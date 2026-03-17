@@ -1,0 +1,13 @@
+flowchart TD
+    A[公理A] --> Core[关系元集合]
+    B1[公理B.1] --> MaxMin[极大/极小元]
+    B1 --> InputOutput[输入输出关系]
+    MaxMin --> ColorDisjoint[颜色不相交性]
+    ColorDisjoint --> SourceUniq[来源唯一性]
+    SourceUniq --> BranchDisjoint[分支不相交性]
+    B2[公理B.2] --> Weaving[编织公理]
+    BranchDisjoint --> NoCross[无跨分支路径]
+    C[公理C] --> Amp[振幅函数]
+    Amp --> Unitary[幺正性]
+    Weaving --> Tensor[张量积]
+    Tensor --> Prob[概率因子化]

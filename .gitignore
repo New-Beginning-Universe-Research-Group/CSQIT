@@ -1,0 +1,56 @@
+
+---
+
+#### `.gitignore`
+```gitignore
+# Lean
+build/
+lake-packages/
+lakefile.olean
+*.olean
+*.ilean
+*.trace
+._lake/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+*.egg-info/
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Data (if any)
+*.csv
+*.h5
+*.nc
+*.npy
+data/
+temp/
+
+# Simulation outputs
+*.png
+*.pdf
+*.json
+!operad_spectrum.json  # Keep the final result
