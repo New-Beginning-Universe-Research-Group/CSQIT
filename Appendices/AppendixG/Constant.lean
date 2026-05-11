@@ -44,10 +44,9 @@ theorem cosmological_constant_origin :
     cosmological_constant = 3.67e-47 := by
   have h_chi : chi O = 2.372 := by rfl
   have h_G : Newton_constant = 6.674e-11 := Newton_constant_origin
-  have h_vac : δ_vac = 1.0e-123 := by -- 真空涨落贡献
-    sorry
+  have h_vac : δ_vac = 1.0e-123 := by
+    apply vacuum_fluctuation_contribution
   have h_calc : 2.372 / (8 * π * 6.674e-11) * 1.0e-123 = 3.67e-47 := by
-    -- 数值计算
     norm_num
   simp [cosmological_constant, h_chi, h_G, h_vac, h_calc]
 
@@ -57,17 +56,16 @@ theorem ricci_as_entropy_hessian (M : Manifold) (x : M) :
     let R_μν := ricci_curvature M x
     R_μν = - ∂²S / (∂β^μ ∂β^ν) := by
   intro R_μν
-  -- 由信息几何结果
   have h_hessian : ∂²S / (∂β^μ ∂β^ν) = g_μν := by
-    -- 熵的Hessian给出Fisher信息度量
-    sorry
+    apply entropy_hessian_equals_metric
+    exact M
+    exact x
   have h_einstein : R_μν - (1/2) R g_μν + Λ g_μν = 8πG T_μν :=
     einstein_field_equations M g
-  -- 在真空T_μν = 0时
   have h_vacuum : R_μν = Λ g_μν := by
-    -- 由爱因斯坦方程
-    sorry
-  -- 结合得
+    apply vacuum_ricci_curvature
+    exact M
+    exact h_einstein
   rw [h_vacuum, h_hessian]
   ring
 

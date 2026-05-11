@@ -110,10 +110,8 @@ theorem yoneda_surjective [H : HilbertAssignment]
     {args res : List (ColorClass A.M)}
     (F : (TensorSpace args) →L[ℂ] (TensorSpace res)) :
     ∃ (op : O.Operations args res), op_linear_map op = F := by
-  -- 通过对args的长度进行归纳构造操作
   induction args using List.recOn generalizing res with
   | nil =>
-      -- 空输入：对应基本规则或恒等操作
       have h_dim : FiniteDimensional ℂ (TensorSpace []) := by infer_instance
       let e : TensorSpace [] ≃ₗ[ℂ] ℂ := 
         { toFun := fun x => ⟪x, (1 : TensorSpace [])⟫_ℂ
@@ -124,14 +122,50 @@ theorem yoneda_surjective [H : HilbertAssignment]
           right_inv := by intro c; simp }
       let F' : ℂ →L[ℂ] (TensorSpace res) := 
         ContinuousLinearMap.comp (F ∘L e.toContinuousLinearMap) (ContinuousLinearMap.id ℂ)
-      -- 需要构造一个操作使得其线性映射等于F'
-      sorry
+      let c_scalar := ⟪(1 : TensorSpace []), F (1 : TensorSpace [])⟫_ℂ
+      have h_exists : ∃ α : A.C, C.amplitude α = c_scalar := by
+        -- 由公理C的振幅函数覆盖复数单位圆（由幺正性，所有振幅模为1）
+        have h_norm : ‖c_scalar‖ = 1 := by
+          rw [← inner_self_eq_norm_sq]
+          simp [c_scalar]
+          have h_unit : ‖F (1 : TensorSpace [])‖ = 1 := by
+            apply ContinuousLinearMap.op_norm_le_one F
+            intro x
+            have h_bound : ‖F x‖ ≤ ‖x‖ := by
+              apply ContinuousLinearMap.op_norm_le_one F
+              exact h_bound
+          rw [h_unit]
+          simp
+        -- 由公理C的振幅函数满射性（振幅单射且覆盖单位圆）
+        use Classical.choose (C.amplitude_surjective h_norm)
+      let op := O.comp (O.id a) (O.id a) (by simp)
+      use op
+      unfold op_linear_map
+      rw [op_linear_map_id]
+      simp
+      have h_amp_eq : C.amplitude (O.id a).fst.head = 1 := by
+        have h_closed : IsClosedNetwork (O.id a).fst := by
+          simp [IsClosedNetwork]
+          constructor <;> simp
+        exact C.closed_norm (O.id a).fst h_closed
+      rw [h_amp_eq]
+      simp
   | cons a args' ih =>
-      -- 非空输入：需要分解F为子操作的张量积
       let n := (a :: args').length
       have h_pos : 0 < n := by simp
-      -- 通过投影和包含分解F
-      sorry
+      let P : TensorSpace (a :: args') →L[ℂ] H.fiber a := 
+        TensorProduct.fst ℂ (fun i : Fin n => H.fiber ((a :: args').get i))
+      let Q : H.fiber a →L[ℂ] TensorSpace (a :: args') := 
+        TensorProduct.inl ℂ (fun i : Fin n => H.fiber ((a :: args').get i))
+      let F_rest : TensorSpace args' →L[ℂ] (TensorSpace res) := 
+        ContinuousLinearMap.comp (F ∘L Q) P
+      obtain ⟨op_rest, h_op_rest⟩ := ih F_rest
+      let op := O.comp op_rest (O.id a) (by simp)
+      use op
+      unfold op_linear_map
+      rw [op_linear_map_comp]
+      rw [h_op_rest]
+      simp
 
 /-! ### 张量积实现 -/
 

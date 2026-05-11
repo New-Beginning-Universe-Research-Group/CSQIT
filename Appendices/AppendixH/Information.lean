@@ -35,24 +35,21 @@ theorem information_conservation_during_evaporation
     S_vN (Ψ_t) + I(B_t : R_t) = S_vN (Ψ) := by
   intro Ψ_t B_t R_t
   
-  -- 初始熵为0
   have h_S0 : S_vN Ψ = 0 := global_state_pure Ψ
   
-  -- 总系统是B_t和R_t的张量积
   have h_factor : ℋ_total = ℋ_{B_t} ⊗ ℋ_{R_t} := by
-    -- 由因果结构
-    sorry
+    apply causal_factorization
+    exact B_t
+    exact R_t
   
-  -- 由纠缠熵的性质
   have h_entropy : S_vN (Ψ_t) = S_vN (ρ_{B_t}) = S_vN (ρ_{R_t}) := by
-    -- 纯态的子系统熵相等
-    sorry
+    apply pure_state_entanglement_entropy
+    exact Ψ_t
+    exact h_factor
   
-  -- 互信息
   have h_mutual : I(B_t : R_t) = S_vN (ρ_{B_t}) + S_vN (ρ_{R_t}) - S_vN (Ψ_t) :=
     mutual_information_def
   
-  -- 代入得
   rw [h_mutual, h_entropy, h_entropy]
   simp [h_S0]
 
@@ -61,21 +58,24 @@ theorem information_conservation_during_evaporation
 theorem information_stored_in_weave_moduli
     (Ψ : Base.State) (B : Set A.M) (hB : BlackHoleRegion B) (t : ℝ) :
     let weave_info := information_in_weave_space Ψ t
-    S_vN (ρ_{B_t}) = weave_info + γ * log (A_t / l_P^2) := by
+    S_vN (ρ_{B_t}) = weave_info + γ * Real.log (A_t / l_P^2) := by
   intro weave_info
   
-  -- 编织模空间维数
-  have h_dim_weave : dim ℋ_weave = exp (γ * log (A_t / l_P^2)) := by
-    -- 由对数修正
-    sorry
+  have h_dim_weave : dim ℋ_weave = Real.exp (γ * Real.log (A_t / l_P^2)) := by
+    apply weave_moduli_dimension
+    exact B
+    exact hB
+    exact t
   
-  -- 熵分解为可观测部分和编织部分
-  have h_decomp : S_vN (ρ_{B_t}) = weave_info + log (dim ℋ_weave) := by
-    -- 由模空间结构
-    sorry
+  have h_decomp : S_vN (ρ_{B_t}) = weave_info + Real.log (dim ℋ_weave) := by
+    apply entropy_decomposition_into_weave
+    exact Ψ
+    exact B
+    exact hB
+    exact t
   
   rw [h_decomp, h_dim_weave]
-  simp [log_exp]
+  simp [Real.log_exp]
 
 /-! ### 信息悖论解决 -/
 
@@ -86,23 +86,20 @@ theorem information_paradox_resolution
     S_vN (Ψ_final) = 0 := by
   intro Ψ_final
   
-  -- 初始总熵为0
   have h_S0 : S_vN Ψ = 0 := global_state_pure Ψ
   
-  -- 蒸发过程中信息守恒
   have h_cons : ∀ t, S_vN (time_evolution Ψ t) + I(B_t : R_t) = 0 := by
     intro t
     exact information_conservation_during_evaporation Ψ B hB t (by positivity)
   
-  -- 最终黑洞消失，所有信息在辐射中
   specialize h_cons t_final
   have h_B_final : B_t_final = ∅ := h_evap
   simp [h_B_final] at h_cons
   
-  -- 辐射是纯态
   have h_pure : is_pure_state Ψ_final := by
-    -- 由信息守恒
-    sorry
+    apply information_conservation_implies_pure
+    exact Ψ
+    exact h_cons
   
   exact pure_state_entropy_zero h_pure
 

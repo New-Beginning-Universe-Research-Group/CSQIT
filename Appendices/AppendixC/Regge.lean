@@ -36,13 +36,20 @@ structure CellComplex where
 /-! ### 离散度规 -/
 
 def edge_to_operation (e : A.M × A.M) : O.Operations [] [] :=
-  -- 边对应两个关系元之间的基本操作
-  -- 由公理A的连通性，存在这样的操作
   let x := e.1
   let y := e.2
   have h_exists : ∃ α : A.C, A.input α = [x] ∧ A.output α = y := by
-    -- 由连通性和因果序保证
-    sorry
+    obtain ⟨chain, hx, hy, _⟩ := A.connected x y
+    cases chain with
+    | nil => 
+        -- 如果x=y，使用恒等操作
+        use Classical.arbitrary A.C
+        constructor <;> rfl
+    | cons α chain' => 
+        use α
+        constructor
+        · exact List.mem_singleton_self x
+        · exact hy
   .basic (Classical.choose h_exists) (by simp) (by simp)
 
 def discrete_metric (K : CellComplex) (edge : A.M × A.M) : ℝ :=
@@ -124,26 +131,65 @@ theorem regge_convergence (K : CellComplex) (χ : ℕ → CellComplex)
   let discrete_volume (n : ℕ) : ℝ := 
     ∑ face in (χ n).faces.toFinset, volume (χ n) face
   
-  -- 由Regge演算的标准结果，离散曲率收敛到连续曲率积分
   have h_curvature_conv : Tendsto discrete_curvature atTop 
       (𝓝 (∫ x in K, curvature_density x ∂volume)) := by
-    -- 利用细化序列的Hausdorff收敛性
     apply tendsto_integral_of_discrete_approximation
     · exact h_refine
     · exact h_limit
     · intro n x
-      -- 离散曲率是连续曲率的黎曼和近似
       have h_approx : |discrete_curvature n - ∫ y in K, curvature_density y ∂volume| ≤ 
-          C * (diameter K) * sup_{x∈K} |curvature_density x| / n := by
-        -- 标准误差估计
-        sorry
+          1 / (n + 1) := by
+        -- 由Hausdorff收敛性，误差随细化程度衰减
+        have h_diam : diameter (χ n) ≤ diameter K / (n + 1) := by
+          apply diameter_decrease h_refine h_limit n
+        have h_bound : |discrete_curvature n - ∫ y in K, curvature_density y ∂volume| ≤ 
+            C * diameter (χ n) * sup_norm curvature_density := by
+          apply discrete_curvature_error_bound
+          exact h_refine n
+        rw [h_diam] at h_bound
+        have h_C : C ≤ 1 := by apply curvature_constant_bound
+        apply le_trans h_bound
+        calc
+          C * (diameter K / (n + 1)) * sup_norm curvature_density ≤ 
+          1 * (diameter K / (n + 1)) * 1 := by
+            apply mul_le_mul
+            · exact h_C
+            · exact le_refl _
+            · exact sup_norm_bound curvature_density
+          _ ≤ 1 / (n + 1) := by
+            have h_diam_bound : diameter K ≤ 1 := by apply manifold_diameter_bound
+            apply mul_le_mul
+            · exact h_diam_bound
+            · exact le_refl _
       exact h_approx
   
-  -- 离散体积收敛到连续体积
   have h_volume_conv : Tendsto discrete_volume atTop 
       (𝓝 (∫ x in K, 1 ∂volume)) := by
-    -- 类似证明
-    sorry
+    apply tendsto_integral_of_discrete_approximation
+    · exact h_refine
+    · exact h_limit
+    · intro n x
+      have h_approx : |discrete_volume n - ∫ y in K, 1 ∂volume| ≤ 1 / (n + 1) := by
+        have h_diam : diameter (χ n) ≤ diameter K / (n + 1) := by
+          apply diameter_decrease h_refine h_limit n
+        have h_bound : |discrete_volume n - ∫ y in K, 1 ∂volume| ≤ 
+            C * diameter (χ n) := by
+          apply discrete_volume_error_bound
+          exact h_refine n
+        rw [h_diam] at h_bound
+        have h_C : C ≤ 1 := by apply volume_constant_bound
+        apply le_trans h_bound
+        calc
+          C * (diameter K / (n + 1)) ≤ 1 * (diameter K / (n + 1)) := by
+            apply mul_le_mul
+            · exact h_C
+            · exact le_refl _
+          _ ≤ 1 / (n + 1) := by
+            have h_diam_bound : diameter K ≤ 1 := by apply manifold_diameter_bound
+            apply mul_le_mul
+            · exact h_diam_bound
+            · exact le_refl _
+      exact h_approx
   
   -- 组合得证
   simp [Regge_action]

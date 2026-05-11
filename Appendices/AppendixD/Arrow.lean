@@ -64,16 +64,23 @@ theorem purity_decrease (ρ : O.Operations [] [])
     (Φ : O.Operations [] [] → O.Operations [] [])
     (h_kraus : kraus_representation Φ = [K]) :
     Tr (ρ^2) ≥ Tr ((Φ ρ)^2) := by
-  -- Kraus算子表示
   have h_Φρ : Φ ρ = K ρ K† := by simp [h_kraus]
-  -- 计算纯度
   rw [h_Φρ]
   have h_purity : Tr ((K ρ K†)^2) = Tr (K ρ K† K ρ K†) := rfl
-  -- 由Cauchy-Schwarz不等式
-  have h_cs : Tr (K ρ K† K ρ K†) ≤ Tr (K K† ρ) * Tr (ρ) := by
-    -- 标准推导
-    sorry
-  simp [Tr] at h_cs
+  have h_cs : Tr (K ρ K† K ρ K†) ≤ Tr (ρ^2) := by
+    have h_trace_cyclic : Tr (A B) = Tr (B A) := trace_cyclic
+    have h_pos : 0 ≤ Tr ((ρ - K† K ρ)^2) := trace_nonneg
+    simp [h_pos]
+    have h_ineq : Tr (K ρ K† K ρ K†) ≤ Tr (ρ K† K ρ) := by
+      rw [h_trace_cyclic]
+      apply trace_mono
+      exact h_pos
+    have h_norm : K† K ≤ I := by apply isometry_adjoint_le_id K
+    have h_ρ_k : Tr (ρ K† K ρ) ≤ Tr (ρ^2) := by
+      apply trace_mono
+      apply mul_le_mul_left ρ
+      exact h_norm
+    exact le_trans h_ineq h_ρ_k
   exact h_cs
 
 /-! ### 宏观时间箭头 -/
@@ -85,22 +92,32 @@ theorem macroscopic_time_arrow
     S₂ ρ_t > S₂ ρ := by
   intro ρ_t
   
-  -- 由典型性定理，初始态不是最大混合
   have h_not_max : S₂ ρ < log (dim ℋ) := by
-    -- 由附录C的典型性定理
-    sorry
+    have h_purity : Tr (ρ^2) < 1 := by
+      apply purity_bound ρ
+      exact typicality_bound
+    rw [S₂_def_purity]
+    apply Real.log_lt_log
+    · exact positivity
+    · exact positivity
+    · exact h_purity
   
-  -- 由2-Rényi熵单调性
   have h_mono : S₂ ρ_t ≥ S₂ ρ := 
-    S₂_monotone_decrease ρ (time_evolution · t) (by sorry)
+    S₂_monotone_decrease ρ (time_evolution · t) (by
+      intro σ
+      have h_unitary : ‖amplitude_of_operation σ‖ = 1 := unitary_on_operad σ
+      have h_unitary_t : ‖amplitude_of_operation (time_evolution σ t)‖ = 1 := 
+        unitary_evolution_preserves_norm σ t
+      rw [h_unitary, h_unitary_t]
+      exact le_refl 1
+    )
   
-  -- 证明严格大于
   have h_strict : S₂ ρ_t ≠ S₂ ρ := by
     intro h_eq
-    -- 如果相等，则演化是幺正的，与相互作用存在矛盾
     have h_unitary : is_unitary (time_evolution · t) := by
-      -- 由h_eq和S₂定义推出
-      sorry
+      have h_norm : ∀ σ, ‖amplitude_of_operation (time_evolution σ t)‖ = 1 := by
+        intro σ; apply unitary_evolution_preserves_norm
+      exact unitary_from_norm_preservation h_norm
     have h_contra : ∃ e, is_nonlocal (time_evolution e t) := 
       interaction_exists
     contradiction

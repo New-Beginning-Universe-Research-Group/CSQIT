@@ -216,10 +216,14 @@ theorem rels_identify_source (op : Operation A args res) (x : A.M) (hx : x ∈ r
                     -- 由归纳假设，x在子操作中
                     obtain ⟨path_i, α_i, h_unique_i⟩ := 
                       rels_identify_source h_sub_op x (by 
-                        -- 需要证明x在h_sub_op中
                         have h_mem : x ∈ relsOfOp h_sub_op := by
-                          -- 由路径存在性可得
-                          sorry
+                          simp [relsOfOp]
+                          cases hβ_eq with
+                          | inl h_eq => 
+                              rw [h_eq]
+                              exact Set.mem_singleton (A.output α_i)
+                          | inr h_in => 
+                              exact Set.mem_union_right _ (Set.mem_singleton _)
                         exact h_mem)
                     exact h_unique_i.2.1
                   
@@ -286,10 +290,14 @@ theorem rels_identify_source (op : Operation A args res) (x : A.M) (hx : x ∈ r
                     -- 由归纳假设，x在子操作中
                     obtain ⟨path_j, α_j, h_unique_j⟩ := 
                       rels_identify_source h_sub_op x (by 
-                        -- 需要证明x在h_sub_op中
                         have h_mem : x ∈ relsOfOp h_sub_op := by
-                          -- 由路径存在性可得
-                          sorry
+                          simp [relsOfOp]
+                          cases hβ_eq with
+                          | inl h_eq => 
+                              rw [h_eq]
+                              exact Set.mem_singleton (A.output α_j)
+                          | inr h_in => 
+                              exact Set.mem_union_right _ (Set.mem_singleton _)
                         exact h_mem)
                     exact h_unique_j.2.1
                   

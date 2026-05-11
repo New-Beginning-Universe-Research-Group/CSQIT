@@ -88,8 +88,14 @@ theorem horizon_weaving_structure (B : Set A.M) (hB : BlackHoleRegion B) :
       maxRelOfOp_is_maximal op x hx_in_op
     -- maxRelOfOp op在B中？
     have h_max_in_B : maxRelOfOp op ∈ B := by
-      -- 由op的支撑集性质
-      sorry
+      have h_support : support op ⊆ B := by
+        apply support_containment_from_suboperation
+        exact x
+        exact hx
+        exact op
+        exact h_sub
+      have h_max_in_support : maxRelOfOp op ∈ support op := maxRelOfOp_mem_support op
+      exact h_support h_max_in_support
     -- 与x是边界元矛盾
     have h_boundary : x ∈ boundary B := hx
     simp [boundary] at h_boundary

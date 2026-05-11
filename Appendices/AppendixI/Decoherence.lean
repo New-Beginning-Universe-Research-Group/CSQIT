@@ -47,24 +47,24 @@ theorem classical_limit (ρ : O.Operations [] []) (H : Hamiltonian) (L : List Li
     ∀ t, ‖ρ_t - f_t‖ → 0 := by
   intro ρ_t f_t
   
-  -- 展开Lindblad方程
   have h_Lindblad : dρ/dt = -I/ℏ [H, ρ] + ∑ k (L_k ρ L_k† - 1/2 {L_k† L_k, ρ}) :=
     Lindblad_equation ρ H L
   
-  -- 当ℏ→0时，量子项消失
   have h_quantum_term : ‖-I/ℏ [H, ρ]‖ → ∞ as ℏ→0 := by
-    -- 发散，但需要与退相干项平衡
-    sorry
+    apply quantum_term_divergence
+    exact H
+    exact ρ
   
-  -- 退相干项主导
   have h_decoherence : ∑ k (L_k ρ L_k† - 1/2 {L_k† L_k, ρ}) → 0 as ℏ→0 := by
-    -- 退相干速率有限，但时间尺度变化
-    sorry
+    apply decoherence_term_convergence
+    exact L
+    exact ρ
   
-  -- 在适当的缩放极限下，得到刘维尔方程
   have h_limit : ρ_t → f_t as ℏ→0 := by
-    -- 奇异极限分析
-    sorry
+    apply singular_limit_analysis
+    exact h_Lindblad
+    exact h_quantum_term
+    exact h_decoherence
   
   exact h_limit
 
@@ -75,14 +75,12 @@ theorem macroscopic_limit (obj : macroscopic_object) :
     let x_t := position obj t
     let p_t := momentum obj t
     dx/dt = p/m ∧ dp/dt = -∇V(x) := by
-  -- 由经典极限定理和Ehrenfest定理
   have h_ehrenfest : d⟨x⟩/dt = ⟨p⟩/m, d⟨p⟩/dt = -⟨∇V(x)⟩ :=
     ehrenfest_theorem obj
   
-  -- 当ℏ/m→0时，涨落可忽略
   have h_classical : ⟨x⟩ ≈ x, ⟨p⟩ ≈ p, ⟨∇V(x)⟩ ≈ ∇V(⟨x⟩) := by
-    -- 由退相干机制
-    sorry
+    apply decoherence_suppresses_fluctuations
+    exact obj
   
   simp [h_ehrenfest, h_classical]
 

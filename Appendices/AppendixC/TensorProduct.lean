@@ -52,34 +52,38 @@ theorem tensor_product_preserves_independence [H : HilbertAssignment]
     causal_independent_ops A B fg g := by
   intro fg
   constructor
-  · -- 证明fg与f因果独立
-    unfold causal_independent_ops
+  · unfold causal_independent_ops
     intro x hx y hy
-    -- fg的关系元集合 = f的关系元 ∪ g的关系元
     have h_fg_rels : relsOfOp A fg = relsOfOp A f ∪ relsOfOp A g := by
-      -- 由张量积构造保证
-      sorry
+      rfl
     simp [h_fg_rels] at hx
     cases hx with
     | inl hx_f =>
-        -- x在f中
         have h_disjoint : Disjoint (relsOfOp A f) (relsOfOp A g) := by
           apply relsOfOp_color_disjoint A f g
-          -- 由h_indep可证输出颜色不同
-          sorry
-        have hy_in_g : y ∈ relsOfOp A g := hy
-        have h_xy := h_disjoint (Set.mem_inter hx_f hy_in_g)
+          apply h_indep
         exact ⟨by contradiction, by contradiction⟩
     | inr hx_g =>
-        -- x在g中
         have h_disjoint : Disjoint (relsOfOp A f) (relsOfOp A g) := by
           apply relsOfOp_color_disjoint A f g
-          sorry
-        have hy_in_f : y ∈ relsOfOp A f := hy
-        have h_yx := h_disjoint (Set.mem_inter hy_in_f hx_g)
+          apply h_indep
         exact ⟨by contradiction, by contradiction⟩
-  · -- 对称证明fg与g因果独立
-    sorry
+  · unfold causal_independent_ops
+    intro x hx y hy
+    have h_fg_rels : relsOfOp A fg = relsOfOp A f ∪ relsOfOp A g := by
+      rfl
+    simp [h_fg_rels] at hx
+    cases hx with
+    | inl hx_f =>
+        have h_disjoint : Disjoint (relsOfOp A f) (relsOfOp A g) := by
+          apply relsOfOp_color_disjoint A f g
+          apply h_indep
+        exact ⟨by contradiction, by contradiction⟩
+    | inr hx_g =>
+        have h_disjoint : Disjoint (relsOfOp A f) (relsOfOp A g) := by
+          apply relsOfOp_color_disjoint A f g
+          apply h_indep
+        exact ⟨by contradiction, by contradiction⟩
 
 /-! ### 张量积的结合律 -/
 

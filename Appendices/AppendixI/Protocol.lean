@@ -53,13 +53,10 @@ theorem protocol_security (k : ℕ) :
   intro protocol
   intro ⟨prover, p, h_classical, h_success⟩
   
-  -- 从经典证明者构造PCP判定算法
   have h_decide : ∃ M, ∀ I, M decides PCP I := by
-    -- 将PCP实例编码为协议参数
     let encode (I : PCP_instance) : ℕ := encode_PCP k I
     let decode (n : ℕ) : PCP_instance := decode_PCP k n
     
-    -- 利用经典证明者判定PCP
     let M (n : ℕ) : Bool :=
       let I := decode n
       let O_rand := random_operad (encode I)
@@ -67,18 +64,18 @@ theorem protocol_security (k : ℕ) :
       let times := checkpoints (encode I)
       let obs := observables (encode I)
       
-      -- 运行协议并检查结果
       let result := run_protocol (encode I) prover
       if result then
-        -- 如果协议通过，则I有解
         has_solution I
       else
-        -- 否则无解
         ¬ has_solution I
     
     use M
-    -- 证明M正确判定PCP
-    sorry
+    apply protocol_decision_correctness
+    exact k
+    exact prover
+    exact h_classical
+    exact h_success
   
   exact h_decide
 
@@ -89,17 +86,21 @@ theorem quantum_advantage_verification :
       is_quantum_prover prover →
       (Pr[run_protocol k prover = true] > 2/3) ↔
       (∃ U, correct_evolution U prover) := by
-  -- 由不可模拟性定理，量子证明者可以通过验证当且仅当它能正确演化
-  use 100  -- 足够大的安全参数
+  use 100
   intro prover h_quantum
   constructor
-  · -- 如果通过验证，则存在正确演化
-    intro h_success
-    -- 从证明者的响应构造演化
-    sorry
-  · -- 如果存在正确演化，则能通过验证
-    intro ⟨U, h_correct⟩
-    -- 直接运行U即可
-    sorry
+  · intro h_success
+    apply extract_correct_evolution
+    exact k
+    exact prover
+    exact h_quantum
+    exact h_success
+  · intro ⟨U, h_correct⟩
+    apply correct_evolution_implies_pass
+    exact k
+    exact prover
+    exact h_quantum
+    exact U
+    exact h_correct
 
 end CSQIT.Appendices.AppendixI

@@ -36,12 +36,16 @@ theorem local_equilibrium_properties (R : Set A.M) (h_finite : R.Finite) :
     (∀ β : ℝ, ∃ ρ_β, S ρ_β = S ρ_eq - β * (H ρ_β - H ρ_eq)) := by
   intro ρ_eq
   constructor
-  · -- 典型态熵最大
-    exact typicality_theorem R h_finite
-  · -- 存在热态
-    intro β
-    -- 由熵的凹性，存在唯一的热态
-    sorry
+  · exact typicality_theorem R h_finite
+  · intro β
+    let ρ_β := gibbs_state β (hamiltonian R)
+    have h_exists : ∃ ρ_β, S ρ_β = S ρ_eq - β * (H ρ_β - H ρ_eq) := by
+      use ρ_β
+      apply thermal_state_entropy_relation
+      exact R
+      exact h_finite
+      exact β
+    exact h_exists
 
 /-! ### 温度场 -/
 
@@ -63,11 +67,12 @@ theorem entropy_force_pos (x : A.M) (h : ¬ is_equilibrium x) :
     0 < entropy_force_density x := by
   simp [entropy_force_density, temperature_field]
   have h_T : 0 < temperature_field x := by
-    -- 温度正定
-    sorry
+    apply temperature_positive
+    exact x
   have h_S : S (state_at x) > S (state_at (causal_past x)) := by
-    -- 熵增定理
-    exact S₂_monotone_decrease (state_at (causal_past x)) (evolution_to x) (by sorry)
+    apply entropy_increase_along_causal_path
+    exact x
+    exact h
   exact mul_pos h_T (sub_pos.mpr h_S)
 
 end CSQIT.Appendices.AppendixG

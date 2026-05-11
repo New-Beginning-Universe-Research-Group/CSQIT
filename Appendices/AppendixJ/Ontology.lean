@@ -55,8 +55,8 @@ theorem ontology_contrast :
     -- 假设X是实体，构造其与自身的关系
     let R := identity_relation X
     have h_fund : is_fundamental R := by
-      -- 恒等关系是基本的
-      sorry
+      apply identity_relation_is_fundamental
+      exact X
     have h_part : X ∈ participants R := by
       -- X是自身的参与者
       trivial

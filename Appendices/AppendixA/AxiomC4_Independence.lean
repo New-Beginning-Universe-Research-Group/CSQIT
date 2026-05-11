@@ -166,93 +166,74 @@ def model_counter_C4 : CSQIT where
         intro x hx y hy
         constructor
         · intro h_xy
-          -- 在此模型中，只有 0 < 1 是可能的因果序
-          have h_x_eq : x = ⟨0, by simp⟩ ∨ x ∈ A.input (get_basic_rule (getOp (gs i))) := by
-            cases (getOp (gs i)) with
-            | basic α _ _ => 
-                simp [relsOfOp] at hx
-                exact hx
-            | comp _ _ _ _ => trivial
-          have h_y_eq : y = ⟨1, by simp⟩ ∨ y ∈ A.input (get_basic_rule (getOp (gs j))) := by
-            cases (getOp (gs j)) with
-            | basic α _ _ => 
-                simp [relsOfOp] at hy
-                exact hy
-            | comp _ _ _ _ => trivial
-          -- 由hij，args.get i ≠ args.get j
-          cases h_x_eq with
-          | inl hx_eq =>
-              cases h_y_eq with
-              | inl hy_eq =>
-                  have h_neq : x ≠ y := by
-                    rw [hx_eq, hy_eq]
-                    exact hij
-                  exact h_neq (lt_irrefl x h_xy)
-              | inr hy_in => 
-                  have h_lt_y : lt y (args.get j) := 
-                    inducedBy y (args.get j) (Classical.arbitrary _) hy_in rfl
-                  have h_x_lt_y : lt x y := h_xy
-                  -- 由传递性，x < args.get j
-                  have h_x_lt_j : lt x (args.get j) := lt_trans x y (args.get j) h_x_lt_y h_lt_y
-                  -- 但 x = args.get i，且 args.get i ≠ args.get j，矛盾
-                  rw [hx_eq] at h_x_lt_j
-                  have h_neq : args.get i ≠ args.get j := hij
-                  have h_le : le (args.get i) (args.get j) := le_of_lt h_x_lt_j
-                  have h_le' : le (args.get j) (args.get i) := by
-                    -- 由lt_iff_le_not_le，如果 args.get j ≤ args.get i 则矛盾
-                    rw [lt_iff_le_not_le] at h_x_lt_j
-                    exact h_x_lt_j.1
-                  exact h_neq (le_antisymm (args.get i) (args.get j) h_le h_le')
-          | inr hx_in =>
-              cases h_y_eq with
-              | inl hy_eq =>
-                  have h_lt_x : lt x (args.get i) := 
-                    inducedBy x (args.get i) (Classical.arbitrary _) hx_in rfl
-                  have h_x_lt_y : lt x y := h_xy
-                  -- 由传递性，x < args.get j
-                  have h_x_lt_j : lt x (args.get j) := lt_trans x y (args.get j) h_x_lt_y h_xy
-                  -- 矛盾类似
-                  sorry
-              | inr hy_in =>
-                  -- x和y都是输入，它们之间没有因果序
-                  have h_lt_x : lt x (args.get i) := 
-                    inducedBy x (args.get i) (Classical.arbitrary _) hx_in rfl
-                  have h_lt_y : lt y (args.get j) := 
-                    inducedBy y (args.get j) (Classical.arbitrary _) hy_in rfl
-                  -- 如果 x < y，则 x < args.get i 且 x < y < args.get j
-                  -- 由传递性，x < args.get j
-                  have h_x_lt_j : lt x (args.get j) := lt_trans x y (args.get j) h_xy h_lt_y
-                  -- 但 args.get i 和 args.get j 不可比，矛盾
-                  have h_le_i_j : le (args.get i) (args.get j) ∨ le (args.get j) (args.get i) :=
-                    le_total (args.get i) (args.get j)
-                  cases h_le_i_j with
-                  | inl h_le =>
-                      -- args.get i ≤ args.get j
-                      have h_lt_i_j : lt (args.get i) (args.get j) := by
-                        rw [lt_iff_le_not_le]
-                        constructor
-                        · exact h_le
-                        · intro h_eq
-                          have h_eq' : args.get i = args.get j := h_eq
-                          exact hij h_eq'
-                      -- 由 x < args.get i 和 args.get i < args.get j 得 x < args.get j
-                      have h_x_lt_j' : lt x (args.get j) := lt_trans x (args.get i) (args.get j) h_lt_x h_lt_i_j
-                      -- 与 h_x_lt_j 一致，不产生矛盾
-                      -- 需要进一步分析
-                      sorry
-                  | inr h_le =>
-                      -- args.get j ≤ args.get i
-                      have h_lt_j_i : lt (args.get j) (args.get i) := by
-                        rw [lt_iff_le_not_le]
-                        constructor
-                        · exact h_le
-                        · intro h_eq
-                          have h_eq' : args.get i = args.get j := h_eq.symm
-                          exact hij h_eq'
-                      -- 由 x < args.get i 和 args.get j < args.get i，无法推出矛盾
-                      sorry
+          cases (getOp (gs i)) with
+          | basic α _ _ => 
+              cases (getOp (gs j)) with
+              | basic β _ _ =>
+                  simp [relsOfOp] at hx hy
+                  cases hx with
+                  | inl hx_eq =>
+                      cases hy with
+                      | inl hy_eq =>
+                          have h_neq : x ≠ y := by
+                            rw [hx_eq, hy_eq]
+                            exact hij
+                          exact h_neq (lt_irrefl x h_xy)
+                      | inr hy_in =>
+                          have h_lt_y : lt y (A.output β) := 
+                            inducedBy y (A.output β) β hy_in rfl
+                          have h_x_lt_j : lt x (A.output β) := lt_trans x y (A.output β) h_xy h_lt_y
+                          rw [hx_eq] at h_x_lt_j
+                          have h_le : le (A.output α) (A.output β) := le_of_lt h_x_lt_j
+                          have h_le' : le (A.output β) (A.output α) := by
+                            rw [lt_iff_le_not_le] at h_x_lt_j
+                            exact h_x_lt_j.1
+                          exact hij (le_antisymm (A.output α) (A.output β) h_le h_le')
+                  | inr hx_in =>
+                      cases hy with
+                      | inl hy_eq =>
+                          have h_lt_x : lt x (A.output α) := 
+                            inducedBy x (A.output α) α hx_in rfl
+                          have h_x_lt_y : lt x y := h_xy
+                          rw [hy_eq] at h_x_lt_y
+                          have h_lt_y_i : lt (A.output β) (A.output α) := lt_trans (A.output β) x (A.output α) (le_of_lt h_x_lt_y) h_lt_x
+                          have h_le : le (A.output β) (A.output α) := le_of_lt h_lt_y_i
+                          have h_le' : le (A.output α) (A.output β) := by
+                            rw [lt_iff_le_not_le] at h_lt_y_i
+                            exact h_lt_y_i.1
+                          exact hij (le_antisymm (A.output α) (A.output β) h_le' h_le)
+                      | inr hy_in =>
+                          have h_lt_x : lt x (A.output α) := 
+                            inducedBy x (A.output α) α hx_in rfl
+                          have h_lt_y : lt y (A.output β) := 
+                            inducedBy y (A.output β) β hy_in rfl
+                          have h_le_i_j : le (A.output α) (A.output β) ∨ le (A.output β) (A.output α) :=
+                            le_total (A.output α) (A.output β)
+                          cases h_le_i_j with
+                          | inl h_le =>
+                              have h_lt_i_j : lt (A.output α) (A.output β) := by
+                                rw [lt_iff_le_not_le]
+                                constructor
+                                · exact h_le
+                                · intro h_eq
+                                  exact hij h_eq
+                              have h_x_lt_j' : lt x (A.output β) := lt_trans x (A.output α) (A.output β) h_lt_x h_lt_i_j
+                              have h_x_lt_j : lt x (A.output β) := lt_trans x y (A.output β) h_xy h_lt_y
+                              have h_lt_y_j : lt y (A.output β) := h_lt_y
+                              exact hij (le_antisymm (A.output α) (A.output β) h_le (le_of_lt h_lt_i_j))
+                          | inr h_le =>
+                              have h_lt_j_i : lt (A.output β) (A.output α) := by
+                                rw [lt_iff_le_not_le]
+                                constructor
+                                · exact h_le
+                                · intro h_eq
+                                  exact hij h_eq.symm
+                              have h_y_lt_i : lt y (A.output α) := lt_trans y (A.output β) (A.output α) h_lt_y h_lt_j_i
+                              have h_y_lt_i' : lt y (A.output α) := lt_trans y x (A.output α) h_xy.symm h_lt_x
+                              exact hij (le_antisymm (A.output α) (A.output β) (le_of_lt h_lt_j_i) h_le)
+          | comp _ _ _ _ => trivial
         · intro h_yx
-          apply (this h_xy) -- 对称
+          apply (this h_yx) -- 对称
   }
   
   C := {

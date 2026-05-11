@@ -259,13 +259,11 @@ def consistency_model : Base :=
             (ops.get? i).isSome ∧ (ops.get? j).isSome) }
       id := λ c => ⟨[0], by 
         have h_eq : ColorClass.mk A_model 0 = c := by
-          -- 0的颜色就是c
           obtain ⟨x, hx⟩ := color_class_nonempty c
           have h_eq' : x = 0 ∨ x = 1 := by fin_cases x <;> simp
           cases h_eq' with
           | inl h => rw [← hx, h]; rfl
           | inr h => 
-              -- 如果c包含1，则通过连通性0和1同色
               have h_conn := A_model.connected 0 1
               obtain ⟨chain, h0, h1, _⟩ := h_conn
               apply Quotient.sound
@@ -295,12 +293,25 @@ def consistency_model : Base :=
             simp [List.get?_append]
             split_ifs <;> simp
       ⟩
-      id_comp := by intro args res f; simp [comp, id]; sorry
-      comp_id := by intro args res f c h; simp [comp, id]; sorry
-      assoc := by intros; sorry
+      id_comp := by 
+        intro args res f
+        simp [comp, id]
+        rfl
+      comp_id := by 
+        intro args res f c h
+        simp [comp, id]
+        rfl
+      assoc := by 
+        intros
+        simp [comp]
+        rfl
     }
   
-  { A := A_model, B := B_model, C := C_model, O := O_model, assoc_law := by intros; sorry }
+  { A := A_model, B := B_model, C := C_model, O := O_model, assoc_law := by 
+    intros
+    simp [comp, id]
+    rfl
+  }
 
 theorem global_consistency : Nonempty Base :=
   ⟨consistency_model⟩

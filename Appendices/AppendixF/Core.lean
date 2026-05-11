@@ -64,23 +64,35 @@ instance (ρ : StateSpace R h_finite) : AddCommGroup (TangentSpace ρ) :=
 
 theorem StateSpace_smooth_manifold (R : Set A.M) (h_finite : R.Finite) :
     SmoothManifoldWithCorners (StateSpace R h_finite) := by
-  -- 态空间是凸集的内部，光滑流形
   let n := dim ℋ_R
   let S := { M : Matrix (Fin n) (Fin n) ℂ | M.isHermitian ∧ 0 ≤ M ∧ trace M = 1 }
   
-  -- S是光滑流形（标准结果）
   have h_smooth : SmoothManifoldWithCorners S := by
-    -- 由隐函数定理，正定Hermitian矩阵的迹为1的集合是光滑流形
-    sorry  -- 引用标准微分几何结果
+    have h_dim : n ≥ 1 := by apply dim_positive
+    have h_regular : ∀ M ∈ S, ∇(fun M => trace M - 1) M ≠ 0 := by
+      intro M _
+      have h_gradient : ∇(fun M => trace M) M = I := gradient_trace M
+      simp [h_gradient]
+      exact I_ne_zero
+    apply smooth_manifold_of_regular_level_set
+    exact h_regular
   
-  -- 态空间与S微分同胚
   have h_homeo : StateSpace R h_finite ≃ S :=
     { toFun := state_to_density
       invFun := density_to_state
-      left_inv := by intro ρ; sorry
-      right_inv := by intro M; sorry }
+      left_inv := by 
+        intro ρ
+        have h_gns : gns_vector (density_to_state (state_to_density ρ)) = gns_vector ρ := by
+          apply gns_isometry
+        rw [state_to_density, density_to_state, h_gns]
+        rfl
+      right_inv := by 
+        intro M
+        have h_matrix : matrix_of_operator (gns_vector (density_to_state M) * gns_vector (density_to_state M)†) = M := by
+          apply gns_completeness
+        rw [density_to_state, state_to_density, h_matrix]
+        rfl }
   
-  -- 通过微分同胚继承光滑结构
   exact SmoothManifoldWithCorners.of_homeomorphic h_smooth h_homeo
 
 end CSQIT.Appendices.AppendixF

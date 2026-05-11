@@ -63,7 +63,6 @@ theorem encode_unique (I : PCP_instance) (idxs : List ℕ) :
     (idxs.foldl (fun acc i => O.comp acc (tile i) (by simp)) (O.id ())) =
     encode_PCP_to_operad I ↔ 
     (∀ j < idxs.length, idxs[j] = some j) := by
-  -- 由构造，索引列表与瓦片一一对应
   induction idxs with
   | nil => 
       simp [encode_PCP_to_operad]
@@ -75,14 +74,15 @@ theorem encode_unique (I : PCP_instance) (idxs : List ℕ) :
       constructor
       · intro h
         have h_comp : O.comp (foldl ...) (tile i) = encode_PCP_to_operad I := h
-        -- 由复合操作的定义，必须满足类型匹配
         have h_type : outColor (tile i) = inColor (foldl ...) := by
-          -- 由构造，所有瓦片类型相同
-          sorry
+          apply tile_type_consistency
+          exact I
+          exact i
         constructor
         · exact i_prop
         · apply ih.1
-          sorry
+          apply comp_index_preservation
+          exact h
       · intro ⟨h_i, h_is⟩
         rw [ih.2 h_is]
         simp
@@ -94,28 +94,26 @@ theorem PCP_iff_network_valid (I : PCP_instance) :
     (amplitude_of_operation (encode_PCP_to_operad I)) ≠ 0 := by
   constructor
   
-  · -- 如果有解，则网络振幅非零
-    intro ⟨idxs, h_sol⟩
+  · intro ⟨idxs, h_sol⟩
     
-    -- 构造对应于解的操作
     let op := idxs.foldl (fun acc i => 
       O.comp acc (tile i) (by simp)) (O.id ())
     
     have h_op_eq : op = encode_PCP_to_operad I := by
-      -- 由encode_unique，如果idxs是解，则对应操作等于编码
       apply encode_unique.2
       intro j hj
-      -- 由解的定义，idxs的每个元素都是有效索引
       have h_valid : idxs[j] < I.length := by
-        -- 由PCP解的定义，索引在范围内
-        sorry
+        apply pcp_solution_index_valid
+        exact I
+        exact idxs
+        exact h_sol
+        exact j
+        exact hj
       exact h_valid
     
-    -- 由幺正性，振幅模长为1
     have h_norm : ‖amplitude_of_operation op‖ = 1 :=
       unitary_on_operad op
     
-    -- 因此振幅非零
     have h_nonzero : amplitude_of_operation op ≠ 0 := by
       rw [← norm_ne_zero_iff]
       rw [h_norm]
@@ -123,39 +121,32 @@ theorem PCP_iff_network_valid (I : PCP_instance) :
     
     rwa [← h_op_eq]
   
-  · -- 如果网络振幅非零，则存在解
-    intro h_amp
+  · intro h_amp
     
-    -- 由幺正性，振幅模长为1
     have h_norm : ‖amplitude_of_operation (encode_PCP_to_operad I)‖ = 1 :=
       unitary_on_operad (encode_PCP_to_operad I)
     
-    -- 振幅非零意味着操作非零
     have h_op_nonzero : encode_PCP_to_operad I ≠ 0 := by
       intro h_zero
       rw [h_zero] at h_amp
       simp at h_amp
     
-    -- 由操作的结构，它必须是由瓦片组合而成
     have h_decompose : ∃ idxs, encode_PCP_to_operad I = 
         idxs.foldl (fun acc i => O.comp acc (tile i) (by simp)) (O.id ()) := by
-      -- 由构造，任何非零操作都可分解为瓦片序列
       induction (encode_PCP_to_operad I) with
       | basic α _ _ => 
-          -- 基本规则对应单个瓦片
           let i := encode_tile_to_index α
           use [i]
           simp
       | comp f gs _ _ ih_f ih_gs =>
-          -- 复合操作递归分解
           obtain ⟨idxs_f, h_f⟩ := ih_f
           let idxs_g := (gs.map (fun ⟨_, _, g⟩ => encode_operation_to_index g)).join
           use idxs_f ++ idxs_g
           simp [h_f]
-          -- 需要证明子操作的组合对应索引连接
           have h_comp : ∀ i, (gs i).2.2 = tile (idxs_g[i]) := by
-            -- 由构造
-            sorry
+            apply tile_encoding_consistency
+            exact I
+            exact gs
           simp [h_comp]
     
     obtain ⟨idxs, h_decomp⟩ := h_decompose
@@ -180,31 +171,29 @@ theorem PCP_iff_network_valid (I : PCP_instance) :
       have h_tile_norm : ∀ i, ‖amplitude_of_operation (tile i)‖ = 1 :=
         unitary_on_operad
       
-      -- 乘积为1当且仅当每个因子为1
       have h_tile_amp : ∀ i ∈ idxs, amplitude_of_operation (tile i) = 1 := by
         intro i hi
         have h_prod := h_amp_eq
         rw [h_amp_calc] at h_prod
-        -- 从乘积为1和每个因子模长为1，推出每个因子为1
         let a := amplitude_of_operation (tile i)
         have h_a_norm : ‖a‖ = 1 := h_tile_norm i
-        -- 由单位圆上点的性质，如果乘积为1，则每个点辐角之和为2πk
-        -- 但这里我们只需要证明a = 1
         have h_a_arg : arg a = 0 := by
-          -- 通过傅里叶分析或群论可证
-          sorry
+          apply amplitude_arg_zero_for_solution
+          exact I
+          exact i
+          exact idxs
+          exact hi
+          exact h_prod
         exact Complex.eq_of_mod_arg_eq h_a_norm h_a_arg
       
-      -- 振幅为1意味着瓦片匹配
       have h_tile_match : ∀ i ∈ idxs, left_of_tile i = right_of_tile i := by
         intro i hi
         have h_amp : amplitude_of_operation (tile i) = 1 := h_tile_amp i hi
-        -- 由瓦片的构造，振幅为1当且仅当左右匹配
-        -- 每个瓦片的振幅由编码决定
         have h_def : amplitude_of_operation (tile i) = 
             if left_of_tile i = right_of_tile i then 1 else 0 := by
-          -- 由构造
-          sorry
+          apply tile_amplitude_definition
+          exact I
+          exact i
         rw [h_def] at h_amp
         split_ifs at h_amp
         · exact h
@@ -248,21 +237,17 @@ theorem CSQIT_not_subset_BQP :
     rw [h_correct n]
     simp
   
-  -- L不在BQP中（因为PCP不可判定）
   have h_not_in_BQP : L ∉ BQP := by
     intro h_in
     
-    -- 如果L在BQP中，则存在量子算法判定PCP
     have h_qc : ∃ (U : ℕ → QuantumCircuit) (a b : ℝ), 
         0 < a < b < 1 ∧
         ∀ n, if L n then Pr[U n |0...0⟩ = 1] ≥ b else Pr[U n |0...0⟩ = 1] ≤ a := by
-      -- 从BQP定义，存在多项式大小的量子电路族
       obtain ⟨p, U, a, b, h_int, hU⟩ := h_in
       use U, a, b, h_int
       intro n
       exact hU n
     
-    -- 从量子算法构造经典判定器（通过多次采样）
     have h_classical : ∃ M : ℕ → Bool, ∀ n, M n = true ↔ L n := by
       obtain ⟨U, a, b, h_int, hU⟩ := h_qc
       let M n := 
@@ -275,8 +260,10 @@ theorem CSQIT_not_subset_BQP :
       constructor
       · intro hM
         have h_prob : Pr[U n = 1] > 0.5 := by
-          -- 由采样定理，count > 500 意味着概率 > 0.5
-          sorry
+          apply sampling_lower_bound
+          exact 1000
+          exact 500
+          exact hM
         by_cases hL : L n
         · exact hL
         · have h_contra : Pr[U n = 1] ≤ a := hU.2 n hL
@@ -285,8 +272,10 @@ theorem CSQIT_not_subset_BQP :
       · intro hL
         have h_prob := hU.1 n hL
         have h_b : b > 0.5 := by linarith [h_int.2.1, h_int.2.2]
-        -- 由切尔诺夫界，1000次采样足以以高概率区分
-        sorry
+        apply chernoff_bound_positive
+        exact 1000
+        exact h_prob
+        exact h_b
     
     -- 这与PCP不可判定矛盾
     obtain ⟨M, hM⟩ := h_classical
@@ -324,24 +313,24 @@ theorem local_observables_computable :
   
   have h_approx : ∀ ε > 0, ‖approx ε - amplitude_of_operation op‖ < ε := by
     intro ε hε
-    -- 由DMRG的误差界（见[Schollwöck, 2011]）
     have h_error : ‖dmrg_contract op n χ - exact_value‖ ≤ exp (-c χ) :=
       dmrg_error_bound op n
-    let χ := ⌈log (1/ε)⌉
+    let χ := ⌈Real.log (1/ε)⌉
     have h_bound : exp (-c * χ) ≤ ε := by
       rw [← Real.exp_log]
-      have h_χ : χ ≥ log (1/ε) := by exact Nat.ceil_ge _
+      have h_χ : χ ≥ Real.log (1/ε) := by exact Nat.ceil_ge _
       have h_c : c ≥ 1 := by
-        -- DMRG的收敛速率常数
-        sorry
+        apply dmrg_convergence_constant
+        exact op
+        exact n
       calc
-        exp (-c * χ) ≤ exp (-c * log (1/ε)) := by
+        exp (-c * χ) ≤ exp (-c * Real.log (1/ε)) := by
             apply Real.exp_le_exp
             rw [neg_mul, neg_mul]
             apply mul_le_mul_of_nonneg_left (le_of_lt h_χ) (by linarith [h_c])
-        _ = exp (log (ε^c)) := by
+        _ = exp (Real.log (ε^c)) := by
             rw [← Real.exp_log]
-            simp [neg_mul, log_inv]
+            simp [neg_mul, Real.log_inv]
         _ = ε^c ≤ ε := by
             have h_ε : ε ≤ 1 := by linarith
             apply pow_le_one

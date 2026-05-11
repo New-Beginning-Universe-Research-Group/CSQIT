@@ -1,6 +1,0 @@
-
-## 🔧 编译指令
-
-```bash
-cd CSQIT
-lake build Appendices.AppendixB

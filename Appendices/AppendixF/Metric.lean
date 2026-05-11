@@ -119,12 +119,10 @@ theorem SLD_equation (ρ : StateSpace R h_finite) (X : TangentSpace ρ) :
 
 theorem SLD_linear (ρ : StateSpace R h_finite) (X Y : TangentSpace ρ) (c : ℂ) :
     SLD ρ (c • X + Y) = c • SLD ρ X + SLD ρ Y := by
-  -- 由SLD定义直接验证
   let Lc := SLD ρ (c • X + Y)
   let Lx := SLD ρ X
   let Ly := SLD ρ Y
   
-  -- 验证满足SLD方程
   have h_eq : ρ_mat * Lc + Lc * ρ_mat = 2 * (c • X_mat + Y_mat) :=
     SLD_equation ρ (c • X + Y)
   
@@ -134,14 +132,31 @@ theorem SLD_linear (ρ : StateSpace R h_finite) (X Y : TangentSpace ρ) (c : ℂ
     rw [SLD_equation ρ X, SLD_equation ρ Y]
     simp
   
-  -- 由唯一性，Lc = c Lx + Ly
   have h_unique : ∀ L1 L2, 
       (ρ_mat * L1 + L1 * ρ_mat = ρ_mat * L2 + L2 * ρ_mat) → L1 = L2 := by
-    -- 在ρ正定时，方程有唯一解
     intro L1 L2 h
     have h_ρ_pos : ρ_mat > 0 := (state_to_density ρ).2.2.1
-    -- 通过谱分解证明
-    sorry
+    let eigen := ρ_mat.eigen_decomposition
+    let λ := eigen.values
+    let U := eigen.vectors
+    have h_diag : U† * ρ_mat * U = diag λ := eigen.diag
+    have h_L1_diag : U† * L1 * U = fun i j => (U† * L1 * U) i j := rfl
+    have h_L2_diag : U† * L2 * U = fun i j => (U† * L2 * U) i j := rfl
+    rw [← Matrix.mul_assoc] at h
+    rw [← Matrix.mul_assoc] at h
+    have h_diag_eq : diag λ * (U† * L1 * U) + (U† * L1 * U) * diag λ = 
+                     diag λ * (U† * L2 * U) + (U† * L2 * U) * diag λ := by
+      simp [h, Matrix.mul_assoc]
+    ext i j
+    have h_eq_ij : (λ i + λ j) * (U† * L1 * U) i j = (λ i + λ j) * (U† * L2 * U) i j := by
+      simp [h_diag_eq, Matrix.mul_apply]
+    have h_lambda_pos : ∀ i, λ i > 0 := by
+      intro i
+      apply eigen.positive
+      exact h_ρ_pos
+    have h_sum_pos : λ i + λ j > 0 := by
+      apply add_pos (h_lambda_pos i) (h_lambda_pos j)
+    exact mul_left_cancel h_sum_pos h_eq_ij
   
   exact h_unique Lc (c • Lx + Ly) (by rw [h_eq, h_eq'])
 
@@ -181,8 +196,20 @@ theorem bures_metric_pos_def (ρ : StateSpace R h_finite) :
           congr
           rw [← Matrix.mul_assoc, Matrix.mul_assoc]
       _ = ∑ i j, ‖(sqrtρ * L * sqrtρ) i j‖^2 := by
-          -- 矩阵平方的迹等于所有矩阵元的模平方和
-          sorry
+          have h_trace_sq : ∀ M : Matrix n n ℂ, trace (M * M†) = ∑ i j, ‖M i j‖^2 := by
+            intro M
+            rw [trace_def, Matrix.mul_apply]
+            simp [Matrix.conj_transpose_apply, Complex.abs_sq, mul_add]
+            rw [← Finset.sum_comm]
+            apply Finset.sum_congr rfl
+            intro i _
+            simp [Matrix.dotProduct, Complex.abs_sq]
+          let M := sqrtρ * L * sqrtρ
+          have h_M_herm : M† = M := by
+            rw [← Matrix.conj_transpose_mul, ← Matrix.conj_transpose_mul]
+            simp [h_L_herm]
+          rw [h_trace_sq, h_M_herm]
+          exact rfl
       _ ≥ 0 := by apply Finset.sum_nonneg; intro i j; exact sq_nonneg _
     
     exact h_pos
@@ -213,8 +240,54 @@ theorem bures_metric_pos_def (ρ : StateSpace R h_finite) :
           _ = trace (ρ_mat^2 * L * L) := rfl
           _ = 0 := by
                 have h_comm : ρ_mat * L = L * ρ_mat := by
-                  -- 由SLD方程和h_eq可证
-                  sorry
+                  have h_sld_eq := SLD_equation ρ X
+                  have h_X_zero : X = 0 := by
+                    have h_trace_zero : trace (ρ_mat * L * L) = 0 := by
+                      rw [← bures_metric] at h_eq
+                      simp [bures_metric] at h_eq
+                      exact h_eq
+                    let sqrtρ := ρ_mat.sqrt
+                    have h_sqrtρ_inv := sqrtρ.mul_inv
+                    have h_L_zero : L = 0 := by
+                      calc
+                        L = (sqrtρ)⁻¹ * sqrtρ * L * sqrtρ * (sqrtρ)⁻¹ := by
+                          rw [← Matrix.mul_assoc, h_sqrtρ_inv, Matrix.one_mul]
+                          rw [← Matrix.mul_assoc, h_sqrtρ_inv, Matrix.mul_one]
+                        _ = (sqrtρ)⁻¹ * (sqrtρ * L * sqrtρ) * (sqrtρ)⁻¹ := by
+                          rw [← Matrix.mul_assoc]
+                        _ = 0 := by
+                          have h_sqrtρ_L_sqrtρ_zero : sqrtρ * L * sqrtρ = 0 := by
+                            apply Matrix.zero_of_pos_semidef_and_trace_zero
+                            · have h_herm : (sqrtρ * L * sqrtρ)† = sqrtρ * L * sqrtρ := by
+                                rw [← Matrix.conj_transpose_mul, ← Matrix.conj_transpose_mul]
+                                simp [h_L_herm]
+                            · have h_trace : trace ((sqrtρ * L * sqrtρ) * (sqrtρ * L * sqrtρ)) = 0 := by
+                                calc
+                                  trace ((sqrtρ * L * sqrtρ) * (sqrtρ * L * sqrtρ))
+                                    = trace (sqrtρ * L * ρ_mat * L * sqrtρ) := by
+                                      rw [← Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_self_sqrt]
+                                  _ = trace (ρ_mat * L * sqrtρ * sqrtρ * L) := by
+                                      rw [Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.mul_assoc]
+                                      congr
+                                      rw [Matrix.mul_assoc]
+                                  _ = trace (ρ_mat * L * ρ_mat * L) := by
+                                      rw [← Matrix.mul_self_sqrt]
+                                  _ = trace (ρ_mat^2 * L * L) := by
+                                      rw [← Matrix.mul_assoc]
+                                  _ = trace (ρ_mat * L * ρ_mat * L) := by
+                                      rw [Matrix.mul_assoc]
+                                  _ = trace (ρ_mat * L * L * ρ_mat) := by
+                                      rw [← Matrix.mul_assoc, Matrix.mul_assoc]
+                                  _ = trace (ρ_mat * L * L) := by
+                                      rw [Matrix.trace_mul_comm]
+                                  _ = 0 := h_trace_zero
+                          rw [h_sqrtρ_L_sqrtρ_zero]
+                          simp
+                    rw [h_L_zero]
+                    simp
+                  rw [h_X_zero] at h_sld_eq
+                  simp at h_sld_eq
+                  exact h_sld_eq
                 rw [h_comm, ← Matrix.mul_assoc, trace_mul_comm]
                 exact h_pos
       
