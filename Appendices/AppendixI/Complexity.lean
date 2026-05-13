@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixI/Complexity.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录I：量子计算
 文件: Complexity.lean
 内容: 计算复杂性基础
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base

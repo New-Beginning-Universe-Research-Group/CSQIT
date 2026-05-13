@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixC/Base.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录C：统一形式化框架
 文件: Base.lean
 内容: CSQIT.Base定义和基础性质
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base
@@ -46,21 +40,15 @@ def Base.toAxiomSystem (base : Base) : AxiomSystem :=
 
 lemma ColorClass.wellFounded {base : Base} :
     WellFounded (base.B.lt) := by
-  -- 良基性等价于不存在无限递减链
   apply WellFounded.intro
   intro a
-  -- 构造所有小于a的元素的集合
   let S := { x : base.A.M | base.B.lt x a }
   
-  -- 由公理B的局部有限性，S是有限集
   have h_finite : S.Finite := (base.B.localFinite a).1
   
-  -- 如果S为空，则a是极小元，自然良基
   if h : S.Nonempty then
-    -- 如果S非空，则存在极小元
     obtain ⟨m, hm_mem, hm_min⟩ := exists_minimal_element base.B S h h_finite
     
-    -- 由极小元性质，不存在x < m
     have h_no_lt : ∀ x, ¬ base.B.lt x m := by
       intro x hx
       have hx_mem : x ∈ S := by
@@ -68,10 +56,8 @@ lemma ColorClass.wellFounded {base : Base} :
         exact hx.1
       exact hm_min x hx_mem hx
     
-    -- 递归调用归纳假设
     exact WellFounded.apply (wellFounded_induction m) a
   else
-    -- S为空，a是极小元，直接应用良基性
     exact WellFounded.apply (WellFounded.intro (fun _ => WellFounded.intro (fun _ => by contradiction))) a
 
 /-! ### 基础性质 -/

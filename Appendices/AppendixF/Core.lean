@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixF/Core.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录F：信息几何与熵动力学
 文件: Core.lean
 内容: 态空间定义、光滑流形结构
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base
@@ -26,20 +20,16 @@ variable (A := base.A) (B := base.B) (C := base.C) (O := base.O)
 
 /-! ### 态空间定义 -/
 
-/-- 有限区域上的态空间 -/
 def StateSpace (R : Set A.M) (h_finite : R.Finite) : Type :=
   { ρ : O.Operations [] [] // ∀ x ∈ relsOfOp A ρ, x ∈ R }
 
 instance (R : Set A.M) (h_finite : R.Finite) : 
     Nonempty (StateSpace R h_finite) := by
-  -- 存在空操作
   let x := Classical.arbitrary A.M
   use ⟨O.id (x.toColorClass), by simp⟩
 
-/-- 态空间到密度算子的映射 -/
 def state_to_density (ρ : StateSpace R h_finite) : 
     { M : Matrix (Fin (dim ℋ_R)) (Fin (dim ℋ_R)) ℂ // M.isHermitian ∧ 0 ≤ M ∧ trace M = 1 } :=
-  -- 由GNS构造得到
   let H_R := gns_hilbert R
   let ψ := gns_vector ρ
   ⟨matrix_of_operator (ψ * ψ†), by simp⟩

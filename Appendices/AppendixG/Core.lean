@@ -1,25 +1,18 @@
-
----
-
-### 文件：`Appendices/AppendixG/Core.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录G：量子引力涌现
 文件: Core.lean
 内容: 局域平衡、熵力密度
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
-import CSQIT.Appendices.AppendixF.Finsler
-import CSQIT.Appendices.AppendixH.Export
+import CSQIT.Appendices.AppendixC.Theorems
+import CSQIT.Appendices.AppendixD.Core
 
 namespace CSQIT.Appendices.AppendixG
 
 open CSQIT.Appendices.AppendixC
-open CSQIT.Appendices.AppendixF
-open CSQIT.Appendices.AppendixH
+open CSQIT.Appendices.AppendixD
 
 variable {base : Base}
 variable (A := base.A) (B := base.B) (C := base.C) (O := base.O)

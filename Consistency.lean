@@ -9,14 +9,14 @@ CSQIT 10.4.5 + HDST 全局一致性检查
 import CSQIT.Base
 import CSQIT.Axioms
 import CSQIT.Unified
-import HDST.Core
+import CSQIT.Unified.Core.Hierarchy
 import Mathlib.Data.Bool.Basic
 import Mathlib.Logic.Consistency
 
 namespace CSQIT.Consistency
 
 open CSQIT
-open HDST.Core
+open CSQIT.Unified.Core
 
 /-! ### 第一部分：CSQIT独立一致性检查 -/
 
@@ -155,8 +155,8 @@ def check_holographic_consistency (model : Unified.UnifiedPhysicalTheory) : Bool
 def check_scale_consistency (model : Unified.UnifiedPhysicalTheory) : Bool :=
   let params := model.hdst_params
   ∀ n : ℤ,
-    let r_n := hierarchyScaleTable n
-    let r_n1 := hierarchyScaleTable (n+1)
+    let r_n := hierarchyScaleTable params n
+    let r_n1 := hierarchyScaleTable params (n+1)
     r_n < r_n1  -- 层级尺度递增
 
 /-- 执行融合一致性检查 -/

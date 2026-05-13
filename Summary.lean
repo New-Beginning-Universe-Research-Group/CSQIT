@@ -10,11 +10,11 @@ CSQIT 10.4.5 融合层级标度理论总结
 -/
 
 import CSQIT.Unified
-import CSQIT.Unified.Core.Axioms
-import CSQIT.Unified.Core.Hierarchy
-import CSQIT.Unified.Theorems.Associativity
-import CSQIT.Unified.Theorems.Cosmology
-import CSQIT.Unified.Theorems.Continuum
+import CSQIT.Core.Axioms
+import CSQIT.Core.Hierarchy
+import CSQIT.Theorems.Associativity
+import CSQIT.Theorems.Cosmology
+import CSQIT.Theorems.Continuum
 
 namespace CSQIT.Unified
 

@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixK/Symbols.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录K：符号表
 文件: Symbols.lean
 内容: 基本符号定义
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base

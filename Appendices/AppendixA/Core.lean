@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixA/Core.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录A：核心定义
 文件: Core.lean
 内容: 颜色类、操作、Operad的基础定义
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base
@@ -64,7 +58,6 @@ def ColorClass.carrier (c : ColorClass A) : Set A.M :=
 
 theorem color_class_nonempty (c : ColorClass A) : c.carrier.Nonempty := by
   obtain ⟨x⟩ : Nonempty A.M := by
-    -- 由连通性，存在至少一个关系元
     have ⟨x, _⟩ := A.connected (Classical.arbitrary A.M) (Classical.arbitrary A.M)
     exact ⟨x⟩
   use x.toColorClass

@@ -1,15 +1,9 @@
-
----
-
-### 文件：`Appendices/AppendixB/Core.lean`
-
-```lean
 /-
 CSQIT 10.4.5 附录B：核心定义
 文件: Core.lean
 内容: 关系元集合、极大/极小元定义
 版本: 10.4.5 (形式化验证完备版)
-验证状态: ✅ 100% 完成，无 sorry
+验证状态: ⚠️ 已从markdown格式转换为纯Lean代码
 -/
 
 import CSQIT.Base
@@ -57,87 +51,67 @@ lemma relsOfOp_nonempty : ∀ op : Operation A args res, (relsOfOp op).Nonempty 
 lemma exists_maximal_successor (S : Set A.M) (h_finite : S.Finite) (a : A.M) (ha : a ∈ S) :
     ∃ m ∈ S, B.le a m ∧ 
               ∀ x ∈ S, B.le a x → B.lt m x → False := by
-  -- 将S转换为Finset以便操作
   let S_finset := h_finite.toFinset
   have h_a_in : a ∈ S_finset := by simp [S_finset, ha]
   
-  -- 定义a的所有后继（包括a本身）
   let successors_finset := S_finset.filter (fun x => B.le a x)
   have h_succ_nonempty : successors_finset.Nonempty := 
     ⟨a, by simp [successors_finset, h_a_in, B.le_refl a]⟩
   
-  -- 定义“非极大”谓词
   let is_not_maximal (x : A.M) : Prop := ∃ y ∈ successors_finset, B.lt x y
   
-  -- 极大元集合 = successors_finset \ {x | is_not_maximal x}
   let maximal_set := successors_finset.filter (fun x => ¬ is_not_maximal x)
   
-  -- 证明 maximal_set 非空
   have h_max_nonempty : maximal_set.Nonempty := by
-    -- 对successors_finset进行归纳
     apply Finset.induction_on (motive := fun T => 
       T.Nonempty → (∀ x ∈ T, is_not_maximal x) → False) successors_finset
     
-    · -- 基础情况：空集不可能，因为successors_finset非空
-      intro h_empty
+    · intro h_empty
       exfalso
       exact h_succ_nonempty.not_subset (by simp)
     
-    · -- 归纳步骤：考虑 insert x T
-      intro x T hx_notin_T ih_T h_insert_nonempty
-      -- 情况1：x不是非极大的，即x是极大元
+    · intro x T hx_notin_T ih_T h_insert_nonempty
       by_cases hx_max : ¬ is_not_maximal x
-      · -- x本身是极大元，那么maximal_set非空（包含x）
-        have hx_in_maximal : x ∈ maximal_set := by
+      · have hx_in_maximal : x ∈ maximal_set := by
           simp [maximal_set, Finset.mem_filter]
           constructor
           · exact Finset.mem_insert_self x T
           · exact hx_max
         exact ⟨x, hx_in_maximal⟩
       
-      · -- 情况2：x是非极大的，则存在y > x，y必须在T中
-        push_neg at hx_max
+      · push_neg at hx_max
         obtain ⟨y, hy_in_T, hxy⟩ := hx_max
         have hy_in_insert : y ∈ insert x T := Finset.mem_insert_of_mem hy_in_T
         
-        -- 由归纳假设，T有极大元（因为T非空）
         have hT_nonempty : T.Nonempty := ⟨y, hy_in_T⟩
         obtain ⟨m, hm_in_T, hm_max_T⟩ := ih_T hT_nonempty
         
-        -- 证明m也是insert x T的极大元
         have hm_in_insert : m ∈ insert x T := Finset.mem_insert_of_mem hm_in_T
         have hm_is_max : ∀ z ∈ insert x T, B.lt m z → False := by
           intro z hz h_lt
           simp at hz
           cases hz with
           | inl hz_eq_x =>
-              -- z = x，需要证明m < x不可能
-              -- 由x < y和m是T的极大元，可知m和y的关系
               have h_not_m_lt_y : ¬ B.lt m y := 
                 hm_max_T y hy_in_T
               
-              -- 假设m < x，则由x < y得m < y（传递性），矛盾
               have h_contra : B.lt m y := 
                 B.lt_trans m x y h_lt hxy
               exact h_not_m_lt_y h_contra
           
           | inr hz_in_T =>
-              -- z ∈ T，直接使用hm_max_T
               exact hm_max_T z hz_in_T h_lt
         
-        -- 因此m在maximal_set中
         have hm_in_maximal : m ∈ maximal_set := by
           simp [maximal_set, Finset.mem_filter]
           constructor
           · exact hm_in_insert
-          · -- 证明m不是非极大的
-            intro h_contra
+          · intro h_contra
             obtain ⟨z, hz_in, hmz⟩ := h_contra
             exact hm_is_max z hz_in hmz
         
         exact ⟨m, hm_in_maximal⟩
   
-  -- 从非空的极大元集合中任选一个
   obtain ⟨m, hm_in_maximal⟩ := h_max_nonempty
   have hm_in_successors : m ∈ successors_finset := Finset.mem_of_mem_filter hm_in_maximal
   have hm_is_maximal : ∀ x ∈ successors_finset, B.lt m x → False := by
@@ -151,7 +125,6 @@ lemma exists_maximal_successor (S : Set A.M) (h_finite : S.Finite) (a : A.M) (ha
       exact h_x_not_maximal
     contradiction
   
-  -- 完成证明
   use m
   constructor
   · exact Set.mem_of_mem_toFinset (Finset.mem_of_mem_filter hm_in_successors)
@@ -244,7 +217,6 @@ theorem maxRelOfOp_eq (op : Operation A args res) (m : A.M)
   have ⟨m', hm'_mem, hm'_max⟩ := Classical.choose_spec (exists_maximal_element (relsOfOp op) 
     (relsOfOp_nonempty op) (relsOfOp_finite op))
   
-  -- 证明 m' ≤ m
   have h_m'_le_m : B.le m' m := by
     by_contra h_not
     have h_lt : B.lt m m' := by
@@ -260,7 +232,6 @@ theorem maxRelOfOp_eq (op : Operation A args res) (m : A.M)
     | inl h_eq => exact h_eq ▸ B.le_refl m
     | inr h_lt' => exact B.lt.le h_lt'
   
-  -- 证明 m ≤ m'
   have h_m_le_m' : B.le m m' := by
     by_contra h_not
     have h_lt : B.lt m' m := by
@@ -274,7 +245,6 @@ theorem maxRelOfOp_eq (op : Operation A args res) (m : A.M)
           exact B.lt_irrefl m' h_not
     exact hm'_max m h_mem h_lt
   
-  -- 由反对称性，m = m'
   have h_eq : m = m' := B.le_antisymm m m' h_m_le_m' h_m'_le_m
   have : maxRelOfOp op = m' := rfl
   rw [this, h_eq]

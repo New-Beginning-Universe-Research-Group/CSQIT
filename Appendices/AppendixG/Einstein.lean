@@ -189,7 +189,7 @@ theorem einstein_field_equations (M : Manifold) (g : RiemannianMetric M) :
   have h_temp : ∀ x n, T = κ/(2π) = a/(2π) := by
     intro x n
     let a := acceleration_of_rindler x n
-    have h_unruh : T = a / (2 * π) := unruh_temperature a
+    have h_unruh : T = unruh_temperature a := rfl
     exact h_unruh
   
   have h_eq : ∀ x n, ∫ (R_μν n^μ n^ν - 1/2 R g_μν n^μ n^ν + Λ g_μν n^μ n^ν - 8πG T_μν n^μ n^ν) δλ = 0 := by

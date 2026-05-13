@@ -6,7 +6,7 @@ package CSQIT where
   keywords := ["physics", "quantum", "gravity", "operad", "information"]
   homepage := "https://github.com/New-Beginning-Universe-Research-Group/CSQIT"
 
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "v4.29.1"
+require mathlib from "/home/user/.mathlib4/mathlib4-4.29.1"
 
 @[default_target]
 lean_lib CSQIT where
