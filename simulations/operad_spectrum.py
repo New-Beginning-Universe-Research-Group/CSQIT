@@ -7,11 +7,16 @@ CSQIT 10.4.5 Operad谱特征值计算
 
 import numpy as np
 import json
-from typing import List, Tuple, Dict
+import os
+import signal
+import sys
+from typing import List, Tuple, Dict, Optional
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
 from scipy import sparse
 from scipy.sparse.linalg import eigsh
+from tqdm import tqdm
+import time
 
 @dataclass
 class ColoredOperad:
@@ -112,26 +117,107 @@ def compute_spectrum(operad: ColoredOperad) -> Dict:
         'chi': float(np.max(eigenvalues)),
     }
 
-def monte_carlo_spectrum(n_samples: int = 10000, seed: int = 42) -> Dict:
-    """蒙特卡洛采样计算谱的统计分布"""
-    np.random.seed(seed)
+class PauseManager:
+    """管理暂停/恢复功能"""
+    def __init__(self, checkpoint_file: str = 'mc_checkpoint.json'):
+        self.paused = False
+        self.checkpoint_file = checkpoint_file
+        self.terminate = False
+        
+        signal.signal(signal.SIGINT, self._handle_signal)
+        signal.signal(signal.SIGTERM, self._handle_signal)
+    
+    def _handle_signal(self, signum, frame):
+        if self.paused:
+            print("\n▶️ 恢复执行...")
+            self.paused = False
+        else:
+            print("\n⏸️ 已暂停！按 Ctrl+C 继续，或等待自动保存检查点...")
+            self.paused = True
+            while self.paused and not self.terminate:
+                time.sleep(0.5)
+    
+    def save_checkpoint(self, data: Dict):
+        """保存检查点"""
+        with open(self.checkpoint_file, 'w') as f:
+            json.dump(data, f)
+        print(f"💾 检查点已保存至 {self.checkpoint_file}")
+    
+    def load_checkpoint(self) -> Optional[Dict]:
+        """加载检查点"""
+        if os.path.exists(self.checkpoint_file):
+            with open(self.checkpoint_file, 'r') as f:
+                return json.load(f)
+        return None
+    
+    def clear_checkpoint(self):
+        """清除检查点"""
+        if os.path.exists(self.checkpoint_file):
+            os.remove(self.checkpoint_file)
+
+
+def monte_carlo_spectrum(n_samples: int = 10000, seed: int = 42, 
+                         use_checkpoint: bool = True) -> Dict:
+    """蒙特卡洛采样计算谱的统计分布（支持暂停/恢复和进度显示）"""
+    pause_manager = PauseManager()
+    
+    start_idx = 0
+    chi_samples = []
+    rng_state = None
+    
+    if use_checkpoint:
+        checkpoint = pause_manager.load_checkpoint()
+        if checkpoint:
+            print(f"📂 找到检查点，已完成 {len(checkpoint['samples'])} 个样本")
+            resume = input("是否从检查点恢复？(y/n): ").strip().lower()
+            if resume == 'y':
+                chi_samples = checkpoint['samples']
+                start_idx = len(chi_samples)
+                rng_state = checkpoint.get('rng_state')
+                if rng_state:
+                    np.random.set_state(tuple(rng_state))
+    
+    if rng_state is None:
+        np.random.seed(seed)
     
     base_operad = construct_standard_model_operad()
     base_adj = base_operad.to_adjacency_matrix()
     
-    chi_samples = []
+    print(f"\n🎯 开始蒙特卡洛采样（共 {n_samples} 个样本）")
+    print("💡 提示：按 Ctrl+C 可以暂停/恢复")
     
-    for _ in range(n_samples):
-        noise = np.random.normal(0, 0.01, base_adj.shape)
-        perturbed_adj = base_adj * (1 + noise)
-        perturbed_adj = np.maximum(perturbed_adj, 0)
-        
-        D = np.diag(perturbed_adj.sum(axis=1))
-        D_inv_sqrt = np.diag(1.0 / np.sqrt(np.maximum(D.diagonal(), 1e-10)))
-        L_norm = np.eye(len(perturbed_adj)) - D_inv_sqrt @ perturbed_adj @ D_inv_sqrt
-        
-        eigvals = np.linalg.eigvalsh(L_norm)
-        chi_samples.append(float(np.max(eigvals)))
+    with tqdm(total=n_samples, initial=start_idx, 
+              desc="采样进度", unit="样本") as pbar:
+        for i in range(start_idx, n_samples):
+            if pause_manager.paused:
+                checkpoint_data = {
+                    'samples': chi_samples,
+                    'rng_state': list(np.random.get_state()),
+                    'n_samples': n_samples,
+                    'current_idx': i
+                }
+                pause_manager.save_checkpoint(checkpoint_data)
+            
+            noise = np.random.normal(0, 0.01, base_adj.shape)
+            perturbed_adj = base_adj * (1 + noise)
+            perturbed_adj = np.maximum(perturbed_adj, 0)
+            
+            D = np.diag(perturbed_adj.sum(axis=1))
+            D_inv_sqrt = np.diag(1.0 / np.sqrt(np.maximum(D.diagonal(), 1e-10)))
+            L_norm = np.eye(len(perturbed_adj)) - D_inv_sqrt @ perturbed_adj @ D_inv_sqrt
+            
+            eigvals = np.linalg.eigvalsh(L_norm)
+            chi_samples.append(float(np.max(eigvals)))
+            
+            pbar.update(1)
+            
+            if i % 1000 == 0 and i > 0:
+                current_mean = np.mean(chi_samples)
+                current_std = np.std(chi_samples)
+                pbar.set_postfix({'当前均值': f'{current_mean:.3f}', 
+                                  '当前标准差': f'{current_std:.3f}'})
+    
+    pause_manager.clear_checkpoint()
     
     return {
         'mean': float(np.mean(chi_samples)),
@@ -141,6 +227,7 @@ def monte_carlo_spectrum(n_samples: int = 10000, seed: int = 42) -> Dict:
         'q2.5': float(np.percentile(chi_samples, 2.5)),
         'q97.5': float(np.percentile(chi_samples, 97.5)),
         'samples': chi_samples[:1000],
+        'total_samples': len(chi_samples),
     }
 
 def plot_spectrum(spectrum: Dict, mc_results: Dict):
