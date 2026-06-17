@@ -1,16 +1,11 @@
-
----
-
-#### `.gitignore`
-```gitignore
 # Lean
 build/
+.lake/
 lake-packages/
 lakefile.olean
 *.olean
 *.ilean
 *.trace
-._lake/
 
 # Python
 __pycache__/
@@ -23,9 +18,7 @@ venv/
 .venv
 *.egg-info/
 dist/
-build/
 pip-log.txt
-pip-delete-this-directory.txt
 
 # IDE
 .vscode/
@@ -41,16 +34,35 @@ pip-delete-this-directory.txt
 Thumbs.db
 desktop.ini
 
-# Data (if any)
-*.csv
-*.h5
-*.nc
-*.npy
-data/
-temp/
+# Archive & History (exclude from Git)
+_archive/
+_backup/
+_scripts/
+_reports/
+*.tar.gz
 
-# Simulation outputs
-*.png
-*.pdf
-*.json
-!operad_spectrum.json  # Keep the final result
+# Project-specific backup files
+CSQIT_*.txt
+*_Backup_*/
+*backup*.md
+_backup/
+
+# Temporary files
+*.ps1
+*.sh
+*.py
+cat
+echo
+encode_*.py
+decode_*.py
+fix_*.py
+transfer_wsl*.py
+export_backup.py
+lakefile*.lean
+test_real*.lean
+theorems.*
+WORKFLOW_README.md
+lake-manifest.json
+
+# Git
+.git/
