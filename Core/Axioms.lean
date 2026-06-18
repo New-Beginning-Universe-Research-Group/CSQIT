@@ -25,6 +25,7 @@ CSQIT 10.4.5 完整公理体系 - 教科书典范级
 - AxiomG: 量子引力耦合
 - AxiomH: 标准模型嵌入
 - AxiomI: 信息因果性（含因果信息单调性）
+- AxiomJ: 动力学编织公理（规则作用更新因果序）
 
 **说明**: AxiomE 已移除，其内容可由 AxiomA 推导：
   - AxiomA.compose_output 对应 AxiomE.output_compose
@@ -445,6 +446,60 @@ class AxiomI (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
     entropy {z | B.le z x} ≤ entropy {z | B.le z y}
 
 /-! ============================================================================
+   公理 J: 动力学编织（从静态结构到动态宇宙）
+   ============================================================================ -/
+
+/--
+================================================================================
+公理 J: AxiomJ (M C : Type*) [AxiomA M C] [AxiomB M C]
+
+**本体论跃迁**：
+  原 AxiomA-D-I 构成了一个"静态"的逻辑宇宙——
+  因果序 lt 是预先给定的、凝固的、不可变的。
+  
+  **问题**：在广义相对论中，因果结构本身就是动力学变量（度规）。
+  编织 compose 改变规则，但不改变 lt 本身。
+  这意味着"时空"是凝固在琥珀中的化石，而非流淌的河流。
+
+**解决方案**：
+  AxiomJ 引入 **演化映射** evolve，使规则可以作用于关系元，
+  产生新的事件，并更新因果层级。
+  这将 Theory 从静态结构升级为**动态系统**，
+  直接对应量子力学中的酉演化。
+
+**数学结构**：
+  evolve : C → M → M   -- 规则作用于关系元，产生新的事件
+  causal_update : ∀ (α : C) (x : M), B.lt x (evolve α x)
+                       -- 操作必然走向未来
+  comp_evolve : ∀ α β x, evolve (A.compose α β) x
+                            = evolve β (evolve α x)
+                       -- 时序复合：先 α 后 β
+
+**物理诠释**：
+  1. **宇宙的呼吸**：每个规则的执行都是一次"事件的诞生"
+     evolve α x 表示在关系元 x 处执行规则 α，产生新的事件
+  2. **时间的方向性**：causal_update 保证演化必然严格走向未来
+     x < evolve α x，热力学箭头被编码在公理中
+  3. **组合的一致性**：comp_evolve 保证复合规则的演化
+     与分步演化等价——这是量子力学酉演化的离散版本
+  4. **与 AxiomD 的深度协同**：
+     AxiomD 断言因果裂缝不存在（output α < output β ⇒ ∃ γ, compose α γ = β）
+     AxiomJ 赋予"因果"以生命：每一次编织都是一次时间的跃迁
+     ⇒ 两个公理共同刻画了一个**活着的、闭合的、演化的离散宇宙**
+
+**证明程度**: ✅ 公理定义完整（动力学闭环）
+================================================================================
+-/
+class AxiomJ (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
+  /-- **演化映射**：规则作用于关系元，产生新的事件 -/
+  evolve : C → M → M
+  /-- **因果更新**：每次演化都严格走向未来 —— 时间箭头内蕴于公理 -/
+  causal_update : ∀ (α : C) (x : M), B.lt x (evolve α x)
+  /-- **时序复合**：复合规则的演化与分步演化等价 —— 酉演化的离散版本 -/
+  comp_evolve : ∀ (α β : C) (x : M),
+    evolve (A.compose α β) x = evolve β (evolve α x)
+
+/-! ============================================================================
    完整理论结构: Theory
    ============================================================================ -/
 
@@ -452,17 +507,19 @@ class AxiomI (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
 ================================================================================
 定义: 完整 CSQIT 理论 (Theory M C)
 
-**物理意义**:
-  整合全部公理的完整时空量子信息理论。
-  一个 Theory 实例即 CSQIT 理论的一个具体模型。
+**物理意义** (v2: 动力学宇宙):
+  从 AxiomA 到 AxiomJ 的完整整合，定义了一个
+  **活着的、演化的、信息因果的、可编织的离散时空量子理论**。
+  
+  AxiomD (编织闭合性) + AxiomJ (动力学编织)
+  共同构成了"宇宙在 Lean 中的自指"的核心引擎。
 
-**数学结构**:
+**数学结构** (更新):
   Σ (A : AxiomA M C) (B : AxiomB M C) (D : AxiomD M C)
-    (C : AxiomC M C) (F : AxiomF M C) ..., (I : AxiomI M C)
+    (C : AxiomC M C) (F : AxiomF M C) (G : AxiomG M C)
+    (H : AxiomH M C) (I : AxiomI M C) (J : AxiomJ M C)
 
-**说明**: AxiomE 未包含在 Theory 结构中，因为其内容可由 AxiomA 推导
-
-**证明程度**: ✅ 定义完整
+**证明程度**: ✅ 定义完整（动力学闭环）
 ================================================================================
 -/
 structure Theory (M C : Type*) where
@@ -474,5 +531,6 @@ structure Theory (M C : Type*) where
   toAxiomG : AxiomG M C
   toAxiomH : AxiomH M C
   toAxiomI : AxiomI M C
+  toAxiomJ : AxiomJ M C
 
 end CSQIT

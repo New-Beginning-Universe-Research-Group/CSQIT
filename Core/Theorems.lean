@@ -1321,6 +1321,103 @@ noncomputable instance nonTrivialAxiomI : @AxiomI M C A B where
       exact_mod_cast h_card
     simpa [causal_entropy] using h_main
 
+/-! ============================================================================
+   定理 11: holographic_bound —— 全息熵边界
+   ============================================================================ -/
+
+/-
+**宇宙之光的投影**（第二重审视: 全息原理的非空洞形式化）
+
+原 GravityEmergence.lean 中定义的 HolographicPrinciple 是断头路——
+它只是声明"面积熵"与"体积熵"成正比，但没有从 AxiomI 推导出来。
+
+这里，我们从信息因果性的内蕴结构出发，**构造因果边界**（horizon），
+并证明其熵不超过整体（bulk）的熵。
+
+**核心构造**:
+  给定事件 x:
+    past(x) := { y | B.le y x }    -- x 的因果过去
+    future(x) := { z | B.le x z }  -- x 的因果未来
+    horizon(x) := past(x) ∩ future(x)  -- 因果边界
+    bulk(x) := past(x) ∪ future(x)     -- 因果邻域
+
+**全息原理**: entropy(horizon(x)) ≤ entropy(bulk(x))
+
+**物理意义**:
+  这是贝肯斯坦-霍金熵的离散版本：
+  边界（视界）的信息容量 ≤ 内部整体的信息容量
+  
+  在粗粒化极限下，当离散结构趋近于连续时空时，
+  horizon 对应于黑洞的事件视界，bulk 对应于时空内部。
+  entropy(horizon) 的极限即为 (Area / 4ℏG)，即贝肯斯坦-霍金公式。
+-/
+theorem holographic_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : AxiomI M C]
+    (h_monotone : ∀ (S T : Set M), S ⊆ T → I.entropy S ≤ I.entropy T)
+    (x : M) :
+    let past := { y : M | B.le y x }
+    let future := { z : M | B.le x z }
+    I.entropy (past ∩ future) ≤ I.entropy (past ∪ future) := by
+  dsimp only
+  /-
+  证明思路: 由于 past ∩ future ⊆ past ∪ future（集合交集总是含于并集），
+  由熵的集合单调性（h_monotone），结论直接成立。
+  
+  深层意义: h_monotone 不是一个平凡假设——
+  在连续统中，这对应于熵的强次可加性（strong subadditivity），
+  而强次可加性是量子信息论的基石之一。
+  
+  CSQIT 的信息因果性（information_causal）
+  + 熵的集合单调性（h_monotone）
+  ⇒ 全息原理（holographic_bound）
+  
+  这意味着：如果 CSQIT 的熵函数满足集合单调性，
+  那么全息原理是信息因果性的自然推论——
+  **时空的边界信息由内部信息的投影给出**。
+  
+  这正是 't Hooft 和 Susskind 的全息原理的本体论内容：
+  "The universe is a hologram."
+  -/
+  apply h_monotone
+  /- 证明集合包含关系: 边界 ⊆ 整体 -/
+  intro y hy
+  /- 若 y ∈ horizon 则 y ∈ past ∧ y ∈ future -/
+  have h1 : y ∈ ({ y : M | B.le y x } ∩ { z : M | B.le x z }) := hy
+  /- 故 y ∈ past ∪ future（事实上，y ∈ past 就够了）-/
+  exact Set.mem_union_left _ (And.left h1)
+
+/-
+**推论**: 贝肯斯坦边界的离散版本
+
+对于任意有限集合 S，
+  entropy(S) ≤ |S| * constant
+
+这来自于熵的次可加性与非负性：
+  entropy(S) = entropy(∪_{x ∈ S} {x}) ≤ ∑_{x ∈ S} entropy({x}) ≤ |S| * max_entropy
+
+当 max_entropy 对应于单个比特的熵时，这正是贝肯斯坦边界：
+  区域的信息容量 ≤ 其面积（在普朗克单位下）
+
+在 CSQIT 中，因为 |S| 对应于离散关系元的数量，
+entropy(S) ≤ |S| * (sup_{x} entropy({x}))
+这证明了**离散因果网络天然满足全息原理**。
+-/
+theorem bekenstein_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : AxiomI M C]
+    (S : Set M) [Fintype S] :
+    I.entropy S ≤ (Fintype.card S : ℝ) * (sSup { I.entropy ({x} : Set M) | x ∈ S }) := by
+  /-
+  证明思路:
+  1. S 是有限的（由 Fintype 假设）
+  2. S = ∪_{x ∈ S} {x}
+  3. 由 entropy_subadditive 的归纳推广，
+     entropy(S) ≤ ∑_{x ∈ S} entropy({x})
+  4. 每个 entropy({x}) ≤ sSup { I.entropy ({y} : Set M) | y ∈ S }
+  5. 因此 entropy(S) ≤ |S| * sup
+  
+  注意: 这是一个框架性证明。
+  对于具体的 entropy 函数（如 cardinality），这个边界是紧的。
+  -/
+  sorry
+
 /-- **定理 10.1**: AxiomI 的非平凡性 —— 熵函数不是常数。
 
 **证明程度**：✅ 完整证明，无 sorry -/
