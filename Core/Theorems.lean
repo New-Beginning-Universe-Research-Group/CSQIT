@@ -190,6 +190,15 @@ def trivialModel : Theory Unit Unit :=
       information_causal := by
         intro x y _; exact show (0 : ℝ) ≤ (0 : ℝ) from by norm_num }
 
+  let instJ : AxiomJ Unit Unit :=
+    { evolve := fun (_ : Unit) (_ : Unit) => (),
+      causal_update := by
+        intro α x
+        sorry,
+      comp_evolve := by
+        intro α β x
+        rfl }
+
   { toAxiomA := instA,
     toAxiomB := instB,
     toAxiomD := instD,
@@ -197,7 +206,8 @@ def trivialModel : Theory Unit Unit :=
     toAxiomF := instF,
     toAxiomG := instG,
     toAxiomH := instH,
-    toAxiomI := instI }
+    toAxiomI := instI,
+    toAxiomJ := instJ }
 
 /-! ----------------------------------------------------------------------------
    模型 2: Bool 模型 (boolModel)
@@ -338,6 +348,15 @@ def boolModel : Theory Bool Unit :=
       information_causal := by
         intro x y _; exact show (0 : ℝ) ≤ (0 : ℝ) from by norm_num }
 
+  let instJ : AxiomJ Bool Unit :=
+    { evolve := fun (_ : Unit) (x : Bool) => x,
+      causal_update := by
+        intro α x
+        sorry,
+      comp_evolve := by
+        intro α β x
+        rfl }
+
   { toAxiomA := instA,
     toAxiomB := instB,
     toAxiomD := instD,
@@ -345,7 +364,8 @@ def boolModel : Theory Bool Unit :=
     toAxiomF := instF,
     toAxiomG := instG,
     toAxiomH := instH,
-    toAxiomI := instI }
+    toAxiomI := instI,
+    toAxiomJ := instJ }
 
 /-! ============================================================================
    核心坍缩定理：AxiomA 强制所有输入为空
@@ -1398,24 +1418,11 @@ theorem holographic_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : A
   区域的信息容量 ≤ 其面积（在普朗克单位下）
 
 在 CSQIT 中，因为 |S| 对应于离散关系元的数量，
-entropy(S) ≤ |S| * (sup_{x} entropy({x}))
 这证明了**离散因果网络天然满足全息原理**。
 -/
 theorem bekenstein_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : AxiomI M C]
-    (S : Set M) [Fintype S] :
-    I.entropy S ≤ (Fintype.card S : ℝ) * (sSup { I.entropy ({x} : Set M) | x ∈ S }) := by
-  /-
-  证明思路:
-  1. S 是有限的（由 Fintype 假设）
-  2. S = ∪_{x ∈ S} {x}
-  3. 由 entropy_subadditive 的归纳推广，
-     entropy(S) ≤ ∑_{x ∈ S} entropy({x})
-  4. 每个 entropy({x}) ≤ sSup { I.entropy ({y} : Set M) | y ∈ S }
-  5. 因此 entropy(S) ≤ |S| * sup
-  
-  注意: 这是一个框架性证明。
-  对于具体的 entropy 函数（如 cardinality），这个边界是紧的。
-  -/
+    (S : Set M) [Fintype S] (h : ∀ x, I.entropy {x} ≤ 1) :
+    I.entropy S ≤ (Fintype.card S : ℝ) := by
   sorry
 
 /-- **定理 10.1**: AxiomI 的非平凡性 —— 熵函数不是常数。

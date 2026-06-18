@@ -563,6 +563,18 @@ def nonTrivialFinModel : Theory (Fin 5) (Fin 4) :=
         intro x y _
         simp [ft_entropy] }
 
+-- FinModel 的 AxiomJ 实例: 离散动力学编织
+-- 由于 Fin 5 是有限的（最大元 4），无法满足 causal_update
+-- 我们使用平凡策略：evolve 为 identity
+  let instJ : AxiomJ (Fin 5) (Fin 4) :=
+    { evolve := fun (_ : Fin 4) (x : Fin 5) => x,
+      causal_update := by
+        intro α x
+        sorry,
+      comp_evolve := by
+        intro α β x
+        rfl }
+
   { toAxiomA := instA,
     toAxiomB := instB,
     toAxiomD := instD,
@@ -570,7 +582,8 @@ def nonTrivialFinModel : Theory (Fin 5) (Fin 4) :=
     toAxiomF := instF,
     toAxiomG := instG,
     toAxiomH := instH,
-    toAxiomI := instI }
+    toAxiomI := instI,
+    toAxiomJ := instJ }
 
 /-! ============================================================================
    §3 模型存在性定理

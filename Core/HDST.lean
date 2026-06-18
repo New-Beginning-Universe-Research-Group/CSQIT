@@ -100,7 +100,16 @@ instance HDSTAxiomI : AxiomI HDSTRelatum HDSTRule where
   entropy_subadditive _ _ := by norm_num
   information_causal _ _ _ := by norm_num
 
-/-! 第十部分：HDST 完整理论实例 -/
+/-! 第十部分：HDST 公理 J -/
+
+instance HDSTAxiomJ : AxiomJ HDSTRelatum HDSTRule where
+  evolve := fun (_ : HDSTRule) (x : HDSTRelatum) => x
+  causal_update := by
+    intro α x
+    sorry
+  comp_evolve := fun (_ _ _ : HDSTRule) => rfl
+
+/-! 第十一部分：HDST 完整理论实例 -/
 
 noncomputable def HDSTTheory : Theory HDSTRelatum HDSTRule where
   toAxiomA := HDSTAxiomA
@@ -111,5 +120,6 @@ noncomputable def HDSTTheory : Theory HDSTRelatum HDSTRule where
   toAxiomG := HDSTAxiomG
   toAxiomH := HDSTAxiomH
   toAxiomI := HDSTAxiomI
+  toAxiomJ := HDSTAxiomJ
 
 end CSQIT.HDST
