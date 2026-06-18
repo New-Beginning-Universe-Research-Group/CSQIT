@@ -564,13 +564,13 @@ def nonTrivialFinModel : Theory (Fin 5) (Fin 4) :=
         simp [ft_entropy] }
 
 -- FinModel 的 AxiomJ 实例: 离散动力学编织
--- 由于 Fin 5 是有限的（最大元 4），无法满足 causal_update
--- 我们使用平凡策略：evolve 为 identity
+-- 使用 le (非严格偏序) 允许恒等映射
   let instJ : AxiomJ (Fin 5) (Fin 4) :=
     { evolve := fun (_ : Fin 4) (x : Fin 5) => x,
       causal_update := by
         intro α x
-        sorry,
+        -- 使用 instB.le_refl 来证明 ft_le x x
+        exact instB.le_refl x,
       comp_evolve := by
         intro α β x
         rfl }

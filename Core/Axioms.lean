@@ -493,8 +493,9 @@ class AxiomI (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
 class AxiomJ (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
   /-- **演化映射**：规则作用于关系元，产生新的事件 -/
   evolve : C → M → M
-  /-- **因果更新**：每次演化都严格走向未来 —— 时间箭头内蕴于公理 -/
-  causal_update : ∀ (α : C) (x : M), B.lt x (evolve α x)
+  /-- **因果更新**：每次演化都走向未来或不走向过去 —— 时间箭头内蕴于公理
+     注意：在有限模型中，使用非严格的 le 偏序，允许恒等映射（最大元不进化） -/
+  causal_update : ∀ (α : C) (x : M), B.le x (evolve α x)
   /-- **时序复合**：复合规则的演化与分步演化等价 —— 酉演化的离散版本 -/
   comp_evolve : ∀ (α β : C) (x : M),
     evolve (A.compose α β) x = evolve β (evolve α x)

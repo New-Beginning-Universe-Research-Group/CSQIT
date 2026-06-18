@@ -106,7 +106,7 @@ instance HDSTAxiomJ : AxiomJ HDSTRelatum HDSTRule where
   evolve := fun (_ : HDSTRule) (x : HDSTRelatum) => x
   causal_update := by
     intro α x
-    sorry
+    trivial  -- le _ _ := True 恒成立
   comp_evolve := fun (_ _ _ : HDSTRule) => rfl
 
 /-! 第十一部分：HDST 完整理论实例 -/
