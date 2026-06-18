@@ -326,17 +326,73 @@ theorem axiomD_independent_of_AB :
 
 /-
 ================================================================================
-开放问题: axiomD_independent_of_ABC
+开放问题: axiomD_independent_of_ABC 的详细分析
 ================================================================================
 
-要证明 AxiomD 独立于 AxiomA + AxiomB + AxiomC，需要构造一个同时满足 A+B+C
-但仍不满足 D 的模型。这需要：
+**问题**: 证明 AxiomD 独立于 AxiomA + AxiomB + AxiomC
 
-1. 为上述反模型添加 AxiomC 实例（例如 amplitude ≡ 1）
-2. 证明 amplitude 满足 norm_one, comp_rule, amplitude_injective
-3. 验证 AxiomD 仍然被违反
+**核心挑战**: 为反模型 (TestM, TestC) 构造一个满足 AxiomC 的 amplitude 函数
 
-这是一个重要的后续工作，将关闭核心理论中的最后一个逻辑缺口。
+**分析**:
+
+1. **为何简单的 amplitude ≡ 1 不可行**:
+   - amplitude_injective 要求 amplitude 是单射的
+   - 但 TestC 有 3 个元素 (a, b, c)
+   - amplitude ≡ 1 对所有规则都返回 1，不是单射
+
+2. **尝试使用单位根作为 amplitude**:
+   ```
+   amplitude(a) = 1, amplitude(b) = i, amplitude(c) = -1
+   ```
+   这满足 norm_one (|z|² = 1) 且是单射的。
+   
+   但 comp_rule 要求: amplitude(compose α β) = amplitude α * amplitude β
+   
+   检查我们的 compose 函数:
+   - compose(a, a) = a → amplitude(compose(a,a)) = amplitude(a) = 1
+     而 amplitude(a) * amplitude(a) = 1 * 1 = 1 ✓
+   
+   - compose(a, c) = b → amplitude(compose(a,c)) = amplitude(b) = i
+     而 amplitude(a) * amplitude(c) = 1 * (-1) = -1 ≠ i ✗
+   
+   **失败**: 单位根方案违反 comp_rule
+
+3. **为何 comp_rule 如此困难**:
+   我们的 compose 函数定义为:
+   ```
+   compose(_, a) = a
+   compose(_, b) = b
+   compose(_, c) = b  ← 关键: 无论 α 是什么，都返回 b
+   ```
+   
+   这种"忽略第一个参数"的设计，使得 amplitude 必须满足:
+   amplitude(b) = amplitude(α) * amplitude(c) 对所有 α
+   
+   这要求 amplitude(α) 对所有 α 都相同，或 amplitude(c) = 0（违反 norm_one）
+   
+4. **可能的解决方向**:
+   
+   a) **重新设计 compose 函数**: 构造一个满足同态性的群运算
+      - 例如: 将 TestC 定义为 Z/3Z 模 3 加法
+      - 但这会破坏 "compose(a, c) = b" 这个违反 AxiomD 的关键性质
+   
+   b) **构造新的反模型**: 使用更复杂的有限群结构
+      - 需要同时满足:
+        * compose 是群运算（满足同态性）
+        * compose 的像是真子集（违反 AxiomD）
+        * amplitude 可以定义为单位根映射
+   
+   c) **接受作为开放问题**: 
+      当前的独立性证明 (AxiomD 独立于 A+B) 已经足够强大。
+      AxiomD 在 A+B+C 下的独立性可以留作未来工作。
+
+**结论**: 寻找满足所有条件的 amplitude 函数是一个高度非平凡的问题。
+将 AxiomD 独立于 A+B+C 的证明保持为开放问题，是当前最诚实的做法。
+这为未来的研究者提供了明确的方向。
+
+**参考价值**: 
+- 如果成功，将完全关闭公理独立性的最后一个缺口
+- 即使不成功，失败的尝试也能帮助我们理解 AxiomC 的深刻含义
 ================================================================================
 -/
 def axiomD_independent_of_ABC : Prop :=
@@ -344,5 +400,11 @@ def axiomD_independent_of_ABC : Prop :=
     ∃ (α β : C),
       (instB.lt (instA.output α) (instA.output β)) ∧
       (¬ ∃ (γ : C), instA.compose α γ = β)
+
+/-
+**备注**: 上述命题目前尚未证明。它需要构造一个同时满足 AxiomA, AxiomB, AxiomC
+但仍违反 AxiomD 的模型。根据上述分析，这需要仔细设计 compose 函数和 amplitude 函数，
+使得它们满足 AxiomC 的同态性要求，但 compose 的像不覆盖整个 C。
+-/
 
 end CSQIT.AxiomD_Independence
