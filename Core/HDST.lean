@@ -64,7 +64,9 @@ instance HDSTAxiomC : AxiomC HDSTRelatum HDSTRule where
 /-! 第五部分：HDST 公理 D -/
 
 instance HDSTAxiomD : AxiomD HDSTRelatum HDSTRule where
-  op_weaving _ _ h _ := by contradiction
+  op_weaving _ _ hlt := by
+    -- HDST 中 lt 恒为 False，故 hlt : False，可直接 contradiction
+    cases hlt
 
 /-! 第六部分：HDST 公理 F -/
 

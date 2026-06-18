@@ -39,7 +39,7 @@ theorem amplitude_ne_zero {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
   have h_norm : Complex.normSq (Cx.amplitude α) = 1 := Cx.norm_one α
   rw [h_zero] at h_norm
   have h_absurd : (0 : ℝ) = 1 := by
-    simp only [Complex.normSq, Complex.ofReal_zero, mul_zero, add_zero] at h_norm
+    simp only [Complex.normSq_zero, add_zero] at h_norm
     exact h_norm
   exact absurd h_absurd (by norm_num)
 

@@ -42,6 +42,7 @@ import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Linarith
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -56,8 +57,8 @@ open CSQIT
    §1 辅助定义与引理（关于 4 次单位根和 Fin 4 加法）
    ============================================================================ -/
 
-private lemma I_pow_0 : (Complex.I ^ (0 : ℕ) : ℂ) = 1 := by simp
-private lemma I_pow_1 : (Complex.I ^ (1 : ℕ) : ℂ) = Complex.I := by simp
+private lemma I_pow_0 : Complex.I ^ (0 : ℕ) = (1 : ℂ) := by simp
+private lemma I_pow_1 : Complex.I ^ (1 : ℕ) = Complex.I := by simp
 private lemma I_pow_2 : Complex.I ^ 2 = -1 := by
   simp [pow_two, Complex.I_mul_I] <;> ring
 private lemma I_pow_3 : Complex.I ^ 3 = -Complex.I := by
@@ -68,6 +69,166 @@ private lemma I_pow_4 : Complex.I ^ 4 = 1 := by
   have h : Complex.I ^ 4 = Complex.I ^ 3 * Complex.I := by
     simp [pow_succ] <;> ring
   rw [h, I_pow_3] <;> simp <;> ring
+
+/-- 辅助引理：证明 I^n 在 {0,1,2,3} 时两两不相等
+
+这些具体的不等式用于 h_nm 引理。-/
+private lemma I_neq_1 : Complex.I ≠ (1 : ℂ) := by
+  intro h; have := congr_arg (fun z : ℂ => z.re) h; simp at this
+
+private lemma I_neq_neg1 : Complex.I ≠ (-1 : ℂ) := by
+  intro h; have := congr_arg (fun z : ℂ => z.im) h; simp at this
+
+private lemma I_neq_negI : Complex.I ≠ (-Complex.I : ℂ) := by
+  intro h
+  have h1 : Complex.I.im = (-Complex.I).im := congr_arg Complex.im h
+  simp only [Complex.I, Complex.neg_im] at h1
+  have h_pos : (1 : ℝ) > 0 := by norm_num
+  have h_neg : (-1 : ℝ) < 0 := by norm_num
+  exact absurd h1 (by linarith)
+
+/-- 实数 1 ≠ -1 的引理 -/
+private lemma one_ne_neg1 : (1 : ℂ) ≠ -1 := by
+  intro h
+  have h1 : (1 : ℂ).re = (-1 : ℂ).re := congr_arg Complex.re h
+  simp at h1
+  have h_pos : (1 : ℝ) > 0 := by norm_num
+  have h_neg : (-1 : ℝ) < 0 := by norm_num
+  exact absurd h1 (by linarith)
+
+/-- 1 ≠ -Complex.I 的引理 -/
+private lemma one_ne_negI : (1 : ℂ) ≠ -Complex.I := by
+  intro h; have := congr_arg (fun z : ℂ => z.re) h; simp at this
+
+private lemma neg1_neq_I : (-1 : ℂ) ≠ Complex.I := by
+  intro h; exact I_neq_neg1 h.symm
+
+private lemma neg1_neq_negI : (-1 : ℂ) ≠ (-Complex.I : ℂ) := by
+  intro h; have := congr_arg (fun z : ℂ => z.im) h; simp at this
+
+private lemma negI_neq_I : (-Complex.I : ℂ) ≠ Complex.I := by
+  intro h; exact I_neq_negI h.symm
+
+/-- 辅助引理：从 I^n = I^m（当 n,m ∈ {0,1,2,3}）推出 n = m
+
+证明：直接展开 I^n 和 I^m 的具体值，利用这些值互不相等的事实证明 n=m。
+关键洞察：若 I^n = I^m 但 n≠m，则会导出复数单位之间不可能的相等关系（如 1 = I）。
+
+我们先在假设 h 上应用 rw 来建立矛盾等式，然后用 I_neq_* 引理配合 absurd 证明 False。-/
+private lemma h_nm (n m : ℕ) (h : Complex.I ^ n = Complex.I ^ m)
+    (hn : n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 3)
+    (hm : m = 0 ∨ m = 1 ∨ m = 2 ∨ m = 3) : n = m := by
+  cases hn with
+  | inl hn0 =>
+    cases hm with
+    | inl hm0 => rw [hn0, hm0]
+    | inr hm' => cases hm' with
+      | inl hm1 =>
+        -- n=0, m=1：若 I^0 = I^1 则 1 = I，矛盾
+        have contra := calc
+          Complex.I = Complex.I ^ 1 := by rw [I_pow_1]
+          _ = Complex.I ^ 0 := by { rw [hn0, hm1] at h; exact h.symm }
+          _ = 1 := by rw [I_pow_0]
+        exact absurd contra I_neq_1
+      | inr hm'' => cases hm'' with
+        | inl hm2 =>
+          -- n=0, m=2：若 I^0 = I^2 则 1 = -1，矛盾
+          have contra := calc
+            (-1 : ℂ) = Complex.I ^ 2 := by rw [I_pow_2]
+            _ = Complex.I ^ 0 := by
+              rw [hn0, hm2] at h
+              exact h.symm
+            _ = 1 := by rw [I_pow_0]
+          exact absurd contra one_ne_neg1.symm
+        | inr hm3 =>
+          -- n=0, m=3：若 I^0 = I^3 则 1 = -I，矛盾
+          have contra := calc
+            (-Complex.I : ℂ) = Complex.I ^ 3 := by rw [I_pow_3]
+            _ = Complex.I ^ 0 := by
+              rw [hn0, hm3] at h
+              exact h.symm
+            _ = 1 := by rw [I_pow_0]
+          exact absurd contra one_ne_negI.symm
+  | inr hn' => cases hn' with
+    | inl hn1 =>
+      cases hm with
+      | inl hm0 =>
+        -- n=1, m=0：若 I^1 = I^0 则 I = 1，矛盾
+        have contra := calc
+          Complex.I = Complex.I ^ 1 := by rw [I_pow_1]
+          _ = Complex.I ^ 0 := by { rw [hn1, hm0] at h; exact h }
+          _ = 1 := by rw [I_pow_0]
+        exact absurd contra I_neq_1
+      | inr hm' => cases hm' with
+        | inl hm1 => rw [hn1, hm1]
+        | inr hm'' => cases hm'' with
+          | inl hm2 =>
+            -- n=1, m=2：若 I^1 = I^2 则 I = -1，矛盾
+            have contra := calc
+              Complex.I = Complex.I ^ 1 := by rw [I_pow_1]
+              _ = Complex.I ^ 2 := by { rw [hn1, hm2] at h; exact h }
+              _ = -1 := by rw [I_pow_2]
+            exact absurd contra I_neq_neg1
+          | inr hm3 =>
+            -- n=1, m=3：若 I^1 = I^3 则 I = -I，矛盾
+            have contra := calc
+              Complex.I = Complex.I ^ 1 := by rw [I_pow_1]
+              _ = Complex.I ^ 3 := by { rw [hn1, hm3] at h; exact h }
+              _ = -Complex.I := by rw [I_pow_3]
+            exact absurd contra I_neq_negI
+    | inr hn'' => cases hn'' with
+      | inl hn2 =>
+        cases hm with
+        | inl hm0 =>
+          -- n=2, m=0：若 I^2 = I^0 则 -1 = 1，矛盾
+          have contra := calc
+            (-1 : ℂ) = Complex.I ^ 2 := by rw [I_pow_2]
+            _ = Complex.I ^ 0 := by { rw [hn2, hm0] at h; exact h }
+            _ = 1 := by rw [I_pow_0]
+          exact absurd contra one_ne_neg1.symm
+        | inr hm' => cases hm' with
+          | inl hm1 =>
+            -- n=2, m=1：若 I^2 = I^1 则 -1 = I，矛盾
+            have contra := calc
+              (-1 : ℂ) = Complex.I ^ 2 := by rw [I_pow_2]
+              _ = Complex.I ^ 1 := by { rw [hn2, hm1] at h; exact h }
+              _ = Complex.I := by rw [I_pow_1]
+            exact absurd contra neg1_neq_I
+          | inr hm'' => cases hm'' with
+            | inl hm2 => rw [hn2, hm2]
+            | inr hm3 =>
+              -- n=2, m=3：若 I^2 = I^3 则 -1 = -I，矛盾
+              have contra := calc
+                (-1 : ℂ) = Complex.I ^ 2 := by rw [I_pow_2]
+                _ = Complex.I ^ 3 := by { rw [hn2, hm3] at h; exact h }
+                _ = -Complex.I := by rw [I_pow_3]
+              exact absurd contra neg1_neq_negI
+      | inr hn3 =>
+        cases hm with
+        | inl hm0 =>
+          -- n=3, m=0：若 I^3 = I^0 则 -I = 1，矛盾
+          have contra := calc
+            (-Complex.I : ℂ) = Complex.I ^ 3 := by rw [I_pow_3]
+            _ = Complex.I ^ 0 := by { rw [hn3, hm0] at h; exact h }
+            _ = 1 := by rw [I_pow_0]
+          exact absurd contra one_ne_negI.symm
+        | inr hm' => cases hm' with
+          | inl hm1 =>
+            -- n=3, m=1：若 I^3 = I^1 则 -I = I，矛盾
+            have contra := calc
+              (-Complex.I : ℂ) = Complex.I ^ 3 := by rw [I_pow_3]
+              _ = Complex.I ^ 1 := by { rw [hn3, hm1] at h; exact h }
+              _ = Complex.I := by rw [I_pow_1]
+            exact absurd contra negI_neq_I
+          | inr hm'' => cases hm'' with
+            | inl hm2 =>
+              -- n=3, m=2：若 I^3 = I^2 则 -I = -1，矛盾
+              have contra := calc
+                (-Complex.I : ℂ) = Complex.I ^ 3 := by rw [I_pow_3]
+                _ = Complex.I ^ 2 := by { rw [hn3, hm2] at h; exact h }
+                _ = -1 := by rw [I_pow_2]
+              exact absurd contra neg1_neq_negI.symm
+            | inr hm3 => rw [hn3, hm3]
 
 /-- 振幅的乘法性：i^(m+n) = i^m * i^n（在 Fin 4 的模运算下）-/
 private theorem fin4_I_pow_add (m n : Fin 4) :
@@ -251,60 +412,7 @@ private theorem fin4_I_inj (x y : Fin 4) :
   have h_m : y.val = 0 ∨ y.val = 1 ∨ y.val = 2 ∨ y.val = 3 := by
     have h₁ : y.val < 4 := Fin.is_lt y
     omega
-  rcases h_n with (hn | hn | hn | hn) <;>
-    rcases h_m with (hm | hm | hm | hm)
-  · rw [hn, hm]
-  · rw [hn, hm] at h
-    have h10 : (1 : ℝ) = (0 : ℝ) := by
-      simpa [I_pow_0, I_pow_1] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_one_ne_zero h10)
-  · rw [hn, hm] at h
-    have h10 : (1 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_0, I_pow_2] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_one_negone h10)
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_0, I_pow_3] using congr_arg (fun z : ℂ => z.im) h
-    exact False.elim (real_ne_zero_negone h10)
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (1 : ℝ) := by
-      simpa [I_pow_1, I_pow_0] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_one_ne_zero h10.symm)
-  · rw [hn, hm]
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_1, I_pow_2] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_zero_negone h10)
-  · rw [hn, hm] at h
-    have h10 : (1 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_1, I_pow_3] using congr_arg (fun z : ℂ => z.im) h
-    exact False.elim (real_ne_one_negone h10)
-  · rw [hn, hm] at h
-    have h10 : (-1 : ℝ) = (1 : ℝ) := by
-      simpa [I_pow_2, I_pow_0] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_one_negone h10.symm)
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_2, I_pow_1] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_zero_negone h10)
-  · rw [hn, hm]
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (-1 : ℝ) := by
-      simpa [I_pow_2, I_pow_3] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_zero_negone h10)
-  · rw [hn, hm] at h
-    have h10 : (0 : ℝ) = (1 : ℝ) := by
-      simpa [I_pow_3, I_pow_0] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_one_ne_zero h10.symm)
-  · rw [hn, hm] at h
-    have h10 : (-1 : ℝ) = (1 : ℝ) := by
-      simpa [I_pow_3, I_pow_1] using congr_arg (fun z : ℂ => z.im) h
-    exact False.elim (real_ne_one_negone h10.symm)
-  · rw [hn, hm] at h
-    have h10 : (-1 : ℝ) = (0 : ℝ) := by
-      simpa [I_pow_3, I_pow_2] using congr_arg (fun z : ℂ => z.re) h
-    exact False.elim (real_ne_zero_negone h10.symm)
-  · rw [hn, hm]
+  exact h_nm x.val y.val h h_n h_m
 
 /-- Fin 4 加法的结合律（作为独立引理证明）-/
 private theorem fin4_compose_assoc (α β γ : Fin 4) :
@@ -399,16 +507,17 @@ def nonTrivialFinModel : Theory (Fin 5) (Fin 4) :=
 
   let instD : AxiomD (Fin 5) (Fin 4) :=
     { op_weaving := by
-        intro α β _ hlen
-        have hin1 : (instA.input β).length = 0 := by
-          change (ft_input β).length = 0
-          <;> rfl
-        have hin2 : (instA.input α).length = 0 := by
-          change (ft_input α).length = 0
-          <;> rfl
-        rw [hin1, hin2] at hlen
-        <;> norm_num at hlen
-        <;> contradiction }
+        intro α β hlt
+        -- nonTrivialFinModel 中所有 output 都等于 (0 : Fin 5)，
+        -- 所以 lt (output α) (output β) 恒为 False
+        unfold AxiomA.output at hlt
+        simp only [instA] at hlt
+        -- 现在 hlt : 0 < 0，这是 Prop 而非 False
+        -- 使用 Fin 5 的自反性证明矛盾
+        have h : ft_output α = ft_output β := rfl
+        rw [h] at hlt
+        -- 现在 hlt : ft_output β < ft_output β
+        contradiction }
 
   let instC : AxiomC (Fin 5) (Fin 4) :=
     { amplitude := ft_amplitude,

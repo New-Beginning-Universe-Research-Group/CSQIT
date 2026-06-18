@@ -16,9 +16,10 @@ CSQIT 10.4.5 一致性证明 - 突破性发现版
    这个定理不依赖 M 或 C 的具体选择，是公理体系的逻辑必然。
    证明：由 compose_input 和 input_nodup 推出。
 
-🔬 发现 2：公理冗余定理
-   - AxiomD（op_weaving）：前提 |input β| = |input α| + 1
-     化简为 0 = 1，恒假，因此公理空洞成立
+🔬 发现 2：公理冗余定理（AxiomD 重构后已解决）
+   - AxiomD（op_weaving）：重构后完全基于 output lt 关系，
+     不再依赖 input 长度条件，因此在当前模型中前提 B.lt (output α) (output β)
+     很少成立（所有模型的 output 都是常函数或恒等）
    - AxiomB.weaving_axiom：前提 x ∈ input α 化简为 x ∈ []，
      即 False，因此公理空洞成立
 
@@ -58,8 +59,10 @@ CSQIT 10.4.5 一致性证明 - 突破性发现版
    - 非平凡模型存在性：nonTrivialFinModel 构造了 |C|=4, |M|=5 的模型，
      其中有非平凡因果序、非平凡规则组合、非平凡振幅
 
-✅ 已证明为冗余的公理（在 AxiomA+B+C 存在时）：
-   - AxiomD.op_weaving：由 input_must_be_empty，前提 |input β| = |input α| + 1 恒假
+✅ 已证明为弱但非冗余的公理（在 AxiomA+B+C 存在时）：
+   - AxiomD.op_weaving：重构后基于 output lt 关系，
+     在当前模型中由于 lt 条件很少成立而相对"弱"，
+     但不是逻辑冗余（不被 AxiomA 推出）
    - AxiomB.weaving_axiom：由 input_must_be_empty，前提 x ∈ input α 恒假
 
 ⚠️ 退化模型中的简单验证（仍有效但不再是唯一见证）：
@@ -433,8 +436,7 @@ theorem axiomC_in_trivialModel :
 
 /-- **公理 D 在 trivialModel 中成立**：操作编织公理。
 
-⚠️ 【平凡验证】—— 最彻底的空真验证！
-由于 `lt _ _ = False`（trivialModel 中 lt 恒为 False），
+⚠️ 【平凡验证】—— 由于 `lt _ _ = False`（trivialModel 中 lt 恒为 False），
 op_weaving 的前提 `B.lt (A.output α) (A.output β)` 永远为 False，
 因此整个蕴涵式（False → ...）空真成立。
 
@@ -577,8 +579,7 @@ op_weaving 的前提 `B.lt (A.output α) (A.output β)` 恒假，
 因为输出恒为 `false`，没有规则的输出能产生 `true`。
 要非平凡满足 AxiomD，需要规则 α, β 使得
 `output α = false` 且 `output β = true`，
-同时 `input β` 的长度比 `input α` 多 1，
-并且存在 γ 使得 `compose α γ = β`。
+同时存在 γ 使得 `compose α γ = β`。
 这在多规则系统（|C| ≥ 2）中才可能。 -/
 theorem axiomD_in_boolModel :
   let lt : Unit → Unit → Prop := fun _ _ => False
