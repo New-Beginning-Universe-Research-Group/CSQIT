@@ -1,51 +1,128 @@
 ================================================================================
-CSQIT Future Work - Research Notes
+CSQIT Future Work - 待完善的理论探索
 ================================================================================
 
-This directory contains incomplete research notes and stub files that are not
-yet ready for formal verification. These files represent future research
-directions and should NOT be compiled as part of the main project.
+本目录包含不完整的研究笔记和存根文件，这些文件尚未准备好进行形式化验证。
+它们代表未来的研究方向，不应作为主项目的一部分进行编译。
+
+**版本**: 10.4.5
+**状态**: 概念框架 / 草稿阶段
+**目标**: 升级为"可工作的玩具模型"
 
 ================================================================================
-Contents
+内容目录
 ================================================================================
 
-1. AppendixB/TensorProduct.lean
-   - Research on tensor product structures for causal weaving
+### 高级优先 (High Priority)
 
-2. AppendixC/Regge.lean
-   - Preliminary work on Regge calculus discretization
+1. **AppendixG/GravityEmergence.lean** ⭐⭐⭐
+   - **状态**: 概念框架 + 初步定义
+   - **内容**: 从离散因果结构研究引力涌现
+   - **关键概念**: 曲率-时间变分关系
+   - **挑战**: 核心困难是建立从 CSQIT 的离散编织结构到爱因斯坦场方程的联系
+   - **路线图**: 下一步在 1+1 维玩具模型上定义离散曲率，证明其与 Regge 作用量的关系
 
-3. AppendixC/TensorProduct.lean
-   - Quantum tensor network representations
+2. **AppendixI/Complexity.lean** ⭐⭐⭐
+   - **状态**: 概念框架
+   - **内容**: 因果结构的复杂性度量
+   - **关键概念**: 因果信息单调性与计算复杂度
+   - **挑战**: 需要为 AxiomI 提供无限集上的非平凡熵函数实例
+   - **路线图**: 首先在整数集上利用复杂度理论定义满足 AxiomI 的熵函数
 
-4. AppendixG/Einstein.lean
-   - Framework for Einstein field equations
+### 中级优先 (Medium Priority)
 
-5. AppendixG/GravityEmergence.lean
-   - Research on gravity emergence from discrete causal structures
+3. **AppendixC/Regge.lean** ⭐⭐
+   - **状态**: 草稿
+   - **内容**: Regge 微分离散化
+   - **关键概念**: 四面体分解与离散曲率
+   - **挑战**: 需要将 Regge calculus 的几何直觉形式化
+   - **路线图**: 与 GravityEmergence 协同发展
 
-6. AppendixI/Complexity.lean
-   - Complexity measures for causal structures
+4. **AppendixC/TensorProduct.lean** ⭐⭐
+   - **状态**: 概念框架
+   - **内容**: 量子张量网络表示
+   - **关键概念**: 多体纠缠与编织结构
+   - **挑战**: 如何将 AxiomD 的编织结构与张量网络态对应
 
-7. AppendixN/Verifier.lean
-   - Verification framework (incomplete)
+5. **AppendixB/TensorProduct.lean** ⭐⭐
+   - **状态**: 概念框架
+   - **内容**: 因果编织的张量积结构
+   - **关键概念**: 多规则组合与多线性代数
+   - **挑战**: 与 op_weaving_multi 定理的关联
 
-8. AppendixO/Reproduce.lean
-   - Numerical reproduction framework (incomplete)
+### 基础建设 (Infrastructure)
+
+6. **AppendixN/Verifier.lean** ⭐
+   - **状态**: 存根
+   - **内容**: 验证框架
+   - **挑战**: 自动化验证工具
+
+7. **AppendixO/Reproduce.lean** ⭐
+   - **状态**: 存根
+   - **内容**: 数值复现框架
+   - **挑战**: 离散模型的数值模拟
 
 ================================================================================
-Disclaimer
+路线图 (Roadmap)
 ================================================================================
 
-THESE FILES ARE NOT PART OF THE FORMALIZED THEORY.
+**短期目标 (1-3 个月)**
+```
+Step 1: 完成 AxiomD 在 A+B+C 下的独立性证明
+        → 关闭 Core/Independence.lean 中的开放问题
 
-They represent work-in-progress research directions and may contain:
-- Unproven conjectures
-- Incomplete definitions
-- Syntax errors
-- Placeholder code
+Step 2: 创建 "1+1 维玩具引力模型"
+        → 在 FutureWork/AppendixG/ 中构建
+        → 定义离散曲率，证明与 Regge 作用量的关系
+        → 展示在某粗粒化极限下趋近于零
 
-Please see the Core/ directory for the formally verified theory.
+Step 3: 创建 TUTORIAL.md
+        → 为新贡献者提供入门指南
+```
+
+**中期目标 (6-12 个月)**
+```
+Step 4: 完成 Complexity.lean
+        → 为 AxiomI 提供无限集上的非平凡实例
+        → 连接到计算复杂度理论
+
+Step 5: 完善 Regge.lean
+        → 与 GravityEmergence 协同
+        → 建立与主流数值相对论的对话
+```
+
+**长期愿景 (1-2 年)**
+```
+Step 6: 从玩具模型到完整理论
+        → 扩展到 3+1 维
+        → 连接标准模型 (AxiomH)
+        → 发表核心论文
+```
+
+================================================================================
+免责声明
+================================================================================
+
+这些文件不是形式化理论的一部分。
+
+它们代表正在进行的研究方向，可能包含：
+- 未证明的猜想
+- 不完整的定义
+- 语法错误
+- 占位符代码
+
+请参阅 Core/ 目录获取经过形式化验证的理论。
+
+================================================================================
+贡献指南
+================================================================================
+
+欢迎贡献！请遵循以下步骤：
+
+1. 选择一个文件并评估其当前状态
+2. 查看"挑战"部分了解主要形式化障碍
+3. 在 Core/ 中建立必要的理论基础（如需要）
+4. 确保任何新证明编译通过且无 sorry/admit
+5. 更新本 README 的状态标注
 
 ================================================================================
