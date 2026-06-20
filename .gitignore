@@ -44,8 +44,17 @@ _reports/
 # Project-specific backup files
 CSQIT_*.txt
 *_Backup_*/
+*_Final_*/
+*_CoreBackup_*/
+*_LeanCore_*/
+*_TextbookFinal_*/
+*_历史版本*/
 *backup*.md
 _backup/
+CSQIT_10.4.5_*
+All_Lean_Code_*.md
+All_Lean_Code_Full_*.txt
+All_Lean_Code_Complete_*.md
 
 # Temporary files
 *.ps1

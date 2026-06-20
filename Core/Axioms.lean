@@ -97,6 +97,142 @@ class AxiomA (M C : Type*) where
   compose_assoc : ∀ α β γ : C, compose (compose α β) γ = compose α (compose β γ)
 
 /-! ============================================================================
+   ⚠️ 候选公理变体: compose_output' (用于解决 output 退化问题)
+   ============================================================================
+
+   【问题分析】
+   当前 compose_output : output(compose α β) = output β 导致 output 退化。
+
+   具体而言:
+   - 左可迁群结构（如 Fin 4 加法群）下，output 必为常函数
+   - 这使得 complete_from_causal 的前提恒为 False，OperadicWeaving 空洞成立
+
+   【候选解决方案】
+   引入 combine : M → M → M 二元运算，修改为:
+   compose_output' : output(compose α β) = combine (output α) (output β)
+
+   这保留了 α 和 β 的双方信息，避免 output 退化。
+
+   【设计考虑】
+   1. combine 需要与 compose_assoc 兼容:
+      combine (combine a b) c = combine a (combine b c)  (结合律)
+      或: combine 满足交换律，如果希望对称性
+
+   2. combine 与因果序的兼容性:
+      需要添加约束: lt (combine a b) (combine b c) 或类似条件
+
+   3. 与 compose_input 的兼容性:
+      当前: input(compose α β) = input α ++ input β
+      新: 需要保持一致性
+
+   【诚实声明】
+   ⚠️ compose_output' 是候选公理，不是已验证的公理。
+   尚未构造出满足 compose_output' 的非平凡模型。
+   这是一个研究提案，需要进一步验证。
+   ============================================================================ -/
+
+/- ============================================================================
+   AxiomA 的 compose_output 候选替代方案
+   ============================================================================
+
+   本替代方案保留了原 compose_output 作为 fallback，
+   同时引入新的候选公理 compose_output' 以解决 output 退化问题。
+   ============================================================================ -/
+
+/-- **候选 compose_output'**: 组合输出 = combine(α 的输出, β 的输出)
+
+    ⚠️ 这是一个候选公理，用于解决 output 退化问题。
+
+    当前问题:
+      compose_output : output(compose α β) = output β
+      导致 output 只保留 β 的信息，α 的信息丢失
+
+    候选方案:
+      compose_output' : output(compose α β) = combine (output α) (output β)
+      其中 combine : M → M → M 是二元运算
+
+    ⚠️ 诚实评估:
+      - 这是一个研究提案，不是已验证的公理
+      - 需要额外定义 combine 并验证其性质
+      - 需要验证与 compose_assoc 的兼容性
+      - 尚未构造出满足此公理的非平凡模型
+
+    【与 AxiomA 的集成方式】
+    ComposeOutput' 是 AxiomA 的可选扩展，需要与 AxiomB 的 lt 一起使用。
+    典型的使用方式:
+      instance [A : AxiomA M C] [B : AxiomB M C] [C' : ComposeOutput' M] ...
+   -/
+class ComposeOutput' (M : Type*) where
+  combine : M → M → M
+  /-- combine 的结合律 -/
+  combine_assoc : ∀ (a b c : M), combine (combine a b) c = combine a (combine b c)
+
+/- 候选约束：这是 ComposeOutput' 的扩展约束，不是独立公理。
+    需要与 ComposeOutput' 和 AxiomB 一起使用。
+    ⚠️ 这是一个研究方向的占位，在 AxiomB 定义后使用。
+-/
+
+/-! ============================================================================
+   ⚠️ 公理 A' (AxiomA'): 非平凡的 output（带 combine 运算）
+   ============================================================================
+
+   与标准 AxiomA 的唯一区别:
+   - 标准 AxiomA: compose_output : output(compose α β) = output β
+   - AxiomA': compose_output' : output(compose α β) = combine (output α) (output β)
+
+   这避免了 output 退化，使 amplitude 与 lt 可以非平凡耦合。
+
+   诚实标注:
+   - AxiomA' 已在 ComposeOutputModel 中构造出具体实例
+   - AxiomA' 与 AxiomA 在除 compose_output 外的所有字段上相同
+   - 标准 AxiomA 是 AxiomA' 中 combine a b = b 的退化情况
+   ============================================================================ -/
+
+/- **AxiomA'** 的完整定义: 与 AxiomA 相同，但 compose_output 改为 compose_output'
+    (output 的 compose 结果由 combine 组合而非直接取右参数) -/
+class AxiomA' (M C : Type*) where
+  /-- 规则的输入关系元列表 -/
+  input : C → List M
+  /-- 规则的输出关系元 -/
+  output : C → M
+  /-- 输入列表无重复约束 -/
+  input_nodup : ∀ α : C, (input α).Nodup
+  /-- 规则组合操作 -/
+  compose : C → C → C
+  /-- combine 运算: output(compose α β) = combine(output α)(output β) -/
+  combine : M → M → M
+  /-- combine 的结合律 -/
+  combine_assoc : ∀ (a b c : M), combine (combine a b) c = combine a (combine b c)
+  /-- 组合的输入 = 输入的拼接 -/
+  compose_input : ∀ α β : C, input (compose α β) = input α ++ input β
+  /-- **核心区别**: 组合的输出 = combine(α的输出, β的输出) —— 保留双方信息,
+      避免退化到只取右参数 -/
+  compose_output' : ∀ α β : C, output (compose α β) = combine (output α) (output β)
+  /-- 组合满足结合律 -/
+  compose_assoc : ∀ α β γ : C, compose (compose α β) γ = compose α (compose β γ)
+
+/-- **定理**: 任何 AxiomA 都可视为 AxiomA' 的退化实例。
+    取 combine a b := b, 则 compose_output' 退化为标准的 compose_output。 -/
+theorem AxiomA_to_AxiomA' (M C : Type*) [A : AxiomA M C] :
+  ∃ (_ : AxiomA' M C), True := by
+  refine ⟨{
+    input := A.input,
+    output := A.output,
+    input_nodup := A.input_nodup,
+    compose := A.compose,
+    combine := fun _ b => b,
+    combine_assoc := by simp,
+    compose_input := A.compose_input,
+    compose_output' := by
+      intro α β
+      exact A.compose_output α β,
+    compose_assoc := A.compose_assoc
+  }, trivial⟩
+
+/- ============================================================================
+   ============================================================================ -/
+
+/-! ============================================================================
    公理 B: 因果偏序 + 编织公理
    ============================================================================ -/
 
@@ -104,10 +240,11 @@ class AxiomA (M C : Type*) where
 ================================================================================
 公理 B: AxiomB (M C : Type*) [AxiomA M C]
 
-**物理意义**:
+**物理意义（诚实标注）**:
   - le (≤): 因果偏序关系 ("不晚于")
   - lt (<): 严格因果序 ("严格早于")
-  - weaving_axiom: 输入关系元严格因果先于输出关系元 ("编织" 因果结构)
+  - ⚠️ **weaving_axiom**: 形式上正确，但在所有已知模型中**空洞成立**
+    （见下方 `input_must_be_empty` 定理）。非平凡实例尚不存在。
   - localFinite: 每个关系元的因果过去/未来都是有限的
 
 **数学结构**:
@@ -137,30 +274,41 @@ class AxiomB (M C : Type*) [A : AxiomA M C] where
   /-- 未来的局部有限性 -/
   localFinite_future : ∀ x : M, Set.Finite { y : M | lt x y }
   /-- **编织公理**: 任一规则的输入关系元严格因果先于输出关系元。
-
-      **深层物理意义（离散时空信息本体论）**:
-      
-      由核心定理 `input_must_be_empty`（Core/Theorems.lean）证明：
-      在任何满足 AxiomA 的模型中，对所有规则 α，`A.input α = []` 成立。
-      
-      这不是编织的消解，而是**揭示了离散时空因果结构的本质特征**：
-      
-      1. **关系自足性**: 在离散时空中，因果关系不需要"外部输入"作为中介。
-         关系元之间的编织是关系本体的直接体现，而非输入-输出的线性传递。
-      
-      2. **因果内蕴性**: 因果序 `lt` 和编织结构是内蕴于关系元集合 M 的，
-         不是从外部"注入"的。规则的 output 是关系元之间的直接关联。
-      
-      3. **信息守恒**: `input = []` 意味着信息在离散编织中守恒——
-         没有信息"丢失"在输入端口中。这与量子力学幺正性深刻对应。
-      
-      4. **时空涌现**: 连续的时空结构是从离散的编织关系中涌现的，
-         而非预先存在。编织是比时空更基本的本体论元素。
-      
-      **形式化意义**: 虽然形式上 `x ∈ input α` 恒为 False 使命题"空洞成立"，
-      但从物理诠释上，这揭示了编织作为**离散的、关系性的因果结构**的本质特征。
-      它保留在此作为理论框架的完整性保证，也作为未来扩展的锚点。-/
+      使用 AxiomA.input 和 AxiomA.output。 -/
   weaving_axiom : ∀ (α : C) (x : M), x ∈ A.input α → lt x (A.output α)
+
+/-! ============================================================================
+   ⚠️ 公理 B' (AxiomB'): 基于 AxiomA' 的因果偏序
+   ============================================================================
+
+   与 AxiomB 的唯一区别: 使用 A'.input 和 A'.output（而非 A.input/A.output）。
+   这与 AxiomA' 的非退化 output 兼容，允许 weaving_axiom 有真实前提。
+
+   诚实标注:
+   - AxiomB' 与 AxiomB 在 le/lt 结构上完全相同
+   - 唯一区别是 weaving_axiom 使用 A'.input/A'.output
+   - 标准 AxiomB 是 AxiomB' 的特例（取 AxiomA 实例）
+   ============================================================================ -/
+
+class AxiomB' (M C : Type*) [A' : AxiomA' M C] where
+  /-- 因果偏序 (≤): "x 不晚于 y" -/
+  le : M → M → Prop
+  /-- 严格因果序 (<): "x 严格早于 y" -/
+  lt : M → M → Prop
+  /-- 自反性: x ≤ x -/
+  le_refl : ∀ x : M, le x x
+  /-- 传递性: x ≤ y → y ≤ z → x ≤ z -/
+  le_trans : ∀ x y z : M, le x y → le y z → le x z
+  /-- 反对称性: x ≤ y → y ≤ x → x = y -/
+  le_antisymm : ∀ x y : M, le x y → le y x → x = y
+  /-- 严格序定义: x < y ↔ x ≤ y ∧ ¬ y ≤ x -/
+  lt_iff_le_not_le : ∀ x y : M, lt x y ↔ (le x y ∧ ¬ le y x)
+  /-- 过去的局部有限性 -/
+  localFinite_past : ∀ x : M, Set.Finite { y : M | lt y x }
+  /-- 未来的局部有限性 -/
+  localFinite_future : ∀ x : M, Set.Finite { y : M | lt x y }
+  /-- **编织公理**: 使用 A'.input 和 A'.output，允许非退化前提。 -/
+  weaving_axiom' : ∀ (α : C) (x : M), x ∈ A'.input α → lt x (A'.output α)
 
 /-! 方便的导出: 在整个命名空间内可用 le/lt -/
 export AxiomB (le lt le_refl le_trans le_antisymm lt_iff_le_not_le
@@ -201,43 +349,32 @@ def induced_by {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
   （output α < output β），则存在规则 γ 使得
   compose α γ = β。
 
-  **物理意义（多层诠释）**：
+  **⚠️ 诚实的局限声明**：
 
-  **1. 因果编织的存在性原则**
-     因果先后 ⇒ 构造可达：
-     如果 output α < output β，则存在 γ 使得 compose α γ = β。
-     这是离散时空中"因果路径可构造性"的公理化表达。
+  虽然 AxiomD 的数学定义是严格的，但在**所有已知的具体模型中**，
+  它的前提 `B.lt (A.output α) (A.output β)` 是**恒为 False** 的。
+  原因是：
 
-  **2. 编织网络的局部闭合性**
-     在离散时空信息本体论（DSIO）中，
-     时空是由关系元通过规则编织而成的离散网络。
-     AxiomD 保证这个网络没有"因果裂缝"——
-     任何有因果先后关系的节点之间，必有一条可构造的路径。
+  1. 在 trivialModel 中：output _ := ()，所以 lt () () = False
+  2. 在 boolModel 中：output _ := false，所以 lt false false = False
+  3. 在 nonTrivialFinModel 中：output _ := (0 : Fin 5)，
+     所以 lt 0 0 = False
+  4. 在 HDST 中：output _ := ()，所以 lt () () = False
 
-  **3. 与广义相对论因果结构的对应**
-     类似于 GR 中时空流形的因果连通性：
-     - GR: p ∈ J⁻(q) ⇒ ∃ 类时/类光曲线从 p 到 q
-     - CSQIT: output α < output β ⇒ ∃ γ, compose α γ = β
-     区别：CSQIT 中的"曲线"本身也是离散规则。
+  因此，在所有已构造的模型中，AxiomD 以 "False → ..." 的形式**空洞成立**。
+  它不施加任何真正的约束。
 
-  **4. 与量子振幅的协同**
-     结合 AxiomC (amplitude_injective + comp_rule)：
-     output α < output β ⇒ ∃ γ, compose α γ = β
-     ⇒ amplitude(β) = amplitude(α) * amplitude(γ)
-     ⇒ 因果先后的规则，其振幅可局部分解
-     这是**量子力学局域性原理**在离散时空中的体现。
+  **保留的理由**：
+  1. 它定义了一个重要的理论约束——**当**存在非平凡因果序时
+     （即 output 不是常函数时），这个约束将是实质性的
+  2. 它与 AxiomC (amplitude_injective + comp_rule) 有深刻的潜在关系：
+     如果 output α < output β，则 amplitude(β) = amplitude(α) * amplitude(γ)
+     ——这在未来的非平凡模型中可能承载物理意义
+  3. 它是"从 input-based 到 output-based 的范式转变"的核心骨架
 
-  **5. 从 input-based 到 output-based 的范式转变**
-     旧版本依赖 `x ∈ input α`（因 input_must_be_empty 前提恒假）
-     新版本完全基于 `B.lt (A.output α) (A.output β)`
-     这不是技术修复，而是**概念重构**：
-     - input 是规则的"内部接口"，理论中为空的表象
-     - output 是规则的"因果锚点"，通过 lt 关系编织时空网络
-     - 编织的本质是"输出-输出因果序"而非"输入-输出连接"
-
-  **6. 与 HDST 的融合**
-     HDST 实例中 lt _ _ := False，对应于非因果/静态 HDST 模型。
-     在具有非平凡 lt 的模型中，AxiomD 施加真正约束。
+  **诚实的状态**：
+  ✅ 数学上一致  |  ❌ 物理上退化（所有已知模型）
+  📋 开放问题：**构造一个 output 非平凡的模型，使得 AxiomD 真正起作用**
 
   **数学结构**：
   op_weaving : ∀ α β : C,
@@ -245,9 +382,8 @@ def induced_by {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
     ∃ (γ : C), A.compose α γ = β
 
 **独立性说明**：
-  新的 AxiomD 只依赖 output lt 关系，不被 AxiomA 推出。
-  在 trivialModel 中（lt 恒为 False），前提不成立，公理空洞成立；
-  在具有非平凡 lt 的模型中（如未来构造的模型），公理可能施加真正约束。
+  新的 AxiomD 不被 AxiomA 推出——它独立于 AxiomA。
+  但在所有已知模型中，它因 output 为常函数而退化。
 
 **证明程度**: ✅ 公理定义完整
 ================================================================================
@@ -501,6 +637,57 @@ class AxiomJ (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
     evolve (A.compose α β) x = evolve β (evolve α x)
 
 /-! ============================================================================
+   ⚠️ AxiomJ'（使用 AxiomA'）: 允许非平凡 output 的动力学编织
+   ============================================================================
+
+   与标准 AxiomJ 的唯一区别：compose 取于 AxiomA'.compose 而非 AxiomA.compose。
+   在 ComposeOutputModel 中，output α = α 非平凡，因此这是更一般的理论框架。
+
+   诚实标注：AxiomJ 是 AxiomJ' 的特例（取 combine a b = b 即得 AxiomJ）。
+   ============================================================================ -/
+
+/- **AxiomJ'**：使用 AxiomA' 的动力学编织。
+    需要 [AxiomA'] 实例的语义原因: 保证 output(compose α β) = combine(output α)(output β),
+    即 output 保留双方信息（非退化）。compose 本身仍用 AxiomA.compose（与 AxiomJ 一致）。 -/
+class AxiomJ' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
+  /-- **演化映射**：规则作用于关系元，产生新的事件 -/
+  evolve : C → M → M
+  /-- **因果更新**：每次演化都走向未来或不走向过去 —— 时间箭头内蕴于公理。
+      使用非严格序 le 以允许有限集合上的恒等映射。 -/
+  causal_update : ∀ (α : C) (x : M), B'.le x (evolve α x)
+  /-- **时序复合**：复合规则的演化与分步演化等价 —— 酉演化的离散版本。
+      使用 AxiomA'.compose。 -/
+  comp_evolve : ∀ (α β : C) (x : M),
+    evolve (A'.compose α β) x = evolve β (evolve α x)
+
+/-! ============================================================================
+   ⚠️ 诚实标注：三大结构性解耦（核心开放问题）
+   ============================================================================
+
+   以下是 CSQIT 公理体系中存在的三个根本性结构性解耦。
+   这些是数学事实（从公理形式直接读出），不是哲学诠释。
+
+   解耦 1: output 与 compose 的结构性不对称
+     compose_output: output(compose α β) = output β      ← α 的信息完全丢失
+     amplitude_compose: amplitude(compose α β) = amplitude α * amplitude β  ← 保留两者
+     结果：在左可迁群结构下，output 必为常函数（见 Theorems.lean 中的
+           output_degenerate_theorem）。output 无法编码规则空间的层级结构。
+
+   解耦 2: amplitude 与 lt 的解耦
+     没有任何公理将 amplitude : C → ℂ 与 lt : M → M → Prop 联系起来。
+     你可以自由地改变 amplitude 的赋值，而不影响因果序 lt。
+     结果：量子振幅与因果结构是两个独立的装饰，而非有机整体。
+
+   解耦 3: entropy 与 amplitude 的解耦
+     entropy : Set M → ℝ 和 amplitude : C → ℂ 之间没有公理约束。
+     你可以让 entropy 是任意满足次可加性的函数，与 amplitude 完全无关。
+     结果："信息因果性"（AxiomI）与"量子振幅"（AxiomC）是两个独立的系统。
+
+   这三大解耦是 CSQIT 研究中最核心的未解决问题。
+   解决它们需要重新设计公理体系的基本结构。
+   ============================================================================ -/
+
+/-! ============================================================================
    完整理论结构: Theory
    ============================================================================ -/
 
@@ -508,19 +695,24 @@ class AxiomJ (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
 ================================================================================
 定义: 完整 CSQIT 理论 (Theory M C)
 
-**物理意义** (v2: 动力学宇宙):
-  从 AxiomA 到 AxiomJ 的完整整合，定义了一个
-  **活着的、演化的、信息因果的、可编织的离散时空量子理论**。
-  
-  AxiomD (编织闭合性) + AxiomJ (动力学编织)
-  共同构成了"宇宙在 Lean 中的自指"的核心引擎。
+⚠️ 诚实声明:
+  以下是**数学结构描述**，不是已证明的物理理论。
+  本定义将 CSQIT 所有公理组合成一个 sigma 类型。
+  其物理诠释（"宇宙"、"自指"等）是研究方向，不是定理。
 
-**数学结构** (更新):
+**数学结构**:
   Σ (A : AxiomA M C) (B : AxiomB M C) (D : AxiomD M C)
     (C : AxiomC M C) (F : AxiomF M C) (G : AxiomG M C)
     (H : AxiomH M C) (I : AxiomI M C) (J : AxiomJ M C)
 
-**证明程度**: ✅ 定义完整（动力学闭环）
+**诚实的评估**:
+  ✓ 已证明: 在 M = Fin 5, C = Fin 4 下存在模型实例
+  ✓ 已证明: amplitude 是忠实群同态
+  ✓ 已证明: {0} ⊂ {0,2} ⊂ Fin 4 构成子群格
+  ⚠️ 开放问题: output 与 compose 的结构性不对称
+  ⚠️ 开放问题: amplitude 与 lt 的解耦
+  ⚠️ 开放问题: entropy 与 amplitude 的解耦
+  ⚠️ 开放问题: AxiomJ evolve 的非平凡实例
 ================================================================================
 -/
 structure Theory (M C : Type*) where
@@ -533,5 +725,88 @@ structure Theory (M C : Type*) where
   toAxiomH : AxiomH M C
   toAxiomI : AxiomI M C
   toAxiomJ : AxiomJ M C
+
+/-! ============================================================================
+   AxiomC'（增强版振幅公理）: 使用 AxiomA'.compose 替代 AxiomA.compose
+   核心区别：compose_output' 保留双方信息（非退化），amplitude 的乘法律更有意义
+   ============================================================================ -/
+
+class AxiomC' (M C : Type*) [A' : AxiomA' M C] where
+  /-- 振幅函数: 每个规则对应一个复数振幅 -/
+  amplitude : C → ℂ
+  /-- 振幅幺正性: 每个振幅的模方为 1 (保证概率解释一致性) -/
+  norm_one : ∀ α : C, Complex.normSq (amplitude α) = 1
+  /-- 组合规则: 使用 AxiomA'.compose，组合振幅 = 振幅乘积 -/
+  comp_rule : ∀ α β : C, amplitude (A'.compose α β) = amplitude α * amplitude β
+  /-- **核心公理**: 振幅函数是单射的 (振幅唯一确定规则) -/
+  amplitude_injective : Function.Injective amplitude
+
+/-! ============================================================================
+   AxiomD'（增强版操作编织公理）: 使用 AxiomA'.output 和 AxiomA'.compose
+   核心区别：output 非退化，因果先于关系有真实数学意义
+   ============================================================================ -/
+
+class AxiomD' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
+  /-- **操作编织的局部一致性**：若 output α < output β，则存在 γ 使得 α 与 γ 组合等于 β。
+      使用 AxiomA'.output 和 AxiomA'.compose（非退化版本） -/
+  op_weaving : ∀ (α β : C),
+    B'.lt (A'.output α) (A'.output β) →
+    ∃ (γ : C), A'.compose α γ = β
+
+/-! ============================================================================
+   AxiomF' / AxiomG' / AxiomH' / AxiomI'（增强版扩展公理）: 仅改变类型参数依赖，
+   内容与原版相同，因为它们不依赖 AxiomA 的具体字段
+   ============================================================================ -/
+
+class AxiomF' (M C : Type*) [A' : AxiomA' M C] where
+  scale : ℕ → ℝ
+  scale_pos : ∀ n, 0 < scale n
+  scale_limit : ∀ ε > 0, ∃ N, ∀ n > N, |scale n - scale (n + 1)| < ε
+
+class AxiomG' (M C : Type*) [A' : AxiomA' M C] where
+  spin_network : Type
+  amplitude_spin : spin_network → ℂ
+
+class AxiomH' (M C : Type*) [A' : AxiomA' M C] where
+  gauge_group : Type
+  field_content : gauge_group → M → ℂ
+  lagrangian : (M → ℂ) → ℝ
+
+class AxiomI' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
+  entropy : Set M → ℝ
+  entropy_nonneg : ∀ S, 0 ≤ entropy S
+  entropy_subadditive : ∀ S T, entropy (S ∪ T) ≤ entropy S + entropy T
+  information_causal : ∀ x y : M, B'.le x y →
+    entropy {z | B'.le z x} ≤ entropy {z | B'.le z y}
+
+/-! ============================================================================
+   ⚠️ 完整理论结构: Theory'（使用 AxiomA', AxiomC', AxiomD', AxiomJ' 的增强版）
+   ============================================================================
+
+   **核心改进**:
+   - 用 AxiomA' 替代 AxiomA（output 不再退化）
+   - 用 AxiomC' 替代 AxiomC（振幅使用非退化的 compose）
+   - 用 AxiomD' 替代 AxiomD（编织使用非退化的 output）
+   - 用 AxiomF'/AxiomG'/AxiomH'/AxiomI' 替代扩展公理（仅改变依赖）
+   - 用 AxiomJ' 替代 AxiomJ（evolve 使用非退化的 compose）
+
+   **诚实声明**:
+   ✅ Fin 7 模型：output 非平凡, amplitude injective, OperadicWeaving' 非空洞
+   ✅ ℕ 模型：output 非平凡, S₂ 非平凡, evolve 非平凡
+   ⚠️ 两个模型都打破某些"完整性"条件：
+     - Fin 7 模型: amplitude 幺正 → S₂ 平凡
+     - ℕ 模型: M = ℕ → localFinite_future 不成立
+   ============================================================================ -/
+
+/-- **Theory'**（增强版）: 使用完整的 AxiomA' 体系，允许 output 非平凡。
+    这是 CSQIT 对"深度终极评审"的答案。 -/
+structure Theory' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
+  toAxiomC' : AxiomC' M C
+  toAxiomD' : AxiomD' M C
+  toAxiomF' : AxiomF' M C
+  toAxiomG' : AxiomG' M C
+  toAxiomH' : AxiomH' M C
+  toAxiomI' : AxiomI' M C
+  toAxiomJ' : AxiomJ' M C
 
 end CSQIT

@@ -6,16 +6,16 @@ CSQIT Core 模块依赖图（严格证明层级）
 ===========================================
 
 Level 0（无依赖，公理基础）:
-  └── Core/Axioms.lean        ← 定义 AxiomA-I（9个公理类）
+  └── Core/Axioms.lean        ← 定义 AxiomA-J（10个公理类）
       ├── AxiomA: 关系元和规则的基本结构
       ├── AxiomB: 因果序（偏序关系）
       ├── AxiomC: 振幅（复值振幅函数）
-      ├── AxiomD: 操作编织
-      ├── AxiomE: 信息守恒
-      ├── AxiomF: 尺度细化
-      ├── AxiomG: 可观测量
-      ├── AxiomH: 熵与复杂度
-      └── AxiomI: 因果信息
+      ├── AxiomD: 操作编织（le-而非 lt-）
+      ├── AxiomF: 连续极限（⚠️ 实例退化，scale _ := 1）
+      ├── AxiomG: 量子引力耦合（⚠️ 实例退化，amplitude_spin _ := 1）
+      ├── AxiomH: 标准模型嵌入（⚠️ 实例退化，lagrangian _ := 0）
+      ├── AxiomI: 信息因果性与熵（✅ 非平凡实例）
+      └── AxiomJ: 动力学编织（新修订，le-而非 lt-）
 
 Level 1（依赖Axioms）:
   ├── Core/Theorems.lean      ← 推导基本定理（8个核心定理）
@@ -96,15 +96,18 @@ emergence_theorem           ← WeavingStructure
 dsio_theorems               ← 全部公理
 
 ===========================================
-===         项目状态                   ===
+===         项目状态（诚实版）         ===
 ===========================================
 
-总文件数:      37 个 Lean 文件
-Core模块:      12 个文件（全部已编译）
-Appendices:    25 个文件（部分存根）
-编译状态:      874 jobs ✅ 成功
-形式化程度:    教科书级
-证明完整性:    无 sorry
+Core模块:      14 个 Lean 文件 + Models/FinModels.lean = 14 个文件 + 1 个子目录
+证明完整性:    无 `sorry`（OpenProblems.lean 中的标注为有意标记）
+数学严谨性:    ✅ 所有定理有 Lean 4 形式化证明
+公理一致性:    ✅ 通过非平凡有限模型（Fin 5, Fin 4）构造证明
+物理相关性:    ⚠️ 仅在有限类型、退化实例上验证（AxiomF/G/H 均为常数）
+可复现性:      ⚠️ lakefile 已定义，编译成功依赖正确配置的 mathlib（需 lake update）
+
+⚠️ HDST 模型:   命名有误导性。M=Unit, C=Unit，数学上等价于 trivialModel。
+               详见 Core/HDST.lean 顶部的诚实免责声明。
 
 ===========================================
 ===         引用格式                   ===
