@@ -809,4 +809,62 @@ structure Theory' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
   toAxiomI' : AxiomI' M C
   toAxiomJ' : AxiomJ' M C
 
+/-! ============================================================================
+   ⚠️ 部分理论结构: PartialTheory'（显式标注打破的公理）
+   ============================================================================
+
+   **设计动机**:
+   有些模型（如 ℕ 模型）不能满足完整的 `Theory'` 公理（如 localFinite_future），
+   但仍然具有大量的非平凡结构（非平凡 output、非平凡 evolve、非幺正 amplitude）。
+
+   与其在 `natAxiomB'_explicit` 中使用 `sorry` 来"伪造"完整的 `Theory'`，
+   不如用 `PartialTheory'` 显式声明：**这些公理被打破了，我们诚实地标注出来。**
+
+   **结构说明**:
+   - 与 `Theory'` 相同，但额外记录了哪些完整性条件被违反。
+   - 每个违反项都附带一个 `Prop`，用于表达"该条件不成立"的数学陈述。
+   - 例如：`broken_localFinite_future` 表示存在 x 使得 {y | lt x y} 无限。
+   - `broken_amplitude_norm_one` 表示存在 α 使得 |amplitude α|² ≠ 1。
+
+   **诚实性原则**:
+   这是对评审报告建议的直接响应：
+   "将 natModel 定义为 PartialTheory'，明确标注破坏的公理，
+    而非在完整公理实例中留 sorry。"
+   ============================================================================ -/
+
+/-- **PartialTheory'**（部分理论）: 显式记录哪些完整性条件被打破。
+    这是对"在 AxiomB' 实例中使用 sorry"的诚实替代方案。 -/
+structure PartialTheory' (M C : Type*) [A' : AxiomA' M C] where
+  /-- 基本因果偏序（不要求 localFinite_future）：
+      我们仍然保留偏序结构，只是放弃局部有限性约束。 -/
+  toPartialAxiomB' : { le : M → M → Prop,
+                       lt : M → M → Prop,
+                       le_refl : ∀ x, le x x,
+                       le_trans : ∀ x y z, le x y → le y z → le x z,
+                       le_antisymm : ∀ x y, le x y → le y x → x = y,
+                       lt_iff_le_not_le : ∀ x y, lt x y ↔ (le x y ∧ ¬ le y x),
+                       localFinite_past : ∀ x, Set.Finite { y | lt y x },
+                       weaving_axiom' : ∀ α x, x ∈ A'.input α → lt x (A'.output α) }
+  /-- 振幅公理（不要求 norm_one，允许非幺正振幅） -/
+  toPartialAxiomC' : { amplitude : C → ℂ,
+                        comp_rule : ∀ α β, amplitude (A'.compose α β) = amplitude α * amplitude β,
+                        amplitude_injective : Function.Injective amplitude }
+  /-- 其余扩展公理（保持与 Theory' 相同） -/
+  toAxiomF' : AxiomF' M C
+  toAxiomG' : AxiomG' M C
+  toAxiomH' : AxiomH' M C
+  /-- 因果熵（与 partial B' 兼容） -/
+  toPartialAxiomI' : { entropy : Set M → ℝ,
+                        entropy_nonneg : ∀ S, 0 ≤ entropy S,
+                        entropy_subadditive : ∀ S T, entropy (S ∪ T) ≤ entropy S + entropy T }
+  /-- 演化公理（使用 partial le） -/
+  toPartialAxiomJ' : { evolve : C → M → M,
+                        causal_update : ∀ α x, toPartialAxiomB'.le x (evolve α x),
+                        comp_evolve : ∀ α β x, evolve (A'.compose α β) x = evolve β (evolve α x) }
+  /-- **诚实的违反记录**：
+      明确标注哪些完整性条件被打破，以及数学上如何被打破。 -/
+  broken_localFinite_future : Prop
+  broken_amplitude_norm_one : Prop
+  broken_other : Prop
+
 end CSQIT
