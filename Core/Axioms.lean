@@ -314,6 +314,55 @@ class AxiomB' (M C : Type*) [A' : AxiomA' M C] where
 export AxiomB (le lt le_refl le_trans le_antisymm lt_iff_le_not_le
                localFinite_past localFinite_future)
 
+/-- **定理: 严格因果序的无反性 (Irreflexivity)**。
+    对任意 x : M，¬ lt x x。
+    这直接由 le_refl + lt_iff_le_not_le 推导：
+    lt x x ↔ le x x ∧ ¬ le x x
+    但 le x x（由 le_refl），所以 ¬ lt x x。 -/
+theorem lt_irrefl {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] (x : M) :
+  ¬ B.lt x x := by
+  have h1 := (B.lt_iff_le_not_le x x)
+  have h2 : B.le x x := B.le_refl x
+  intro h3
+  have h4 : B.le x x ∧ ¬ B.le x x := h1.mp h3
+  exact h4.right h2
+
+/-! ============================================================================
+   🔍 AxiomB_totalOrder: 强化版因果秩序（全序假设）
+   ============================================================================
+
+   **设计动机**:
+   标准 AxiomB 只要求偏序（le_refl, le_trans, le_antisymm）。
+   但我们的核心定理 `nontrivial_weaving_iff_causal_gt1` 的反向方向需要更强的假设：
+   因果偏序在 output 的像上是**全序**（三分律）。
+
+   **诚实的数学分层**:
+   - 标准 AxiomB: 偏序（最小假设，最广泛适用）
+   - AxiomB_totalOrder: 全序（更强假设，用于编织公理的双向等价）
+
+   **与物理直觉的一致性**:
+   在所有已知的具体模型中（Fin n, Unit, Bool, ℕ），
+   因果偏序都是全序，所以这个假设在实际应用中通常成立。
+   ============================================================================ -/
+
+/-- **AxiomB_totalOrder**: 强化版因果秩序公理——全序假设。
+    在标准 AxiomB 的基础上增加三分律（任意两个关系元可比）。
+    这使得编织公理的非空洞性与因果面非平凡性完全等价。 -/
+class AxiomB_totalOrder (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
+  /-- **三分律**: 任意两个关系元在因果偏序下都可比。
+      即: ∀ x y : M, x ≤ y ∨ y ≤ x。
+      这意味着因果偏序实际上是一个全序。 -/
+  le_total : ∀ (x y : M), B.le x y ∨ B.le y x
+
+/-! ============================================================================
+   🔍 AxiomB'_totalOrder: 基于 AxiomA' 的强化版因果秩序
+   ============================================================================ -/
+
+/-- **AxiomB'_totalOrder**: 基于 AxiomA' 的全序因果秩序。
+    与 AxiomB_totalOrder 完全平行，但使用 AxiomA' 实例。 -/
+class AxiomB'_totalOrder (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
+  le_total : ∀ (x y : M), B'.le x y ∨ B'.le y x
+
 /--
 **辅助定义**: 编织诱导的因果关系
 
@@ -874,32 +923,44 @@ structure Theory' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
 /-- **PartialTheory'**（部分理论）: 显式记录哪些完整性条件被打破。
     这是对"在 AxiomB' 实例中使用 sorry"的诚实替代方案。 -/
 structure PartialTheory' (M C : Type*) [A' : AxiomA' M C] where
-  /-- 基本因果偏序（不要求 localFinite_future）：
-      我们仍然保留偏序结构，只是放弃局部有限性约束。 -/
-  toPartialAxiomB' : { le : M → M → Prop,
-                       lt : M → M → Prop,
-                       le_refl : ∀ x, le x x,
-                       le_trans : ∀ x y z, le x y → le y z → le x z,
-                       le_antisymm : ∀ x y, le x y → le y x → x = y,
-                       lt_iff_le_not_le : ∀ x y, lt x y ↔ (le x y ∧ ¬ le y x),
-                       localFinite_past : ∀ x, Set.Finite { y | lt y x },
-                       weaving_axiom' : ∀ α x, x ∈ A'.input α → lt x (A'.output α) }
-  /-- 振幅公理（不要求 norm_one，允许非幺正振幅） -/
-  toPartialAxiomC' : { amplitude : C → ℂ,
-                        comp_rule : ∀ α β, amplitude (A'.compose α β) = amplitude α * amplitude β,
-                        amplitude_injective : Function.Injective amplitude }
+  /-- 因果偏序 (≤) -/
+  le : M → M → Prop
+  /-- 严格因果序 (<) -/
+  lt : M → M → Prop
+  /-- 自反性 -/
+  le_refl : ∀ x : M, le x x
+  /-- 传递性 -/
+  le_trans : ∀ x y z : M, le x y → le y z → le x z
+  /-- 反对称性 -/
+  le_antisymm : ∀ x y : M, le x y → le y x → x = y
+  /-- 严格序与偏序等价 -/
+  lt_iff_le_not_le : ∀ x y : M, lt x y ↔ (le x y ∧ ¬ le y x)
+  /-- 过去的局部有限性 -/
+  localFinite_past : ∀ x : M, Set.Finite { y : M | lt y x }
+  /-- 编织公理' -/
+  weaving_axiom' : ∀ (α : C) (x : M), x ∈ A'.input α → lt x (A'.output α)
+  /-- 振幅函数 -/
+  amplitude : C → ℂ
+  /-- 振幅合成法则 -/
+  amplitude_comp_rule : ∀ (α β : C), amplitude (A'.compose α β) = amplitude α * amplitude β
+  /-- 振幅单射性 -/
+  amplitude_injective : Function.Injective amplitude
   /-- 其余扩展公理（保持与 Theory' 相同） -/
   toAxiomF' : AxiomF' M C
   toAxiomG' : AxiomG' M C
   toAxiomH' : AxiomH' M C
-  /-- 因果熵（与 partial B' 兼容） -/
-  toPartialAxiomI' : { entropy : Set M → ℝ,
-                        entropy_nonneg : ∀ S, 0 ≤ entropy S,
-                        entropy_subadditive : ∀ S T, entropy (S ∪ T) ≤ entropy S + entropy T }
-  /-- 演化公理（使用 partial le） -/
-  toPartialAxiomJ' : { evolve : C → M → M,
-                        causal_update : ∀ α x, toPartialAxiomB'.le x (evolve α x),
-                        comp_evolve : ∀ α β x, evolve (A'.compose α β) x = evolve β (evolve α x) }
+  /-- 因果熵 -/
+  entropy : Set M → ℝ
+  /-- 熵非负性 -/
+  entropy_nonneg : ∀ S : Set M, 0 ≤ entropy S
+  /-- 熵次可加性 -/
+  entropy_subadditive : ∀ S T : Set M, entropy (S ∪ T) ≤ entropy S + entropy T
+  /-- 演化函数 -/
+  evolve : C → M → M
+  /-- 因果更新条件 -/
+  causal_update : ∀ (α : C) (x : M), le x (evolve α x)
+  /-- 演化合成法则 -/
+  comp_evolve : ∀ (α β : C) (x : M), evolve (A'.compose α β) x = evolve β (evolve α x)
   /-- **诚实的违反记录**：
       明确标注哪些完整性条件被打破，以及数学上如何被打破。 -/
   broken_localFinite_future : Prop

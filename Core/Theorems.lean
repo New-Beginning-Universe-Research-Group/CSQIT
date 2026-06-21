@@ -3573,52 +3573,52 @@ def has_nontrivial_weaving {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] : Pro
   ∃ (α β : C), B.lt (A.output α) (A.output β)
 
 /-- **定理 15.1: 非空洞编织 ⇔ 因果面非平凡（k > 1）**。
-    在任何标准 Theory 模型中：
+    若因果偏序在 output 的像上是全序（三分律），则：
     has_nontrivial_weaving ↔ ∃ (α β : C), A.output α ≠ A.output β
-    ↔ causal_degree ≥ 2
+
+    诚实标注:
+    - 前向方向 (→) 对任何偏序都成立（无需额外假设）
+    - 反向方向 (←) 需要额外假设 `le_total`（即 output 像上的三分律）
+      这是合理的，因为在所有已知模型（Fin n, Unit, Bool）中，le 都是全序
 
     这是编织公理的"最小条件"——编织非空洞要求 output 至少有 2 个不同值。
     但这本身还**不**保证信息面非平凡（m > 1）——那需要对 amplitude 做进一步约束。 -/
-theorem nontrivial_weaving_iff_causal_gt1 {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] :
+theorem nontrivial_weaving_iff_causal_gt1 {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
+    (h_total : ∀ (x y : M), B.le x y ∨ B.le y x) :
   has_nontrivial_weaving (M := M) (C := C) ↔
   ∃ (α β : C), A.output α ≠ A.output β := by
   constructor
-  · -- 前向方向: 非空洞编织 ⇒ output 不是常函数
+  · -- 前向方向: 非空洞编织 ⇒ output 不是常函数 (对任何偏序都成立)
     intro h
     rcases h with ⟨α, β, h_lt⟩
     refine' ⟨α, β, _⟩
     have h_ne : A.output α ≠ A.output β := by
       intro h_eq
       rw [h_eq] at h_lt
-      have h_irref := (show ¬ B.lt (A.output β) (A.output β) from by
-        exact B.lt_irrefl (A.output β))
-      exact h_irref h_lt
+      exact lt_irrefl (A.output β) h_lt
     exact h_ne
-  · -- 反向方向: output 不是常函数 ⇒ 非空洞编织
+  · -- 反向方向: output 不是常函数 ⇒ 非空洞编织 (需要 h_total 假设)
     intro h
     rcases h with ⟨α, β, h_ne⟩
-    -- 需要证明: B.lt (output α) (output β) 或 B.lt (output β) (output α)
-    -- 由线性序，对任何 x ≠ y，必有 B.lt x y 或 B.lt y x
-    have h_total : B.lt (A.output α) (A.output β) ∨ B.lt (A.output β) (A.output α) := by
-      have h_le : B.le (A.output α) (A.output β) ∨ B.le (A.output β) (A.output α) := B.le_total (A.output α) (A.output β)
-      cases h_le with h1 h2
-      · -- Case 1: output α ≤ output β
+    have h_le : B.le (A.output α) (A.output β) ∨ B.le (A.output β) (A.output α) :=
+      h_total (A.output α) (A.output β)
+    cases h_le with h1 h2
+    · -- Case 1: output α ≤ output β
+      have h_pos : B.lt (A.output α) (A.output β) := by
         have h_ne2 : ¬ B.le (A.output β) (A.output α) := by
           intro h3
           have h_eq : A.output α = A.output β := B.le_antisymm h1 h3
           exact h_ne h_eq
-        exact Or.inl ((show B.lt (A.output α) (A.output β) from
-          ⟨h1, h_ne2⟩))
-      · -- Case 2: output β ≤ output α
+        exact (B.lt_iff_le_not_le (A.output α) (A.output β)).mpr ⟨h1, h_ne2⟩
+      exact ⟨α, β, h_pos⟩
+    · -- Case 2: output β ≤ output α
+      have h_pos : B.lt (A.output β) (A.output α) := by
         have h_ne2 : ¬ B.le (A.output α) (A.output β) := by
           intro h3
           have h_eq : A.output α = A.output β := B.le_antisymm h3 h2
           exact h_ne h_eq
-        exact Or.inr ((show B.lt (A.output β) (A.output α) from
-          ⟨h2, h_ne2⟩))
-    cases h_total with h_pos h_pos2
-    · refine' ⟨α, β, h_pos⟩
-    · refine' ⟨β, α, h_pos2⟩
+        exact (B.lt_iff_le_not_le (A.output β) (A.output α)).mpr ⟨h2, h_ne2⟩
+      exact ⟨β, α, h_pos⟩
 
 /-- **定理 15.2: 左可迁群模型中，编织公理空洞成立**。
     在左可迁群（如 Fin n 加法群）模型中：
@@ -3673,8 +3673,46 @@ theorem weaving_implies_causal_nontrivial {M C : Type*} [A : AxiomA M C] [B : Ax
   has_nontrivial_weaving (M := M) (C := C) →
   ∃ (α β : C), A.output α ≠ A.output β := by
   intro h
-  have h_iff := nontrivial_weaving_iff_causal_gt1 (M := M) (C := C)
-  exact h_iff.mp h
+  rcases h with ⟨α, β, h_lt⟩
+  refine' ⟨α, β, _⟩
+  have h_ne : A.output α ≠ A.output β := by
+    intro h_eq
+    rw [h_eq] at h_lt
+    exact lt_irrefl (A.output β) h_lt
+  exact h_ne
+
+/-- **定理 15.3b: 因果面非平凡（在全序假设下）⇒ 编织公理非空洞实例**。
+    在因果偏序是全序（三分律成立）的假设下，
+    如果 output 不是常函数，则编织公理非空洞。
+
+    **诚实标注**: 反向方向确实需要 `h_total`（三分律）假设。
+    如果因果偏序不是全序，output 的两个不同值可能不可比。
+    但在所有已知标准模型（Fin n, Unit, Bool）中，le 都是全序。 -/
+theorem causal_nontrivial_implies_weaving {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
+    (h_total : ∀ (x y : M), B.le x y ∨ B.le y x) :
+  (∃ (α β : C), A.output α ≠ A.output β) →
+  has_nontrivial_weaving (M := M) (C := C) := by
+  intro h
+  rcases h with ⟨α, β, h_ne⟩
+  have h_le : B.le (A.output α) (A.output β) ∨ B.le (A.output β) (A.output α) :=
+    h_total (A.output α) (A.output β)
+  cases h_le with h1 h2
+  · -- Case 1: output α ≤ output β
+    have h_pos : B.lt (A.output α) (A.output β) := by
+      have h_ne2 : ¬ B.le (A.output β) (A.output α) := by
+        intro h3
+        have h_eq : A.output α = A.output β := B.le_antisymm h1 h3
+        exact h_ne h_eq
+      exact (B.lt_iff_le_not_le (A.output α) (A.output β)).mpr ⟨h1, h_ne2⟩
+    exact ⟨α, β, h_pos⟩
+  · -- Case 2: output β ≤ output α
+    have h_pos : B.lt (A.output β) (A.output α) := by
+      have h_ne2 : ¬ B.le (A.output α) (A.output β) := by
+        intro h3
+        have h_eq : A.output α = A.output β := B.le_antisymm h3 h2
+        exact h_ne h_eq
+      exact (B.lt_iff_le_not_le (A.output β) (A.output α)).mpr ⟨h2, h_ne2⟩
+    exact ⟨β, α, h_pos⟩
 
 /-! ============================================================================
    第十五部分总结: 编织公理 = 两面平衡态的实现机制

@@ -2,7 +2,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"10.5"
+  version := v!"10.5.0"
 
 require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0-rc6"
 
