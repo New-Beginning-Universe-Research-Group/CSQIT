@@ -1,15 +1,15 @@
 /-
-CSQIT 10.4.5: HDST 公理实例化（诚实标注版）
+CSQIT 10.4.5: 退化一致性模型（Trivial Consistency Witness）
 文件: Core/HDST.lean
-版本: 10.4.5 (诚实修订版, 2026-06-19)
+版本: 10.5 (诚实命名修订版, 2026-06-20)
 日期: 2026-06-15
 
 ================================================================================
-⚠️ 诚实的免责声明:
+⚠️ 诚实的命名声明（依据 10.5 版评审报告 P0-1 建议）:
 ================================================================================
 
-本文件定义的 "HDST" (高维时空) 模型在数学上满足 CSQIT 的所有公理，
-但在物理意义上是退化的。具体而言：
+本文件定义的模型在数学上**严格等价于 trivialModel** (M=Unit, C=Unit)。
+具体而言：
 
   • HDSTRelatum := Unit  — "关系元"是单元素集合，实际上没有维度
   • HDSTRule := Unit     — "规则"也是单元素集合，实际上没有规则多样性
@@ -19,18 +19,24 @@ CSQIT 10.4.5: HDST 公理实例化（诚实标注版）
   • entropy _ := 0       — 熵恒为 0，没有信息内容
   • evolve _ x := x      — 动力学演化是恒等映射，没有演化
 
-因此，本模型在数学上等价于 trivialModel (M=Unit, C=Unit)。
+**命名历史与诚实性说明**：
+  - 最初命名为 "HDST"（高维时空）是为了表达"这是一个结构位置"，
+    但在物理上造成了严重误导——它没有任何高维或非平凡的内容。
+  - 从 10.5 版开始，本文件保留了所有代码以维持一致性见证的功能，
+    但在命名上明确标注为"退化模型"。
+  - 对于新代码，**建议直接使用 Core/Theorems.lean 中的 trivialModel**，
+    而非本文件中的 HDST* 实例——它们在数学上完全等价。
 
-命名为 "HDST" 是为了表达"这是一个可以承载高维时空理论的结构位置"，
-但当前填充的内容是平凡的。未来的工作应当在此结构位置上构造
-真正非平凡的实例（例如 M = ℤ^n，C = 某种编码的演化规则）。
+**为何保留此文件而非删除？**
+  - 它构成了 Core/Unified.lean 中 StandardUnifiedModel 的历史基础
+  - 它是 CSQIT 公理体系一致性的一个显式见证（尽管 trivialModel 也是）
+  - 它展示了"如何从空结构构造完整的 Theory 实例"
 
-本声明不削弱模型作为一致性见证的有效性 ——
-它仍然证明了 CSQIT 公理体系是逻辑自洽的。
 ================================================================================
 
 验证状态: ✅ 无 sorry / 无 admit
 物理非平凡性: ❌ 退化（与 trivialModel 数学等价）
+建议: 新代码使用 trivialModel 而非 HDST* 系列实例
 -/
 
 import Core.Axioms
@@ -147,5 +153,25 @@ noncomputable def HDSTTheory : Theory HDSTRelatum HDSTRule where
   toAxiomH := HDSTAxiomH
   toAxiomI := HDSTAxiomI
   toAxiomJ := HDSTAxiomJ
+
+/-! 第十二部分：显式等价定理（10.5 版新增 - 依据评审报告 P0-1） -/
+
+/-- HDST 关系元类型与 Unit 同构。
+    这是"HDST 没有维度"这一陈述的形式化证明。 -/
+theorem HDSTRelatum_equiv_Unit : HDSTRelatum ≃ Unit :=
+  Equiv.mk
+    (fun (_ : HDSTRelatum) => ())
+    (fun (_ : Unit) => ())
+    (by intro x; cases x; rfl)
+    (by intro x; cases x; rfl)
+
+/-- HDST 规则类型与 Unit 同构。
+    这是"HDST 没有规则多样性"这一陈述的形式化证明。 -/
+theorem HDSTRule_equiv_Unit : HDSTRule ≃ Unit :=
+  Equiv.mk
+    (fun (_ : HDSTRule) => ())
+    (fun (_ : Unit) => ())
+    (by intro x; cases x; rfl)
+    (by intro x; cases x; rfl)
 
 end CSQIT.HDST
