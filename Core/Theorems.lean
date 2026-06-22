@@ -1900,6 +1900,11 @@ noncomputable instance nonTrivialAxiomI : @AxiomI M C A B where
   在粗粒化极限下，当离散结构趋近于连续时空时，
   horizon 对应于黑洞的事件视界，bulk 对应于时空内部。
   entropy(horizon) 的极限即为 (Area / 4ℏG)，即贝肯斯坦-霍金公式。
+
+  ⚠️ **OP-P0-8 连续性极限**：贝肯斯坦-霍金公式中的"Area"是连续几何量。
+  CSQIT 目前只证明了**离散**因果熵的边界。
+  从离散面积到连续面积的收敛性，属于 OP-P0-8
+  （`regge_to_einstein_hilbert_convergence`），**目前完全未形式化证明**。
 -/
 theorem holographic_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : AxiomI M C]
     (h_monotone : ∀ (S T : Set M), S ⊆ T → I.entropy S ≤ I.entropy T)
@@ -3864,6 +3869,8 @@ theorem causal_nontrivial_implies_weaving {M C : Type*} [A : AxiomA M C] [B : Ax
 
    - "离散时空涌现出连续流形"的连续性极限
      → **未形式化**（属于 W3 的研究方向）
+       ⚠️ 参见 `OpenProblems.lean` 中的 OP-P0-8: `regge_to_einstein_hilbert_convergence`
+       这是连接离散 CSQIT 与连续引力理论的唯一桥梁，目前**完全未证明**
 
    本次 Lean 更新的精确状态：
    - W1（形式化数学）: 上述 7 个核心定理 + 多个具体模型实例

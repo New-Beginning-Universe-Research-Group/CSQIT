@@ -100,17 +100,17 @@ CSQIT/
 
 ## ✅ 核心公理体系（A-J）
 
-| 公理 | 描述 | 数学状态 | 物理意义 |
+| 公理 | 描述 | 数学状态 | 核心局限 |
 |------|------|----------|----------|
-| **AxiomA** | 关系元 (M) 与规则 (C) 的定义 | ✅ 完备 | 宇宙的基本组成 |
-| **AxiomB** | 因果偏序与严格因果序 | ✅ 完备，有非平凡实例 | 时间的因果结构 |
-| **AxiomC** | 量子振幅（复数幺正表示） | ✅ 完备，有非平凡实例 | 量子概率的本质 |
-| **AxiomD** | 操作编织（规则的组合一致性） | ⚠️ 数学完备，但在所有已知模型中**空洞成立** | 因果演化的机制 |
-| **AxiomJ** | 动力学编织（新修订） | ✅ 自洽，le-而非 lt- | 演化的不动点定理 |
-| **AxiomF** | 连续极限 | ⚠️ 已定义，实例退化 | 时空连续性的涌现 |
-| **AxiomG** | 量子引力耦合 | ⚠️ 已定义，实例退化 | 引力与量子的统一 |
-| **AxiomH** | 标准模型嵌入 | ⚠️ 已定义，实例退化 | 粒子物理的容纳 |
-| **AxiomI** | 信息因果性与熵 | ✅ 有非平凡实例（贝肯斯坦边界） | 信息的物理意义 |
+| **AxiomA** | 关系元 (M) 与规则 (C) 的定义 | ✅ 完备 | 仅在离散有限类型上严格证明 |
+| **AxiomB** | 因果偏序与严格因果序 | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
+| **AxiomC** | 量子振幅（复数幺正表示） | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
+| **AxiomD** | 操作编织（规则的组合一致性） | ⚠️ 数学完备，但在所有已知模型中**空洞成立** | breakthroughModel 首次实现非空洞实例 |
+| **AxiomJ** | 动力学编织（新修订） | ✅ 自洽，le-而非 lt- | 仅在离散有限类型上严格证明 |
+| **AxiomF** | 连续极限 | ⚠️ 已定义，实例退化 | **尚未形式化**：连续极限收敛性（OP-P0-8） |
+| **AxiomG** | 量子引力耦合 | ⚠️ 已定义，实例退化 | **尚未形式化**：引力变分原理（OP-P0-8） |
+| **AxiomH** | 标准模型嵌入 | ⚠️ 已定义，实例退化 | **尚未形式化**：标准模型导出（OP-P1） |
+| **AxiomI** | 信息因果性与熵 | ✅ 有非平凡实例（贝肯斯坦边界） | 仅在离散结构上严格证明，连续极限（OP-P0-8）未证明 |
 
 **关于 AxiomD 的诚实标注**（2026-06-19 批判性审查后添加）：
 在所有已构造的模型（trivialModel, boolModel, nonTrivialFinModel, HDST）中：
@@ -131,19 +131,19 @@ CSQIT/
 
 ## 📐 已证明的核心定理
 
-| 定理 | 文件 | 描述 | 适用范围 |
-|------|------|------|----------|
-| `input_must_be_empty` | Axioms.lean | 在 AxiomA 约束下，输入必然为空 | 所有模型 |
-| `causal_le_refl/trans/antisymm` | Theorems.lean | 因果序确实是偏序 | 所有模型 |
-| `amplitude_compose` | Theorems.lean | 振幅的组合规则 | 所有模型 |
-| `amplitude_injective` | Axioms.lean | 振幅唯一决定规则 | 所有模型 |
-| `weaving_axiom_redundant` | Independence.lean | 编织公理的冗余性 | 理论分析 |
-| `axiomD_independent_of_AB` | AxiomD_Independence.lean | AxiomD 独立于 A+B | 理论分析 |
-| `axiomI_nontrivial` | Theorems.lean | 信息因果性的非平凡实例 | Fin 5 模型 |
-| `bekenstein_bound` | Theorems.lean | 熵的上界（贝肯斯坦边界） | 有限集合上严格证明 |
-| `bekenstein_bound_finset` | Theorems.lean | Finset 归纳版本 | 构造性证明 |
-| `trivialModel_uniqueness` | Consistency.lean | M=Unit 模型的本质唯一性 | 平凡模型 |
-| `csqit_has_nonTrivial_model` | Theorems.lean | 非平凡有限模型存在 | 关键一致性定理 |
+| 定理 | 文件 | 描述 | 适用范围 | 核心局限 |
+|------|------|------|----------|----------|
+| `input_must_be_empty` | Axioms.lean | 在 AxiomA 约束下，输入必然为空 | 所有模型 | 无（W1 严格证明） |
+| `causal_le_refl/trans/antisymm` | Theorems.lean | 因果序确实是偏序 | 所有模型 | 无（W1 严格证明） |
+| `amplitude_compose` | Theorems.lean | 振幅的组合规则 | 所有模型 | 无（W1 严格证明） |
+| `amplitude_injective` | Axioms.lean | 振幅唯一决定规则 | 所有模型 | 无（W1 严格证明） |
+| `weaving_axiom_redundant` | Independence.lean | 编织公理的冗余性 | 理论分析 | ⚠️ 论证基于分析，独立性未形式化 |
+| `axiomD_independent_of_AB` | AxiomD_Independence.lean | AxiomD 独立于 A+B | 理论分析 | ⚠️ `def`（未证明的命题） |
+| `axiomI_nontrivial` | Theorems.lean | 信息因果性的非平凡实例 | Fin 5 模型 | 无（W1 严格证明） |
+| `bekenstein_bound` | Theorems.lean | 熵的上界（贝肯斯坦边界） | 有限集合上严格证明 | ⚠️ 仅离散版本；连续极限（OP-P0-8）未证明 |
+| `bekenstein_bound_finset` | Theorems.lean | Finset 归纳版本 | 构造性证明 | 无（W1 严格证明） |
+| `trivialModel_uniqueness` | Consistency.lean | M=Unit 模型的本质唯一性 | 平凡模型 | 无（W1 严格证明） |
+| `csqit_has_nonTrivial_model` | Theorems.lean | 非平凡有限模型存在 | 关键一致性定理 | 无（W1 严格证明） |
 
 以上所有定理的 Lean 4 证明均可在相应文件中查阅，无 `sorry`。
 
