@@ -394,39 +394,36 @@ def natAxiomC'_nonunitary :
 /-- **natPartialModel: ℕ 上的 PartialTheory'（无 sorry，诚实构造）。
 
     满足的非平凡性质:
-    - AxiomA': output = id (非平凡)
+    - toAxiomA': input = fun _ => [], output = id, compose = Nat.add
     - evolve: evolve α x = x + α (非平凡！)
     - nat_amplitude_nonunitary: 满足 comp_rule 和 injective
 
-    诚实打破的性质（显式记录）:
-    - broken_localFinite_future: 由 nat_future_infinite(0) 证明成立
+    打破的性质（诚实标注）:
+    - broken_localFinite_future: 由 nat_future_infinite 证明成立
     - broken_amplitude_norm_one: 由 nat_amplitude_not_unitary 证明成立
 
     这是对评审报告建议的直接实现：
     "将 natModel 重构为 PartialTheory'，明确标注破坏的公理，
      而非在完整公理实例中留 sorry。" -/
-def natPartialModel [A' : AxiomA' ℕ ℕ] : PartialTheory' ℕ ℕ where
-  toPartialAxiomB' := {
-    le := fun x y => x ≤ y,
-    lt := fun x y => x < y,
-    le_refl := by intro x; exact le_refl x,
-    le_trans := by intro x y z hxy hyz; exact le_trans hxy hyz,
-    le_antisymm := by intro x y hxy hyx; exact le_antisymm hxy hyx,
-    lt_iff_le_not_le := by intro x y; simp,
-    localFinite_past := by
-      intro x
-      have : { y : ℕ | y < x } ⊆ Finset.range x := by
-        intro y hy; simp at hy; simpa [Finset.mem_range] using hy
-      exact Set.Finite.subset (Finset.finite_toSet _) this,
-    weaving_axiom' := by
-      intro α x hx
-      simp at hx <;> contradiction
-  }
-  toPartialAxiomC' := {
-    amplitude := nat_amplitude_nonunitary,
-    comp_rule := nat_amplitude_comp_rule,
-    amplitude_injective := nat_amplitude_injective
-  }
+def natPartialModel : PartialTheory' ℕ ℕ where
+  toAxiomA' := natAxiomA'
+  le := fun x y => x ≤ y
+  lt := fun x y => x < y
+  le_refl := by intro x; exact le_refl x
+  le_trans := by intro x y z hxy hyz; exact le_trans hxy hyz
+  le_antisymm := by intro x y hxy hyx; exact le_antisymm hxy hyx
+  lt_iff_le_not_le := by intro x y; simp
+  localFinite_past := by
+    intro x
+    have : { y : ℕ | y < x } ⊆ Finset.range x := by
+      intro y hy; simp at hy; simpa [Finset.mem_range] using hy
+    exact Set.Finite.subset (Finset.finite_toSet _) this
+  weaving_axiom' := by
+    intro α x hx
+    simp at hx <;> contradiction
+  amplitude := nat_amplitude_nonunitary
+  amplitude_comp_rule := nat_amplitude_comp_rule
+  amplitude_injective := nat_amplitude_injective
   toAxiomF' := {
     scale := fun _ => (1 : ℝ),
     scale_pos := by intro n; norm_num,
@@ -443,24 +440,20 @@ def natPartialModel [A' : AxiomA' ℕ ℕ] : PartialTheory' ℕ ℕ where
     field_content := fun _ _ => (0 : ℂ),
     lagrangian := fun _ => (0 : ℝ)
   }
-  toPartialAxiomI' := {
-    entropy := fun S =>
-      if h : Set.Finite S then (Nat.card (Set.Finite.toFinset h) : ℝ) else 0,
-    entropy_nonneg := by
-      intro S
-      simp only <;> split <;> norm_num <;> linarith,
-    entropy_subadditive := by
-      intro S T
-      by_cases hS : Set.Finite S <;> by_cases hT : Set.Finite T <;> simp [hS, hT] <;> norm_num
-  }
-  toPartialAxiomJ' := {
-    evolve := fun α x => x + α,
-    causal_update := by intro α x; simp; linarith,
-    comp_evolve := by
-      intro α β x
-      simp [add_assoc]
-      <;> ring
-  }
+  entropy := fun S =>
+    if h : Set.Finite S then (Nat.card (Set.Finite.toFinset h) : ℝ) else 0
+  entropy_nonneg := by
+    intro S
+    simp only <;> split <;> norm_num <;> linarith
+  entropy_subadditive := by
+    intro S T
+    by_cases hS : Set.Finite S <;> by_cases hT : Set.Finite T <;> simp [hS, hT] <;> norm_num
+  evolve := fun α x => x + α
+  causal_update := by intro α x; simp; linarith
+  comp_evolve := by
+    intro α β x
+    simp [add_assoc]
+    <;> ring
   broken_localFinite_future := ∃ x : ℕ, ¬ Set.Finite { y : ℕ | x < y }
   broken_amplitude_norm_one := ∃ α : ℕ, Complex.normSq (nat_amplitude_nonunitary α) ≠ 1
   broken_other := False
@@ -482,12 +475,12 @@ theorem natPartialModel_broken_norm_one :
    ============================================================================ -/
 
 /-- **存在定理 1**: Fin 7 上存在完整的 Theory' 模型。 -/
-theorem fin7_theory_exists : ∃ (M C : Type), Nonempty (Theory' M C) :=
-  ⟨Fin 7, Fin 7, ⟨fin7Model⟩⟩
+theorem fin7_theory_exists : Nonempty (Theory' (Fin 7) (Fin 7)) :=
+  ⟨fin7Model⟩
 
 /-- **存在定理 2**: ℕ 上存在 PartialTheory' 模型（evolve 非平凡，amplitude 非幺正）。 -/
-theorem nat_partial_theory_exists : ∃ (M C : Type), Nonempty (PartialTheory' M C) :=
-  ⟨ℕ, ℕ, ⟨natPartialModel⟩⟩
+theorem nat_partial_theory_exists : Nonempty (PartialTheory' ℕ ℕ) :=
+  ⟨natPartialModel⟩
 
 /-! ============================================================================
    诚实的总结表：各模型满足/破坏的性质

@@ -91,9 +91,15 @@ class AxiomA (M C : Type*) where
   compose : C → C → C
   /-- 组合的输入 = 输入的拼接 -/
   compose_input : ∀ α β : C, input (compose α β) = input α ++ input β
-  /-- 组合的输出 = 后一规则的输出 -/
+  /-- ⚠️ **诚实标注**: 组合的输出 = 后一规则的输出
+      此公理在左可迁 compose 结构下导致 output 退化为常函数
+      （见 Theorems.lean 中 `output_degenerate_theorem`）。
+      若需非平凡 output，请使用 AxiomA' 中的 `compose_output'`。 -/
   compose_output : ∀ α β : C, output (compose α β) = output β
-  /-- 组合满足结合律 -/
+  /-- ⚠️ **诚实标注**: 组合满足结合律
+      此为独立公理，目前未被证明可由 AxiomB + AxiomC 推导。
+      任何声称"结合律可由因果序和概率幅推导"的说法，
+      在当前形式化体系中均是**未证明的**。 -/
   compose_assoc : ∀ α β γ : C, compose (compose α β) γ = compose α (compose β γ)
 
 /-! ============================================================================
@@ -921,8 +927,13 @@ structure Theory' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
    ============================================================================ -/
 
 /-- **PartialTheory'**（部分理论）: 显式记录哪些完整性条件被打破。
-    这是对"在 AxiomB' 实例中使用 sorry"的诚实替代方案。 -/
-structure PartialTheory' (M C : Type*) [A' : AxiomA' M C] where
+    这是对"在 AxiomB' 实例中使用 sorry"的诚实替代方案。
+
+    此结构直接包含 AxiomA' 作为字段，用于传递给 AxiomF'/G'/H'。
+    这避免了复杂的类型类实例依赖问题。 -/
+structure PartialTheory' (M C : Type*) where
+  /-- AxiomA' 实例（用于传递给扩展公理） -/
+  toAxiomA' : AxiomA' M C
   /-- 因果偏序 (≤) -/
   le : M → M → Prop
   /-- 严格因果序 (<) -/
@@ -937,15 +948,15 @@ structure PartialTheory' (M C : Type*) [A' : AxiomA' M C] where
   lt_iff_le_not_le : ∀ x y : M, lt x y ↔ (le x y ∧ ¬ le y x)
   /-- 过去的局部有限性 -/
   localFinite_past : ∀ x : M, Set.Finite { y : M | lt y x }
-  /-- 编织公理' -/
-  weaving_axiom' : ∀ (α : C) (x : M), x ∈ A'.input α → lt x (A'.output α)
+  /-- 编织公理'（使用 toAxiomA' 的 input/output） -/
+  weaving_axiom' : ∀ (α : C) (x : M), x ∈ toAxiomA'.input α → lt x (toAxiomA'.output α)
   /-- 振幅函数 -/
   amplitude : C → ℂ
   /-- 振幅合成法则 -/
-  amplitude_comp_rule : ∀ (α β : C), amplitude (A'.compose α β) = amplitude α * amplitude β
+  amplitude_comp_rule : ∀ (α β : C), amplitude (toAxiomA'.compose α β) = amplitude α * amplitude β
   /-- 振幅单射性 -/
   amplitude_injective : Function.Injective amplitude
-  /-- 其余扩展公理（保持与 Theory' 相同） -/
+  /-- 其余扩展公理（使用 toAxiomA'） -/
   toAxiomF' : AxiomF' M C
   toAxiomG' : AxiomG' M C
   toAxiomH' : AxiomH' M C
@@ -960,7 +971,7 @@ structure PartialTheory' (M C : Type*) [A' : AxiomA' M C] where
   /-- 因果更新条件 -/
   causal_update : ∀ (α : C) (x : M), le x (evolve α x)
   /-- 演化合成法则 -/
-  comp_evolve : ∀ (α β : C) (x : M), evolve (A'.compose α β) x = evolve β (evolve α x)
+  comp_evolve : ∀ (α β : C) (x : M), evolve (toAxiomA'.compose α β) x = evolve β (evolve α x)
   /-- **诚实的违反记录**：
       明确标注哪些完整性条件被打破，以及数学上如何被打破。 -/
   broken_localFinite_future : Prop
