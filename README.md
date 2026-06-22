@@ -136,11 +136,11 @@ CSQIT/
 | `input_must_be_empty` | Axioms.lean | 在 AxiomA 约束下，输入必然为空 | 所有模型 | 无（W1 严格证明） |
 | `causal_le_refl/trans/antisymm` | Theorems.lean | 因果序确实是偏序 | 所有模型 | 无（W1 严格证明） |
 | `amplitude_compose` | Theorems.lean | 振幅的组合规则 | 所有模型 | 无（W1 严格证明） |
-| `amplitude_injective` | Axioms.lean | 振幅唯一决定规则 | 所有模型 | 无（W1 严格证明） |
+| `amplitude_injective` | Axioms.lean | 振幅唯一决定规则 | 所有满足 AxiomA 的模型 | ⚠️ 仅适用于满足 AxiomA 的模型；标准 Theory 框架下与 output 非平凡性不相容（trade-off） |
 | `weaving_axiom_redundant` | Independence.lean | 编织公理的冗余性 | 理论分析 | ⚠️ 论证基于分析，独立性未形式化 |
 | `axiomD_independent_of_AB` | AxiomD_Independence.lean | AxiomD 独立于 A+B | 理论分析 | ⚠️ `def`（未证明的命题） |
 | `axiomI_nontrivial` | Theorems.lean | 信息因果性的非平凡实例 | Fin 5 模型 | 无（W1 严格证明） |
-| `bekenstein_bound` | Theorems.lean | 熵的上界（贝肯斯坦边界） | 有限集合上严格证明 | ⚠️ 仅离散版本；连续极限（OP-P0-8）未证明 |
+| `bekenstein_bound` | Theorems.lean | 熵的上界（贝肯斯坦边界） | 有限集合上严格证明 | ⚠️ 仅离散版本；在已知模型中取等号（entropy(S)=|S|），物理严格不等式未实现；连续极限（OP-P0-8）未证明 |
 | `bekenstein_bound_finset` | Theorems.lean | Finset 归纳版本 | 构造性证明 | 无（W1 严格证明） |
 | `trivialModel_uniqueness` | Consistency.lean | M=Unit 模型的本质唯一性 | 平凡模型 | 无（W1 严格证明） |
 | `csqit_has_nonTrivial_model` | Theorems.lean | 非平凡有限模型存在 | 关键一致性定理 | 无（W1 严格证明） |
@@ -246,6 +246,26 @@ lake build Core.Theorems
 - "时空从编织中涌现" — 因为这还只是一个数学思想，没有收敛性证明
 
 **诚为本**。
+
+---
+
+### 📜 版本演进 (10.4.5 → 10.5)
+
+| 日期 | 版本 | 主要改进 |
+|:---|:---|:---|
+| 2026-06-19 | 10.4.5 | 初始版本，完整的公理体系和核心定理形式化 |
+| 2026-06-20 | 10.4.5-诚实修订 | 批判性审查后修正多项诚实性问题 |
+| 2026-06-22 | 10.5 | **诚实性修订**：严格区分 W1/W2/W3；消除所有 `sorry`；重构 PartialTheory' |
+
+**10.4.5 → 10.5 关键变更**:
+- **诚实性修订**：在所有公理和定理中增加了"核心局限"说明，明确标注了证明的适用范围
+- **compose_assoc 标注**：明确标注为独立公理（非由 B+C 推导）
+- **守恒律升级**：将 `k×m=|C|` 升级为 P0 未证明猜想（OP-P0-6）
+- **OP-P0-8**：新增离散→连续收敛性开放问题（`regge_to_einstein_hilbert_convergence`）
+- **AxiomD 区分**：清晰区分标准 AxiomD 和 AxiomD'，并在 README 中明确标注
+- **独立性证明重构**：`AxiomC_Independence.lean` 添加证明范围声明，防止高估结论
+- **开放问题系统化**：`OpenProblems.lean` 重构为 P0/P1/P2 三级，为每个问题提供技术路线分析
+- **消除占位符**：删除无实际内容的 `axiomD_completeness_analysis` 定理
 
 ---
 

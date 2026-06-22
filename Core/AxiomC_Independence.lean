@@ -15,7 +15,9 @@ CSQIT 10.4.5 公理C独立性论证
 这些反例模型**不保证**满足 `AxiomA` 和 `AxiomB` 的其他约束。
 具体而言：
 - 本文件中的 amplitude 函数（如 `const_amplitude`）**不满足** `AxiomC.amplitude_factorization`
-- 这些模型仅用于证明 AxiomC 内部字段的独立性，不构成完整 Theory 的反例
+- 更重要的是，这些模型**不满足** `AxiomA.compose_input` 和 `AxiomA.compose_output` 约束
+- 因此，它们**不是**完整 CSQIT Theory 的反例
+- 它们仅用于证明 AxiomC 内部字段的独立性
 
 **完整 Theory 背景下的独立性**：
 若要证明某个公理在完整 CSQIT Theory（A+B+C+D+...）下独立，

@@ -14,21 +14,23 @@ require mathlib from git "https://github.com/leanprover-community/mathlib4.git" 
 -- 应将其加入 Core/ 目录，并在这里的 roots 中登记。
 
 lean_lib CSQIT where
+  -- ⚠️ roots 按依赖关系的拓扑顺序排列
+  -- 阅读顺序：基础公理 → 定理 → 模型 → 分析/综合 → 文档
   roots := #[
-    `Core.Axioms,
-    `Core.Theorems,
-    `Core.Models.FinModels,
-    `Core.Models.EnhancedModels,
-    `Core.HDST,
-    `Core.Consistency,
-    `Core.Independence,
-    `Core.AxiomD_Independence,
-    `Core.AxiomC_Independence,
-    `Core.WeavingStructure,
-    `Core.Hierarchy,
-    `Core.Unified,
-    `Core.Summary,
-    `Core.Philosophy,
-    `Core.OpenProblems,
-    `Core.README
+    `Core.Axioms,              -- 1. 基础：公理体系定义（所有其他模块依赖此）
+    `Core.Theorems,            -- 2. 核心定理（依赖 Axioms）
+    `Core.Models.FinModels,     -- 3. 有限模型构造（依赖 Axioms, Theorems）
+    `Core.Models.EnhancedModels,-- 4. 增强模型（依赖 Axioms, Theorems, FinModels）
+    `Core.HDST,                -- 5. HDST 模型（依赖 Axioms）
+    `Core.WeavingStructure,    -- 6. 编织结构分析（依赖 Axioms, Theorems）
+    `Core.Hierarchy,           -- 7. 公理层次关系（依赖 Axioms, Theorems）
+    `Core.Consistency,         -- 8. 一致性证明（依赖 Axioms, Theorems, FinModels）
+    `Core.Independence,        -- 9. 独立性证明（依赖 Axioms, Theorems）
+    `Core.AxiomD_Independence, -- 10. AxiomD 独立性（依赖 Axioms, Theorems）
+    `Core.AxiomC_Independence, -- 11. AxiomC 独立性（依赖 Axioms, Theorems）
+    `Core.Unified,             -- 12. 统一框架（依赖上述大部分模块）
+    `Core.Summary,             -- 13. 项目总结（依赖上述模块）
+    `Core.Philosophy,          -- 14. 物理哲学背景（文档性质）
+    `Core.OpenProblems,        -- 15. 开放问题（依赖上述模块）
+    `Core.README               -- 16. 模块说明（最后）
   ]

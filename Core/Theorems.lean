@@ -1905,6 +1905,11 @@ noncomputable instance nonTrivialAxiomI : @AxiomI M C A B where
   CSQIT 目前只证明了**离散**因果熵的边界。
   从离散面积到连续面积的收敛性，属于 OP-P0-8
   （`regge_to_einstein_hilbert_convergence`），**目前完全未形式化证明**。
+
+  ⚠️ **与 AdS/CFT 全息原理的区别**：本定理证明的是一个**熵的不等式**
+  （`entropy(horizon) ≤ entropy(bulk)`），而非一个**对偶性**（边界理论 ≡ 体理论）。
+  将本定理称为"离散全息原理"是一种物理诠释（W3），但其数学内容仅为一个不等式。
+  真正的全息对偶性（如 AdS/CFT）需要额外的结构，在本框架中尚未形式化。
 -/
 theorem holographic_bound {M C : Type*} [A : AxiomA M C] [B : AxiomB M C] [I : AxiomI M C]
     (h_monotone : ∀ (S T : Set M), S ⊆ T → I.entropy S ≤ I.entropy T)
