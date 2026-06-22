@@ -52,9 +52,16 @@ CSQIT_*.txt
 *backup*.md
 _backup/
 CSQIT_10.4.5_*
+CSQIT_10.5_*
 All_Lean_Code_*.md
 All_Lean_Code_Full_*.txt
 All_Lean_Code_Complete_*.md
+All_Lean_Code_Export_*
+Core_Lean_Code_*.txt
+*_深度梳理*.md
+*_Review*.md
+theorems_base64.txt
+test_mex3.lean
 
 # Temporary files
 *.ps1

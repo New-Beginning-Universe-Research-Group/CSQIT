@@ -36,6 +36,8 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Data.Finset.Basic
+import Mathlib.Algebra.Group.Basic
+import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
@@ -84,8 +86,10 @@ private lemma fin4_I_pow_add (α β : Fin 4) :
 /-- **injective**: 如果 I^m = I^n，则 m = n（对于 m, n < 4）-/
 private lemma fin4_I_inj (x y : Fin 4)
   (h : Complex.I ^ x.val = Complex.I ^ y.val) : x = y := by
-  fin_cases x <;> fin_cases y <;> simp [I_pow_0, I_pow_1, I_pow_2, I_pow_3] at h <;>
-    (try { contradiction }) <;> (try { rfl })
+  fin_cases x <;> fin_cases y <;>
+    simp [I_pow_0, I_pow_1, I_pow_2, I_pow_3] at h <;>
+    try { exact h } <;>
+    contradiction
 
 /-! ============================================================================
    §1.2 模型组件的顶层定义（避免 let 作用域问题）
@@ -130,7 +134,7 @@ private lemma mod_compose_output (α β : Fin 4) : mod_output (mod_compose α β
 
 private lemma mod_compose_assoc (α β γ : Fin 4) :
   mod_compose (mod_compose α β) γ = mod_compose α (mod_compose β γ) := by
-  simp [mod_compose, add_assoc]
+  simp [mod_compose, Fin.add_def, Nat.add_assoc]
 
 /-- **AxiomA 实例** -/
 private instance instA : AxiomA (Fin 5) (Fin 4) :=
@@ -209,7 +213,8 @@ private lemma mod_op_weaving (α β : Fin 4)
   (hlt : instB.lt (instA.output α) (instA.output β)) :
   ∃ (γ : Fin 4), instA.compose α γ = β := by
   -- output 是常函数 0，所以 lt (output α) (output β) 恒为 False
-  simp [instA, instB, mod_lt, mod_output] at hlt <;> contradiction
+  have : ¬ instB.lt 0 0 := lt_irrefl 0
+  contradiction
 
 /-- **AxiomD 实例** -/
 private instance instD : AxiomD (Fin 5) (Fin 4) :=
@@ -352,7 +357,7 @@ private lemma ft_input_nodup (α : Fin 2) : List.Nodup (ft_input α) := by
 
 private lemma ft_compose_assoc (α β γ : Fin 2) :
   ft_compose (ft_compose α β) γ = ft_compose α (ft_compose β γ) := by
-  simp [ft_compose, add_assoc]
+  simp [ft_compose, Fin.add_def, Nat.add_assoc]
 
 private instance instA : AxiomA (Fin 2) (Fin 2) :=
   { input := ft_input,
@@ -421,7 +426,8 @@ private instance instB : AxiomB (Fin 2) (Fin 2) :=
 private instance instD : AxiomD (Fin 2) (Fin 2) :=
   { op_weaving := by
       intro α β hlt
-      simp [instA, instB, ft_output, ft_lt] at hlt <;> contradiction }
+      have : ¬ instB.lt 0 0 := lt_irrefl 0
+      contradiction }
 
 /-! §4 Trade-off 分析：振幅退化与输出非平凡的不对称性 -/
 
