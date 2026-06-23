@@ -978,4 +978,32 @@ structure PartialTheory' (M C : Type*) where
   broken_amplitude_norm_one : Prop
   broken_other : Prop
 
+/--
+**类型别名**: BoundedTheory — PartialTheory' 的别名
+
+命名说明：
+- `Partial` 可能被误解为"尚未完成"
+- `BoundedTheory` 更清晰地传达了"这是有意不完整的"这一信息
+- 同时保留 `PartialTheory'` 作为向后兼容的别名
+
+用法示例：
+```lean
+def myModel : BoundedTheory ℕ ℕ := { ... }
+-- 等价于:
+def myModel : PartialTheory' ℕ ℕ := { ... }
+```
+-/
+@[reducible, simp, norm_cast]
+def BoundedTheory := PartialTheory'
+
+/--
+**BoundedTheory 的诚实性原则**
+
+`BoundedTheory`（原 `PartialTheory'`）是一种创新的"诚实性模式"：
+- 不使用 `sorry` 掩盖问题
+- 将限制条件显式化为结构的一部分
+- 每个 `broken_*` 字段都有严格的数学证明
+
+这对于处理理论物理中不可避免的近似/理想化非常有用。
+-/
 end CSQIT

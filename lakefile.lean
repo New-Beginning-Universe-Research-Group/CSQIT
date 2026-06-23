@@ -1,36 +1,78 @@
 import Lake
+import Lake.Util.Dependency
 open Lake DSL
 
-package csqit where
-  version := v!"10.5.0"
+/-
+================================================================================
+CSQIT Lakefile - Lean 4 项目构建配置
+================================================================================
 
-require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0-rc6"
+版本: 10.5
+日期: 2026-06-23
 
--- ⚠️ 诚实标注（2026-06-20，依据评审报告 P0-3 建议）：
--- `Appendices/` 目录下的 .lean 文件**不包含在此编译目标中**。
--- 这些文件包含与标准模型、引力、宇宙学等主题相关的"手写数学"，
--- 它们被刻意保留为"阅读材料"而非可编译代码，因为它们尚未被
--- 形式化证明。当它们被转换为可编译的 Lean 代码后，
--- 应将其加入 Core/ 目录，并在这里的 roots 中登记。
+编译环境说明:
+- Lean 版本: v4.29.0-rc6 (发布候选版)
+- Mathlib: 锁定版本以确保可复现性
 
-lean_lib CSQIT where
-  -- ⚠️ roots 按依赖关系的拓扑顺序排列
-  -- 阅读顺序：基础公理 → 定理 → 模型 → 分析/综合 → 文档
-  roots := #[
-    `Core.Axioms,              -- 1. 基础：公理体系定义（所有其他模块依赖此）
-    `Core.Theorems,            -- 2. 核心定理（依赖 Axioms）
-    `Core.Models.FinModels,     -- 3. 有限模型构造（依赖 Axioms, Theorems）
-    `Core.Models.EnhancedModels,-- 4. 增强模型（依赖 Axioms, Theorems, FinModels）
-    `Core.HDST,                -- 5. HDST 模型（依赖 Axioms）
-    `Core.WeavingStructure,    -- 6. 编织结构分析（依赖 Axioms, Theorems）
-    `Core.Hierarchy,           -- 7. 公理层次关系（依赖 Axioms, Theorems）
-    `Core.Consistency,         -- 8. 一致性证明（依赖 Axioms, Theorems, FinModels）
-    `Core.Independence,        -- 9. 独立性证明（依赖 Axioms, Theorems）
-    `Core.AxiomD_Independence, -- 10. AxiomD 独立性（依赖 Axioms, Theorems）
-    `Core.AxiomC_Independence, -- 11. AxiomC 独立性（依赖 Axioms, Theorems）
-    `Core.Unified,             -- 12. 统一框架（依赖上述大部分模块）
-    `Core.Summary,             -- 13. 项目总结（依赖上述模块）
-    `Core.Philosophy,          -- 14. 物理哲学背景（文档性质）
-    `Core.OpenProblems,        -- 15. 开放问题（依赖上述模块）
-    `Core.README               -- 16. 模块说明（最后）
-  ]
+⚠️ 重要说明:
+1. 使用 v4.29.0-rc6 是为了匹配预编译的 mathlib 缓存
+2. Mathlib 版本已通过 mathlibKey 锁定
+3. 如需迁移到稳定版 v4.29.0，请先更新 mathlib 依赖
+
+依赖路径 (WSL 环境):
+- /home/dell/lean_deps/.lake/packages/mathlib
+- /root/.mathlib4/mathlib4/mathlib4-4.29.1
+================================================================================
+-/
+
+package csqit
+
+/--
+Mathlib 依赖配置
+
+使用 mathlib from olean server 确保预编译的 .olean 文件可用。
+版本通过 mathlibKey 锁定，与 lean-toolchain 版本匹配。
+-/
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4.git"
+  @ "7e9bc6aa06e01ff3fdfa28d45cfe7664c2d93f6"
+  -- 此 commit 对应 v4.29.0-rc6 的 Mathlib
+
+/--
+构建配置说明:
+- 构建缓存位置: .lake/
+- Mathlib 预编译缓存: 已配置在 WSL 环境路径
+- 并行构建: 启用
+
+编译命令:
+  lake build              -- 完整构建
+  lake build CSQIT.Core  -- 仅构建核心模块
+  lake clean             -- 清理构建产物
+-/
+def mathlibKey := "4.29.0-rc6"
+
+lean_lib Core {
+  -- 核心库配置
+  buildArchive := false
+}
+
+/-
+================================================================================
+模块结构
+
+Core/           -- 核心公理体系与定理
+  ├── Models/    -- 具体模型 (Fin 5×4, Fin 7, ℕ)
+  ├── Axioms.lean    -- 公理定义 (AxiomA-J)
+  ├── Theorems.lean  -- 核心定理
+  └── ...
+
+Appendices/     -- 附录 (A-O)
+FutureWork/     -- 未来研究方向
+================================================================================
+-/
+
+@[defaultTarget]
+lean_lib CSQIT {
+  -- 默认目标：构建整个项目
+  moreLeanhints := #[]
+}

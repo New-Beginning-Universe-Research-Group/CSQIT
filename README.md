@@ -83,11 +83,11 @@ CSQIT/
 │   ├── Appendices/AppendixB/TensorProduct.lean
 │   ├── Appendices/AppendixC/Regge.lean
 │   ├── Appendices/AppendixG/Einstein.lean
-│   ├── Appendices/AppendixG/GravityEmergence.lean
+│   ├── Appendices/AppendixG/GravityEmergence.lean ⚠️ 框架占位符
 │   ├── Appendices/AppendixG/ToyGravity.lean
 │   ├── Appendices/AppendixI/Complexity.lean
 │   ├── Appendices/AppendixN/Verifier.lean
-│   └── Appendices/AppendixO/Reproduce.lean
+│   └── Appendices/AppendixO/Reproduce.lean ⚠️ 数值计算为占位符
 ├── lakefile.lean                       # Lake 项目配置（新增，2026-06-19）
 ├── lean-toolchain                      # Lean 版本（v4.29.0-rc6）
 ├── COMPILATION_ENVIRONMENT.md          # 编译环境说明
