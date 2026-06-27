@@ -23,6 +23,7 @@ lean_lib CSQIT where
     `Core.Hierarchy,
     `Appendices.AppendixA.Uniqueness,
     `Appendices.AppendixB.CausalAndProbability,
-    `Appendices.AppendixD.CausalStructure,
-    `Appendices.AppendixJ.Mathematics
+    `Appendices.AppendixC.CausalStructure,
+    `Appendices.AppendixD.BlackHoleThermo,
+    `Appendices.AppendixE.Mathematics
   ]
