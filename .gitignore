@@ -53,6 +53,8 @@ CSQIT_*.txt
 _backup/
 CSQIT_10.4.5_*
 CSQIT_10.5_*
+CSQIT_FinalBackup_*
+优化历史备份/
 All_Lean_Code_*.md
 All_Lean_Code_Full_*.txt
 All_Lean_Code_Complete_*.md
@@ -62,6 +64,11 @@ Core_Lean_Code_*.txt
 *_Review*.md
 theorems_base64.txt
 test_mex3.lean
+
+# Paper files (kept in backup but not in core repo)
+CSQIT_11.0_Final_Paper_*.md
+CSQIT_*_论文*.md
+CSQIT_*_完整理论*.md
 
 # Temporary files
 *.ps1
