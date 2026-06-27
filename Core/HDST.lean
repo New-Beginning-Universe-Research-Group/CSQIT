@@ -158,7 +158,7 @@ noncomputable def HDSTTheory : Theory HDSTRelatum HDSTRule where
 
 /-- HDST 关系元类型与 Unit 同构。
     这是"HDST 没有维度"这一陈述的形式化证明。 -/
-theorem HDSTRelatum_equiv_Unit : HDSTRelatum ≃ Unit :=
+def HDSTRelatum_equiv_Unit : HDSTRelatum ≃ Unit :=
   Equiv.mk
     (fun (_ : HDSTRelatum) => ())
     (fun (_ : Unit) => ())
@@ -167,7 +167,7 @@ theorem HDSTRelatum_equiv_Unit : HDSTRelatum ≃ Unit :=
 
 /-- HDST 规则类型与 Unit 同构。
     这是"HDST 没有规则多样性"这一陈述的形式化证明。 -/
-theorem HDSTRule_equiv_Unit : HDSTRule ≃ Unit :=
+def HDSTRule_equiv_Unit : HDSTRule ≃ Unit :=
   Equiv.mk
     (fun (_ : HDSTRule) => ())
     (fun (_ : Unit) => ())

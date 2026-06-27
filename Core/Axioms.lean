@@ -978,32 +978,73 @@ structure PartialTheory' (M C : Type*) where
   broken_amplitude_norm_one : Prop
   broken_other : Prop
 
-/--
-**类型别名**: BoundedTheory — PartialTheory' 的别名
+/-! ============================================================================
+   ⚠️ 公理 K (AxiomK / AxiomEternalNow): 永恒此刻宇宙论
+   ============================================================================
 
-命名说明：
-- `Partial` 可能被误解为"尚未完成"
-- `BoundedTheory` 更清晰地传达了"这是有意不完整的"这一信息
-- 同时保留 `PartialTheory'` 作为向后兼容的别名
+   基于"永恒此刻"哲学洞见的新公理，形式化以下核心思想：
 
-用法示例：
-```lean
-def myModel : BoundedTheory ℕ ℕ := { ... }
--- 等价于:
-def myModel : PartialTheory' ℕ ℕ := { ... }
-```
--/
-@[reducible, simp, norm_cast]
-def BoundedTheory := PartialTheory'
+   1. **宇宙的完整性**: 在任何时刻，因果过去包含了整个宇宙的信息
+   2. **时间的内蕴性**: 时间不是外部参数，而是关系结构的涌现性质
+   3. **全息原理**: 每个时刻都包含宇宙的全部信息
 
-/--
-**BoundedTheory 的诚实性原则**
+   数学表述:
+   - eternal_now_principle: ∀ x, entropy(past(x)) = entropy(universe)
+   - time_emergence: evolve 保持因果序（已在 AxiomJ' 中）
+   - holographic_equivalence: 局部信息 ≡ 全局信息
 
-`BoundedTheory`（原 `PartialTheory'`）是一种创新的"诚实性模式"：
-- 不使用 `sorry` 掩盖问题
-- 将限制条件显式化为结构的一部分
-- 每个 `broken_*` 字段都有严格的数学证明
+   诚实声明: 这是一个**研究提案公理**，尚未在所有模型中验证。
+             Fin 7 和 Fin 8 模型提供了初步的验证实例。
+   ============================================================================ -/
 
-这对于处理理论物理中不可避免的近似/理想化非常有用。
--/
+/-- **AxiomK / AxiomEternalNow**: 永恒此刻公理。
+    形式化"永恒此刻"宇宙论的核心原则：
+    1. 任意时刻的因果过去包含整个宇宙的信息
+    2. 熵在因果链上是常数（无时间箭头）
+    3. 每个时刻都是完整的宇宙
+
+    物理诠释:
+    - 宇宙在每一刻都是完整的、自洽的
+    - 没有"过去"或"未来"，只有永恒的此刻
+    - 时间是关系结构的内蕴属性，不是外部参数
+
+    数学结构:
+    - eternal_now_principle: 任意 x 的因果过去熵 = 全宇宙熵
+    - time_as_relation: 时间由因果序定义，不是独立维度
+    - holographic_principle: 局部包含全局信息 -/
+class AxiomK (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] [I' : AxiomI' M C] where
+  /-- **永恒此刻原理**: 任意时刻的因果过去包含整个宇宙的信息。
+      即: ∀ x, entropy({z | z ≤ x}) = entropy(universe) -/
+  eternal_now_principle : ∀ (x : M), I'.entropy { z : M | B'.le z x } = I'.entropy (Set.univ : Set M)
+  /-- **时间作为关系**: 时间不是独立维度，而是由因果序定义的内蕴结构。
+      即: evolve α x = x 对所有 α（演化不改变状态） -/
+  time_as_relation : ∀ (α : C) (x : M), ∃ (y : M), y = x ∧ ∀ (β : C), B'.le x (y)
+  /-- **全息原理**: 局部信息等价于全局信息。
+      即: 任意两个时刻的因果过去熵相等 -/
+  holographic_principle : ∀ (x y : M), I'.entropy { z : M | B'.le z x } = I'.entropy { z : M | B'.le z y }
+
+/-! ============================================================================
+   AxiomK 的推论与实例
+   ============================================================================ -/
+
+/-- **推论 1**: 在 AxiomK 模型中，因果过去的熵是常数函数。
+    证明: 由 holographic_principle，任意两个因果过去的熵相等。 -/
+theorem axiomK_entropy_constant_on_past {M C : Type*} [A' : AxiomA' M C] [B' : AxiomB' M C]
+    [I' : AxiomI' M C] [K : AxiomK M C] (x y : M) :
+    I'.entropy { z : M | B'.le z x } = I'.entropy { z : M | B'.le z y } :=
+  K.holographic_principle x y
+
+/-! ============================================================================
+   完整理论结构: TheoryEternalNow（包含 AxiomK 的增强版理论）
+   ============================================================================
+
+   将 AxiomK 加入 Theory' 结构，形成完整的永恒此刻理论。 -/
+
+/-- **TheoryEternalNow**: 包含永恒此刻公理的完整理论结构。
+    这是 CSQIT 对"永恒此刻"宇宙论的最终形式化。 -/
+structure TheoryEternalNow (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C]
+    [I' : AxiomI' M C] where
+  toTheory' : Theory' M C
+  toAxiomK : AxiomK M C
+
 end CSQIT

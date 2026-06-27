@@ -1,16 +1,14 @@
 /-
-CSQIT 10.4.5 附录J：数学基础定理 - 教科书典范级
-文件: Mathematics.lean
-物理意义: CSQIT 公理体系的数学结构性质
-数学方法: 群论、代数结构、范畴论基础
-证明程度: ✅ 完整证明
-验证状态: ✅ 100% 完成，无 sorry
+CSQIT 10.5 附录J：数学基础与代数结构
+文件: Appendices/AppendixJ/Mathematics.lean
+版本: 10.5 (数学根本优化版)
+日期: 2026-06-28
 ================================================================================
-
-本模块形式化 CSQIT 的数学基础：
-1. ✅ 规则组合的结合律（半群结构）
-2. ✅ 振幅的群性质（单位元、逆元）
-3. ✅ 因果序的偏序性质
+CSQIT 公理体系的数学结构性质：
+- 规则组合构成半群
+- 振幅映射是半群同态
+- 振幅的单位圆群性质
+- 因果序的偏序性质
 ================================================================================
 -/
 
@@ -24,14 +22,13 @@ namespace CSQIT.Appendices.AppendixJ.Mathematics
 open CSQIT
 
 /-! ============================================================================
-   §1 规则组合的代数结构
+   1. 规则组合的半群结构
    ============================================================================ -/
 
 /--
 定理 J.1: 组合结合律
-物理意义: 规则组合顺序不影响最终结果
-数学陈述: (α ∘ β) ∘ γ = α ∘ (β ∘ γ)
-证明程度: ✅ 完整证明
+规则组合构成半群
+**证明程度**: ✅ 完整证明
 -/
 theorem compose_assoc {M C : Type*} [A : AxiomA M C]
     (α β γ : C) : A.compose (A.compose α β) γ = A.compose α (A.compose β γ) :=
@@ -39,9 +36,8 @@ theorem compose_assoc {M C : Type*} [A : AxiomA M C]
 
 /--
 定理 J.2: 振幅结合律的保持
-物理意义: 振幅在组合下保持结合律
-数学陈述: amplitude((α∘β)∘γ) = amplitude(α∘(β∘γ))
-证明程度: ✅ 完整证明
+振幅在组合下保持结合律
+**证明程度**: ✅ 完整证明
 -/
 theorem amplitude_assoc_preserved {M C : Type*}
     [A : AxiomA M C] [Cx : AxiomC M C] (α β γ : C) :
@@ -52,14 +48,13 @@ theorem amplitude_assoc_preserved {M C : Type*}
   ring
 
 /-! ============================================================================
-   §2 振幅的群性质
+   2. 振幅的群性质（单位圆 U(1)）
    ============================================================================ -/
 
 /--
 定理 J.3: 振幅模方恒为1
-物理意义: 振幅构成单位圆群 U(1)
-数学陈述: ∀α, |amplitude(α)|² = 1
-证明程度: ✅ 完整证明
+振幅构成单位圆群 U(1)
+**证明程度**: ✅ 完整证明
 -/
 theorem amplitude_unit_circle {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
     (α : C) : Complex.normSq (Cx.amplitude α) = 1 :=
@@ -67,9 +62,8 @@ theorem amplitude_unit_circle {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
 
 /--
 定理 J.4: 振幅乘法的封闭性
-物理意义: 振幅乘积仍在单位圆上
-数学陈述: |z₁|² = 1 ∧ |z₂|² = 1 → |z₁·z₂|² = 1
-证明程度: ✅ 完整证明
+单位复数在乘法下封闭
+**证明程度**: ✅ 完整证明
 -/
 theorem amplitude_mul_closed (z₁ z₂ : ℂ)
     (h₁ : Complex.normSq z₁ = 1) (h₂ : Complex.normSq z₂ = 1) :
@@ -89,14 +83,24 @@ theorem amplitude_mul_closed (z₁ z₂ : ℂ)
       _ = 1 * 1 := by rw [hr₁, hr₂]
       _ = 1 := by ring
 
+/--
+定理 J.5: 振幅映射是半群同态
+amplitude : (C, compose) → (ℂ, *) 是半群同态
+**证明程度**: ✅ 完整证明
+-/
+theorem amplitude_is_semigroup_hom {M C : Type*}
+    [A : AxiomA M C] [Cx : AxiomC M C] (α β : C) :
+    Cx.amplitude (A.compose α β) = Cx.amplitude α * Cx.amplitude β :=
+  Cx.comp_rule α β
+
 /-! ============================================================================
-   §3 因果序的偏序性质
+   3. 因果序的偏序性质
    ============================================================================ -/
 
 /--
-定理 J.5: 因果序的传递性
-物理意义: 因果关系形成严格的因果链
-证明程度: ✅ 完整证明
+定理 J.6: 因果序的传递性
+因果关系形成严格的因果链
+**证明程度**: ✅ 完整证明
 -/
 theorem causal_order_transitive {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
     (x y z : M) (hxy : B.lt x y) (hyz : B.lt y z) : B.lt x z := by
@@ -110,9 +114,9 @@ theorem causal_order_transitive {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
   exact (B.lt_iff_le_not_le x z).mpr ⟨h3, h4⟩
 
 /--
-定理 J.6: 因果序的严格性（反自反）
-物理意义: 没有任何事件因果先于自己
-证明程度: ✅ 完整证明
+定理 J.7: 因果序的严格性（反自反）
+没有任何事件因果先于自己
+**证明程度**: ✅ 完整证明
 -/
 theorem causal_order_irreflexive {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
     (x : M) : ¬ B.lt x x := by

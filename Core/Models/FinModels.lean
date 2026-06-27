@@ -83,13 +83,34 @@ private lemma fin4_I_pow_add (α β : Fin 4) :
   Complex.I ^ (α + β : Fin 4).val = Complex.I ^ α.val * Complex.I ^ β.val := by
   fin_cases α <;> fin_cases β <;> simp [I_pow_0, I_pow_1, I_pow_2, I_pow_3, I_pow_4, pow_add] <;> ring
 
-/-- **injective**: 如果 I^m = I^n，则 m = n（对于 m, n < 4）-/
+/-- **injective**: 如果 I^m = I^n，则 m = n（对于 m, n < 4）
+
+    证明：Fin 4 的值范围为 {0,1,2,3}，对应的幂为：
+    I^0 = 1, I^1 = I, I^2 = -1, I^3 = -I
+    这四个值两两不同，故 injection 成立。 -/
 private lemma fin4_I_inj (x y : Fin 4)
   (h : Complex.I ^ x.val = Complex.I ^ y.val) : x = y := by
-  fin_cases x <;> fin_cases y <;>
-    simp [I_pow_0, I_pow_1, I_pow_2, I_pow_3] at h <;>
-    try { exact h } <;>
-    contradiction
+  fin_cases x
+  · fin_cases y
+    · rfl
+    · simp [I_pow_0, I_pow_1, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_0, I_pow_2, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_0, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+  · fin_cases y
+    · simp [I_pow_0, I_pow_1, Complex.ext_iff] at h <;> norm_num at h
+    · rfl
+    · simp [I_pow_1, I_pow_2, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_1, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+  · fin_cases y
+    · simp [I_pow_0, I_pow_2, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_1, I_pow_2, Complex.ext_iff] at h <;> norm_num at h
+    · rfl
+    · simp [I_pow_2, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+  · fin_cases y
+    · simp [I_pow_0, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_1, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+    · simp [I_pow_2, I_pow_3, Complex.ext_iff] at h <;> norm_num at h
+    · rfl
 
 /-! ============================================================================
    §1.2 模型组件的顶层定义（避免 let 作用域问题）
