@@ -340,7 +340,7 @@ theorem layer2_degenerate_witness :
 3. 在 M=Bool 且 input α ≠ [] 的模型中，编织公理是否一致？
 4. HDSTTheory 是否真正提供了非平凡因果结构？
 
-【诚实标注】—— 这些问题的状态是：✗ 未解决
+说明：这些问题的状态是：✗ 未解决
 请勿将"构造了退化模型"误解为"解决了这些问题"。-/
 def open_problems_statement : Prop := True
 
@@ -513,7 +513,7 @@ theorem axiomA_in_boolModel :
   `false ∈ input α` 且 `output α = true`，因此编织公理的"输入→输出"
   因果连接从未被真正测试过。
 
-**诚实标注**：boolModel 有非平凡的因果结构（false 严格因果先于 true），
+**说明**：boolModel 有非平凡的因果结构（false 严格因果先于 true），
 但规则层面的"编织"仍然退化——没有规则真正利用了这个因果结构。
 要获得非平凡编织，需要存在规则 α 使得
 `input α ≠ []` 且 `∀ x ∈ input α, lt x (output α)`。
@@ -573,7 +573,7 @@ theorem axiomC_in_boolModel :
 op_weaving 的前提 `B.lt (A.output α) (A.output β)` 恒假，
 整个公理空真成立。
 
-**诚实标注**：在 boolModel 中，`lt false true` 确实成立，
+**说明**：在 boolModel 中，`lt false true` 确实成立，
 但这个 lt 事实从未"接入"到规则层面——
 因为输出恒为 `false`，没有规则的输出能产生 `true`。
 要非平凡满足 AxiomD，需要规则 α, β 使得
@@ -790,7 +790,7 @@ theorem axiomA_B_C_compatible :
 - compose_output (公理A) ⇒ output_compose (原公理E)
 - compose_input (公理A) ⇒ input_compose_length (原公理E，两边取length)
 
-**诚实标注**: 这是 CSQIT 公理体系一致性的最弱（但已足够）见证。
+**说明**: 这是 CSQIT 公理体系一致性的最弱（但已足够）见证。
 它只证明"不矛盾"，不证明"有物理意义的模型"。 -/
 theorem all_axioms_A_D_C_compatible_in_unit :
   ∃ (input : Unit → List Unit)
@@ -851,8 +851,8 @@ end AxiomCompatibility
    3. csqit_multi_rule_model_exists_claim —— 另一个开放问题（同样以 Prop 方式陈述）
 
    说明：开放问题使用 `def ... : Prop := ...` 而非 `theorem ... := by sorry`，
-         因为项目编译配置将 `sorry` 视为错误。这是一种更诚实的标注方式——
-         明确表明这些是猜想，而非已证明的定理。
+         因为项目编译配置将 `sorry` 视为错误。这种方式明确表明
+         这些是猜想，而非已证明的定理。
    ============================================================================ -/
 
 section OpenProblemsAndNewTheorems

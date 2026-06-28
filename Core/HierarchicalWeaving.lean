@@ -387,7 +387,7 @@ axiom level_functor_exists (n : ℕ) (M : ℕ → Type*) (C : ℕ → Type*)
    §5.6 层级级联定理（从 axiom 到 theorem）
    ============================================================================
 
-   根据评审报告（方面F），我们将 `hierarchical_cascade_exists` 从 axiom 升级为 theorem。
+   `hierarchical_cascade_exists` 从 axiom 升级为 theorem。
 
    **核心思想**：
    对于任何有限群结构 C，层级级联可以具体构造出来：

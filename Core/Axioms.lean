@@ -91,7 +91,7 @@ class AxiomA (M C : Type*) where
   compose : C → C → C
   /-- 组合的输入 = 输入的拼接 -/
   compose_input : ∀ α β : C, input (compose α β) = input α ++ input β
-  /-- ⚠️ **诚实标注**: 组合的输出 = 后一规则的输出
+  /-- 组合的输出 = 后一规则的输出
       此公理在左可迁 compose 结构下导致 output 退化为常函数
       （见 Theorems.lean 中 `output_degenerate_theorem`）。
       若需非平凡 output，请使用 AxiomA' 中的 `compose_output'`。 -/
@@ -290,7 +290,7 @@ class AxiomB (M C : Type*) [A : AxiomA M C] where
    与 AxiomB 的唯一区别: 使用 A'.input 和 A'.output（而非 A.input/A.output）。
    这与 AxiomA' 的非退化 output 兼容，允许 weaving_axiom 有真实前提。
 
-   诚实标注:
+   说明:
    - AxiomB' 与 AxiomB 在 le/lt 结构上完全相同
    - 唯一区别是 weaving_axiom 使用 A'.input/A'.output
    - 标准 AxiomB 是 AxiomB' 的特例（取 AxiomA 实例）
@@ -446,7 +446,7 @@ def induced_by {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
 class AxiomD (M C : Type*) [A : AxiomA M C] [B : AxiomB M C] where
   /-- **操作编织的局部一致性**: 若 output α < output β，则存在 γ 使得 α 与 γ 组合等于 β。
 
-      **诚实标注**: 在所有已知标准 Theory 模型中，前提 `lt(output α)(output β)` 恒为 False，
+      **说明**: 在所有已知标准 Theory 模型中，前提 `lt(output α)(output β)` 恒为 False，
       原因见 `output_degenerate_theorem`（Theorems.lean）。非平凡实例需用 AxiomA'（Theory'）。 -/
   op_weaving : ∀ (α β : C),
     B.lt (A.output α) (A.output β) →
@@ -920,14 +920,13 @@ structure Theory' (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
    - 例如：`broken_localFinite_future` 表示存在 x 使得 {y | lt x y} 无限。
    - `broken_amplitude_norm_one` 表示存在 α 使得 |amplitude α|² ≠ 1。
 
-   **诚实性原则**:
-   这是对评审报告建议的直接响应：
-   "将 natModel 定义为 PartialTheory'，明确标注破坏的公理，
-    而非在完整公理实例中留 sorry。"
+   **设计原则**:
+   PartialTheory' 显式记录哪些完整性条件被打破，
+   而非在完整公理实例中留 sorry。
    ============================================================================ -/
 
 /-- **PartialTheory'**（部分理论）: 显式记录哪些完整性条件被打破。
-    这是对"在 AxiomB' 实例中使用 sorry"的诚实替代方案。
+    这是替代"在 AxiomB' 实例中使用 sorry"的方案。
 
     此结构直接包含 AxiomA' 作为字段，用于传递给 AxiomF'/G'/H'。
     这避免了复杂的类型类实例依赖问题。 -/

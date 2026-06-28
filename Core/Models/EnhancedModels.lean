@@ -9,22 +9,22 @@ CSQIT v11.0.0 增强理论模型构造
 
 本文件构造增强理论 (Theory') 的具体模型实例。
 
-基于"核心代码最终评审报告"的三大改进：
-  1. finite_evolve_tradeoff: 有限全序单调映射必有不动点（原已证明）
-     + finite_evolve_tradeoff_strict: 有限全序严格递增映射不可能（新增）
+主要内容：
+  1. finite_evolve_tradeoff: 有限全序单调映射必有不动点
+     + finite_evolve_tradeoff_strict: 有限全序严格递增映射不可能
   2. fin7Model: Fin 7 上的完整 Theory' 模型（振幅单射证明优化）
-  3. natPartialModel: ℕ 上的 PartialTheory' 模型（用 PartialTheory' 替代 sorry）
-     - nat_amplitude_nonunitary: 非幺正 amplitude 的显式构造（已证明）
-     - nat_future_infinite: ℕ 的未来是无限的（已证明）
+  3. natPartialModel: ℕ 上的 PartialTheory' 模型
+     - nat_amplitude_nonunitary: 非幺正 amplitude 的显式构造
+     - nat_future_infinite: ℕ 的未来是无限的
 
 ================================================================================
-诚实性保证
+说明
 ================================================================================
 
   ✓ 无任何 sorry、admit 或未证明的公理填充
-  ✓ 所有"打破"的公理都显式记录在 broken_* 字段中
-  ✓ 所有定理证明都使用标准逻辑推理，无欺骗性假设
-  ✓ 有限/无限的 trade-off 是数学事实，而非代码"缺陷"
+  ✓ 所有不满足的公理都显式记录在 broken_* 字段中
+  ✓ 所有定理证明都使用标准逻辑推理
+  ✓ 有限/无限的 trade-off 是数学事实
 
 ================================================================================
 -/
@@ -982,13 +982,12 @@ def natAxiomC'_nonunitary :
     - evolve: evolve α x = x + α (非平凡！)
     - nat_amplitude_nonunitary: 满足 comp_rule 和 injective
 
-    打破的性质（诚实标注）:
+    打破的性质:
     - broken_localFinite_future: 由 nat_future_infinite 证明成立
     - broken_amplitude_norm_one: 由 nat_amplitude_not_unitary 证明成立
 
-    这是对评审报告建议的直接实现：
-    "将 natModel 重构为 PartialTheory'，明确标注破坏的公理，
-     而非在完整公理实例中留 sorry。" -/
+    将 natModel 重构为 PartialTheory'，明确标注破坏的公理，
+    而非在完整公理实例中留 sorry。 -/
 noncomputable def natPartialModel : PartialTheory' ℕ ℕ where
   toAxiomA' := natAxiomA'
   le := fun x y => x ≤ y

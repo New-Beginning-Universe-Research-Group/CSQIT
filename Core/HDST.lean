@@ -151,7 +151,7 @@ noncomputable def HDSTTheory : Theory HDSTRelatum HDSTRule where
   toAxiomI := HDSTAxiomI
   toAxiomJ := HDSTAxiomJ
 
-/-! 第十二部分：显式等价定理（10.5 版新增 - 依据评审报告 P0-1） -/
+/-! 第十二部分：显式等价定理 -/
 
 /-- HDST 关系元类型与 Unit 同构。
     这是"HDST 没有维度"这一陈述的形式化证明。 -/
