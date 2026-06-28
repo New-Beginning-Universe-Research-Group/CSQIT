@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT v11.0.0 层级级联的完整数学形式化
 文件: Core/CompleteHierarchicalCascade.lean
 版本: 11.0.0
@@ -145,14 +145,15 @@ class HasLevelStructure (α : Type*) where
 
    ============================================================================ -/
 
-/-- **层级级联定理（第二层假设）**
+/-- **层级级联存在性猜想**（Hierarchical Cascade Existence Conjecture）
 
-    公理：如果存在一个 GenerativeRelation M，
+    猜想：如果存在一个 GenerativeRelation M，
           则存在一个无穷的层级级联。
 
-    这是第二层的"基本假设"，而非第一层的"定理"。
-    参见文件顶部的重要声明。 -/
-axiom hierarchical_cascade_exists (M : Type*) [GenerativeRelation M] :
+    说明：这是一个未证明的猜想，而非公理或定理。
+    这是第二层的"工作假设"，而非第一层的"定理"。 -/
+def hierarchical_cascade_exists (M : Type*) [GenerativeRelation M] :
+    Prop :=
   ∃ (cascade : ℕ → Type*),
     cascade 0 = M ∧
     ∀ n, ∃ (S : StableSubstructure' (cascade n)),
@@ -344,14 +345,14 @@ class CosmicUnification where
 
    ============================================================================ -/
 
-/-- **层级级联定理（第二层假设）**
+/-- **层级级联构造猜想**（Cascade Construction Conjecture）
 
-    公理：对于任何具有生成关系的系统，
+    猜想：对于任何具有生成关系的系统，
           存在一个从层级 n 到层级 n+1 的构造方法。
 
-    这是第二层的"基本假设"，而非第一层的"定理"。
-    参见文件顶部的重要声明。 -/
-axiom cascade_theorem :
+    说明：这是一个未证明的猜想，而非公理或定理。
+    这是第二层的"工作假设"，而非第一层的"定理"。 -/
+def cascade_theorem : Prop :=
   ∀ (M : Type*) [GenerativeRelation M],
     ∃ (cascade : ℕ → Type*),
       cascade 0 = M ∧

@@ -17,7 +17,7 @@ import Core.Theorems
 import Core.WeavingStructure
 import Mathlib.Data.Complex.Basic
 
-namespace CSQIT.Appendices.AppendixJ.Mathematics
+namespace CSQIT.Appendices.AppendixE.Mathematics
 
 open CSQIT
 
@@ -135,4 +135,4 @@ theorem causal_order_irreflexive {M C : Type*} [A : AxiomA M C] [B : AxiomB M C]
   have h1 : B.le x x ∧ ¬ B.le x x := (B.lt_iff_le_not_le x x).mp h
   exact h1.2 h1.1
 
-end CSQIT.Appendices.AppendixJ.Mathematics
+end CSQIT.Appendices.AppendixE.Mathematics

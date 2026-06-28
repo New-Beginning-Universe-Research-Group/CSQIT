@@ -184,15 +184,16 @@ def level_interaction_map : ℕ → InteractionDominance
    这解释了为什么层与层之间有"质的飞跃"。
    ---------------------------------------------------------------------------- -/
 
-/-- **愿景 L3.1：层级函子**
+/-- **愿景 L3.1：层级函子猜想**（Level Functor Conjecture）
 
-    这是一个开放问题，尚未形式化。
+    说明：这是一个开放问题，尚未形式化。
+    这是一个未证明的猜想，而非公理或定理。
 
     需要定义：
     1. Level_n 的范畴结构
     2. 函子 F_n : Level_n → Level_{n+1}
     3. 证明函子的性质（可能不忠实） -/
-axiom LevelFunctorConjecture :
+def LevelFunctorConjecture : Prop :=
   ∀ (n : ℕ), ∃ (F : Type* → Type*),
     -- F 将 Level_n 的稳定子结构映射为 Level_{n+1} 的基本单元
     -- F 允许粗粒化（不忠实）
@@ -212,12 +213,13 @@ axiom LevelFunctorConjecture :
    这为"意识"提供了数学位置。
    ---------------------------------------------------------------------------- -/
 
-/-- **愿景 L3.2：观测者自指节点**
+/-- **愿景 L3.2：观测者自指节点猜想**（Observer Self-Reference Conjecture）
 
-    这是一个开放问题，尚未形式化。
+    说明：这是一个开放问题，尚未形式化。
+    这是一个未证明的猜想，而非公理或定理。
 
     猜想：观测者 = 自指函数节点的涌现性质 -/
-axiom ObserverSelfReferenceConjecture :
+def ObserverSelfReferenceConjecture : Prop :=
   ∃ (Observer : Type*),
     -- Observer 是层级级联的一个节点
     -- Observer 能够对自身进行"编织"
@@ -236,12 +238,13 @@ axiom ObserverSelfReferenceConjecture :
    - 或者是层级间耦合的涌现效应？
    ---------------------------------------------------------------------------- -/
 
-/-- **愿景 L3.3：暗物质暗能量猜想**
+/-- **愿景 L3.3：暗物质暗能量猜想**（Dark Energy / Dark Matter Conjecture）
 
-    这是一个开放问题，目前纯概念性。
+    说明：这是一个开放问题，目前纯概念性。
+    这是一个未证明的猜想，而非公理或定理。
 
     猜想：暗物质和暗能量是宇宙层级两面性的表现 -/
-axiom DarkEnergyConjecture :
+def DarkEnergyConjecture : Prop :=
   -- 暗物质和暗能量可以在层级框架中解释
   True  -- 占位，等待研究
 

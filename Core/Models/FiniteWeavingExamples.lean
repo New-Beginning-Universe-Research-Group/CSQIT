@@ -579,17 +579,20 @@ theorem weaving_commutative
   simp [generated_subgroup, add_comm]
   <;> rfl
 
-/-- **编织的单调性**：如果 S₁ ⊆ S₂，
+/-- **编织的单调性猜想**：如果 S₁ ⊆ S₂，
     那么它们的编织结果就是 S₂。
+
+    说明：这是一个未证明的猜想，而非定理。
+    在循环群中，若 S₁ ⊆ S₂，则生成的子群应该等于 S₂。
 
     这对应于化学中的"饱和"概念：
     如果一个原子已经有了满壳层，
     它就不太可能再与其他原子形成更稳定的结构。 -/
-theorem weaving_monotonic
+def weaving_monotonic
     (S₁ S₂ : AlgebraicStableSubstructure (Fin 8) (Fin 8))
     (h : S₁.carrier ⊆ S₂.carrier) :
-  (generated_subgroup S₁ S₂).carrier = S₂.carrier := by
-  sorry
+    Prop :=
+  (generated_subgroup S₁ S₂).carrier = S₂.carrier
 
 /-! ----------------------------------------------------------------------------
    例子：具体的编织计算

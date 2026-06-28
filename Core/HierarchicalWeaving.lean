@@ -367,20 +367,21 @@ class LevelFunctor (n : ℕ) (M : ℕ → Type*) (C : ℕ → Type*)
   /-- 不忠实性：允许多个不同的稳定子结构映射到同一个基本单元 -/
   not_necessarily_faithful : True
 
-/-- **层级函子存在性公理**（第二层假设）
+/-- **层级函子存在性猜想**（Level Functor Existence Conjecture）
 
-    公理：对于任何层级 n，存在一个层级函子 F: Level_n → Level_{n+1}。
+    猜想：对于任何层级 n，存在一个层级函子 F: Level_n → Level_{n+1}。
 
-    这是第二层的基本假设，而非第一层的定理。
-    它允许层级级联的"粗粒化"和"涌现"。
+    说明：这是一个未证明的猜想，而非公理或定理。
+    它刻画了层级级联的"粗粒化"和"涌现"可能性。
 
     物理意义：
     - Level n 的复杂结构被"粗粒化"为 Level n+1 的简单单元
     - 例如：原子中的电子云被粗粒化为分子中的化学键
     - 这是层级间"质的飞跃"的数学描述 -/
-axiom level_functor_exists (n : ℕ) (M : ℕ → Type*) (C : ℕ → Type*)
+def level_functor_exists (n : ℕ) (M : ℕ → Type*) (C : ℕ → Type*)
     [A'_n : AxiomA' (M n) (C n)] [B'_n : AxiomB' (M n) (C n)]
     [A'_n1 : AxiomA' (M (n+1)) (C (n+1))] [B'_n1 : AxiomB' (M (n+1)) (C (n+1))] :
+    Prop :=
   ∃ (F : LevelFunctor n M C), True
 
 /-! ============================================================================

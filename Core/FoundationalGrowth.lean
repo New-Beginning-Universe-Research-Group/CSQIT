@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT v11.0.0 宇宙生长的基础原理 - 从最核心因素开始
 文件: Core/FoundationalGrowth.lean
 版本: 11.0.0
@@ -354,27 +354,31 @@ structure StableSubstructure' (M : Type*) [GenerativeRelation M]
    这些性质是概念性的（第二层），依赖于"连续极限假设"。
    ---------------------------------------------------------------------------- -/
 
-/-- **复结构的保生成性**（第二层概念性猜想）
+/-- **复结构的保生成性猜想**（Complex Structure Preserves Generation Conjecture）
 
     猜想：如果 x ⇒ y，则 complex_structure y 可以表示为
           complex_structure x 与某个复数的乘积。
 
+    说明：这是一个未证明的猜想，而非公理或定理。
     这意味着生成关系被映射为复数乘法，
     即复结构是"保结构"的。 -/
-axiom complex_structure_preserves_generation {M : Type*} [GenerativeRelation M]
+def complex_structure_preserves_generation {M : Type*} [GenerativeRelation M]
     (S : StableSubstructure' M) :
+    Prop :=
   ∀ (x y : M), x ∈ S.carrier → y ∈ S.carrier →
     x ⇒ y →
     ∃ (c : ℂ), S.complex_structure y = S.complex_structure x * c
 
-/-- **复结构的相位旋转对称性**（第二层概念性猜想）
+/-- **复结构的相位旋转对称性猜想**（U(1) Symmetry of Complex Structure Conjecture）
 
     猜想：复结构具有 U(1) 相位旋转对称性，
           即乘以 e^(iθ) 不改变物理性质。
 
+    说明：这是一个未证明的猜想，而非公理或定理。
     这是量子力学中相位的来源。 -/
-axiom complex_structure_has_u1_symmetry {M : Type*} [GenerativeRelation M]
+def complex_structure_has_u1_symmetry {M : Type*} [GenerativeRelation M]
     (S : StableSubstructure' M) :
+    Prop :=
   ∀ (x : M) (θ : ℝ),
     x ∈ S.carrier →
     ∃ (y : M), y ∈ S.carrier ∧

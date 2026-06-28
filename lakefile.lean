@@ -1,7 +1,10 @@
 import Lake
 open Lake DSL
 
-package csqit
+package csqit where
+  leanOptions := #[
+    ⟨`pp.unicode.fun, true⟩
+  ]
 
 require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
 
@@ -9,18 +12,47 @@ require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
 lean_lib CSQIT where
   roots := #[
     `Core.Axioms,
+    `Core.Theorems,
+    `Core.Consistency,
+    `Core.Independence,
+    `Core.AxiomD_Independence,
+    `Core.AxiomC_Independence,
     `Core.CausalWeaving,
+    `Core.AlgebraicCausality,
+    `Core.WeavingStructure,
     `Core.AmplitudeTheorems,
     `Core.TwoAspectTheorems,
-    `Core.Theorems,
+    `Core.HierarchicalWeaving,
+    `Core.HierarchicalLevels,
+    `Core.Hierarchy,
+    `Core.TradeoffAndVerification,
+    `Core.FoundationalGrowth,
+    `Core.GrowthToAxioms,
+    `Core.TwoAspectToSU2,
+    `Core.CompleteHierarchicalCascade,
+    `Core.UnifiedLivingParadigm,
+    `Core.ShellCapacityDerivation,
+    `Core.ComputationalPillars,
+    `Core.HDST,
+    `Core.Unified,
+    `Core.Philosophy,
+    `Core.Summary,
+    `Core.OpenProblems,
+    `Core.CausalLattice,
+    `Core.QuantumMeasurement,
+    `Core.ThermodynamicArrow,
+    `Core.DarkUniverse,
+    `Core.CausalSetCorrespondence,
+    `Core.B_V_Naturalness,
+    `Core.CausalLatticeToAxiomA,
+    `Core.BasicModels,
     `Core.Models.FinModels,
     `Core.Models.EnhancedModels,
-    `Core.WeavingStructure,
-    `Core.HierarchicalWeaving,
-    `Core.TradeoffAndVerification,
-    `Core.Philosophy,
-    `Core.HDST,
-    `Core.Hierarchy,
+    `Core.Models.Fin8Growth,
+    `Core.Models.TwoAspectBalancedVerification,
+    `Core.Models.FiniteWeavingExamples,
+    `Core.Models.SmallSemigroupExploration,
+    `Core.Models.PeriodicTable,
     `Appendices.AppendixA.Uniqueness,
     `Appendices.AppendixB.CausalAndProbability,
     `Appendices.AppendixC.CausalStructure,

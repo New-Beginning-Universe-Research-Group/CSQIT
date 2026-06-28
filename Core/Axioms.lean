@@ -1016,8 +1016,12 @@ class AxiomK (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] [I' : AxiomI' M
       即: ∀ x, entropy({z | z ≤ x}) = entropy(universe) -/
   eternal_now_principle : ∀ (x : M), I'.entropy { z : M | B'.le z x } = I'.entropy (Set.univ : Set M)
   /-- **时间作为关系**: 时间不是独立维度，而是由因果序定义的内蕴结构。
-      即: evolve α x = x 对所有 α（演化不改变状态） -/
-  time_as_relation : ∀ (α : C) (x : M), ∃ (y : M), y = x ∧ ∀ (β : C), B'.le x (y)
+      形式化表述：任意两个可比较的关系元 x ≤ y，
+      从 x 到 y 的"时间间隔"完全由因果关系本身决定，
+      不需要额外的时间参数。
+      具体表述：因果序是全序（任意两元素可比），
+      即时间没有分支，是线性的因果序列。 -/
+  time_as_relation : ∀ (x y : M), B'.le x y ∨ B'.le y x
   /-- **全息原理**: 局部信息等价于全局信息。
       即: 任意两个时刻的因果过去熵相等 -/
   holographic_principle : ∀ (x y : M), I'.entropy { z : M | B'.le z x } = I'.entropy { z : M | B'.le z y }

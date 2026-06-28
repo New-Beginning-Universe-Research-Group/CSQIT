@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT v11.0.0 两面性 → SO(3) → 2n² 的概念性推导
 文件: Core/TwoAspectToSU2.lean
 版本: 11.0.0（重构版）
@@ -115,14 +115,15 @@ structure TwoAspectComplexStructure where
     - 这两个自由度构成二维实向量空间
     - 二维实空间上的旋转群是 SO(2) ≅ U(1)
     - 因此两面系统具有 U(1) 相位对称性 -/
-axiom two_aspect_implies_complex_structure :
+def two_aspect_implies_complex_structure : Prop :=
   ∀ (M : Type*) [GenerativeRelation M],
     ∃ (structure : TwoAspectComplexStructure), True
 
-/-- **两面性 → SO(3) 猜想**（第二层）
+/-- **两面性 → SO(3) 猜想**（Two-Aspect Implies SO(3) Symmetry Conjecture）
 
     猜想：连续两面性系统具有 SO(3) 旋转对称性。
 
+    说明：这是一个未证明的猜想，而非公理或定理。
     这是第二层的概念性解释，依赖于"连续极限假设"，尚未严格证明。
 
     证明思路（非严格）：
@@ -130,7 +131,7 @@ axiom two_aspect_implies_complex_structure :
     - 在三维相空间中，有三个独立的旋转方向
     - 每个方向对应一个 U(1)
     - 三个 U(1) 生成 SO(3) -/
-axiom two_aspect_implies_so3_symmetry :
+def two_aspect_implies_so3_symmetry : Prop :=
   ∀ (M : Type*) [GenerativeRelation M],
     True
 

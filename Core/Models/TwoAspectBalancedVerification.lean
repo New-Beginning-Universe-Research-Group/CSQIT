@@ -387,7 +387,7 @@ structure TwoAspectBalanced (n : ℕ) (S : AlgebraicStableSubstructure' n) : Pro
    §8. Fin 8 中两面平衡态的验证
    ============================================================================ -/
 
-/-- **验证：H4 是 Fin 8 的两面平衡态**
+/-- **验证猜想：H4 是 Fin 8 的两面平衡态**
 
     H4 = {0, 2, 4, 6}
     - |H4| = 4
@@ -395,16 +395,11 @@ structure TwoAspectBalanced (n : ℕ) (S : AlgebraicStableSubstructure' n) : Pro
     - |H4| = 2 × [G:H4] ✓
     - H4 是极大的真子群 ✓
 
-    所以 H4 是 Fin 8 的两面平衡态！ -/
-theorem subgroup_4_is_balanced : TwoAspectBalanced 8 subgroup_4 := by
-  refine {
-    maximal := by
-      intro T hST
-      sorry, -- 需要验证
-    saturated := by
-      simp [causal_size, info_size]
-      <;> norm_num
-  }
+    说明：这是一个未证明的猜想，而非定理。
+    在循环群 Fin 8 中，阶为 4 的子群确实是极大子群，
+    但需要形式化证明所有满足 S.carrier ⊂ T.carrier 的子群 T 必有 T.carrier = Set.univ。 -/
+def subgroup_4_is_balanced : Prop :=
+  TwoAspectBalanced 8 subgroup_4
 
 /-! ============================================================================
    §9. 与元素周期表的对应

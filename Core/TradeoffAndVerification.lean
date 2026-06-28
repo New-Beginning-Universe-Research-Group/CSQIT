@@ -122,11 +122,15 @@ theorem fin7_weaving_witness_unique (α β : Fin 7) (h_lt : α < β) :
     ∃! (γ : Fin 7), @AxiomA'.compose (Fin 7) (Fin 7) fin7AxiomA' α γ = β := by
   use β - α
   constructor
-  · have h₁ : α + (β - α) = β := by exact?
+  · have h_le : α ≤ β := Fin.le_of_lt h_lt
+    have h₁ : α + (β - α) = β := Fin.add_sub_of_le h_le
     exact h₁
   · intro γ hγ
     have h₁ : α + γ = β := hγ
-    have h₂ : γ = β - α := by exact?
+    have h_le : α ≤ β := Fin.le_of_lt h_lt
+    have h₂ : γ = β - α := by
+      rw [← Fin.add_sub_of_le h_le, h₁]
+      <;> rw [add_comm]
     exact h₂
 
 /-- **Fin 7 振幅与因果序耦合定理**:
@@ -138,7 +142,8 @@ theorem fin7_amplitude_causal_coupling (α β : Fin 7) (h_lt : α < β) :
     @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' β =
     @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' α *
     @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' (β - α) := by
-  have h₁ : α + (β - α) = β := by exact?
+  have h_le : α ≤ β := Fin.le_of_lt h_lt
+  have h₁ : α + (β - α) = β := Fin.add_sub_of_le h_le
   have h₂ := fin7AxiomC'.comp_rule α (β - α)
   have h₃ : @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' (α + (β - α)) =
       @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' α *

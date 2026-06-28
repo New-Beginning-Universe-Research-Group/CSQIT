@@ -210,7 +210,7 @@ theorem cyclicAmplitude_norm_one (α : Fin n) :
   have h₁ : ‖cyclicAmplitude α‖ = 1 := by
     simpa [cyclicAmplitude] using norm_exp_I_mul_ofReal (2 * Real.pi * (α.val : ℝ) / (n : ℝ))
   have h₂ : normSq (cyclicAmplitude α) = ‖cyclicAmplitude α‖ ^ 2 := by
-    exact?
+    exact Complex.normSq_eq_norm_sq (cyclicAmplitude α)
   rw [h₂, h₁]
   <;> norm_num
 
@@ -417,7 +417,7 @@ instance fin7AxiomD' : AxiomD' (Fin 7) (Fin 7) where
     refine ⟨β - α, ?_⟩
     have h_le : α ≤ β := Fin.le_of_lt h_lt
     have h : α + (β - α) = β := by
-      exact?
+      exact Fin.add_sub_of_le h_le
     exact h
 
 instance fin7AxiomF' : AxiomF' (Fin 7) (Fin 7) where
@@ -531,7 +531,7 @@ instance fin8AxiomD' : AxiomD' (Fin 8) (Fin 8) where
     refine ⟨β - α, ?_⟩
     have h_le : α ≤ β := Fin.le_of_lt h_lt
     have h : α + (β - α) = β := by
-      exact?
+      exact Fin.add_sub_of_le h_le
     exact h
 
 instance fin8AxiomF' : AxiomF' (Fin 8) (Fin 8) where
@@ -1118,7 +1118,7 @@ instance fin7AxiomK : @AxiomK (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomB' fin7AxiomI
     have : fin7AxiomI'.entropy { z : Fin 7 | z ≤ x } = 0 := by rfl
     have : fin7AxiomI'.entropy (Set.univ : Set (Fin 7)) = 0 := by rfl
     rfl
-  time_as_relation := fun α x => ⟨x, rfl, fun β => Fin.le_refl x⟩
+  time_as_relation := fun x y => le_total x y
   holographic_principle := fun x y => by
     have : fin7AxiomI'.entropy { z : Fin 7 | z ≤ x } = 0 := by rfl
     have : fin7AxiomI'.entropy { z : Fin 7 | z ≤ y } = 0 := by rfl
@@ -1130,7 +1130,7 @@ instance fin8AxiomK : @AxiomK (Fin 8) (Fin 8) fin8AxiomA' fin8AxiomB' fin8AxiomI
     have : fin8AxiomI'.entropy { z : Fin 8 | z ≤ x } = 0 := by rfl
     have : fin8AxiomI'.entropy (Set.univ : Set (Fin 8)) = 0 := by rfl
     rfl
-  time_as_relation := fun α x => ⟨x, rfl, fun β => Fin.le_refl x⟩
+  time_as_relation := fun x y => le_total x y
   holographic_principle := fun x y => by
     have : fin8AxiomI'.entropy { z : Fin 8 | z ≤ x } = 0 := by rfl
     have : fin8AxiomI'.entropy { z : Fin 8 | z ≤ y } = 0 := by rfl

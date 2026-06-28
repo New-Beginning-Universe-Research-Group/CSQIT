@@ -332,19 +332,23 @@ theorem amplitude_output_no_function_dependency
   rcases h_nontrivial with ⟨α, β, h_ne⟩
   exact h_ne (h_inj (h_amp_const α β))
 
-/-- **增强型猜想** (Enhanced Conjecture):
+/-- **振幅-输出耦合猜想** (Amplitude-Output Coupling Conjecture):
     在 Theory'（带 combine 运算）的框架中，或许可以建立振幅与因果序之间的非平凡联系。
 
     猜想：存在 combine 运算使得
     amplitude (combine α β) 不仅依赖于 α 和 β，
-    还依赖于 output α 和 output β，从而将两者耦合。 -/
-axiom amplitude_output_coupling_conjecture
+    还依赖于 output α 和 output β，从而将两者耦合。
+
+    说明：这是一个未证明的猜想，而非公理或定理。 -/
+def amplitude_output_coupling_conjecture
+    {M C : Type*}
     [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C] :
-    ∃ (combine : C → C → C),
-      ∀ (α β γ δ : C),
-        (A.output α = A.output β) →
-        (Cx.amplitude γ = Cx.amplitude δ) →
-        (Cx.amplitude (combine α γ) = Cx.amplitude (combine β δ))
+    Prop :=
+  ∃ (combine : C → C → C),
+    ∀ (α β γ δ : C),
+      (A.output α = A.output β) →
+      (Cx.amplitude γ = Cx.amplitude δ) →
+      (Cx.amplitude (combine α γ) = Cx.amplitude (combine β δ))
 
 /-! ----------------------------------------------------------------------------
    振幅的内在两面性
@@ -715,17 +719,19 @@ structure LevelTransition {M1 C1 M2 C2 : Type*}
 /-- **两面平衡态的传递性猜想** (Two-Aspect Transitivity Conjecture):
     如果两个规则在第一层有相同的输出，那么它们在第二层的像也有相同的输出。
 
-    这个猜想目前是**未证明的**，但它是连接层级生长的"逻辑脊柱"。
+    说明：这是一个未证明的猜想，而非公理或定理。
+    它是连接层级生长的"逻辑脊柱"。
 
     物理直觉：原子（Level_n 的平衡态）组合成分子（Level_{n+1} 的结构），
     但原子的"两面性"（因果面和信息面）在组合后依然可辨认。 -/
-axiom two_aspect_transitivity_conjecture
+def two_aspect_transitivity_conjecture
     {M1 C1 M2 C2 : Type*}
     [A1 : AxiomA M1 C1] [B1 : AxiomB M1 C1] [C1' : AxiomC M1 C1]
     [A2 : AxiomA M2 C2] [B2 : AxiomB M2 C2] [C2' : AxiomC M2 C2]
     (T : @LevelTransition M1 C1 M2 C2 A1 B1 C1' A2 B2 C2')
     (α β : C1) (h : A1.output α = A1.output β) :
-    A2.output (T.F α) = A2.output (T.F β)
+    Prop :=
+  A2.output (T.F α) = A2.output (T.F β)
 
 /-! ============================================================================
    第三层：核心定理（Core Theorems）

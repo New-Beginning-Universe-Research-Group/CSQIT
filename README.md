@@ -74,6 +74,12 @@ CSQIT/
 │   ├── TradeoffAndVerification.lean   # 权衡与验证
 │   ├── ShellCapacityDerivation.lean   # 壳容量推导
 │   ├── TwoAspectToSU2.lean            # 两面性到 SU(2)
+│   ├── CausalLattice.lean             # [NEW v11] 因果格理论
+│   ├── CausalLatticeToAxiomA.lean     # [NEW v11] 因果格与公理兼容性
+│   ├── QuantumMeasurement.lean        # [NEW v11] 量子测量两面性解答
+│   ├── ThermodynamicArrow.lean        # [NEW v11] 时间箭头的因果起源
+│   ├── DarkUniverse.lean              # [NEW v11] 暗物质暗能量统一解释
+│   ├── CausalSetCorrespondence.lean   # [NEW v11] 因果集理论对应
 │   ├── Models/                        # 模型目录
 │   │   ├── FinModels.lean             # 非平凡有限模型（Fin 5, Fin 4）
 │   │   ├── Fin8Growth.lean            # Fin 8 宇宙生长验证
@@ -107,7 +113,7 @@ CSQIT/
 | **AxiomA** | 关系元 (M) 与规则 (C) 的定义 | ✅ 完备 | 仅在离散有限类型上严格证明 |
 | **AxiomB** | 因果偏序与严格因果序 | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
 | **AxiomC** | 量子振幅（复数幺正表示） | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
-| **AxiomD** | 操作编织（规则的组合一致性） | ⚠️ 数学完备，但在所有已知模型中**空洞成立** | breakthroughModel 首次实现非空洞实例 |
+| **AxiomD** | 操作编织（规则的组合一致性） | ⚠️ 数学完备，基础模型中空洞成立 | OutputNonTrivial 模型首次实现非空洞实例；Theory' 框架下 fin7/fin8 模型均有非平凡编织 |
 | **AxiomJ** | 动力学编织（新修订） | ✅ 自洽，le-而非 lt- | 仅在离散有限类型上严格证明 |
 | **AxiomF** | 连续极限 | ⚠️ 已定义，实例退化 | **尚未形式化**：连续极限收敛性（OP-P0-8） |
 | **AxiomG** | 量子引力耦合 | ⚠️ 已定义，实例退化 | **尚未形式化**：引力变分原理（OP-P0-8） |
@@ -115,12 +121,17 @@ CSQIT/
 | **AxiomI** | 信息因果性与熵 | ✅ 有非平凡实例（贝肯斯坦边界） | 仅在离散结构上严格证明，连续极限（OP-P0-8）未证明 |
 
 **关于 AxiomD 的说明**：
-在所有已构造的模型（trivialModel, boolModel, nonTrivialFinModel, HDST）中：
+在基础 Theory 框架的已构造模型（trivialModel, boolModel, nonTrivialFinModel, HDST）中：
 - `output` 是**常函数**（output _ := 0 或 output _ := ()）
 - 因此 `lt(output α)(output β)` 恒为 `lt(c)(c) = False`
 - 因此 AxiomD 的前提恒为 False，公理以 "False → ..." 的形式**空洞成立**
-- 在新建的 [OutputNonTrivial 模型](Core/Models/FinModels.lean) 中，output 是非平凡的，但 amplitude 退化为常数
+- 在 [OutputNonTrivial 模型](Core/Models/FinModels.lean) 中，output 是非平凡的，但 amplitude 退化为常数
 - 这证明了**核心 trade-off**：`output 非平凡 ⟺ amplitude 非平凡` 不可兼得（在当前 compose_output 约束下）
+
+在扩展 Theory' 框架中（EnhancedModels.lean）：
+- **fin7Model**（Fin 7, 单位根振幅）：output 非平凡 + amplitude 幺正单射 + op_weaving 非空洞
+- **fin8Model**（Fin 8, 单位根振幅）：output 非平凡 + amplitude 幺正单射 + op_weaving 非空洞
+- Theory' 通过放松 compose_output 约束（output(compose α β) = output α + output β）打破了 trade-off
 
 **诚实标注**: AxiomF/G/H 在所有已构造的模型中均为常数实例：
 - `scale _ := 1`（连续极限）
@@ -146,6 +157,12 @@ CSQIT/
 | `bekenstein_bound_finset` | Theorems.lean | Finset 归纳版本 | 构造性证明 | 无（W1 严格证明） |
 | `trivialModel_uniqueness` | Consistency.lean | M=Unit 模型的本质唯一性 | 平凡模型 | 无（W1 严格证明） |
 | `csqit_has_nonTrivial_model` | Theorems.lean | 非平凡有限模型存在 | 关键一致性定理 | 无（W1 严格证明） |
+| `standard_theory_no_two_aspect_balance` | TwoAspectTheorems.lean | 两面性二一定理 | 有限非平凡模型 | 在标准 Theory 框架中，因果面（output）和信息面（amplitude）不可同时非平凡 |
+| `amplitude_injective_implies_left_transitive` | TwoAspectTheorems.lean | 振幅单射蕴含左可迁 | 满足 AxiomA+C 的群模型 | 解释为什么群结构中因果面退化 |
+| `two_aspect_asymmetry_in_finite_group_models` | TwoAspectTheorems.lean | 有限群模型的两面不对称性 | 有限群模型 | 两面性的基本不对称定理 |
+| `output_degenerate_theorem` | TwoAspectTheorems.lean | output 退化定理 | 满足特定条件的模型 | output 为常函数的判定条件 |
+| `finite_semigroup_injective_hom_to_group` | TwoAspectTheorems.lean | 有限半群单射同态到群则为群 | 代数结构定理 | 两面性理论的代数基础 |
+| `conservation_law_lower_bound` | TwoAspectTheorems.lean | 守恒律下界 | 有限模型 | k × m ≤ |C| 的严格证明 |
 
 以上所有定理的 Lean 4 证明均可在相应文件中查阅，无 `sorry`。
 
@@ -160,13 +177,17 @@ CSQIT/
 | **nonTrivialFinModel** | Fin 5 | Fin 4 | ✅ 满足全部公理 | **amplitude 单射非平凡**，但 output 恒为 0，AxiomD 空洞成立 |
 | **HDSTTheory** | Unit | Unit | ✅ 满足全部公理 | ⚠️ 数学上等价于 trivialModel，命名有误导性 |
 | **OutputNonTrivial** [新] | Fin 2 | Fin 2 | ✅ 满足 A+B+D+F+G+H+I+J | **output 非平凡**，AxiomD 真正起作用，但 **amplitude 退化为常数**，不满足 AxiomC |
+| **fin7Model** (Theory') | Fin 7 | Fin 7 | ✅ 满足 AxiomA'-J'（完整 Theory'） | **output 非平凡 + amplitude 幺正单射 + op_weaving 非空洞**；Theory' 框架打破 trade-off |
+| **fin8Model** (Theory') | Fin 8 | Fin 8 | ✅ 满足 AxiomA'-J'（完整 Theory'） | output 非平凡 + amplitude 幺正单射 + op_weaving 非空洞；8 阶循环群模型 |
+| **natPartialModel** (PartialTheory') | ℕ | ℕ | ⚠️ PartialTheory'（部分满足） | 无限模型示例：演化非平凡，但 localFinite_future 不成立，amplitude 非幺正 |
 
 **核心结论**：
-1. 在 nonTrivialFinModel 中：amplitude 非平凡（单射），但 output 退化（常函数）
-2. 在 OutputNonTrivial 模型中：output 非平凡（恒等函数），但 amplitude 退化（常数）
-3. **没有任何已知模型同时满足 amplitude 非平凡且 output 非平凡**
+1. 在基础 Theory 框架的 nonTrivialFinModel 中：amplitude 非平凡（单射），但 output 退化（常函数）
+2. 在基础 Theory 框架的 OutputNonTrivial 模型中：output 非平凡（恒等函数），但 amplitude 退化（常数）
+3. **基础 Theory 框架中没有任何已知模型同时满足 amplitude 非平凡且 output 非平凡**
 4. 这是 `compose_output` 公理（`output(compose α β) = output β`）导致的数学必然性
-5. ⚠️ **这是 CSQIT 当前最深刻的已知局限**
+5. 在扩展 Theory' 框架中（fin7Model, fin8Model）：通过放松 compose_output 约束，成功实现了 output 非平凡 + amplitude 幺正单射 + op_weaving 非空洞三者共存
+6. ⚠️ **基础 Theory 的 trade-off 是 CSQIT 当前最深刻的已知数学结果；Theory' 是突破此限制的扩展框架**
 
 **总结**: CSQIT 有多种有限模型证明公理体系的逻辑一致性。但这些模型揭示了一个深刻的 trade-off——output 与 amplitude 不可同时非平凡。
 
@@ -255,7 +276,7 @@ lake build Core.Theorems
 |:---|:---|:---|
 | 2026-06-19 | 10.4.5 | 初始版本，完整的公理体系和核心定理形式化 |
 | 2026-06-22 | 10.5 | 严格区分 W1/W2/W3；消除所有 `sorry`；重构 PartialTheory' |
-| 2026-06-28 | 11.0.0 | 版本统一；附录精简为 A-E；两面性定理深化；层级级联框架完善 |
+| 2026-06-28 | 11.0.0 | **理论层级跃升**：因果格理论、量子测量两面性解答、时间箭头因果起源、暗物质暗能量统一解释、因果集理论对应；歼灭所有 sorry/exact?；格公理完全性验证 |
 
 ---
 

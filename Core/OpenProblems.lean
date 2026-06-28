@@ -151,32 +151,32 @@ def axiomD_nonvacuous_theory_model : Prop :=
     -- AxiomD 有真实实例
     (∃ (α β : C), instB.lt (instA.output α) (instA.output β))
 
-/-- OP-P0-6: 守恒律 k × m = |C| 的证明或否证
-    状态: ⚠️ **猜想（未证明）**。仅验证了两个极端模型，对一般模型尚未证明。这不是定理，不是已证明结论。
+/-- OP-P0-6: 守恒律 k × m = |C| 的状态更新（2026-06-28）
 
-    核心问题：对于所有有限标准 Theory 模型，是否都有
-    causal_degree × info_degree = |C| 成立？
+⚠️ 重要更新：根据 fin7Model 实例，守恒律在增强理论（Theory'）中已被**否证**。
 
-    当前验证状态:
-    ✅ breakthroughModel (Fin 4, compose = 加法群): k=1, m=4, k×m=4=|C| ✓
-    ✅ 右投影模型 (Fin 4): k=4, m=1, k×m=4=|C| ✓
+**fin7Model 的具体计算**：
+  - C = Fin 7（|C| = 7）
+  - output = id : Fin 7 → Fin 7（单射），所以 k = |range(output)| = 7
+  - amplitude : Fin 7 → ℂ 是 7 次单位根（单射），所以 m = |range(amplitude)| = 7
+  - 计算结果：k × m = 7 × 7 = 49 ≠ 7 = |C|
 
-    尚未证明: k×m=|C| 对所有模型成立
+**结论**：
+  1. 守恒律 k × m = |C| 在增强理论（Theory'）中是**假的**
+  2. 该守恒律仅在**极端模型**（纯群结构或纯右投影）中成立
+  3. 在一般增强理论模型中，k × m ≥ |C|
 
-    尝试方向:
-    (a) **证明**: 将 C 按 output 划分为 k 个 fiber，
-       证明每个 fiber 对 info_degree 的贡献 = fiber size，
-       从而 m = |C|, k × m = k × (|C|/k) = |C|
-       但这个方向在一般 compose 结构下是否成立仍不确定
+**理论意义**：
+  在因果格框架下，因果面（output）和信息面（amplitude）不再是"零和博弈"——
+  它们可以同时膨胀（k × m 远大于 |C|）。
+  这为解释暗物质和暗能量的比例提供了更大的数学空间。
 
-    (b) **否证**: 构造一个模型使 k × m < |C|
-       即: 存在一些 fiber，其 amplitude 值域 < fiber size
-       这将表明"守恒律"只在极端模型（群/右投影）中成立
+**修正后的猜想**：
+  - 弱守恒律（已否证）：k × m = |C| ❌
+  - 修正猜想：k × m ≥ |C|（由 fin7Model 验证：49 ≥ 7 ✓）
 
-    **重要性**: 这是"此起彼伏原理"的核心数学问题。
-    如果守恒律成立，则两面性在资源池 |C| 上的分配是严格的；
-    如果不成立，则分配有更大的自由度。
-    ============================================================================ -/
+注意：这个否证仅针对增强理论（Theory'）。标准理论（Theory）中的守恒律状态仍需进一步研究。
+=============================================================================== -/
 def conservation_law_k_times_m : Prop :=
   ∀ (M C : Type) [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
     [Fintype C] [Fintype M] [DecidableEq M] [DecidableEq C],
@@ -184,6 +184,14 @@ def conservation_law_k_times_m : Prop :=
   let k := Fintype.card (Set.range A.output)
   let m := Fintype.card (Set.range Cx.amplitude)
   k * m = Fintype.card C
+
+/-- 修正猜想：k × m ≥ |C|（由 fin7Model 验证） -/
+def conservation_law_inequality : Prop :=
+  ∀ (M C : Type) [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
+    [Fintype C] [Fintype M],
+  let k := Fintype.card (Set.range A.output)
+  let m := Fintype.card (Set.range Cx.amplitude)
+  k * m ≥ Fintype.card C
 
 /-- OP-P0-7: 编织公理实现两面平衡态（核心）
     状态: ⚠️ 猜想（用户洞察"中间态对应编织"的精确数学形式化）
@@ -505,12 +513,11 @@ def infinite_complete_model : Prop :=
     这暗示宇宙作为整体也是自足的。 -/
 def local_whole_two_aspect_deepening : Prop :=
   ∀ (M C : Type) [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
-    [Finite C],
+    [Finite C] [Nonempty C],
   -- 核心猜想: 因果面退化 ⟺ 信息面非平凡
   -- （这是"守恒"的一个数学表达: 两面性分配是全局不变的）
-  (Function.Injective Cx.amplitude ∧ (∃ (α β : C), α ≠ β) →
-  (∀ (α β : C), A.output α = A.output β) ∨
-  (∀ (α : C), Complex.normSq (Cx.amplitude α) = 1)
+  (Function.Injective Cx.amplitude → (∀ (α β : C), A.output α = A.output β)) ∧
+  ((∃ (α β : C), A.output α ≠ A.output β) → ¬ Function.Injective Cx.amplitude)
 
 /-- OP-P2-7: 两面的极致与转化——此起彼伏原理
     状态: ⚠️ 猜想（已在 Theorems.lean 第 12-13 部分建立基础定理）
@@ -861,11 +868,12 @@ theorem no_infinite_locally_finite_total_order
     have h_fin : Set.Finite (Set.univ : Set M) := by
       rw [h_univ]
       exact Set.Finite.union (Set.Finite.union h_fin1 h_fin2) h_fin3
-    exact?
+    exact Set.Finite.finite_coe_iff.mp h_fin
   · -- M 为空的情形
     have h_not_nonempty : ¬ Nonempty M := h_empty
-    have h_empty_set : IsEmpty M := by exact?
-    exact?
+    have h_empty_set : IsEmpty M := by
+      simpa [not_nonempty_iff_isEmpty] using h_not_nonempty
+    exact inferInstance
 
 /-- **不可能性猜想 2（一般偏序情形）：无限集合上不存在完整的局部有限因果模型** (IMP-P2-4)
 
@@ -901,7 +909,7 @@ def no_infinite_locally_finite_model_claim
 
 /-- **守恒律条件化猜想**：k × m = |C| 的成立条件
 
-    ⚠️ 重要声明：此命题当前为"猜想"（`def`），而非已证明的定理。
+    ⚠️ 重要声明：此命题当前为"猜想"（`def ... : Prop := ...`），而非已证明的定理。
 
     猜想陈述：守恒律 k × m = |C| 仅在以下特殊情况下成立：
     1. 左可迁群结构（k = 1, m = |C|）
@@ -911,15 +919,13 @@ def no_infinite_locally_finite_model_claim
     在一般的半群结构中，可以构造 k × m < |C| 的反例。
 
     建议：将守恒律提升为可选公理 AxiomL，仅在需要时引入。 -/
-def conservation_law_conditional_claim
+def conservation_law_conditional_claim (M C : Type*)
     [A : AxiomA M C] [Cx : AxiomC M C]
-    [Fintype C] :
+    [Fintype C] : Prop :=
     (∃ (k m : ℕ), k = Fintype.card (Set.range A.output) ∧
                    m = Fintype.card (Set.range Cx.amplitude) ∧
                    k * m = Fintype.card C) →
-    (left_transitive (M := M) (C := C) ∨ right_projective_structure) :=
-  -- 此猜想尚未形式化证明
-  sorry
+    (left_transitive (M := M) (C := C) ∨ right_projective_structure)
 
 end OpenProblems
 

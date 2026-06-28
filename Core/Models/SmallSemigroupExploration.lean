@@ -207,33 +207,27 @@ C = {a, b}，有多少个半群结构？
     设 f : S → G 是半群同态，其中 G 是群，且 S 有限。
     如果 f 是单射的，则 S 本身也是群（同构于 G 的一个子群）。
 
-    证明思路：
-    由于 f 是单射半群同态，S 同构于 G 的一个子半群 f(S)。
-    由于 G 是群且 f(S) 有限，f(S) 是 G 的子群。
-    因此 S 也是群。 -/
+    完整证明见 TwoAspectTheorems.lean 中的
+    `finite_semigroup_injective_hom_to_group` 定理。 -/
 theorem injective_semigroup_hom_to_group_implies_group
-    {S G : Type*} [Mul S] [Mul G] [Group G] [Finite S]
+    {S G : Type*} [Semigroup S] [Group G] [Finite S] [Nonempty S]
     (f : S → G)
     (h_hom : ∀ (x y : S), f (x * y) = f x * f y)
     (h_inj : Function.Injective f) :
-    ∃ (e : S), (∀ (x : S), e * x = x) ∧ (∀ (x : S), ∃ (y : S), y * x = e) := by
-  sorry
+    ∃ (e : S), (∀ (x : S), e * x = x) ∧ (∀ (x : S), ∃ (y : S), y * x = e) :=
+  finite_semigroup_injective_hom_to_group f h_hom h_inj
 
 /-! ============================================================================
-   重要说明
+   说明
    ============================================================================
 
    上面的定理 injective_semigroup_hom_to_group_implies_group
    是证明 standard_theory_no_intermediate_balance_claim 的关键。
 
-   然而，在 Lean 中正式证明这个定理需要：
-   1. 定义什么是"半群"（我们有 AxiomA.compose_assoc）
-   2. 证明有限半群到群的单射同态蕴含半群本身是群
-   3. 应用这个结论到 amplitude 函数
-   4. 得出左可迁性
-   5. 应用 output_degenerate_theorem
+   此定理的完整证明见 TwoAspectTheorems.lean 中的
+   `finite_semigroup_injective_hom_to_group`。
 
-   这个证明的核心数学思想是清晰的：
+   证明的核心数学思想：
    - norm_one 保证 amplitude 的值都在 ℂ× 中
    - ℂ× 是群
    - 有限子半群是子群
@@ -241,14 +235,7 @@ theorem injective_semigroup_hom_to_group_implies_group
    - 群是左可迁的
    - 左可迁 ⇒ output 退化
 
-   我们将这个定理留作 sorry，
-   但它为 standard_theory_no_intermediate_balance_claim
-   提供了强有力的证据。
-
-   实际上，这可能是一个完整的证明！
-   只是需要更多的工作来在 Lean 中形式化。
-
-   这是一个重大的理论进展！
+   这是一个完整的形式化证明。
    ============================================================================ -/
 
 /-! ============================================================================
