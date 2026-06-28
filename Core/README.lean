@@ -2,7 +2,7 @@
 CSQIT Core 模块依赖图（严格证明层级）
 
 ===========================================
-===         CSQIT 10.4.5 架构         ===
+===         CSQIT v11.0.0 架构         ===
 ===========================================
 
 Level 0（无依赖，公理基础）:
@@ -114,7 +114,7 @@ Core模块:      14 个 Lean 文件 + Models/FinModels.lean = 14 个文件 + 1 �
 ===========================================
 
 当引用本项目时，请使用:
-  CSQIT 10.4.5: Axiomatic Foundation for Discrete Spacetime
+  CSQIT v11.0.0: Axiomatic Foundation for Discrete Spacetime
   Information Ontology, 2026
 
 -/
