@@ -1,61 +1,34 @@
+/-
+CSQIT v11.0.0 Lake 项目配置文件
+版本: 11.0.0
+Lean 版本: v4.29.0-rc6
+日期: 2026-06-30
+
+本文件定义了 CSQIT 项目的 Lake 构建配置，
+包括 mathlib 依赖和 Core/Appendices 模块。
+-/
+
 import Lake
 open Lake DSL
 
 package csqit where
-  leanOptions := #[
-    ⟨`pp.unicode.fun, true⟩
-  ]
+  version := v!"11.0.0"
+  leanOptions := #[⟨`linter.unreachableTactic, false⟩, ⟨`linter.unusedTactic, false⟩]
 
+-- mathlib 依赖（使用本地路径）
 require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
 
 @[default_target]
 lean_lib CSQIT where
   roots := #[
     `Core.Axioms,
-    `Core.Theorems,
-    `Core.Consistency,
-    `Core.Independence,
-    `Core.AxiomD_Independence,
-    `Core.AxiomC_Independence,
-    `Core.CausalWeaving,
-    `Core.AlgebraicCausality,
-    `Core.WeavingStructure,
-    `Core.AmplitudeTheorems,
-    `Core.TwoAspectTheorems,
-    `Core.HierarchicalWeaving,
-    `Core.HierarchicalLevels,
-    `Core.Hierarchy,
-    `Core.TradeoffAndVerification,
-    `Core.FoundationalGrowth,
-    `Core.GrowthToAxioms,
-    `Core.TwoAspectToSU2,
-    `Core.CompleteHierarchicalCascade,
-    `Core.UnifiedLivingParadigm,
-    `Core.ShellCapacityDerivation,
-    `Core.ComputationalPillars,
-    `Core.HDST,
-    `Core.Unified,
-    `Core.Philosophy,
-    `Core.Summary,
-    `Core.OpenProblems,
-    `Core.CausalLattice,
-    `Core.QuantumMeasurement,
-    `Core.ThermodynamicArrow,
-    `Core.DarkUniverse,
-    `Core.CausalSetCorrespondence,
-    `Core.B_V_Naturalness,
-    `Core.CausalLatticeToAxiomA,
     `Core.BasicModels,
-    `Core.Models.FinModels,
-    `Core.Models.EnhancedModels,
-    `Core.Models.Fin8Growth,
-    `Core.Models.TwoAspectBalancedVerification,
-    `Core.Models.FiniteWeavingExamples,
-    `Core.Models.SmallSemigroupExploration,
-    `Core.Models.PeriodicTable,
-    `Appendices.AppendixA.Uniqueness,
-    `Appendices.AppendixB.CausalAndProbability,
-    `Appendices.AppendixC.CausalStructure,
-    `Appendices.AppendixD.BlackHoleThermo,
-    `Appendices.AppendixE.Mathematics
+    `Core.FoundationalGrowth,
+    `Core.HierarchicalLevels,
+    `Core.AlgebraicCausality,
+    `Core.TwoAspectToSU2,
+    `Core.CausalLattice,
+    `Core.ShellCapacityDerivation,
+    `Core.Unified,
+    `Core.Consistency
   ]

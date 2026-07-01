@@ -87,11 +87,14 @@ CSQIT v11.0.0 一致性证明
 import Core.Axioms
 import Core.Theorems
 import Core.HDST
+import Core.BasicModels
+import Core.Models.FinModels
 
 namespace CSQIT.Consistency
 
 open CSQIT
 open CSQIT.HDST
+open CSQIT.Models.FinModel5x4
 
 /-! ============================================================================
    §1 模型非平凡性分析

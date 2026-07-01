@@ -53,6 +53,8 @@ CSQIT_*.txt
 _backup/
 CSQIT_10.4.5_*
 CSQIT_10.5_*
+CSQIT_11.0.0_*
+CSQIT_11.1.0_*
 CSQIT_FinalBackup_*
 优化历史备份/
 All_Lean_Code_*.md
@@ -65,12 +67,14 @@ Core_Lean_Code_*.txt
 theorems_base64.txt
 test_mex3.lean
 
-# Paper files (kept in backup but not in core repo)
-CSQIT_11.0_Final_Paper_*.md
-CSQIT_*_论文*.md
-CSQIT_*_完整理论*.md
+# Docker build files (not part of core repo)
+csqsit_docker_build/
+DOCKER_BUILD_GUIDE.md
+Dockerfile.csqit
+*.tar.zst
 
 # Temporary files
+commit_msg.txt
 *.ps1
 *.sh
 *.py
@@ -86,6 +90,11 @@ test_real*.lean
 theorems.*
 WORKFLOW_README.md
 lake-manifest.json
+requirements.txt
+TUTORIAL.md
+
+# Trae IDE
+.trae/
 
 # Git
 .git/

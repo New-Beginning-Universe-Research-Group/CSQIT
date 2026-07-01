@@ -58,8 +58,13 @@ Step 4: 从表示到壳层容量（严格证明）
 
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Data.Finset.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Core.FoundationalGrowth
+import Core.BasicModels
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -69,7 +74,7 @@ set_option linter.unusedVariables false
 
 namespace CSQIT.TwoAspectToSU2
 
-open Nat
+open Nat Finset CSQIT.FoundationalGrowth
 
 /-! ============================================================================
    §1. Step 1: 两面性 → 复结构（概念性）
@@ -117,7 +122,7 @@ structure TwoAspectComplexStructure where
     - 因此两面系统具有 U(1) 相位对称性 -/
 def two_aspect_implies_complex_structure : Prop :=
   ∀ (M : Type*) [GenerativeRelation M],
-    ∃ (structure : TwoAspectComplexStructure), True
+    ∃ (s : TwoAspectComplexStructure), True
 
 /-- **两面性 → SO(3) 猜想**（Two-Aspect Implies SO(3) Symmetry Conjecture）
 
@@ -247,8 +252,10 @@ def orbital_count (n : ℕ) : ℕ :=
     证明：由 sum_of_first_n_odd_numbers 定理直接得出。 -/
 theorem orbital_count_is_n_squared (n : ℕ) :
   orbital_count n = n * n := by
-  simp [orbital_count]
-  <;> exact sum_of_first_n_odd_numbers n
+  have h : ∀ n : ℕ, ∑ k ∈ Finset.range n, (2 * k + 1) = n * n := by
+    intro n
+    exact sum_of_first_n_odd_numbers n
+  simpa [orbital_count] using h n
 
 /-- **第 n 壳层的最大电子容量**（考虑自旋）
 
@@ -357,7 +364,7 @@ theorem two_aspect_implies_shell_capacity (n : ℕ) :
 def noble_gas_atomic_numbers : List ℕ :=
   [2, 10, 18, 36, 54, 86, 118]
 
-/-- **验证：稀有气体原子序数等于前 n 个壳层的累积容量**
+/- **验证：稀有气体原子序数等于前 n 个壳层的累积容量**
 
     前 1 个壳层容量：2 → He
     前 2 个壳层容量：2 + 8 = 10 → Ne
@@ -384,7 +391,7 @@ def noble_gas_atomic_numbers : List ℕ :=
 
     简化起见，我们先接受 2n² 公式，
     然后在更高级的层级中处理能级交错。
-    ---------------------------------------------------------------------------- -/
+-/
 
 /-! ============================================================================
    §7. 周期重复模式的解释

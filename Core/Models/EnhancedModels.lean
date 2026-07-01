@@ -417,7 +417,9 @@ instance fin7AxiomD' : AxiomD' (Fin 7) (Fin 7) where
     refine ⟨β - α, ?_⟩
     have h_le : α ≤ β := Fin.le_of_lt h_lt
     have h : α + (β - α) = β := by
-      exact Fin.add_sub_of_le h_le
+      apply Fin.ext
+      simp [Fin.add_def, Fin.sub_def]
+      <;> omega
     exact h
 
 instance fin7AxiomF' : AxiomF' (Fin 7) (Fin 7) where
@@ -531,7 +533,9 @@ instance fin8AxiomD' : AxiomD' (Fin 8) (Fin 8) where
     refine ⟨β - α, ?_⟩
     have h_le : α ≤ β := Fin.le_of_lt h_lt
     have h : α + (β - α) = β := by
-      exact Fin.add_sub_of_le h_le
+      apply Fin.ext
+      simp [Fin.add_def, Fin.sub_def]
+      <;> omega
     exact h
 
 instance fin8AxiomF' : AxiomF' (Fin 8) (Fin 8) where

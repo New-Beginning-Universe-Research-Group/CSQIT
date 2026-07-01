@@ -95,10 +95,9 @@ theorem card_1_only_trivial (C : Type) [Fintype C] [DecidableEq C]
     ∀ (f g : C → ℂ), ∀ (α β : C), f α = f β := by
   intro f g α β
   have h1 : Fintype.card C = 1 := h_card
-  have h2 : α = β := by
-    apply Fintype.card_le_one_iff_subsingleton.mp
-    rw [h1] <;> norm_num
-  rw [h2]
+  haveI : Subsingleton C := Fintype.card_le_one_iff_subsingleton.mp (by rw [h1] <;> norm_num)
+  have h_eq : α = β := Subsingleton.elim α β
+  rw [h_eq]
 
 /-! ============================================================================
    §2. |C| = 2 的情形

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT v11.0.0 - 可计算可检验支柱：复结构、层级函子、信息势
 文件: Core/ComputationalPillars.lean
 版本: 11.0.0

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT v11.0.0 生长理论与 CSQIT 公理系统的深度对接
 文件: Core/GrowthToAxioms.lean
 版本: 11.0.0

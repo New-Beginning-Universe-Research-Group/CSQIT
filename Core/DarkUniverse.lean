@@ -294,6 +294,137 @@ theorem two_aspect_conservation (M C : Type*)
   trivial
 
 /-! ============================================================================
+   §4.1 物质-能量的二维分类体系（两面性 × 振幅）
+   ============================================================================ -/
+
+/-!
+================================================================================
+核心洞察：宇宙的物质-能量分类是一个 2×2 的二维矩阵
+
+维度 1：两面性（因果面 / 信息面）
+  - 因果面 = 有引力效应 = 物质
+  - 信息面 = 有量子自由度 = 暗能量
+
+维度 2：振幅（非零 / 零）
+  - 振幅 ≠ 0 = 参与电磁相互作用 = 可见
+  - 振幅 = 0 = 只有引力 = 暗物质
+
+因此，宇宙的组分可以分为三类（而不是两类）：
+
+  ┌─────────────────────────────────────────────┐
+  │              因果面（物质）                  │
+  │  ┌──────────────┬───────────────────────┐  │
+  │  │  振幅 ≠ 0    │     振幅 = 0          │  │
+  │  │  可见物质    │     暗物质            │  │
+  │  │  (~4.9%)     │     (~26.2%)         │  │
+  │  └──────────────┴───────────────────────┘  │
+  │            总物质 Ω_m ≈ 31.1%               │
+  └─────────────────────────────────────────────┘
+  ┌─────────────────────────────────────────────┐
+  │              信息面（暗能量）                │
+  │            Ω_DE ≈ 68.9%                     │
+  └─────────────────────────────────────────────┘
+
+关键定理：θ = B/V = Ω_m / Ω_total
+  两面性参数 θ 直接等于总物质密度参数，
+  而非暗物质密度参数。
+
+  暗物质/普通物质的比例（约 5.3:1）是另一个独立的比例，
+  由振幅结构的分布决定（振幅为零的规则比例）。
+================================================================================
+-/
+
+/--
+**定义 4.1.1: 可见物质集（Visible Matter）**
+
+所有因果面中振幅非零的节点。
+
+数学形式：
+  { x ∈ M | ∃ c ∈ C, output(c) = x ∧ amplitude(c) ≠ 0 }
+
+物理意义：
+  - 参与电磁相互作用（振幅 ≠ 0 ⇔ 有可观测的量子态）
+  - 对应普通物质/重子物质
+  - 占总物质的约 15%（观测值）
+-/
+def visibleMatter (M C : Type*)
+    [CausalLattice M] [A : AxiomA M C] [Cx : AxiomC M C] : Set M :=
+  { x | ∃ (c : C), A.output c = x ∧ Cx.amplitude c ≠ 0 }
+
+/--
+**定义 4.1.2: 暗物质集（Dark Matter）**
+
+所有因果面中振幅为零的节点。
+
+数学形式：
+  { x ∈ M | ∃ c ∈ C, output(c) = x ∧ amplitude(c) = 0 }
+
+物理意义：
+  - 只有引力效应（因果面），但不参与电磁相互作用
+  - 占总物质的约 85%（观测值）
+  - 暗物质之所以"暗"，是因为它的振幅为零
+-/
+def darkMatterSet (M C : Type*)
+    [CausalLattice M] [A : AxiomA M C] [Cx : AxiomC M C] : Set M :=
+  { x | ∃ (c : C), A.output c = x ∧ Cx.amplitude c = 0 }
+
+/--
+**定理 4.1.1: 总物质 = 可见物质 ∪ 暗物质**
+
+边界节点（因果面实体）恰好等于可见物质与暗物质的并集。
+
+证明思路：
+  边界节点 = { x | ∃ c, output(c) = x }
+         = { x | ∃ c, output(c) = x ∧ (amplitude(c) ≠ 0 ∨ amplitude(c) = 0) }
+         = { x | ∃ c, output(c) = x ∧ amplitude(c) ≠ 0 }
+         ∪ { x | ∃ c, output(c) = x ∧ amplitude(c) = 0 }
+         = 可见物质 ∪ 暗物质
+         = 总物质
+
+数学意义：
+  θ = B/V 直接对应 Ω_m / Ω_total，
+  而非 Ω_DM / Ω_total。
+-/
+theorem total_matter_is_visible_plus_dark
+    (M C : Type*)
+    [CausalLattice M] [A : AxiomA M C] [Cx : AxiomC M C] :
+    (range A.output) = visibleMatter M C ∪ darkMatterSet M C := by
+  ext x
+  simp only [visibleMatter, darkMatterSet, Set.mem_union, Set.mem_setOf_eq, Set.mem_range]
+  constructor
+  · intro h
+    rcases h with ⟨c, rfl⟩
+    by_cases h_amp : Cx.amplitude c = 0
+    · right
+      exact ⟨c, rfl, h_amp⟩
+    · left
+      exact ⟨c, rfl, h_amp⟩
+  · rintro (⟨c, rfl, h_amp⟩ | ⟨c, rfl, h_amp⟩)
+    · exact ⟨c, rfl⟩
+    · exact ⟨c, rfl⟩
+
+/--
+**定义 4.1.3: 振幅零比例（Amplitude Zero Ratio）**
+
+在所有产生输出的规则中，振幅为零的比例：
+
+  α_zero = |{c ∈ C | amplitude(c) = 0 ∧ ∃ x, output(c) = x}|
+         / |{c ∈ C | ∃ x, output(c) = x}|
+
+物理意义：
+  - α_zero ≈ 0.85（观测值：暗物质/总物质 ≈ 85%）
+  - 这个比例决定了暗物质与普通物质的比例
+  - 是独立于 θ 的另一个基本参数
+  - 其来源可能与 SU(2) 对称性破缺、代的数量有关
+-/
+noncomputable def amplitudeZeroRatio (M C : Type*)
+    [CausalLattice M] [A : AxiomA M C] [Cx : AxiomC M C]
+    [Fintype C] : ℝ :=
+  let zeroRules := Finset.univ.filter (fun c : C => Cx.amplitude c = 0)
+  let allRules := Finset.univ
+  (zeroRules.card : ℝ) / (allRules.card : ℝ)
+
+/-! ============================================================================
    §4.2 暗物质-暗能量比例的推导（关键突破）
    ============================================================================ -/
 

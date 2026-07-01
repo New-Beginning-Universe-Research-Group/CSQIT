@@ -46,7 +46,7 @@ CSQIT 与因果集理论的关系：
 import Core.Axioms
 import Core.CausalLattice
 import Mathlib.Order.Basic
-import Mathlib.Data.Set.Finite
+import Mathlib.Data.Set.Finite.Basic
 
 namespace CSQIT.CausalSetCorrespondence
 

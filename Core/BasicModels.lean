@@ -1,6 +1,7 @@
 import Core.Axioms
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Set.Finite.Basic
 
 namespace CSQIT
 
@@ -116,19 +117,17 @@ private lemma trivial_information_causal (x y : Unit) (h : trivial_le x y) :
     trivial_entropy {z | trivial_le z x} ≤ trivial_entropy {z | trivial_le z y} := by
   exact show (0 : ℝ) ≤ (0 : ℝ) from by norm_num
 
+private def trivial_evolve (_ : Unit) (_ : Unit) : Unit := ()
+
 private lemma trivial_causal_update (α : Unit) (x : Unit) :
     trivial_le x (trivial_evolve α x) := by
   trivial
-where
-  trivial_evolve (_ : Unit) (_ : Unit) : Unit := ()
 
 private lemma trivial_comp_evolve (α β : Unit) (x : Unit) :
     trivial_evolve (trivial_compose α β) x = trivial_evolve β (trivial_evolve α x) := by
   rfl
-where
-  trivial_evolve (_ : Unit) (_ : Unit) : Unit := ()
 
-private def instA : AxiomA Unit Unit :=
+private instance instA : AxiomA Unit Unit :=
   { input := trivial_input,
     output := trivial_output,
     input_nodup := trivial_input_nodup,
@@ -137,7 +136,7 @@ private def instA : AxiomA Unit Unit :=
     compose_output := trivial_compose_output,
     compose_assoc := trivial_compose_assoc }
 
-private def instB : AxiomB Unit Unit :=
+private instance instB : AxiomB Unit Unit :=
   { le := trivial_le,
     lt := trivial_lt,
     le_refl := trivial_le_refl,
@@ -148,38 +147,38 @@ private def instB : AxiomB Unit Unit :=
     localFinite_future := trivial_localFinite_future,
     weaving_axiom := trivial_weaving_axiom }
 
-private def instD : AxiomD Unit Unit :=
+private instance instD : AxiomD Unit Unit :=
   { op_weaving := by
       intro α β hlt
       cases hlt }
 
-private def instC : AxiomC Unit Unit :=
+private instance instC : AxiomC Unit Unit :=
   { amplitude := trivial_amplitude,
     norm_one := trivial_amplitude_norm_one,
     comp_rule := trivial_amplitude_comp,
     amplitude_injective := trivial_amplitude_injective }
 
-private def instF : AxiomF Unit Unit :=
+private instance instF : AxiomF Unit Unit :=
   { scale := trivial_scale,
     scale_pos := trivial_scale_pos,
     scale_limit := trivial_scale_limit }
 
-private def instG : AxiomG Unit Unit :=
+private instance instG : AxiomG Unit Unit :=
   { spin_network := Unit,
     amplitude_spin := fun (_ : Unit) => (1 : ℂ) }
 
-private def instH : AxiomH Unit Unit :=
+private instance instH : AxiomH Unit Unit :=
   { gauge_group := Unit,
     field_content := trivial_field_content,
     lagrangian := trivial_lagrangian }
 
-private def instI : @AxiomI Unit Unit instA instB :=
+private instance instI : @AxiomI Unit Unit instA instB :=
   { entropy := trivial_entropy,
     entropy_nonneg := trivial_entropy_nonneg,
     entropy_subadditive := trivial_entropy_subadditive,
     information_causal := trivial_information_causal }
 
-private def instJ : AxiomJ Unit Unit :=
+private instance instJ : AxiomJ Unit Unit :=
   { evolve := fun (_ : Unit) (_ : Unit) => (),
     causal_update := by
       intro α x
@@ -313,7 +312,7 @@ private lemma bool_comp_evolve (α β : Unit) (x : Bool) :
     bool_evolve (bool_compose α β) x = bool_evolve β (bool_evolve α x) := by
   rfl
 
-private def instA : AxiomA Bool Unit :=
+private instance instA : AxiomA Bool Unit :=
   { input := bool_input,
     output := bool_output,
     input_nodup := bool_input_nodup,
@@ -322,7 +321,7 @@ private def instA : AxiomA Bool Unit :=
     compose_output := bool_compose_output,
     compose_assoc := bool_compose_assoc }
 
-private def instB : AxiomB Bool Unit :=
+private instance instB : AxiomB Bool Unit :=
   { le := bool_le,
     lt := bool_lt,
     le_refl := bool_le_refl,
@@ -333,36 +332,36 @@ private def instB : AxiomB Bool Unit :=
     localFinite_future := bool_localFinite_future,
     weaving_axiom := bool_weaving_axiom }
 
-private def instD : AxiomD Bool Unit :=
+private instance instD : AxiomD Bool Unit :=
   { op_weaving := bool_op_weaving }
 
-private def instC : AxiomC Bool Unit :=
+private instance instC : AxiomC Bool Unit :=
   { amplitude := bool_amplitude,
     norm_one := bool_amplitude_norm_one,
     comp_rule := bool_amplitude_comp,
     amplitude_injective := bool_amplitude_injective }
 
-private def instF : AxiomF Bool Unit :=
+private instance instF : AxiomF Bool Unit :=
   { scale := bool_scale,
     scale_pos := bool_scale_pos,
     scale_limit := bool_scale_limit }
 
-private def instG : AxiomG Bool Unit :=
+private instance instG : AxiomG Bool Unit :=
   { spin_network := Unit,
     amplitude_spin := fun (_ : Unit) => (1 : ℂ) }
 
-private def instH : AxiomH Bool Unit :=
+private instance instH : AxiomH Bool Unit :=
   { gauge_group := Unit,
     field_content := bool_field_content,
     lagrangian := bool_lagrangian }
 
-private def instI : @AxiomI Bool Unit instA instB :=
+private instance instI : @AxiomI Bool Unit instA instB :=
   { entropy := bool_entropy,
     entropy_nonneg := bool_entropy_nonneg,
     entropy_subadditive := bool_entropy_subadditive,
     information_causal := bool_information_causal }
 
-private def instJ : AxiomJ Bool Unit :=
+private instance instJ : AxiomJ Bool Unit :=
   { evolve := bool_evolve,
     causal_update := bool_causal_update,
     comp_evolve := bool_comp_evolve }

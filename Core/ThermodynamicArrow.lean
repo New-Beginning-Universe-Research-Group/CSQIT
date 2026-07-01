@@ -48,7 +48,7 @@ CSQIT 的回答更加根本：
 import Core.Axioms
 import Core.CausalLattice
 import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Set.Finite
+import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Order.Basic
 
 namespace CSQIT.ThermodynamicArrow

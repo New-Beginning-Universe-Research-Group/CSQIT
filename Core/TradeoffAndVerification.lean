@@ -123,14 +123,26 @@ theorem fin7_weaving_witness_unique (α β : Fin 7) (h_lt : α < β) :
   use β - α
   constructor
   · have h_le : α ≤ β := Fin.le_of_lt h_lt
-    have h₁ : α + (β - α) = β := Fin.add_sub_of_le h_le
+    have h_add_lt : α.val + (β - α).val < 7 := by
+      rw [Fin.sub_val_of_le h_le]
+      <;> omega
+    have h₁ : (α + (β - α)).val = β.val := by
+      rw [Fin.val_add_eq_of_add_lt h_add_lt, Fin.sub_val_of_le h_le] <;> omega
+    apply Fin.ext
     exact h₁
   · intro γ hγ
     have h₁ : α + γ = β := hγ
     have h_le : α ≤ β := Fin.le_of_lt h_lt
     have h₂ : γ = β - α := by
-      rw [← Fin.add_sub_of_le h_le, h₁]
-      <;> rw [add_comm]
+      apply Fin.ext
+      have h₃ : (α + γ).val = β.val := by
+        rw [h₁]
+      have h_add_lt : α.val + γ.val < 7 := by
+        have h₄ : (α + γ).val = β.val := h₃
+        omega
+      have h₅ : α.val + γ.val = β.val := by
+        rw [← Fin.val_add_eq_of_add_lt h_add_lt, h₃]
+      rw [Fin.sub_val_of_le h_le] <;> omega
     exact h₂
 
 /-- **Fin 7 振幅与因果序耦合定理**:
@@ -143,7 +155,11 @@ theorem fin7_amplitude_causal_coupling (α β : Fin 7) (h_lt : α < β) :
     @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' α *
     @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' (β - α) := by
   have h_le : α ≤ β := Fin.le_of_lt h_lt
-  have h₁ : α + (β - α) = β := Fin.add_sub_of_le h_le
+  have h_add_lt : α.val + (β - α).val < 7 := by
+    rw [Fin.sub_val_of_le h_le] <;> omega
+  have h₁ : α + (β - α) = β := by
+    apply Fin.ext
+    rw [Fin.val_add_eq_of_add_lt h_add_lt, Fin.sub_val_of_le h_le] <;> omega
   have h₂ := fin7AxiomC'.comp_rule α (β - α)
   have h₃ : @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' (α + (β - α)) =
       @AxiomC'.amplitude (Fin 7) (Fin 7) fin7AxiomA' fin7AxiomC' α *
@@ -194,7 +210,7 @@ class BalancedState (M C : Type*) [A' : AxiomA' M C] [B' : AxiomB' M C] where
     2. amplitude 是 7次单位根群同态
     3. evolve 是恒等映射（满足 causal_update）
     4. 熵函数取常数即可满足 entropy_stable -/
-noncomputable def fin7BalancedState : BalancedState (Fin 7) (Fin 7) where
+@[reducible] noncomputable def fin7BalancedState : BalancedState (Fin 7) (Fin 7) where
   toAxiomC' := fin7AxiomC'
   toAxiomD' := fin7AxiomD'
   toAxiomF' := fin7AxiomF'
