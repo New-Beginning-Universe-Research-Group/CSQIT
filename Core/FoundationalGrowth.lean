@@ -260,7 +260,12 @@ theorem causal_past_refl {M : Type*} [GenerativeRelation M] (x : M) :
 theorem causal_past_trans {M : Type*} [GenerativeRelation M] (x y z : M)
     (hxy : causal_past x y) (hyz : causal_past y z) :
   causal_past x z := by
-  sorry
+  revert x hxy
+  induction hyz with
+  | refl => intro x hxy; exact hxy
+  | step y' z' h_prev h_gen ih =>
+    intro x hxy
+    exact causal_past.step y' z' (ih x hxy) h_gen
 
 /-! ============================================================================
    Layer 2: 因果子结构的涌现

@@ -31,5 +31,6 @@ lean_lib CSQIT where
     `Core.ShellCapacityDerivation,
     `Core.ScaleDynamics,
     `Core.Unified,
-    `Core.Consistency
+    `Core.Consistency,
+    `Core.Models.FiniteWeavingExamples
   ]

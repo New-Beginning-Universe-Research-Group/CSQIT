@@ -50,6 +50,8 @@ import Mathlib.Data.Set.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Fin.Basic
+import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Algebra.Ring.Defs
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -150,22 +152,39 @@ def full_causal : CausalSubstructure (Fin 8) (Fin 8) :=
    这与元素周期表的周期性有深刻联系！
    ============================================================================ -/
 
-/-- **Fin 8 中的循环稳定子结构**
+/-- **Fin 8 中的循环稳定子结构（反例性占位符）**
 
-    由元素 d 生成的循环子群是稳定子结构。
+    由元素 d 生成的循环子群。
     代表元 rep = d
     载体 carrier = {0, d, 2d, 3d, ...} (mod 8)
 
-    这是群论中循环子群的 CSQIT 表达。 -/
+    重要说明（数学诚实性标注）：
+    本定义中的 `past_closed` 字段**无法证明**，因为循环子群在 Fin 8 的自然序下
+    **不满足因果过去封闭**。具体反例：
+    - 取 d = 4，则 carrier = {0, 4}
+    - 4 ∈ carrier，且 1 ≤ 4（自然序），但 1 ∉ {0, 4}
+
+    这揭示了一个深刻的张力（详见下方 §3 末尾的讨论）：
+    - **因果封闭**（关于自然序 ≤ 的前缀封闭）→ 子集形如 {0, 1, ..., n}
+    - **代数封闭**（关于加法的子群封闭）→ 子集形如 {0, d, 2d, ...}
+    - 两者在 Fin 8 中几乎不相交（除平凡情况外）
+
+    因此循环子群不能直接作为 `StableSubstructure`（要求 past_closed）。
+    正确的构造应使用 `AlgebraicStableSubstructure`（不要求 past_closed），
+    见下方 `cyclic_algebraic_stable`。
+
+    此处的 `sorry` 是**有意保留的占位符**，标注一个数学上不成立的构造尝试，
+    以提醒读者：因果封闭与代数封闭的统一需要更精细的框架（如 `AlgebraicCausality.lean`
+    中的代数因果序 `algebraic_le`，它将因果序本身定义为代数生成关系，从而统一两种封闭性）。 -/
 def cyclic_stable_substructure (d : Fin 8) : StableSubstructure (Fin 8) (Fin 8) :=
   let carrier := {x : Fin 8 | ∃ k : ℕ, x = k • d}
   {
     carrier := carrier,
-    past_closed := sorry
+    past_closed := sorry  -- 数学上不成立：循环子群非前缀封闭，见上方注释
     rep := d,
-    rep_in_carrier := sorry
-    combine_closed := sorry
-    internally_connected := sorry
+    rep_in_carrier := sorry  -- 同上，依赖 past_closed 的存在
+    combine_closed := sorry  -- 同上
+    internally_connected := sorry  -- 同上
   }
 
 /-! ----------------------------------------------------------------------------
@@ -228,15 +247,63 @@ structure AlgebraicStableSubstructure (M C : Type*) [A' : AxiomA' M C] where
 /-- **Fin 8 中的循环子群作为代数稳定子结构**
 
     这是一个干净的构造：
-    由 d 生成的循环子群 = {0, d, 2d, 3d, ...} (mod 8) -/
+    由 d 生成的循环子群 = {0, d, 2d, 3d, ...} (mod 8)
+
+    证明要点（已严格形式化）：
+    - rep_in_carrier: d = 1 • d（由 one_nsmul）
+    - combine_closed: (k₁ • d) + (k₂ • d) = (k₁ + k₂) • d（由 add_nsmul）
+    - internally_connected: 对 x = k • d，取 y = (k + 7) • d，
+      则 d + y = 1 • d + (k + 7) • d = (k + 8) • d = k • d（因 8 • d = 0 在 Fin 8 中，
+      由 nsmul_eq_mul + Fin.natCast_self）。 -/
 def cyclic_algebraic_stable (d : Fin 8) : AlgebraicStableSubstructure (Fin 8) (Fin 8) :=
   let carrier := {x : Fin 8 | ∃ k : ℕ, x = k • d}
   {
     carrier := carrier,
     rep := d,
-    rep_in_carrier := sorry
-    combine_closed := sorry
-    internally_connected := sorry
+    rep_in_carrier := by
+      -- d = 1 • d，由 one_nsmul
+      show d ∈ carrier
+      exact ⟨1, (one_nsmul d).symm⟩
+    combine_closed := by
+      -- 若 x = k₁ • d, y = k₂ • d，则 x + y = (k₁ + k₂) • d
+      intro x y hx hy
+      obtain ⟨k₁, hk₁⟩ := hx
+      obtain ⟨k₂, hk₂⟩ := hy
+      refine ⟨k₁ + k₂, ?_⟩
+      rw [hk₁, hk₂]
+      -- 目标：AxiomA'.combine (Fin 8) (k₁ • d) (k₂ • d) = (k₁ + k₂) • d
+      -- combine = (+) 在 Fin 8 模型中，用 rfl 展开 projection
+      have h_combine : AxiomA'.combine (Fin 8) (k₁ • d) (k₂ • d) = (k₁ • d) + (k₂ • d) := rfl
+      rw [h_combine, ← add_nsmul]
+    internally_connected := by
+      -- 对 x = k • d，取 y = (k + 7) • d
+      -- 则 d + y = 1 • d + (k + 7) • d = (k + 8) • d = k • d（因 8 • d = 0）
+      intro x hx
+      obtain ⟨k, hk⟩ := hx
+      refine ⟨(k + 7) • d, ⟨k + 7, rfl⟩, ?_⟩
+      rw [hk]
+      -- 目标：AxiomA'.combine (Fin 8) d ((k + 7) • d) = k • d
+      have h_combine : AxiomA'.combine (Fin 8) d ((k + 7) • d) = d + (k + 7) • d := rfl
+      rw [h_combine]
+      -- 目标：d + (k + 7) • d = k • d
+      -- 把左侧第一个 d 改为 1 • d，以便应用 add_nsmul
+      -- 使用 congr 精确控制只重写第一个 d，避免 (k+7)•d 里的 d 也被改写
+      conv_lhs =>
+        congr
+        · rw [← one_nsmul d]
+        · skip
+      -- 目标：1 • d + (k + 7) • d = k • d
+      rw [← add_nsmul]
+      -- 目标：(1 + (k + 7)) • d = k • d
+      have h_arith : 1 + (k + 7) = k + 8 := by omega
+      rw [h_arith, add_nsmul]
+      -- 目标：k • d + 8 • d = k • d
+      have h8 : (8 : ℕ) • d = (0 : Fin 8) := by
+        -- 在 Fin 8 中，8 • d = d + d + ... + d (8次) = 8 * d.val mod 8 = 0
+        -- Fin 8 缺少 NonAssocSemiring 实例，故不能用 nsmul_eq_mul
+        -- 用 fin_cases 对 d 分 8 种情况，每种用 decide 验证有限群计算
+        fin_cases d <;> decide
+      rw [h8, add_zero]
   }
 
 /-! ----------------------------------------------------------------------------
@@ -578,19 +645,49 @@ def weaving_monotonic
    所以阶是 8/1 = 8 ✓
    ---------------------------------------------------------------------------- -/
 
-/-- **阶跳跃现象**：当两个子群"互补时，编织会产生阶的跳跃。
+/-- **阶跳跃现象**：当两个子群"互补"时，编织会产生阶的跳跃。
 
     这是层级级联的核心机制：
     小的稳定子结构 + 互补的生成元
     → 大得多的稳定子结构
 
     物理对应：
-    - 碱金属 + 卤素 → 盐（稳定分子
-    两种都很活泼，结合后非常稳定。 -/
+    - 碱金属 + 卤素 → 盐（稳定分子）
+    两种都很活泼，结合后非常稳定。
+
+    证明思路（已形式化）：
+    - `generated_subgroup S₁ S₂ = cyclic_algebraic_stable (S₁.rep + S₂.rep)`
+    - `subgroup_order_2.rep = 4`，`subgroup_order_8.rep = 1`
+    - 左边 = `cyclic_algebraic_stable (4 + 1)` = `cyclic_algebraic_stable 5`，carrier = ⟨5⟩
+    - 右边 = `cyclic_algebraic_stable 1`，carrier = ⟨1⟩ = 整个 Fin 8
+    - 因 gcd(5, 8) = 1，5 是 Fin 8 的生成元（5 在 mod 8 下可逆，5⁻¹ = 5，因 5×5=25≡1）
+    - 故 ⟨5⟩ = ⟨1⟩ = Fin 8，两 carrier 相等
+
+    形式化策略：用 `Set.subset.antisymm` 证明双向包含。
+    - ⟨5⟩ ⊆ ⟨1⟩：若 x = k•5，则 x = (k*5)•1（因 5•1 = 5，由 mul_nsmul'）
+    - ⟨1⟩ ⊆ ⟨5⟩：若 x = k•1，则 x = (k*5)•5（因 5•5 = 1，由 mul_nsmul'）
+    关键引理 `5 • 5 = 1`（在 Fin 8 中）说明 5 是自逆元，从而是生成元。 -/
 theorem order_jump_example :
   (generated_subgroup subgroup_order_2 subgroup_order_8).carrier =
   subgroup_order_8.carrier := by
-  sorry
+  -- 辅助引理：5 个 1 相加 = 5（平凡）
+  have h_51 : (5 : ℕ) • (1 : Fin 8) = (5 : Fin 8) := by decide
+  -- 关键引理：5 个 5 相加 = 25 ≡ 1 (mod 8)，故 5 是自逆元（生成元）
+  have h_55 : (5 : ℕ) • (5 : Fin 8) = (1 : Fin 8) := by decide
+  -- rep 化简：subgroup_order_2.rep = 4, subgroup_order_8.rep = 1, 故 4 + 1 = 5
+  have h_rep : subgroup_order_2.rep + subgroup_order_8.rep = (5 : Fin 8) := by rfl
+  -- 用 ext 证明集合相等：x ∈ carrier_left ↔ x ∈ carrier_right
+  ext x
+  constructor
+  · -- x ∈ ⟨5⟩ → x ∈ ⟨1⟩：若 x = k • (4+1)，取 witness m = k * 5
+    rintro ⟨k, hk⟩
+    rw [h_rep] at hk  -- hk : x = k • 5
+    refine ⟨k * 5, ?_⟩
+    rw [hk, mul_nsmul', h_51]
+  · -- x ∈ ⟨1⟩ → x ∈ ⟨5⟩：若 x = k • 1，取 witness m = k * 5
+    rintro ⟨k, hk⟩
+    refine ⟨k * 5, ?_⟩
+    rw [h_rep, hk, mul_nsmul', h_55]
 
 /-! ============================================================================
    §10. 层级级联的具体构造

@@ -80,6 +80,7 @@ import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.Group.Basic
+import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
 
@@ -113,26 +114,39 @@ open CSQIT
     当且仅当 x 可以表示为 y 的倍数（即 x ∈ ⟨y⟩）。
 
     换句话说：y 生成的子群包含 x，
-    所以 y 是 x 的"因"，x 是 y 的"果"。 -/
+    所以 y 是 x 的"因"，x 是 y 的"果"。
+
+    数学定义：x = k • y，其中 k • y 表示 y 的 k 次加法（nsmul）。
+    这等价于 x ∈ ⟨y⟩（x 属于由 y 生成的循环子群）。 -/
 def algebraic_le {n : ℕ} [NeZero n] (x y : Fin n) : Prop :=
-  ∃ k : ℕ, x = (List.replicate k y).sum
+  ∃ k : ℕ, x = k • y
 
 /-! ----------------------------------------------------------------------------
    代数因果序的基本性质
    ---------------------------------------------------------------------------- -/
 
-/-- **自反性**：每个元素都在自己的因果过去中。 -/
+/-- **自反性**：每个元素都在自己的因果过去中。
+    证明：取 k = 1，由 one_nsmul 有 1 • x = x。 -/
 theorem algebraic_le_refl {n : ℕ} [NeZero n] (x : Fin n) :
   algebraic_le x x := by
   refine ⟨1, ?_⟩
-  simp
+  exact (one_nsmul x).symm
 
 /-- **传递性**：如果 x 在 y 的因果过去中，
-    y 在 z 的因果过去中，则 x 在 z 的因果过去中。 -/
+    y 在 z 的因果过去中，则 x 在 z 的因果过去中。
+
+    证明：设 x = k₁ • y，y = k₂ • z。
+    则 x = k₁ • (k₂ • z) = (k₁ * k₂) • z（由 mul_nsmul'）。
+    所以 x 在 z 的因果过去中，取 k = k₁ * k₂。 -/
 theorem algebraic_le_trans {n : ℕ} [NeZero n] (x y z : Fin n)
     (hxy : algebraic_le x y) (hyz : algebraic_le y z) :
   algebraic_le x z := by
-  sorry
+  obtain ⟨k₁, hk₁⟩ := hxy
+  obtain ⟨k₂, hk₂⟩ := hyz
+  refine ⟨k₁ * k₂, ?_⟩
+  -- mul_nsmul' a m n : (m * n) • a = m • (n • a)
+  -- 逆向使用：把 m • (n • a) 重写为 (m * n) • a
+  rw [hk₁, hk₂, ← mul_nsmul']
 
 /-! ----------------------------------------------------------------------------
    重要观察：代数因果序不是全序

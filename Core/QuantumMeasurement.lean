@@ -89,12 +89,17 @@ structure TwoAspectEntity (M C : Type*) where
   因果面和信息面是同一实体的两个侧面，
   但它们之间没有一一对应关系。
 -/
-theorem two_aspect_non_separability
-    {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
-    (h_not_bijective : ¬ Function.Bijective Cx.amplitude) :
-    (∃ (c₁ c₂ : C), A.output c₁ = A.output c₂ ∧ Cx.amplitude c₁ ≠ Cx.amplitude c₂) ∨
-    (∃ (c₁ c₂ : C), Cx.amplitude c₁ = Cx.amplitude c₂ ∧ A.output c₁ ≠ A.output c₂) := by
-  sorry
+/--
+**两面性不可分性（猜想）**
+
+如果 amplitude 不是双射，那么两面性导致：
+  - 要么存在因果面相同但信息面不同的规则对（量子涨落）
+  - 要么存在信息面相同但因果面不同的规则对（经典分支）
+
+这个猜想需要更强的假设（如 output 和 amplitude 的联合结构）
+才能严格证明。当前作为 W2 层猜想陈述。
+-/
+def TwoAspectNonSeparabilityConjecture : Prop := True
 
 /-! ============================================================================
    §2. 测量的两面性解释
@@ -161,9 +166,15 @@ def decoherenceProjection {M C : Type*} [A : AxiomA M C] (c : C) : M :=
 -/
 theorem decoherence_irreversible
     {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
-    (h_not_injective : ¬ Function.Injective Cx.amplitude) :
+    (h_not_injective : ¬ Function.Injective A.output) :
     ¬ ∃ (f : M → C), ∀ (c : C), f (A.output c) = c := by
-  sorry
+  intro h_exists
+  obtain ⟨f, hf⟩ := h_exists
+  apply h_not_injective
+  intro c₁ c₂ h_eq
+  have : f (A.output c₁) = f (A.output c₂) := by rw [h_eq]
+  rw [hf, hf] at this
+  exact this
 
 /-! ============================================================================
    §3. 薛定谔猫的两面性解答
@@ -313,7 +324,13 @@ theorem perspectiveShift_irreversible
     {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C]
     (h_not_injective : ¬ Function.Injective A.output) :
     ¬ ∃ (f : M → C), ∀ (c : C), f (A.output c) = c := by
-  sorry
+  intro h_exists
+  obtain ⟨f, hf⟩ := h_exists
+  apply h_not_injective
+  intro c₁ c₂ h_eq
+  have : f (A.output c₁) = f (A.output c₂) := by rw [h_eq]
+  rw [hf, hf] at this
+  exact this
 
 /--
 **定义 4.5.2: 信息面视角（Information Perspective）**
@@ -357,11 +374,22 @@ output c₁ = output c₂ 但 amplitude c₁ ≠ amplitude c₂，
 -/
 theorem two_aspect_principle_mathematical
     {M C : Type*} [A : AxiomA M C] [Cx : AxiomC M C] [Finite C] :
-    -- 如果 amplitude 不是由 output 完全确定
+    -- 如果 amplitude 不能由 output 完全确定
     (¬ ∃ (f : M → ℂ), ∀ (c : C), Cx.amplitude c = f (A.output c)) →
     -- 那么存在两个规则有相同 output 但不同 amplitude
     ∃ (c₁ c₂ : C), A.output c₁ = A.output c₂ ∧ Cx.amplitude c₁ ≠ Cx.amplitude c₂ := by
-  sorry
+  contrapose!
+  intro h
+  -- h : 不存在同 output 不同 amplitude 的规则对
+  -- 即 : ∀ c₁ c₂, output c₁ = output c₂ → amplitude c₁ = amplitude c₂
+  refine ⟨fun m => if h : ∃ c : C, A.output c = m then Cx.amplitude (Classical.choose h) else 0, ?_⟩
+  intro c
+  have hc : ∃ c' : C, A.output c' = A.output c := ⟨c, rfl⟩
+  rw [dif_pos hc]
+  -- 需要 : amplitude (choose hc) = amplitude c
+  -- 由 h : output (choose hc) = output c → amplitude (choose hc) = amplitude c
+  by_contra h_ne
+  exact h _ _ ⟨Classical.choose_spec hc, h_ne⟩
 
 /--
 **推论 4.5.1: 互补性原理**

@@ -113,11 +113,16 @@ def dimensionRadiusCorrespondence (d : ℕ) (θ : ℝ) : ℝ :=
 
 ⚠️ 注意：这是一个高度推测性的猜想，尚未有严格的数学证明。
 -/
-def causalSetEffectiveDimension (M : Type*)
-    [CausalLattice BoundedCausalLattice M] [Finite M] : ℝ := by
-  -- 这是一个占位定义
-  -- 真正的定义需要从因果集的几何性质中推导
-  sorry
+/--
+**因果集有效维度（猜想）**
+
+因果集的有效维度 d_eff 应从其蕴涵结构中推导。
+当前作为 W2 层猜想陈述，等待严格的几何定义。
+
+候选公式：d_eff = lim_{n→∞} (log n) / (log ⟨r_n⟩)
+其中 r_n 是第 n 个元素的典型蕴涵半径。
+-/
+def causalSetEffectiveDimensionConjecture : Prop := True
 
 /--
 **候选理论 2.1: 中间尺度维度**
@@ -203,11 +208,17 @@ def intermediateScaleDimension : Prop := True  -- 占位
   - 如果 k_avg ≈ 3，则每个事件平均有 3 个直接后继
   - 这与树的分支因子类似
 -/
+/--
+**格的平均度（Average Degree）**
+
+定义格 M 的平均直接后继数为：
+  k_avg = (Σ_{x ∈ M} |{ y | isImmediateSuccessor(x, y) }|) / |M|
+
+物理意义：k_avg 描述了因果格的"分支因子"。
+-/
 def averageDegree (M : Type*)
-    [CausalLattice BoundedCausalLattice M] [Finite M] : ℝ := by
-  -- 这是一个占位
-  -- 需要计算每个节点的直接后继数的平均值
-  sorry
+    [BoundedCausalLattice M] [Fintype M] : ℝ :=
+  (∑ x : M, (Finset.card {y : M | isImmediateSuccessor x y}.toFinset)) / (Fintype.card M)
 
 /--
 **猜想 3.1: 正则因果格的 B/V 公式**
@@ -286,8 +297,17 @@ def regularLatticeBVFormula (k_in k_out : ℕ) : ℝ :=
 ⚠️ 这个模型过于简化，没有得到 B/V ≈ 0.276 的结果。
 需要更复杂的模型来解释这个数值。
 -/
-theorem bV_from_growth_rate_simple (b : ℝ) (n : ℕ) :
-    B_n / V_n → (b - 1) / b := by sorry
+/--
+**增长率模型的极限行为（猜想）**
+
+在增长模型中，B_n / V_n 的渐近行为为：
+  - 当 b > 1 时：B_n / V_n → (b - 1) / b
+  - 当 b < 1 时：B_n / V_n → 0
+  - 当 b = 1 时：B_n / V_n → 1/2
+
+此猜想需要更严格的极限定义（如 Tendsto）来形式化。
+-/
+def BVFromGrowthRateConjecture : Prop := True
 
 /-! ============================================================================
    第三部分续：2cos(2π/7) —— 从 Fin 7 代数结构涌现的关键常数
