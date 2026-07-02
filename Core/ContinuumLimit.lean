@@ -61,6 +61,42 @@ theorem isImmediateSuccessor_le {M : Type*} [CausalLattice M] {x y : M}
     (h : isImmediateSuccessor x y) : x ≤ y :=
   le_of_lt h.1
 
+/--
+**因果距离的非负性**
+
+因果距离是自然数，因此非负。
+这是离散度量的基本性质。
+-/
+theorem causalDistance_nonneg {M : Type*} [CausalLattice M] {x y : M} (h : x ≤ y) :
+    0 ≤ causalDistance x y h := by
+  exact Nat.zero_le _
+
+/-! ============================================================================
+   §0.5 格间距的基本性质
+   ============================================================================ -/
+
+/--
+**格间距非负**
+
+latticeSpacing 是平均因果距离，因此非负。
+-/
+theorem latticeSpacing_nonneg (M : Type*) [CausalLattice M] [Fintype M] :
+    0 ≤ latticeSpacing M := by
+  rw [latticeSpacing]
+  split_ifs <;> positivity
+
+/--
+**精细化关系的自反性**
+
+每个因果格都是自身的精细化（恒等映射）。
+这是精细化偏序的基本性质。
+-/
+theorem refines_refl (M : Type*) [CausalLattice M] : refines M M := by
+  rw [refines]
+  refine' ⟨fun x => x, _⟩
+  intro x y h
+  exact h
+
 /-! ============================================================================
    §1. 离散胞腔与 Regge 曲率
    ============================================================================ -/
@@ -160,8 +196,43 @@ noncomputable def reggeAction
   ∑ x : M, area x * reggeCurvatureAtVertex M x triangles angle
 
 /-! ============================================================================
-   §2. 连续爱因斯坦-希尔伯特作用量（符号占位）
+   §1.5 Regge 曲率的基本代数性质
    ============================================================================ -/
+
+/--
+**Regge 曲率的线性性（关于角度函数）**
+
+如果角度函数是两个角度函数的和，
+则对应的 Regge 曲率也满足相应的线性关系。
+
+这是离散曲率的基本代数性质，
+在收敛性证明中用于误差估计。
+-/
+theorem reggeCurvatureAtVertex_additive
+    (M : Type*) [CausalLattice M] [Fintype M]
+    (x : M) (triangles : Finset (Simplex2 M))
+    (ang1 ang2 : Simplex2 M → M → ℝ) :
+    reggeCurvatureAtVertex M x triangles (fun t y => ang1 t y + ang2 t y)
+    = reggeCurvatureAtVertex M x triangles ang1
+    + reggeCurvatureAtVertex M x triangles ang2
+    - 2 * Real.pi := by
+  simp [reggeCurvatureAtVertex, sum_add_distrib]
+  <;> ring
+
+/--
+**空三角形集的 Regge 曲率**
+
+如果没有三角形经过顶点 x，
+则顶点处的曲率缺角就是完整的 2π。
+
+这是"平坦空间 = 无曲率 = 角度和 = 2π"的离散版本。
+-/
+theorem reggeCurvatureAtVertex_empty
+    (M : Type*) [CausalLattice M] [Fintype M] (x : M)
+    (angle : Simplex2 M → M → ℝ) :
+    reggeCurvatureAtVertex M x (∅ : Finset (Simplex2 M)) angle = 2 * Real.pi := by
+  simp [reggeCurvatureAtVertex]
+  <;> ring
 
 /--
 **定义 2.1: 爱因斯坦-希尔伯特作用量（简化形式）**

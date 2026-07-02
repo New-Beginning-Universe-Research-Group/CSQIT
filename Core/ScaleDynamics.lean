@@ -100,6 +100,22 @@ def amplitudeAlongChain (M C : Type*) [A : AxiomA M C] [Cx : AxiomC M C]
     (chain : List C) : ℂ :=
   List.prod (chain.map Cx.amplitude)
 
+/--
+**振幅的链可乘性**
+
+两段因果链连接后的总振幅 = 两段振幅的乘积。
+
+这是离散路径积分的基本恒等式，
+对应于量子力学中"振幅的可加性 = 概率的叠加"的离散前身。
+-/
+theorem amplitudeAlongChain_append (M C : Type*)
+    [A : AxiomA M C] [Cx : AxiomC M C]
+    (chain1 chain2 : List C) :
+    amplitudeAlongChain M C (chain1 ++ chain2) =
+    amplitudeAlongChain M C chain1 * amplitudeAlongChain M C chain2 := by
+  simp [amplitudeAlongChain, List.map_append, List.prod_append]
+  <;> ring
+
 /-! ============================================================================
    §3. 规范路线 —— Fin 7 对称性与 Cartan 生成元
    ============================================================================ -/
@@ -139,6 +155,63 @@ theorem cartan_generators_commute (k l : Fin 3) :
   fin_cases k <;> fin_cases l <;>
     simp [cartanGenerator, Matrix.diagonal_mul_diagonal, mul_comm] <;>
     congr <;> ext i <;> fin_cases i <;> simp <;> ring
+
+/-! ============================================================================
+   §3.5 su(3) 根系统与升降算符
+   ============================================================================ -/
+
+/--
+**su(3) 的正根索引**
+
+su(3) 有 3 个正根（秩为 2，所以是 3 个正根 + 3 个负根 = 6 个根）。
+这里用 (i, j) 表示 e_ij 矩阵单位，i < j 对应正根。
+-/
+inductive RootIndex : Type where
+  | root12 : RootIndex  -- e_{12}, 对应根 α₁
+  | root13 : RootIndex  -- e_{13}, 对应根 α₁+α₂
+  | root23 : RootIndex  -- e_{23}, 对应根 α₂
+  deriving DecidableEq, Fintype
+
+/--
+**升算符（step-up operator）E_{ij}**
+
+将第 j 个基态升到第 i 个基态的矩阵单位。
+i < j 时为正根对应的升算符。
+
+直接定义：只有 (i,j) 位置是 1，其余都是 0。
+-/
+def stepUpOperator (r : RootIndex) : Matrix (Fin 3) (Fin 3) ℂ :=
+  fun i j =>
+    match r with
+    | RootIndex.root12 => if i = 0 ∧ j = 1 then 1 else 0
+    | RootIndex.root13 => if i = 0 ∧ j = 2 then 1 else 0
+    | RootIndex.root23 => if i = 1 ∧ j = 2 then 1 else 0
+
+/--
+**降算符（step-down operator）F_{ij}**
+
+将第 i 个基态降到第 j 个基态的矩阵单位。
+是升算符的共轭转置（厄米共轭）。
+-/
+def stepDownOperator (r : RootIndex) : Matrix (Fin 3) (Fin 3) ℂ :=
+  fun i j =>
+    match r with
+    | RootIndex.root12 => if i = 1 ∧ j = 0 then 1 else 0
+    | RootIndex.root13 => if i = 2 ∧ j = 0 then 1 else 0
+    | RootIndex.root23 => if i = 2 ∧ j = 1 then 1 else 0
+
+/--
+**su(3) 的基本对易关系（猜想）**
+
+Cartan 生成元与升降算符的对易子满足：
+  [H_i, E_α] = α_i · E_α
+  [E_α, F_α] = α_i · H_i
+  [E_α, E_β] = N_{αβ} · E_{α+β}（当 α+β 是根时）
+
+这些是 su(3) 李代数的定义关系。
+完整形式化需要更深入的李代数库支持。
+-/
+def SU3RootSystemCommutationRelations : Prop := True
 
 /-! ============================================================================
    §4. 统一汇聚：统一作用量结构
