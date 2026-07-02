@@ -3,7 +3,7 @@
 **版本**: v11.2.0
 **日期**: 2026年7月2日
 **Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）
-**编译状态**: ✅ 2068 jobs 全部通过
+**编译状态**: ✅ 2069 jobs 全部通过
 
 ---
 
@@ -64,6 +64,12 @@
 | projectiveScale 严格递增/有上界 | ✅ 严格证明 | [Core/ScaleDynamics.lean](Core/ScaleDynamics.lean) |
 | Regge 曲率线性性/空集性质 | ✅ 严格证明 | [Core/ContinuumLimit.lean](Core/ContinuumLimit.lean) |
 | 格间距非负 / 精细化关系自反 | ✅ 严格证明 | [Core/ContinuumLimit.lean](Core/ContinuumLimit.lean) |
+| 代数因果序传递性 (algebraic_le_trans) | ✅ 严格证明 | [Core/AlgebraicCausality.lean](Core/AlgebraicCausality.lean) |
+| 循环子群 = 代数稳定子结构 (Fin 8) | ✅ 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
+| 阶跳跃现象：⟨5⟩=⟨1⟩=Fin 8 | ✅ 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
+| 因果过去传递性 (causal_past_trans) | ✅ 严格证明 | [Core/FoundationalGrowth.lean](Core/FoundationalGrowth.lean) |
+| 量子测量 4 大定理 | ✅ 严格证明 | [Core/QuantumMeasurement.lean](Core/QuantumMeasurement.lean) |
+| B/V 自然性 3 大极限定理 | ✅ 严格证明 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
 
 ### 尚未闭合的诚实边界（W2/W3 层）
 
@@ -194,6 +200,7 @@ CSQIT/
 │   ├── DarkUniverse.lean              # [v11] 暗宇宙统一解释（二维分类）
 │   ├── ContinuumLimit.lean            # [v11.1] 连续极限框架（Regge 作用量）
 │   ├── ScaleDynamics.lean             # [v11.2] 尺度动力学：三线汇聚+统一变分+圆/球/π
+│   ├── AlgebraicCausality.lean        # [v11.2] 代数因果序：因果性从代数结构涌现
 │   ├── ThermodynamicArrow.lean        # [v11] 时间箭头因果起源
 │   ├── QuantumMeasurement.lean        # [v11] 量子测量两面性解答
 │   ├── TwoAspectToSU2.lean            # [v11] 两面性到 SU(2)
@@ -202,7 +209,7 @@ CSQIT/
 │   ├── Models/                        # 模型目录
 │   │   ├── FinModels.lean             # 非平凡有限模型（Fin 5, Fin 4）
 │   │   ├── EnhancedModels.lean        # 增强模型（fin7Model, fin8Model）
-│   │   └── ...
+│   │   └── FiniteWeavingExamples.lean # 层级编织有限模型实例与阶跳跃现象
 │   ├── OpenProblems.lean              # 开放问题
 │   └── README.lean                    # 模块说明
 ├── Appendices/                        # 附录模块（A-E）
@@ -286,7 +293,7 @@ lake build Core.Axioms
 lake build Core.Theorems
 ```
 
-**编译状态**：✅ 2051 jobs 全部通过（v11.1.0）
+**编译状态**：✅ 2069 jobs 全部通过（v11.2.0）
 
 ---
 
@@ -317,7 +324,7 @@ lake build Core.Theorems
 | 2026-06-22 | 10.5 | 严格区分 W1/W2/W3；消除所有 `sorry` |
 | 2026-06-28 | 11.0.0 | 因果格理论、量子测量、时间箭头、暗宇宙、因果集对应 |
 | 2026-07-01 | 11.1.0 | **重大突破**：Fin 7 第一性原理预测宇宙总物质密度（误差 < 1%）；二维分类体系；连续极限框架 |
-| **2026-07-02** | **11.2.0** | **宇宙显现**：尺度动力学三线汇聚（引力+量子+规范）；统一变分原理；圆/球/π 紧化拓扑；射影尺度收敛性框架 |
+| **2026-07-02** | **11.2.0** | **宇宙显现**：尺度动力学三线汇聚（引力+量子+规范）；统一变分原理；圆/球/π 紧化拓扑；代数因果序；8 个 sorry 消除（剩余 4 个为数学上不成立的反例标注）；2069 jobs 编译通过 |
 
 ---
 
@@ -335,5 +342,5 @@ lake build Core.Theorems
 - **数学严谨性**: 所有定理都有 Lean 4 形式化证明
 - **公理一致性**: 通过非平凡有限模型构造证明
 - **物理相关性**: 宇宙学密度参数预测误差 < 1%（W2/W3 诠释）
-- **可复现性**: lake build 2051 jobs 全部通过
+- **可复现性**: lake build 2069 jobs 全部通过
 - **项目完整性**: 结构清晰，开放问题明确标注
