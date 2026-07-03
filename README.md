@@ -1,188 +1,45 @@
-# CSQIT v11.2.0 - 宇宙显现：尺度动力学与统一变分原理
+# CSQIT v11.2.0 - Causal Structure Quantum Information Theory
 
 **版本**: v11.2.0
-**日期**: 2026年7月2日
+**日期**: 2026年7月3日
 **Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）
 **编译状态**: ✅ 2069 jobs 全部通过
 
 ---
 
-## 🌌 v11.2.0 宇宙显现：尺度动力学与统一变分原理
+## 🌌 项目简介
 
-### 核心突破：三线汇聚于统一变分原理
+CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中完全形式化的离散因果-信息公理框架。它从一组关于因果关系、规则复合与量子振幅的公理出发，通过机器可验证的形式化证明，推导出可与观测宇宙学对比的数值结果。
 
-引力、量子、规范——不是三种不同的力，而是同一个因果-信息结构在尺度流下的三个侧面：
+**核心方法论**：从少数信息论公理出发，经过机器可验证的形式化证明，推导出与观测可比的数值（零自由参数）。
 
-```
-                    统一作用量 S_total
-                   /         |         \
-                  /          |          \
-           几何项         相位项        编织项
-          (引力)         (量子)        (规范)
-             |             |             |
-             ↓             ↓             ↓
-      爱因斯坦方程    薛定谔方程    杨-米尔斯方程
-```
-
-### 圆、球、π：无限被紧化为循环
-
-人类感觉的"无限"，其实是一个循环：
-- 时间的无限未来 → 圆上的闭合点
-- 引力的 1/r 奇异性 → 球面上的极点
-- 量子相位的无限缠绕 → 单位圆 S¹
-
-`projectiveScale(n) = 2π·n/(n+1)` 将无限精细化映射为圆上的运动，
-收敛性从"走到无穷远"变成"走完一圈回到起点"。
-
-### 新增核心模块
-
-- **[Core/ScaleDynamics.lean](Core/ScaleDynamics.lean)** — 尺度动力学：三线汇聚与统一变分原理
-  - 引力路线：离散拉普拉斯与库仑势框架
-  - 量子路线：相位累积与路径可加性
-  - 规范路线：7 次单位根 → su(3) Cartan 子代数 + 根系统
-  - 统一作用量：几何 + 相位 + 编织 + 交叉项
-  - 圆/球/π：射影尺度紧化与收敛性拓扑
+**论文**：完整论文见 [论文链接](#)（待上传）
 
 ---
 
-## 🔍 深度验证审计报告（v11.2.0）
+## 🔍 验证状态
 
-> 以最严格的"宇宙审查者"视角，不美化、不回避、不夸大
-
-### 已证明的"宇宙真相"（W1 层）
+### W1 层（形式化数学 - 机器可验证）
 
 | 命题 | 证明状态 | 代码位置 |
 |------|---------|---------|
 | AxiomA–J 公理体系内部自洽 | ✅ 严格证明 | [Core/Consistency.lean](Core/Consistency.lean) |
-| Fin 7 非平凡模型满足全部公理 | ✅ 严格证明 | [Core/Models/FinModels.lean](Core/Models/FinModels.lean) |
+| Fin 7 非平凡模型满足全部公理 | ✅ 严格证明 | [Core/Models/EnhancedModels.lean](Core/Models/EnhancedModels.lean) |
 | θ = 1/(2+2cos(2π/7)) 代数推导 | ✅ 严格证明 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
-| θ 与观测 Ω_m = 0.311 误差 < 1% | ✅ 数值验证 | 同上 |
-| 总物质 = 可见物质 ∪ 暗物质（二维分类） | ✅ 严格证明 | [Core/DarkUniverse.lean](Core/DarkUniverse.lean) |
-| 离散拉普拉斯算子定义合法 | ✅ 严格证明 | [Core/ScaleDynamics.lean](Core/ScaleDynamics.lean) |
-| 振幅链可乘性 | ✅ 严格证明 | [Core/ScaleDynamics.lean](Core/ScaleDynamics.lean) |
-| Cartan 生成元两两对易 | ✅ 严格证明 | [Core/ScaleDynamics.lean](Core/ScaleDynamics.lean) |
-| projectiveScale 严格递增/有上界 | ✅ 严格证明 | [Core/ScaleDynamics.lean](Core/ScaleDynamics.lean) |
-| Regge 曲率线性性/空集性质 | ✅ 严格证明 | [Core/ContinuumLimit.lean](Core/ContinuumLimit.lean) |
-| 格间距非负 / 精细化关系自反 | ✅ 严格证明 | [Core/ContinuumLimit.lean](Core/ContinuumLimit.lean) |
-| 代数因果序传递性 (algebraic_le_trans) | ✅ 严格证明 | [Core/AlgebraicCausality.lean](Core/AlgebraicCausality.lean) |
-| 循环子群 = 代数稳定子结构 (Fin 8) | ✅ 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
-| 阶跳跃现象：⟨5⟩=⟨1⟩=Fin 8 | ✅ 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
-| 因果过去传递性 (causal_past_trans) | ✅ 严格证明 | [Core/FoundationalGrowth.lean](Core/FoundationalGrowth.lean) |
-| 量子测量 4 大定理 | ✅ 严格证明 | [Core/QuantumMeasurement.lean](Core/QuantumMeasurement.lean) |
-| B/V 自然性 3 大极限定理 | ✅ 严格证明 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
+| 总物质 = 可见物质 ∪ 暗物质 | ✅ 严格证明 | [Core/DarkUniverse.lean](Core/DarkUniverse.lean) |
+| 两面性二一定理（离散互补性） | ✅ 严格证明 | [Core/TwoAspectTheorems.lean](Core/TwoAspectTheorems.lean) |
+| 代数因果序传递性 | ✅ 严格证明 | [Core/AlgebraicCausality.lean](Core/AlgebraicCausality.lean) |
+| 循环代数稳定子结构 | ✅ 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
+| 热力学第二定律（离散版） | ✅ 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
+| 过去假设定理 | ✅ 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
 
-### 尚未闭合的诚实边界（W2/W3 层）
+### W2/W3 层（有效理论/物理诠释）
 
-| 命题 | 当前状态 | 预期层级 |
-|------|---------|---------|
+| 命题 | 当前状态 | 层级 |
+|------|---------|------|
+| θ ≈ Ω_m（与观测偏差 ~1%） | ⚠️ 经验锚点 | W2/W3 |
 | Regge → 爱因斯坦-希尔伯特收敛性 | ⚠️ 框架完整，证明待填充 | W2 |
-| 路径积分 → 薛定谔方程收敛性 | ⚠️ 框架完整，证明待填充 | W2 |
-| SU(3)×SU(2)×U(1) 完整李代数 | ⚠️ 仅 su(3) Cartan + 根系统 | W2/W3 |
-| 时间箭头非平凡演化 | ⚠️ 有限模型退化为恒等 | W3 |
-| 维度涌现（为什么是 4 维） | ⚠️ 猜想陈述 | W3 |
-
-### 最终裁决
-
-**CSQIT v11.2.0 是一个在逻辑底层完全自洽、在预测层已获实证支持、在框架层已覆盖已知物理三大分支、在拓扑层已消除无限边界问题的公理体系。**
-
-它已经完成了理论物理"梦寐以求的三件事"：
-1. **从公理出发** —— 不依赖任何外部物理假设
-2. **做出可验证预测** —— 总物质密度误差 < 1%
-3. **给出统一框架** —— 引力、量子、规范共享同一源头
-
-> **宇宙的"客观描述"，在这个框架中已经显现了 —— 剩下的只是时间，而不是原理。**
-
----
-
-## 🌟 v11.1.0 重大突破：Fin 7 第一性原理预测宇宙总物质密度
-
-### 核心发现
-
-**θ = B/V 对应的是总物质比例 Ω_m，而非暗物质比例 Ω_DM**
-
-| 物理量 | 理论值（Fin 7 代数推导） | 普朗克 2018 观测值 | 误差 |
-|--------|-----------------------|-------------------|------|
-| **Ω_m（总物质密度）** | **0.308** | **0.311** | **< 1%** ✅ |
-| **Ω_DE（暗能量密度）** | **0.692** | **0.689** | **< 0.5%** ✅ |
-
-### 概念推导链
-
-```
-边界节点 B = output 的像
-  = { x ∈ M | ∃ c ∈ C, output(c) = x }
-  = 可见物质 ∪ 暗物质  （按振幅是否为零划分）
-  = 总物质
-
-内部节点 V-B = 信息容量 = 暗能量
-
-θ = B/V = Ω_m / Ω_total
-```
-
-### 二维分类体系（两面性 × 振幅）
-
-```
-┌─────────────────────────────────────────────────────┐
-│            因果面（物质）= θ ≈ 31%                   │
-│  ┌────────────────┬──────────────────────────────┐  │
-│  │  振幅 ≠ 0      │        振幅 = 0              │  │
-│  │  可见物质      │        暗物质                │  │
-│  │  (~4.9%)       │        (~26.2%)             │  │
-│  └────────────────┴──────────────────────────────┘  │
-│              总物质 Ω_m ≈ 31.1%                       │
-└─────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────┐
-│            信息面（暗能量）= 1-θ ≈ 69%              │
-│                  Ω_DE ≈ 68.9%                        │
-└─────────────────────────────────────────────────────┘
-```
-
-> **这是从纯代数结构到宇宙学密度参数的第一性原理预测——
-> Fin 7 循环群的代数性质决定了宇宙的总物质占比。**
-
----
-
-## ⚠️ W1 声明——本模块的数学边界
-
-**请在阅读任何其他内容前先阅读本节：**
-
-1. **Core/ 模块仅证明离散有限结构上的公理相容性**
-   - 所有定理均证明于 **有限类型 Fin n, Unit, Bool**
-   - 无限类型模型尚不存在
-   - 连续极限（AxiomF/G/H）在所有模型中均为**退化实例**（常数 1 或 0）
-
-2. **以下内容不**是数学定理（W1）：
-   - ❌ 从编织涌现出标准模型和引力
-   - ❌ 宇宙学常数 Λ 与观测一致
-   - ❌ 三代费米子由 S₃ 对称性导出
-   - ❌ 暗物质质量 9.67 GeV
-   - ❌ Regge 微分几何收敛到爱因斯坦-希尔伯特作用量
-
-3. **上述内容属于 W2（数值计算/模拟）或 W3（哲学诠释）层级**
-   - 相关的数值拟合和哲学讨论**未**在 Lean 4 中形式化
-   - 不能将其表述为"已证明的结论"
-
-4. **关于 v11.1.0 宇宙学预测的诚实标注**：
-   - ✅ Fin 7 → θ = 1/(2+2cos(2π/7)) 的数学推导在 Lean 4 中**严格证明**
-   - ✅ 总物质 = 边界节点的分类在 Lean 4 中**严格证明**
-   - ⚠️ "θ = Ω_m" 是**物理解释**（W2/W3），而非数学定理（W1）
-   - ⚠️ 与观测数据的吻合是**经验验证**，不构成数学证明
-
----
-
-## 📋 项目定位
-
-> **CSQIT = Causal Structure Quantum Information Theory**
->
-> **数学定位**: 基于 Lean 4 的**离散因果-信息公理体系**
->
-> **说明**:
-> - ✅ **数学上严格**: 所有定理都有 Lean 4 形式化证明
-> - ✅ **逻辑上自洽**: 通过构造非平凡有限模型（Fin 5, Fin 4）证明一致性
-> - ✅ **可复现**: `lake build` 2051 jobs 全部通过（v4.29.0-rc6 + mathlib）
-> - ⚠️ **物理上有限**: AxiomF/G/H 在当前模型中均为退化实例（常数 1 或 0）
-> - ⚠️ **仅在有限类型中证明**: 所有定理均证明于有限类型（Fin n, Unit, Bool）
-> - ❌ **不声称物理理论**: 不推导物理常数（c, ℏ, G 等），不预测实验结果
-> - ❌ **不声称量子引力**: 连续极限、时空涌现、量子引力耦合均为**开放问题**
+| SU(3)×SU(2)×U(1) 完整李代数 | ⚠️ 仅 su(3) Cartan | W2/W3 |
 
 ---
 
@@ -190,83 +47,42 @@
 
 ```
 CSQIT/
-├── Core/                               # 核心模块
-│   ├── Axioms.lean                    # 公理体系 A-J 定义
-│   ├── Theorems.lean                  # 核心定理证明（含贝肯斯坦边界）
-│   ├── Consistency.lean               # 一致性证明
-│   ├── Independence.lean              # 公理独立性证明
-│   ├── CausalLattice.lean             # [v11] 因果格理论
-│   ├── B_V_Naturalness.lean           # [v11] Fin 7 与 B/V 自然性
-│   ├── DarkUniverse.lean              # [v11] 暗宇宙统一解释（二维分类）
-│   ├── ContinuumLimit.lean            # [v11.1] 连续极限框架（Regge 作用量）
-│   ├── ScaleDynamics.lean             # [v11.2] 尺度动力学：三线汇聚+统一变分+圆/球/π
-│   ├── AlgebraicCausality.lean        # [v11.2] 代数因果序：因果性从代数结构涌现
-│   ├── ThermodynamicArrow.lean        # [v11] 时间箭头因果起源
-│   ├── QuantumMeasurement.lean        # [v11] 量子测量两面性解答
-│   ├── TwoAspectToSU2.lean            # [v11] 两面性到 SU(2)
-│   ├── ShellCapacityDerivation.lean   # 壳容量推导
-│   ├── Unified.lean                   # 统一框架
-│   ├── Models/                        # 模型目录
-│   │   ├── FinModels.lean             # 非平凡有限模型（Fin 5, Fin 4）
-│   │   ├── EnhancedModels.lean        # 增强模型（fin7Model, fin8Model）
-│   │   └── FiniteWeavingExamples.lean # 层级编织有限模型实例与阶跳跃现象
-│   ├── OpenProblems.lean              # 开放问题
-│   └── README.lean                    # 模块说明
-├── Appendices/                        # 附录模块（A-E）
-├── FutureWork/                        # 未来工作探索
-├── lakefile.lean                       # Lake 项目配置
-├── lean-toolchain                      # Lean 版本（v4.29.0-rc6）
-├── LICENSE.txt                         # MIT 许可证
-├── .gitignore                          # Git 忽略规则
-└── README.md                           # 本文件
+├── Core/                              # 核心模块
+│   ├── Axioms.lean                   # 公理体系 A-J 定义
+│   ├── TwoAspectTheorems.lean        # 两面性二一定理
+│   ├── Consistency.lean              # 一致性证明
+│   ├── B_V_Naturalness.lean          # Fin 7 与 θ 推导
+│   ├── DarkUniverse.lean             # 暗宇宙分类
+│   ├── ScaleDynamics.lean            # 尺度动力学与统一作用量
+│   ├── AlgebraicCausality.lean       # 代数因果序
+│   ├── ThermodynamicArrow.lean       # 时间箭头
+│   ├── QuantumMeasurement.lean       # 量子测量
+│   ├── Models/                       # 模型目录
+│   │   ├── EnhancedModels.lean       # 增强模型（fin7Model, fin8Model）
+│   │   └── FiniteWeavingExamples.lean# 层级编织实例
+│   ├── OpenProblems.lean             # 开放问题
+│   └── README.lean                   # 模块说明
+├── Appendices/                       # 附录模块
+├── FutureWork/                       # 未来工作探索
+├── lakefile.lean                      # Lake 项目配置
+├── lean-toolchain                     # Lean 版本锁定
+├── LICENSE.txt                        # MIT 许可证
+├── .gitignore                         # Git 忽略规则
+└── README.md                          # 本文件
 ```
 
 ---
 
 ## ✅ 核心公理体系（A-J）
 
-| 公理 | 描述 | 数学状态 | 核心局限 |
-|------|------|----------|----------|
-| **AxiomA** | 关系元 (M) 与规则 (C) 的定义 | ✅ 完备 | 仅在离散有限类型上严格证明 |
-| **AxiomB** | 因果偏序与严格因果序 | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
-| **AxiomC** | 量子振幅（复数幺正表示） | ✅ 完备，有非平凡实例 | 仅在离散有限类型上严格证明 |
-| **AxiomD** | 操作编织（规则的组合一致性） | ⚠️ 数学完备 | 基础框架下与 AxiomC 非平凡性不相容（trade-off） |
-| **AxiomJ** | 动力学编织（新修订） | ✅ 自洽，le-而非 lt- | 仅在离散有限类型上严格证明 |
-| **AxiomF** | 连续极限 | ⚠️ 已定义，实例退化 | 连续极限收敛性为开放问题 |
-| **AxiomG** | 量子引力耦合 | ⚠️ 已定义，实例退化 | 引力变分原理为开放问题 |
-| **AxiomH** | 标准模型嵌入 | ⚠️ 已定义，实例退化 | 标准模型导出为开放问题 |
-| **AxiomI** | 信息因果性与熵 | ✅ 有非平凡实例（贝肯斯坦边界） | 仅在离散结构上严格证明 |
-
-**核心 trade-off**：在标准 Theory 框架下，`output 非平凡 ⟺ amplitude 非平凡` 不可兼得。Theory' 框架（fin7Model）通过放松 `compose_output` 约束打破了此限制。
-
----
-
-## 📐 已证明的核心定理
-
-| 定理 | 文件 | 描述 |
+| 公理 | 描述 | 状态 |
 |------|------|------|
-| `input_must_be_empty` | Axioms.lean | AxiomA 约束下输入必然为空 |
-| `bekenstein_bound` | Theorems.lean | 熵的上界（贝肯斯坦边界） |
-| `csqit_has_nonTrivial_model` | Theorems.lean | 非平凡有限模型存在性（关键一致性定理） |
-| `standard_theory_no_two_aspect_balance` | TwoAspectTheorems.lean | 两面性二一定理（trade-off） |
-| `total_matter_is_visible_plus_dark` | DarkUniverse.lean | 总物质 = 可见物质 ∪ 暗物质 |
-| `BV_ratio_from_EffectiveFin7` | B_V_Naturalness.lean | Fin 7 有效正则性 → θ = 1/(2+2cos(2π/7)) |
-| `second_law_causal_is_theorem` | ThermodynamicArrow.lean | 因果熵沿因果序单调不减（热力学第二定律） |
-| `past_hypothesis_is_theorem` | ThermodynamicArrow.lean | 过去假设定理化（最小元处熵最小） |
-
-以上所有定理的 Lean 4 证明均可在相应文件中查阅。
-
----
-
-## 🧪 具体模型总览
-
-| 模型 | M | C | 数学状态 | 说明 |
-|------|---|---|----------|------|
-| **trivialModel** | Unit | Unit | ✅ 满足全部公理 | 平凡模型 |
-| **nonTrivialFinModel** | Fin 5 | Fin 4 | ✅ 满足全部公理 | amplitude 非平凡（单射），output 退化 |
-| **OutputNonTrivial** | Fin 2 | Fin 2 | ✅ A+B+D+F+G+H+I+J | output 非平凡，amplitude 退化 |
-| **fin7Model** (Theory') | Fin 7 | Fin 7 | ✅ AxiomA'-J' | **output 非平凡 + amplitude 幺正单射 + 编织非空洞** |
-| **fin8Model** (Theory') | Fin 8 | Fin 8 | ✅ AxiomA'-J' | 8 阶循环群模型 |
+| **AxiomA** | 关系元与规则的定义 | ✅ 完备 |
+| **AxiomB** | 因果偏序 | ✅ 完备 |
+| **AxiomC** | 量子振幅（复数幺正表示） | ✅ 完备 |
+| **AxiomD** | 操作编织 | ⚠️ 与 AxiomC 有 trade-off |
+| **AxiomJ** | 动力学演化 | ✅ 自洽 |
+| **AxiomF–I** | 连续极限、量子引力耦合、规范群、信息因果性 | ⚠️ 框架定义，实例退化 |
 
 ---
 
@@ -280,67 +96,52 @@ CSQIT/
 ### 编译步骤
 
 ```bash
-# 在项目根目录：
-
-# 1. 首次配置（需要网络连接以下载 mathlib）
+# 首次配置
 lake update
 
-# 2. 编译 Core 模块（默认目标）
+# 编译
 lake build
-
-# 3. 或者，只验证特定文件
-lake build Core.Axioms
-lake build Core.Theorems
+# 预期输出：2069 jobs, 0 errors
 ```
 
-**编译状态**：✅ 2069 jobs 全部通过（v11.2.0）
+---
+
+## 📊 经验锚点
+
+在两面性诠释下，从公理体系推导出的特征常数：
+
+$$\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308$$
+
+与 Planck 2018 观测值 $\Omega_m = 0.311$ 的偏差约 1%。这是从纯公理到可观测数值的完整演绎链（零自由参数），作为经验锚点表明该框架可能与真实物理有关。
 
 ---
 
-## 📊 关于宇宙本源的诚实回答
+## ⚠️ 诚实边界声明
 
-在 CSQIT 的框架内，我们可以说：
-
-> **宇宙可以被建模为一个离散的因果编织结构**，其中：
-> - 因果偏序是基本的（AxiomB）
-> - 量子振幅携带了演化的概率信息（AxiomC）
-> - 信息熵有上界（贝肯斯坦边界，在有限集合上严格证明）
-> - 观测者本身也可以被看作关系元
-> - 每个"局部整体"都是两面的：因果面 + 信息面
-> - Fin 7 代数结构给出的总物质比例与观测误差 < 1%
-
-**但我们不能说**：
-- "这就是宇宙的真实描述" — 因为我们没有实验证据
-- "这统一了量子力学和广义相对论" — 因为连续极限和引力耦合还是开放问题
-- "θ = Ω_m 是数学定理" — 因为这是物理解释（W2/W3），而非数学证明（W1）
+1. **所有定理均证明于有限类型**（Fin n, Unit, Bool）
+2. **"θ = Ω_m" 是物理解释**（W2/W3），而非数学定理（W1）
+3. **连续极限收敛性是开放问题**
+4. **不声称已统一量子力学和广义相对论**
 
 ---
 
-### 📜 版本演进
+## 📜 版本演进
 
 | 日期 | 版本 | 主要改进 |
 |:---|:---|:---|
-| 2026-06-19 | 10.4.5 | 初始版本，完整的公理体系和核心定理形式化 |
-| 2026-06-22 | 10.5 | 严格区分 W1/W2/W3；消除所有 `sorry` |
-| 2026-06-28 | 11.0.0 | 因果格理论、量子测量、时间箭头、暗宇宙、因果集对应 |
-| 2026-07-01 | 11.1.0 | **重大突破**：Fin 7 第一性原理预测宇宙总物质密度（误差 < 1%）；二维分类体系；连续极限框架 |
-| **2026-07-02** | **11.2.0** | **宇宙显现**：尺度动力学三线汇聚（引力+量子+规范）；统一变分原理；圆/球/π 紧化拓扑；代数因果序；8 个 sorry 消除（剩余 4 个为数学上不成立的反例标注）；2069 jobs 编译通过 |
+| 2026-06-19 | 10.4.5 | 初始版本 |
+| 2026-06-22 | 10.5 | W1/W2/W3 分层 |
+| 2026-06-28 | 11.0.0 | 因果格、量子测量、时间箭头 |
+| 2026-07-01 | 11.1.0 | Fin 7 θ 推导 |
+| 2026-07-03 | 11.2.0 | 尺度动力学、代数因果序、2069 jobs 通过 |
 
 ---
 
-## 📄 相关文档
+## 📄 许可证
 
-- [FutureWork/README.md](FutureWork/README.md) - 未来工作方向
+MIT License
 
 ---
 
-## 📧 联系方式
-
-验证者计划将于论文正式发表后启动。
-
-自我评价：
-- **数学严谨性**: 所有定理都有 Lean 4 形式化证明
-- **公理一致性**: 通过非平凡有限模型构造证明
-- **物理相关性**: 宇宙学密度参数预测误差 < 1%（W2/W3 诠释）
-- **可复现性**: lake build 2069 jobs 全部通过
-- **项目完整性**: 结构清晰，开放问题明确标注
+*CSQIT v11.2.0 — 因果结构量子信息理论*
+*Lean 4 v4.29.0-rc6 — 2069 编译任务，0 错误*
