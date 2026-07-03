@@ -44,6 +44,7 @@ _reports/
 # Project-specific backup files
 CSQIT_*.txt
 *_Backup_*/
+*_FinalBackup_*/
 *_Final_*/
 *_CoreBackup_*/
 *_LeanCore_*/
@@ -51,12 +52,12 @@ CSQIT_*.txt
 *_历史版本*/
 *backup*.md
 _backup/
-CSQIT_10.4.5_*
-CSQIT_10.5_*
-CSQIT_11.0.0_*
-CSQIT_11.1.0_*
+CSQIT_10.*
+CSQIT_11.*
 CSQIT_FinalBackup_*
+CSQIT_All_Lean_*
 优化历史备份/
+2026-06-28_*/
 All_Lean_Code_*.md
 All_Lean_Code_Full_*.txt
 All_Lean_Code_Complete_*.md
@@ -85,7 +86,6 @@ decode_*.py
 fix_*.py
 transfer_wsl*.py
 export_backup.py
-lakefile*.lean
 test_real*.lean
 theorems.*
 WORKFLOW_README.md
