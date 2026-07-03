@@ -13,7 +13,7 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 
 **核心方法论**：从少数信息论公理出发，经过机器可验证的形式化证明，推导出与观测可比的数值（零自由参数）。
 
-**论文**：[CSQIT_Paper_English_v11.2.0.md](CSQIT_Paper_English_v11.2.0.md) | [投稿信](Cover_Letter.md)
+**论文**：[English](CSQIT_Paper_English_v11.2.0.md) | [中文版](CSQIT_顶刊论文_中文版_v3_最终版.md) | [投稿信](Cover_Letter.md)
 
 ---
 
