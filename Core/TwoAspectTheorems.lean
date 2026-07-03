@@ -999,10 +999,10 @@ theorem measurement_forces_degeneracy
     [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
     [Finite C] [DecidableEq C]
     (c_meas : C) (α : C)
-    (h_meas : IsMeasurementSetup c_meas α) :
+    (h_meas : @IsMeasurementSetup M C A B Cx c_meas α) :
     ∃ (γ : C),
       A.compose c_meas α = γ ∧
-      A.output γ ≠ A.output α → ¬ Function.Injective Cx.amplitude := by
+      (A.output γ ≠ A.output α → ¬ Function.Injective Cx.amplitude) := by
   rcases h_meas with ⟨γ, h_compose, h_impl⟩
   exact ⟨γ, h_compose, h_impl⟩
 
@@ -1037,9 +1037,8 @@ theorem measurement_creates_new_state
     [Finite C] [DecidableEq C]
     (c_meas : C) (α : C)
     (h_new_facet : A.output (A.compose c_meas α) ≠ A.output α) :
-    let γ := A.compose c_meas α in
     ¬ Function.Injective Cx.amplitude ∧
-    A.output γ ≠ A.output α := by
+    A.output (A.compose c_meas α) ≠ A.output α := by
   constructor
   · exact measurement_ontological_corollary c_meas α h_new_facet
   · exact h_new_facet

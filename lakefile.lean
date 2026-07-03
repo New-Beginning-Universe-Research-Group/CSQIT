@@ -32,5 +32,15 @@ lean_lib CSQIT where
     `Core.ScaleDynamics,
     `Core.Unified,
     `Core.Consistency,
-    `Core.Models.FiniteWeavingExamples
+    `Core.Theorems,
+    `Core.CausalWeaving,
+    `Core.AmplitudeTheorems,
+    `Core.TwoAspectTheorems,
+    `Core.HierarchicalWeaving,
+    `Core.Hierarchy,
+    `Core.HDST,
+    `Core.Models.FiniteWeavingExamples,
+    `Core.Models.PeriodicTable,
+    `Core.Models.EnhancedModels,
+    `Core.Models.FinModels
   ]
