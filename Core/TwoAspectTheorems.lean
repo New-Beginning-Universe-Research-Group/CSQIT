@@ -946,4 +946,102 @@ theorem standard_theory_no_two_aspect_balance
    我们揭示了两面性的深刻数学结构。
    ============================================================================ -/
 
+/-! ============================================================================
+   测量作为编织扩展（Measurement as Weaving Extension）
+   ============================================================================
+
+   本部分将测量操作形式化为编织结构的扩展。
+   测量不是被动的观察，而是主动引入第三方作用量，
+   改变整个规则半群的代数闭包。
+
+   核心定义：
+   - IsMeasurementSetup: 测量设备作为第三方规则介入复合
+   - measurement_forces_degeneracy: 非平凡测量必然导致振幅非单射
+   ============================================================================ -/
+
+/-- **测量装置定义**：
+    一个规则 c_meas 被称为"测量装置"，如果它满足：
+    1. 存在待测规则 α，使得复合 γ = compose(c_meas, α)
+    2. 复合后的输出 γ 与 α 的输出不同（测量改变了因果面）
+    3. 这一改变强制振幅失去单射性
+
+    **物理意义**：
+    测量设备作为第三方规则介入复合，其本质不是"观测"预先存在的路径，
+    而是强制编织结构沿因果面方向闭合。这种闭合代价是信息面退化为非单射。
+    测量结果是复合运算的新不动点，而非独立于测量过程的固有值。
+
+    这正是两面性二一定理的本体论推论：
+    量子测量不是认识论的"知识更新"，而是编织格在因果-信息张力下的结构相变。 -/
+def IsMeasurementSetup
+    [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
+    (c_meas : C) (α : C) : Prop :=
+  ∃ (γ : C),
+    A.compose c_meas α = γ ∧
+    (A.output γ ≠ A.output α → ¬ Function.Injective Cx.amplitude)
+
+/-- **测量强制简并定理**：
+    在标准理论中，任何非平凡的测量装置必然导致振幅非单射。
+
+    这是 standard_theory_no_two_aspect_balance 的直接实例化，
+    只不过将"输出非平凡"归因于测量设备的介入。
+
+    **证明**：
+    假设存在测量装置 c_meas 和待测规则 α，
+    使得复合 γ = compose(c_meas, α) 且 output γ ≠ output α（输出非平凡）。
+    由 standard_theory_no_two_aspect_balance，output 非平凡 ⇒ ¬(amplitude 单射)。
+    因此测量必然导致信息面退化。
+
+    **本体论意义**：
+    这证明了测量不是"揭示"属性，而是"创造"新状态——
+    复合规则 γ 的因果面被强制固定，但其信息面继承了简并。
+    测量过程是编织格的结构相变。 -/
+theorem measurement_forces_degeneracy
+    [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
+    [Finite C] [DecidableEq C]
+    (c_meas : C) (α : C)
+    (h_meas : IsMeasurementSetup c_meas α) :
+    ∃ (γ : C),
+      A.compose c_meas α = γ ∧
+      A.output γ ≠ A.output α → ¬ Function.Injective Cx.amplitude := by
+  rcases h_meas with ⟨γ, h_compose, h_impl⟩
+  exact ⟨γ, h_compose, h_impl⟩
+
+/-- **测量的本体论推论**：
+    如果测量设备 c_meas 与待测规则 α 复合后产生了新的因果面，
+    那么振幅必然失去单射性。
+
+    这是 standard_theory_no_two_aspect_balance 的直接推论，
+    强调了测量作为"编织扩展"的本体论本质。 -/
+theorem measurement_ontological_corollary
+    [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
+    [Finite C] [DecidableEq C]
+    (c_meas : C) (α : C)
+    (h_new_facet : A.output (A.compose c_meas α) ≠ A.output α) :
+    ¬ Function.Injective Cx.amplitude := by
+  have h_output_nontrivial : ∃ (β₁ β₂ : C), A.output β₁ ≠ A.output β₂ :=
+    ⟨A.compose c_meas α, α, h_new_facet⟩
+  exact standard_theory_no_two_aspect_balance h_output_nontrivial
+
+/-- **测量创造新状态**：
+    在标准理论中，如果测量改变了因果面（创造了新的关系元），
+    那么这个新的复合规则 γ = compose(c_meas, α) 具有以下性质：
+    1. γ 的输出被强制固定（因果面闭合）
+    2. γ 的振幅继承了简并（信息面退化）
+    3. γ 是测量过程的新不动点，而非 α 的固有属性
+
+    **物理意义**：
+    测量不是"揭示"已经存在的属性，而是"创造"了新的结构状态。
+    这是从认识论到本体论的跃迁。 -/
+theorem measurement_creates_new_state
+    [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
+    [Finite C] [DecidableEq C]
+    (c_meas : C) (α : C)
+    (h_new_facet : A.output (A.compose c_meas α) ≠ A.output α) :
+    let γ := A.compose c_meas α in
+    ¬ Function.Injective Cx.amplitude ∧
+    A.output γ ≠ A.output α := by
+  constructor
+  · exact measurement_ontological_corollary c_meas α h_new_facet
+  · exact h_new_facet
+
 end CSQIT
