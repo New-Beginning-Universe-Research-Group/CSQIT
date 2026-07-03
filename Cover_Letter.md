@@ -1,16 +1,16 @@
 # Cover Letter for Submission
 
-**To the Editor of [Journal Name]**
+**To the Editor of Physical Review D**
 
 Dear Editor,
 
-We are pleased to submit our paper "CSQIT: Causal Structure Quantum Information Theory—From Axioms to Observable Cosmology" for consideration for publication in [Journal Name].
+I am pleased to submit my paper "CSQIT: Causal Structure Quantum Information Theory—From Axioms to Observable Cosmology" for consideration for publication in Physical Review D.
 
 This work presents a fundamentally new approach to theoretical physics: a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. What distinguishes this work is the combination of three key features:
 
 **1. Zero-Parameter Deductive Chain**
 
-Starting from a small set of information-theoretic axioms (AxiomA–K), we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant θ = 1/(2+2cos(2π/7)) ≈ 0.308 emerges naturally from the algebraic structure of cyclic group Fin 7. This derivation involves no free parameters—θ is uniquely determined by the axiom system.
+Starting from a small set of information-theoretic axioms (AxiomA–K), I derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant θ = 1/(2+2cos(2π/7)) ≈ 0.308 emerges naturally from the algebraic structure of cyclic group Fin 7. This derivation involves no free parameters—θ is uniquely determined by the axiom system.
 
 **2. Formalized Verification**
 
@@ -44,11 +44,11 @@ This work will be of interest to theoretical physicists, mathematical physicists
 The complete source code, including all Lean 4 proofs, is available at:
 https://github.com/New-Beginning-Universe-Research-Group/CSQIT
 
-We believe this work represents a significant step forward in foundational physics and would be honored to have it considered for publication in [Journal Name].
+I believe this work represents a significant step forward in foundational physics and would be honored to have it considered for publication in Physical Review D.
 
 Sincerely,
 
-[Your Name(s)]  
-[Your Affiliation(s)]  
-[Your Email(s)]  
-[Your ORCID(s)]
+Zhang Jun  
+New Beginning Universe Research Group (Independent Researcher)  
+cnjun939@163.com  
+ORCID: 0009-0004-9803-3237
