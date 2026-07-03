@@ -8,16 +8,17 @@
 
 \title{From Axioms to Observable Cosmology: A Formalized Discrete Framework}
 
-\author{[Your Name(s)]}
-\affiliation{[Your Affiliation(s)]}
-\email{[Your Email(s)]}
+\author{Zhang Jun}
+\affiliation{New Beginning Universe Research Group (Independent Researcher)}
+\email{cnjun939@163.com}
+\orcid{0000-0000-0000-0000}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of axioms concerning causal relations, rule composition, and quantum amplitudes, we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$ emerges naturally from the algebraic structure of cyclic group $\mathbb{Z}_7$. Under the duality interpretation, this constant corresponds to the observed total matter density $\Omega_m = 0.311$ (Planck 2018) with a deviation of approximately 1\%. This work demonstrates that a formalized axiomatic approach---with zero free parameters---can produce quantitative results comparable to observational data.
+We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of axioms concerning causal relations, rule composition, and quantum amplitudes, we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$ emerges naturally from the algebraic structure of cyclic group $\mathbb{Z}_7$. Under the duality interpretation, this constant corresponds to the observed total matter density $\Omega_m = 0.311$ (Planck 2018)~\cite{Planck2018} with a deviation of approximately 1\%. This work demonstrates that a formalized axiomatic approach---with zero free parameters---can produce quantitative results comparable to observational data.
 
 \textit{Key contributions}: (1) A complete axiomatic system (AxiomA-K) formalized in Lean 4; (2) The Duality Two-One Theorem: causal non-triviality and information non-triviality cannot coexist; (3) Algebraic causal order: causal relations derived from algebraic structure; (4) A complete deductive chain from axioms to $\theta$; (5) An empirical anchor: $\theta \approx \Omega_m$ with $\sim 1\%$ deviation.
 \end{abstract}
@@ -36,7 +37,7 @@ The reconciliation of quantum mechanics and general relativity remains one of th
     \item \textbf{Causal set theory}: No direct observational anchor
 \end{itemize}
 
-CSQIT takes a different approach: starting from information-theoretic axioms and using formalized verification to derive consequences.
+CSQIT takes a different approach: starting from information-theoretic axioms and using formalized verification to derive consequences. The motivation is rooted in the idea that information is the primary substance of physical reality~\cite{Wheeler1989}.
 
 \subsection{Methodology}
 
@@ -69,7 +70,9 @@ This work makes five key contributions:
 
 \subsection{Relation to Causal Set Theory}
 
-CSQIT extends causal set theory by: (1) deriving causal order from algebraic structure rather than taking it as primitive; (2) unifying causal and information aspects through the duality theorem; (3) providing an observational anchor through $\theta$.
+CSQIT extends and deepens the causal set program~\cite{Bombelli1987, Sorkin2005} in three ways: (1) deriving causal order from algebraic structure rather than taking it as primitive; (2) unifying causal and information aspects through the duality theorem; (3) providing an observational anchor through $\theta$. The relation to loop quantum gravity~\cite{Ambjorn1995} is more distant---CSQIT does not quantize geometry but starts from causal-informational primitives.
+
+All axioms and proofs are formalized in Lean 4~\cite{Lean2024} using the mathlib library. The complete source code (2069 compilation jobs, 0 errors) is available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
 
 \section{Axiomatic System}
 
@@ -169,7 +172,7 @@ The entropy of a closed system never decreases.
 \end{theorem}
 
 \begin{theorem}[Past Hypothesis as Theorem]
-The low-entropy initial state is a consequence of the causal structure, not an independent assumption.
+The low-entropy initial state is a consequence of the causal structure, not an independent assumption~\cite{Penrose2004}.
 \end{theorem}
 
 \section{Limits of Finite Models}
@@ -225,7 +228,7 @@ While the interpretation of $\theta$ as $\Omega_m$ remains at the W2/W3 level, t
 
 \acknowledgments
 
-The authors thank the TRAE AI and DeepSeek AI for assistance with formalization and writing.
+The author is an independent researcher and would like to thank TRAE AI and DeepSeek AI for assistance with Lean 4 formalization and manuscript preparation. This work was conducted independently without external funding. The author declares no conflicts of interest. The complete source code, formal proofs, and supplementary materials are publicly available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
 
 \bibliography{references}
 
