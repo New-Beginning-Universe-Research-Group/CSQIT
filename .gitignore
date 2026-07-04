@@ -74,6 +74,13 @@ DOCKER_BUILD_GUIDE.md
 Dockerfile.csqit
 *.tar.zst
 
+# Submission materials (keep local only)
+*_PRL/
+*_PRD/
+Cover_Letter*.md
+*_Submission_Guide.md
+*_投稿材料评审报告*.md
+
 # Temporary files
 commit_msg.txt
 *.ps1
@@ -92,6 +99,9 @@ WORKFLOW_README.md
 lake-manifest.json
 requirements.txt
 TUTORIAL.md
+texlive.profile
+lakefile_minimal.lean
+lakefile_wsl.lean
 
 # Trae IDE
 .trae/
