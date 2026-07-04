@@ -1,0 +1,108 @@
+\documentclass[aps,prl,twocolumn,nofootinbib,floatfix]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\title{The Source Code of the Universe: Formal Deduction from Discrete Information to Cosmic Density}
+
+\author{Zhang Jun}
+\affiliation{New Beginning Universe Research Group (Independent Researcher)}
+\email{cnjun939@163.com}
+\orcid{0009-0004-9803-3237}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of information-theoretic axioms (AxiomA-K), we derive through machine-verifiable proofs a complete deductive chain to a characteristic constant $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$, which corresponds to the observed total matter density $\Omega_m = 0.311$ (Planck 2018) with a deviation of approximately 1\%. Among primes $p=3,5,7,11,\ldots$, only $p=7$ yields $\theta(p)$ within the structure formation window $(0.28,0.33)$, establishing a uniqueness constraint from algebraic structure to cosmological parameters. The complete proof code (50 Lean files, ~24,300 lines, 2196 compilation tasks with 0 errors) is available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+
+\textit{Key results}: (1) Zero-parameter deductive chain from axioms to observable; (2) $\theta \approx \Omega_m$ within $\sim 1\%$; (3) Algebraic uniqueness of $p=7$; (4) Machine-verified formalization; (5) Existential inversion: structure$=7$ as observer existence condition.
+\end{abstract}
+
+\section{Introduction}
+
+The reconciliation of quantum mechanics and general relativity remains unresolved. Traditional approaches (string theory, loop quantum gravity, causal set theory) face fundamental challenges: no unique vacuum, no complete semiclassical limit, or no observational anchor. We introduce CSQIT, a fully formalized discrete causal-information framework in Lean 4 that derives a characteristic constant from axioms with zero free parameters, matching cosmological observations within $\sim 1\%$.
+
+\section{Axiomatic System and Formalization}
+
+The CSQIT framework is built upon 10 core axioms (AxiomA-K) formalized in Lean 4:
+
+\begin{itemize}
+    \item \textbf{AxiomA}: Weaving structure of rules and relation elements
+    \item \textbf{AxiomB}: Causal partial order
+    \item \textbf{AxiomC}: Complex-valued quantum amplitude (unitary)
+    \item \textbf{AxiomD}: Operational weaving
+    \item \textbf{AxiomE-K}: Information capacity, continuum limit, gauge group, etc.
+\end{itemize}
+
+All axioms and proofs are implemented and verified in Lean 4 (50 files, ~24,300 lines, 2196 compilation jobs with 0 errors).
+
+\section{Duality Two-One Theorem}
+
+The central theorem states that causal non-triviality and information non-triviality cannot coexist:
+
+\begin{theorem}[Duality Two-One]
+In the standard framework, if the output function is non-degenerate (causal non-triviality), then the amplitude function is degenerate (information degeneracy), and vice versa.
+\end{theorem}
+
+This establishes a discrete complementarity principle---causal structure and quantum information are two projections of the same underlying reality.
+
+\section{Characteristic Constant $\theta$}
+
+In $\mathbb{Z}_7$ (the smallest prime-order cyclic group satisfying both unitarity and injectivity), the characteristic constant is:
+
+\[
+\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308
+\]
+
+This satisfies the cubic equation $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$. Under the duality interpretation, $\theta$ corresponds to the observed total matter density $\Omega_m = 0.311$ (Planck 2018) with a deviation of approximately 1\%.
+
+\section{Uniqueness of $p=7$}
+
+The algebraic expansion spectrum $\theta(p) = 1/(2+2\cos(2\pi/p))$ is strictly monotonically decreasing for primes $p \ge 3$:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccc}
+\hline
+$p$ & $\theta(p)$ & In $(0.28,0.33)$? \\
+\hline
+3 & 1.000 & No \\
+5 & 0.382 & No \\
+\textbf{7} & \textbf{0.308} & \textbf{Yes} \\
+11 & 0.272 & No \\
+$\infty$ & 0.250 & No \\
+\hline
+\end{tabular}
+\caption{Algebraic expansion spectrum. Only $p=7$ yields $\theta(p)$ within the structure formation window.}
+\label{tab:spectrum}
+\end{table}
+
+Structure formation requires $\Omega_m \in (0.28,0.33)$: too low and perturbations cannot collapse into galaxies; too high and the universe recollapses. Only $p=7$ satisfies this constraint.
+
+\section{Existential Inversion}
+
+We reframe the question ``why 7?'' as:
+
+\begin{quote}
+``Structure$=7$ is the necessary condition for observers who can ask `why 7' to exist.''
+\end{quote}
+
+Let $S(p)$ denote ``a causal lattice with algebraic base $p$ can support internal observers.'' Then $S(p) \implies p=7$. For $p \neq 7$, no observers can exist to question why $p$ is what it is.
+
+\section{Discussion}
+
+CSQIT demonstrates that a formalized axiomatic approach---with zero free parameters---can produce quantitative results comparable to observational data. The proximity of $\theta \approx 0.308$ to $\Omega_m = 0.311$ is the first observational anchor of this structural deduction.
+
+The complete source code is available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+
+\acknowledgments
+
+This work was conducted independently without external funding.
+
+\bibliography{references}
+
+\end{document}
