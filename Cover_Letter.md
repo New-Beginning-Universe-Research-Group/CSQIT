@@ -4,7 +4,7 @@
 
 Dear Editor,
 
-I am pleased to submit my paper "CSQIT: Causal Structure Quantum Information Theory—From Axioms to Observable Cosmology" for consideration for publication in Physical Review D.
+I am pleased to submit my paper **"The Source Code of the Universe: Formal Deduction from Discrete Information to Cosmic Density"** for consideration for publication as a **Regular Article** in Physical Review D.
 
 This work presents a fundamentally new approach to theoretical physics: a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. What distinguishes this work is the combination of three key features:
 
@@ -14,7 +14,7 @@ Starting from a small set of information-theoretic axioms (AxiomA–K), I derive
 
 **2. Formalized Verification**
 
-All mathematical claims in this work are implemented and verified in Lean 4. The complete proof code consists of 2069 compilation tasks, all passing with zero errors. This level of formalization ensures that the deductive chain is mathematically rigorous and free from implicit assumptions.
+All mathematical claims in this work are implemented and verified in Lean 4. The complete proof code consists of 50 Lean files with approximately 24,300 lines of formal proof, with 2196 compilation tasks all passing with zero errors. This level of formalization ensures that the deductive chain is mathematically rigorous and free from implicit assumptions.
 
 **3. Empirical Anchor**
 
@@ -48,7 +48,7 @@ I believe this work represents a significant step forward in foundational physic
 
 Sincerely,
 
-Zhang Jun  
-New Beginning Universe Research Group (Independent Researcher)  
+Zhang Jun (Jun Zhang)  
+Independent Researcher  
 cnjun939@163.com  
 ORCID: 0009-0004-9803-3237

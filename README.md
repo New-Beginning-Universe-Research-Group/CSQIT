@@ -1,9 +1,10 @@
 # CSQIT v11.2.0 - Causal Structure Quantum Information Theory
 
-**版本**: v11.2.0
-**日期**: 2026年7月3日
-**Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）
-**编译状态**: ✅ 2069 jobs 全部通过
+**版本**: v11.2.0  
+**日期**: 2026年7月4日  
+**Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）  
+**编译状态**: ✅ 2196 jobs 全部通过  
+**代码规模**: 50 个 Lean 文件，约 24,300 行形式化证明
 
 ---
 
@@ -13,7 +14,12 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 
 **核心方法论**：从少数信息论公理出发，经过机器可验证的形式化证明，推导出与观测可比的数值（零自由参数）。
 
-**论文**：[English](CSQIT_Paper_English_v11.2.0.md) | [中文版](CSQIT_顶刊论文_中文版_v3_最终版.md) | [投稿信](Cover_Letter.md)
+**论文**：
+- 英文版（MD）: [The Source Code of the Universe](CSQIT_SourceCodeOfUniverse_en_v11.2.0.md)
+- 中文版（MD）: [宇宙的源代码](CSQIT_宇宙的源代码_zh_v11.2.0.md)
+- LaTeX版（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex](CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex)
+- LaTeX版（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.tex](CSQIT_宇宙的源代码_zh_v11.2.0.tex)
+- 投稿信: [Cover Letter](Cover_Letter.md)
 
 ---
 
@@ -144,4 +150,4 @@ MIT License
 ---
 
 *CSQIT v11.2.0 — 因果结构量子信息理论*
-*Lean 4 v4.29.0-rc6 — 2069 编译任务，0 错误*
+*Lean 4 v4.29.0-rc6 — 2196 编译任务，0 错误*

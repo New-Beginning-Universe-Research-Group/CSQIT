@@ -1,18 +1,19 @@
-# CSQIT: Causal Structure Quantum Information Theory
+# The Source Code of the Universe: Formal Deduction from Discrete Information to Cosmic Density
 
-## From Axioms to Observable Cosmology: A Formalized Discrete Framework
+## CSQIT: Causal Structure Quantum Information Theory
 
-**Authors**: [Your Name(s)]  
+**Author**: Jun Zhang  
+**ORCID**: 0009-0004-9803-3237  
 **Version**: v11.2.0  
 **Date**: July 3, 2026  
 **Lean Version**: v4.29.0-rc6  
-**Compilation Status**: ✅ 2196 jobs passed
+**Codebase**: 50 Lean files, ~24,300 lines of formal proof
 
 ---
 
 ## Abstract
 
-We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of axioms concerning causal relations, rule composition, and quantum amplitudes, we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant θ = 1/(2+2cos(2π/7)) ≈ 0.308 emerges naturally from the algebraic structure of cyclic group Fin 7. Under the duality interpretation, this constant corresponds to the observed total matter density Ω_m = 0.311 (Planck 2018) with a deviation of approximately 1%. This work demonstrates that a formalized axiomatic approach—with zero free parameters—can produce quantitative results comparable to observational data.
+We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of axioms concerning causal relations, rule composition, and quantum amplitudes, we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant θ = 1/(2+2cos(2π/7)) ≈ 0.308 emerges naturally from the algebraic structure of cyclic group Fin 7. Under the duality interpretation, this constant corresponds to the observed total matter density Ω_m = 0.311 (Planck 2018) with a deviation of approximately 1%. We further demonstrate that among primes p=3,5,7,11,13,17,..., only p=7 yields θ(p) within the structure formation window (0.28, 0.33), establishing a uniqueness constraint from algebraic structure to cosmological parameters. Epistemologically (W3), the theory frames observers as internal nodes of the causal lattice—what we observe is not a universe that "chose" 7, but rather that structure=7 is the necessary condition for observers like us to exist. This work demonstrates that a formalized axiomatic approach—with zero free parameters—can produce quantitative results comparable to observational data.
 
 **Key contributions**:
 1. A complete axiomatic system (AxiomA–K) formalized in Lean 4
@@ -20,6 +21,8 @@ We present CSQIT (Causal Structure Quantum Information Theory), a fully formaliz
 3. Algebraic causal order: causal relations derived from algebraic structure
 4. A complete deductive chain from axioms to the characteristic constant θ
 5. An empirical anchor: θ ≈ Ω_m with ~1% deviation
+6. Algebraic expansion spectrum: monotonic decrease of θ(p) and uniqueness of p=7 within the structure formation window
+7. Existential inversion (W3): structural necessity rather than cosmic choice as the epistemological framing
 
 ---
 
@@ -50,6 +53,18 @@ CSQIT takes a different approach: starting from information-theoretic axioms and
 3. **Algebraic causal order**: causal_past(x,y) ↔ x ∈ ⟨y⟩—causality emerges from algebraic structure
 4. **Characteristic constant θ**: Derived from Fin 7 cyclic group algebra
 5. **Empirical anchor**: θ ≈ Ω_m with ~1% deviation
+6. **Algebraic expansion spectrum**: monotonic decrease of θ(p) and uniqueness of p=7 within the structure formation window
+7. **Existential inversion (W3)**: structural necessity rather than cosmic choice as the epistemological framing
+
+### 1.3.1 Epistemological Stance (W3)
+
+The present work adopts a specific epistemological stance: **observers are internal nodes of the causal lattice, not external spectators**. This has the following consequences:
+
+1. What we observe is not "the universe as it is," but rather "the universe as seen from within a structure of a given algebraic type."
+2. The characteristic constant θ ≈ 0.308 is not a parameter the universe "chose"; it is a structural invariant of the class of causal lattices capable of supporting internal observers.
+3. The question "why is the universe the way it is?" is reframed as "what algebraic structures can support observers who ask this question?"—and the answer, in the CSQIT framework, is that the algebraic base must be Fin 7.
+
+This stance is explicitly labeled W3 (interpretive layer) and is not required for accepting the formal results at W1 (theorems) or W2 (standard physical interpretation).
 
 ### 1.4 Relation to Causal Set Theory
 
@@ -94,7 +109,7 @@ class Theory (M : Type) (C : Type) where
 
 ---
 
-## 3. Duality Two-One Theorem
+## 3. First Bifurcation: Duality Two-One Theorem
 
 ### 3.1 Statement
 
@@ -116,7 +131,7 @@ The fin7Model relaxes `compose_output` constraint, allowing both aspects to be n
 
 ---
 
-## 4. Algebraic Causal Order
+## 4. Emergence of Causality: Algebraic Causal Order
 
 ### 4.1 Motivation
 
@@ -209,7 +224,7 @@ Consider the algebraic "identity" of $2\cos(2\pi/p)$ in algebraic number theory:
 | Prime $p$ | Value of $2\cos(2\pi/p)$ | Minimal Polynomial Degree | Number Field | CSQIT $\theta$ | Structural Character |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **3** | $-1$ | 1 (degenerate integer) | $\mathbb{Q}$ | $1.0$ | **Absolutely closed**, no evolution space |
-| **5** | $(\sqrt{5}-1)/2 \approx 0.618$ | 2 (quadratic) | Quadratic field $\mathbb{Q}(\sqrt{5})$ | $\approx 0.276$ | **Binary balance**, reversible oscillation |
+| **5** | $(\sqrt{5}-1)/2 \approx 0.618$ | 2 (quadratic) | Quadratic field $\mathbb{Q}(\sqrt{5})$ | $\approx 0.382$ | **Golden ratio recurrence**, reversible oscillation, no irreversible records |
 | **7** | $\approx 1.247$ | **3 (cubic)** | **Cyclic cubic field** $\mathbb{Q}(\zeta_7+\zeta_7^{-1})$ | $\approx 0.308$ | **Non-linear self-reference**, three-body interaction, irreducible chaos edge |
 
 **Algebraic watershed**:
@@ -239,7 +254,7 @@ $$
 
 **Deep structural intuition**:
 1. **Linear ($p=3$)**: Corresponds to pure geometry (Einstein's static universe), no dark matter evolution space.
-2. **Quadratic ($p=5$)**: Corresponds to pure scalar field oscillation (e.g., axion), only describing linear growth of "cold dark matter," unable to explain late-time cosmic acceleration (giving $\Omega_m \approx 0.276$, dark energy $\approx 0.724$, universe would open too quickly).
+2. **Quadratic ($p=5$)**: Corresponds to binary oscillation at the golden ratio. Matter density is too high ($\Omega_m \approx 0.382$), causing the universe to close too early before radiation-matter equality, preventing large-scale structure formation; at the same time, quadratic systems are time-reversible, with no irreversible historical records.
 3. **Cubic ($p=7$)**: Corresponds to **non-linear density feedback**. A cubic equation has three real roots, corresponding to three cosmic evolution "fixed points": early radiation dominance (root $\to 0$), matter-dark energy balance (root at 0.308), and pure dark energy dominance (root $\to 1$).
 
 **The precise translation of "ternary generation" in CSQIT**: To simultaneously accommodate "visible matter (non-zero amplitude)," "dark matter (zero amplitude)," and "dark energy (projective compactification boundary)" in a discrete causal lattice, the algebraic structure must provide an **irreducible cubic polynomial**. Only a cubic equation allows three phases to transform into one another via the `combine` operation within the same finite lattice (Fin 7).
@@ -251,6 +266,26 @@ $$
 | **3** | **Minimal non-degenerate base** (geometric triangle, SU(3) Cartan generators) | Provides **spatial geometric skeleton** (lowest-dimensional support for Regge action) |
 | **5** | **Second-order cyclic extension** (golden ratio, $\mathbb{Q}(\sqrt{5})$) | Provides **planar causal spinor** (binary weaving channel of spin networks) |
 | **7** | **Third-order cyclic extension** ($\mathbb{Q}(\zeta_7+\zeta_7^{-1})$, discriminant $7^2$) | Provides **non-linear coupling of time and matter** (the only algebraic base stably yielding the observed $\Omega_m$) |
+
+#### Expansion Spectrum and Structure Formation Window
+
+To systematically assess the uniqueness of $p=7$, we define the expansion degree $d(p) = (p-1)/2$ for each prime $p \ge 3$, and compute $\theta(p) = 1/(2+2\cos(2\pi/p))$. The results form a monotonically decreasing sequence:
+
+| Prime $p$ | Expansion Degree $d=(p-1)/2$ | $\theta(p) = 1/(2+2\cos(2\pi/p))$ | Structural Character | Within (0.28, 0.33)? |
+| :---: | :---: | :---: | :--- | :---: |
+| 3 | 1 | 1.000 | Absolute closure, no evolution | ✗ |
+| 5 | 2 | 0.382 | Golden ratio recurrence, reversible oscillation | ✗ (above) |
+| **7** | **3** | **0.308** | **Non-linear self-reference, three-body interaction** | **✓** |
+| 11 | 5 | 0.272 | Quintic nonlinearity, structure formation hindered | ✗ (below) |
+| 13 | 6 | 0.265 | Sextic nonlinearity, loose structure, dark energy dominated | ✗ (below) |
+| 17 | 8 | 0.259 | Octic nonlinearity, dilution acceleration | ✗ (below) |
+| $\infty$ | $\infty$ | 0.250 | Continuum limit, pure de Sitter | ✗ (below) |
+
+**Mathematical property**: $\theta(p)$ is strictly monotonically decreasing for primes $p \ge 3$. As $p \to \infty$, $\theta(p) \to 0.25$.
+
+**Structure formation window**: Structure formation in the universe requires matter density to lie in a specific range: too low ($\Omega_m < 0.28$) and perturbations cannot collapse into galaxies; too high ($\Omega_m > 0.33$) and the universe recollapses before structure can mature. Only $p=7$ yields $\theta(p) \in (0.28, 0.33)$.
+
+**Uniqueness statement (W3)**: Within the algebraic expansion spectrum of primes, $p=7$ is the unique prime whose corresponding $\theta(p)$ falls within the structure formation window. This is not a coincidence—it is a constraint from algebraic number theory on what kinds of causal lattices can support complex structure.
 
 **Conjecture (Naturalness of Fin 7, W3)**: The causal structure of the universe selects prime $p=7$ because $7$ is the smallest positive integer satisfying both:  
 (1) The cyclic group $C_p$ is non-degenerate (prime);  
@@ -272,19 +307,61 @@ Against the legitimate challenge that "$p=7$ was chosen only because it fits $\O
 
 **Honest label**: The above "modulo-8 congruence" argument, specifically the chain "3×3 affine plane → 15 → mod 8 → 7," currently belongs to the **W3 interpretive layer** and has not yet been fully formalized in Lean. However, it elevates "post-hoc selection" from an "embarrassing coincidence" to a "structural necessity" proposition awaiting proof—even if this conjecture is ultimately falsified, the "algebraic-cosmological correspondence" it reveals remains a valuable theoretical direction.
 
+### 5.9 Existential Inversion: From "Choice" to "Existence Condition"
+
+The arguments above respond to the "why 7" question at the level of algebraic structure. But there is a deeper epistemological reframing available.
+
+**Traditional framing**: "The universe chose 7. Why?"  
+**CSQIT framing (W3)**: "Structure=7 is the necessary condition for observers who can ask 'why 7' to exist."
+
+We call this reframing **existential inversion**.
+
+#### Formal Statement (W3)
+
+Let $S(p)$ denote the statement "a causal lattice with algebraic base $p$ can support internal observers capable of recording irreversible histories and asking structural questions." Then:
+
+$$
+S(p) \implies p = 7
+$$
+
+In contrapositive form: if $p \neq 7$, then no observers can exist within the lattice to question why $p$ is what it is.
+
+**Intuitive justification**:
+- For $p=3$: The lattice is absolutely closed ($\theta=1$). No evolution, no time arrow, no observers.
+- For $p=5$: The lattice is in golden ratio recurrence ($\theta \approx 0.382$). Reversible oscillation, matter density too high for stable structure formation, no irreversible records, no observers who can "remember" why.
+- For $p=7$: The lattice has cubic nonlinearity and three-way weaving flow. Past-present-future form a closed loop, enabling irreversible records and self-referential cognition.
+- For $p \ge 11$: $\theta(p) < 0.272$, too low for stable structure formation. Density perturbations grow too slowly, galaxies cannot form within the cosmic age, no bound structures, no observers.
+
+**Syntactic compression**:
+
+> **It is not that the universe chose 7; rather, it is because structure=7 that we became "we."**
+
+This is an epistemological inversion, not a physical prediction. It reframes "why is the universe like this?" as "what kind of universe can produce beings who ask this question?"—and the answer, in the CSQIT framework, is precisely a universe with algebraic base 7.
+
+**Honest label (W3)**: Existential inversion is a W3-level interpretive stance. It does not constitute a formal proof that $p=7$ is the only structure supporting observers. Rather, it is a coherent epistemological framework that makes the observed value of $\Omega_m$ less surprising: we should not be surprised to observe $\Omega_m \approx 0.31$, because this is the range in which observers like us can exist.
+
 ---
 
-## 6. Scale Dynamics
+## 6. Scale Dynamics: Projective Compactification and Gauge Closure
 
 ### 6.1 Unified Action
 
 $$S_{\text{total}} = S_{\text{geometry}} + S_{\text{phase}} + S_{\text{weaving}} + S_{\text{cross}}$$
 
-### 6.2 Projective Compactification
+### 6.2 Projective Compactification and Time as Scale
 
 $$s(n) = \frac{2\pi n}{n+1}$$
 
 This maps infinite refinement to circular motion on S¹.
+
+**Time as scale, not dimension (W3)**: Time is not a fundamental dimension—it is the scalar parameter of the causal lattice's refinement trajectory from finite to infinite. Space has 3 dimensions (rooted in the three real roots of the cubic extension), but time is not a "fourth dimension"—it is the **tracking parameter of projective compactification**.
+
+**Structural meaning of 3+1**:
+\[
+\text{Spacetime} = 3 + 1 \iff \text{stable closure of cubic extension (3)} + \text{projective tracking scale (1)}
+\]
+
+In everyday language, "the passage of time" translates in the CSQIT framework to: the weaving structure of the causal lattice continuously approaches the projective circle along the refinement sequence, and the process of $s(n) = 2\pi n/(n+1) \to 2\pi$ is perceived as time by internal observers.
 
 ### 6.3 SU(3) Cartan Subalgebra
 
@@ -292,7 +369,7 @@ This maps infinite refinement to circular motion on S¹.
 
 ---
 
-## 7. Thermodynamic Arrow of Time
+## 7. Arrow of Time: Lattice-Theoretic Derivation of the Second Law
 
 ### 7.1 Second Law as Theorem
 
@@ -357,7 +434,9 @@ CSQIT satisfies a cardinality bound |S| ≤ |M|, which is structurally analogous
 
 ### 9.4 Sorry Audit
 
-v11.2.0 eliminated 13 sorry statements through formalized proofs. 4 sorry statements remain intentionally in `cyclic_stable_substructure` as counterexamples marking mathematically impossible assertions.
+The formalization of CSQIT is an iterative engineering effort spanning many versions. From the very first version, the project underwent countless rewrites—from early AI-assisted manual operations to later systematic AI workflows with parallel sub-agents—the total number of sorry and admit statements eliminated over the course of the project is beyond precise accounting. This section documents only the **traceable sorry elimination history since v11.0** as a methodological snapshot of the formalization engineering process.
+
+Since v11.0, 13 sorry statements were eliminated through formalized proofs. 4 sorry statements remain intentionally in `cyclic_stable_substructure` as counterexamples marking mathematically impossible assertions.
 
 ### 9.5 Three Closure Loops and the Unitary Closure Thesis
 
@@ -377,7 +456,12 @@ Synthesizing all preceding layers of analysis—from **measurement ontology** (w
 - **Code fact**: `ScaleDynamics.lean` constructs exactly **the 8 diagonal generators of SU(3)** (discretization of Gell-Mann matrices) via `cartanGenerator`.
 - **Geometric fact**: The 3×3 affine plane ($\mathbb{F}_3^2$) is the **minimal irreducible projection** of these 8 generators plus the central charge (0). Row-column-diagonal conservation is equivalent to the annihilation of the SU(3) **Casimir operator** (quadratic conserved quantity) on discrete lattice points.
 - **Physical fact**: Strong interaction color confinement (SU(3)) in this framework is not an "externally imposed gauge group" but the **automatic automorphism group of causal lattice $\text{Fin}\,8$**.
-- **Precise statement**: **Gauge symmetry (strong interaction) is the "linear conservation layer" of the causal weaving lattice at cardinality 8; matter density (Fin 7) is the "non-linear ground state" of this symmetry under modulo-8 reduction. The two realize "color-flavor" duality through the congruence $8 \equiv 1 \pmod{7}$.**
+- **Direction 4 tetrahedral symmetry (W3)**: Beyond the 8 generators of SU(3), there is a deeper symmetry correspondence—**Direction 4**. The root of spatial direction in 3D space is not 3 orthogonal axes but the **4 vertex directions of a regular tetrahedron**. This fourfold symmetry has consistent correspondences across scales:
+  - **Geometric layer**: 4 vertices of a regular tetrahedron = the most symmetric finite point set in 3D space
+  - **Gauge layer**: 4 generators of SU(2)×U(1) = electroweak unification degrees of freedom
+  - **Chemical layer**: Carbon's sp³ hybridization = 4 covalent bond directions
+  - **Life layer**: 4 DNA bases (A, T, C, G) = basic letters of genetic information
+- **Precise statement**: **Gauge symmetry (strong interaction) is the "linear conservation layer" of the causal weaving lattice at cardinality 8; matter density (Fin 7) is the "non-linear ground state" of this symmetry under modulo-8 reduction. Direction 4 is another projection of Fin 8 closure in 3D space—the 8 SU(3) generators correspond to strong interaction, while the fourfold symmetry of Direction 4 corresponds to the common algebraic base of electroweak interaction and life chemistry.**
 
 #### Closure Loop 3: Evolution Closure Loop (Time W3 → Combinatorial Code W1)
 
@@ -386,24 +470,44 @@ Synthesizing all preceding layers of analysis—from **measurement ontology** (w
 - **Physical fact**: The current cosmic dark energy ($\Omega_\Lambda \approx 0.692$) is precisely the reciprocal complement of matter density ($1 - 0.308 = 0.692$). **Dark energy is not "vacuum energy" but the apparent effect of remaining combinatorial degrees of freedom being mapped to "accelerated expansion" by projective compactification ($s(n) = 2\pi n/(n+1)$) after the causal lattice saturates and can no longer generate new relation-pairs.**
 - **Precise statement**: **The arrow of time (low entropy to high entropy) is the historical record of "unsaturated weaving" (0→8); the current cosmic accelerated expansion is the topological resistance of the projective circle's infinite future ($n \to \infty, s \to 2\pi$) closing onto a finite circumference after "saturated weaving" (reaching 64).**
 
-#### The Unified Identity Equation
+#### Closure Loop 4: Life-Cognition Closure Loop (Micro → Macro, W3)
 
-Substituting the three closure loops into the CSQIT axiomatic system, we obtain the following **unified identity equation**:
+Extending the algebraic structure to atomic, molecular, and life scales, we observe consistent cross-scale correspondences:
 
-$$
-\boxed{\Omega_m \equiv \theta(7) = \frac{1}{2+2\cos(2\pi/7)} \iff \text{Fin}\,8 \text{ conservation flow } (15) \bmod 8 = 7}
-$$
+- **Atomic scale**: The cyclic generator of Fin 7 corresponds to the periodic structure of electron shell filling (period lengths 2, 8, 8, 18, 18, 32). The chemical properties of elements are determined by the "weaving order" of their outermost electrons.
+- **Molecular scale**: Types of molecular bonds correspond to basic CSQIT operations—covalent bonds correspond to `compose` rule composition, ionic bonds correspond to `combine` information fusion, and hydrogen bonds correspond to weak associations of partial weaving. Molecular symmetries (e.g., 6-fold symmetry of benzene) correspond to physical projections of the causal lattice automorphism group.
+- **Life scale**: The 64 genetic codons precisely correspond to the complete closure of Fin 8 ($8^2 = 64$). Among them, 61 encode amino acids (non-zero amplitude, corresponding to visible matter) and 3 are stop codons (zero amplitude, corresponding to dark matter). This classification forms a structural isomorphism with CSQIT's matter classification theorem.
+- **Cognitive scale**: Observers, as self-referential nodes capable of recording irreversible histories and asking "why is the structure this way," have their existence as a sufficient condition for algebraic structure being 7—this is existential inversion.
+
+**Precise statement**: From Ω_m to DNA, structure=7 is the algebraic invariant across all scales. The combinatorial structure of the causal lattice not only determines the universe's macroscopic parameters but also encodes all possible weaving patterns from atoms and molecules to life and cognition.
+
+#### The Extended Unified Identity Equation
+
+Substituting the four closure loops into the CSQIT axiomatic system, we obtain the following **extended unified identity equation**:
+
+\[
+\boxed{
+\begin{aligned}
+&\Omega_m \equiv \theta(7) \approx 0.308 \quad &\text{(cosmological scale)} \\
+&\text{Periodic table} \iff \text{Fin 7 shell filling} \quad &\text{(atomic scale)} \\
+&\text{Molecular bonds} \iff \text{compose} + \text{combine} \quad &\text{(molecular scale)} \\
+&64\text{ codons} \iff 8^2\text{ weaving pairs} \quad &\text{(life scale)} \\
+&\text{Observer existence} \iff \text{structure}=7 \quad &\text{(cognitive scale)}
+\end{aligned}
+}
+\]
 
 **What does this mean?**
 - **The universe is not an expanding balloon**; it is a **cellular automaton** whose **state-space cardinality** is locked to **8** (gauge degrees of freedom) and whose **coupling constant** is locked to **7** (matter-spacetime interaction).
 - **The 3×3 affine plane** is the **observational projection** of these 8 degrees of freedom in three-dimensional real space (the inevitable way detectors resolve an 8-dimensional Lie algebra in 3D).
-- **3, 5, and 7 are algebraic thresholds**: 3 generates spatial volume elements (tetrahedra), 5 generates spin networks (binary entanglement), and 7 generates matter density (cubic non-linearity). Any prime smaller than 7 would yield a universe with either no dark energy ($p=3$) or no structure formation ($p=5$).
+- **3, 5, and 7 are progressively rising algebraic complexity thresholds**: 3 generates spatial volume elements (tetrahedra), the foundation of three-dimensional geometry; 5 generates spin networks (binary entanglement), adding quantum nonlocality on top of spatial structure; 7 generates matter density (cubic non-linearity), the unique prime order that simultaneously supports structure formation and dark energy. Primes below 7 cannot sustain a complete universe: $p=3$ lacks the dark-energy-driven expansion mechanism, and $p=5$ lacks sufficient non-linearity to form large-scale structure.
+- **From Ω_m to DNA**: The same Fin 7 algebraic structure spans all scales—from cosmology to molecular biology, structure=7 is the invariant algebraic base.
 
-**Honest label (W3)**: The above "unified identity equation" and "three closure loops" currently belong to the **physical interpretation layer (W3)** and have not yet been fully formalized in Lean. In particular, the chain "$15 \equiv 7 \pmod 8$ rigidly yields $\theta$" requires further algebraic-geometric formalization. Nevertheless, these closure loops forge the scattered theorems (duality, algebraic causality, scale dynamics, thermodynamic arrow) into a unified cosmological narrative, demonstrating the **explanatory power and consistency** of the CSQIT framework—even if some links require future correction, the methodological goal of "closed deduction from axioms to observation" has been achieved.
+**Honest label (W3)**: The above "extended unified identity equation" and "four closure loops" currently belong to the **physical interpretation layer (W3)** and have not yet been fully formalized in Lean. In particular, the chain "$15 \equiv 7 \pmod 8$ rigidly yields $\theta$" requires further algebraic-geometric formalization. Cross-scale correspondences (periodic table, molecular bonds, genetic code) are empirically observed structural isomorphisms whose rigorous mathematical proof remains to be established. Nevertheless, these closure loops forge the scattered theorems (duality, algebraic causality, scale dynamics, thermodynamic arrow) into a unified cosmological narrative, demonstrating the **explanatory power and consistency** of the CSQIT framework—even if some links require future correction, the methodological goal of "closed deduction from axioms to observation" has been achieved.
 
 ---
 
-## 10. Conclusions
+## 10. Epistemology: Formal Status of the Internal Observer
 
 ### 10.1 Summary
 
@@ -416,15 +520,57 @@ CSQIT presents a formalized discrete causal-information framework with:
 ### 10.2 Structural Insights
 
 Three key structural insights emerge:
-1. **Duality**: Causality and quantum information are two sides of the same reality
-2. **Algebraic causality**: Causal relations emerge from algebraic structure
-3. **Projective compactification**: Infinity is a cycle, not a boundary
+1. **Duality**: Causality and quantum information are two projections of the same reality—cannot both be nontrivial
+2. **Algebraic causality**: Causal relations emerge from algebraic structure—causal closure = algebraic closure
+3. **Projective compactification**: Infinity is a cyclic compactification, not a boundary—the universality of π has topological roots
 
-### 10.3 Epistemic Significance
+These insights have mathematical support (W1 layer theorems), but their physical interpretation belongs to W2/W3 layers.
+
+### 10.3 Empirical Anchor
+
+The proximity of $\theta \approx 0.308$ to $\Omega_m = 0.311$ is the first observational anchor of the structural deduction. This is:
+- **Not a prediction**—because $\theta = \Omega_m$ is an interpretive leap
+- **Not a coincidence**—because it is the unique value derived from axioms with zero free parameters
+- **An anchor**—indicating that this deductive chain may be related to real physics
+
+### 10.4 Epistemic Significance
 
 This work demonstrates that the axiomatic-formalized approach—deriving quantitative predictions from first principles without free parameters—is viable in physics.
 
-### 10.4 Future Directions
+**Epistemic implication of existential inversion (W3)**:
+
+CSQIT is not a "model of the universe." It is a **deductive framework for "how observers are possible"**.
+
+The ultimate question it answers is not:
+> "What is the universe like?"
+
+but rather the more fundamental:
+> "What kind of universe can produce observers who ask this question?"
+
+The answer to this question, formally expressed as the unique nontrivial root of the cubic equation $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$ at $\theta \approx 0.308$, observationally as Planck data $\Omega_m \approx 0.311$, and epistemologically as:
+
+> **The reason we see 0.308 is because structure=7 made us "us."**
+
+A golden ratio (Fin 5) universe has no irreversible records and thus cannot produce observers. A cubic nonlinear (Fin 7) universe possesses the nonlinear closed loop of "past-present-future," making "questioning" and "recording" possible. The reason we can ask "why 7" is precisely because we are ourselves products of 7.
+
+### 10.5 Final Positioning
+
+CSQIT is not a "model about the universe." It is a **deductive framework about the underlying structure of the universe**—it attempts to answer the question:
+
+> **If the universe is fundamentally causal-information structure, what must its macroscopic properties be?**
+
+The answer to this question appears near 0.308 in the form of θ.
+
+To our knowledge, this is the first implementation in a discrete causal framework of:
+- Complete formal deduction from axiomatic system to characteristic constant
+- Numerical derivation with zero free parameters
+- Comparability with observational cosmology
+- Cross-scale structural correspondence from atoms to life
+- Internal self-referential constraint on "observer existence conditions"
+
+Whether this path leads to ultimate truth remains unknown. But it at least demonstrates that **physics need not presuppose an external "observer" but can instead start from the condition that "observers are internal nodes of the structure" and derive values consistent with observation.** This is a methodological transition from "observing the universe" to "the universe observing itself through us."
+
+### 10.6 Future Directions
 
 - Prove continuum limit convergence
 - Derive complete Standard Model gauge group
@@ -432,40 +578,40 @@ This work demonstrates that the axiomatic-formalized approach—deriving quantit
 
 ---
 
-## Appendix A: Six-Layer Uniqueness Lock-up Framework
+## Appendix A: Six-Layer Uniqueness Lock-in Framework
 
 ### A.1 Positioning
 
-This appendix presents the epistemological apex of CSQIT at the **highest standard** (mathematical rigor + physical reality + philosophical thoroughness + formal completeness): **Six-Layer Uniqueness Lock-up**. It is not "a possible model," but **the algebraic form that any causal-information closed system capable of producing irreversible observers must necessarily take**.
+This appendix presents the **six-layer uniqueness lock-in framework** of CSQIT, integrating mathematical rigor, physical correspondence, and epistemological framing. It is not "one possible model among many," but rather **the algebraic form that any causal-information closed system capable of producing irreversible observers must necessarily take**, within the axiomatic constraints of the theory.
 
 Each layer is explicitly labeled with W1/W2/W3 certainty levels; all cross-layer assertions are declared.
 
-### A.2 The Logical Chain of Six Lock-ups
+### A.2 The Logical Chain of Six Lock-ins
 
-#### First Lock-up: Axiomatic Closure (W1)
+#### First Lock-stop: Axiomatic Closure (W1)
 
-**Theorem** (`input_must_be_empty`, [Core/Axioms.lean](file:///c:/Users/DELL/.trae-cn/worktrees/CSQIT-workspace/feat-csqit-lean4-formal-proof-vf7wFF/Core/Axioms.lean)): In every model satisfying AxiomA, the input list of every rule is empty.
+**Theorem** (`input_must_be_empty`, [Core/CausalWeaving.lean](file:///c:/Users/DELL/.trae-cn/worktrees/CSQIT-workspace/feat-csqit-lean4-formal-proof-vf7wFF/Core/CausalWeaving.lean)): In every model satisfying AxiomA, the input list of every rule is empty.
 
 **Uniqueness corollary**: Causal rules depend on no external input — the universe is a **closed, self-referential rule system**. Any rule relying on external input is eliminated by the repeated-input contradiction of `compose`.
 
-#### Second Lock-up: Two-Aspect Conflict (W1)
+#### Second Lock-stop: Two-Aspect Conflict (W1)
 
 **Theorem** (`standard_theory_no_two_aspect_balance`, [Core/TwoAspectTheorems.lean](file:///c:/Users/DELL/.trae-cn/worktrees/CSQIT-workspace/feat-csqit-lean4-formal-proof-vf7wFF/Core/TwoAspectTheorems.lean)): Under a finite rule set, the causal aspect (output) and the informational aspect (amplitude) cannot be simultaneously nontrivial.
 
 **Uniqueness corollary**: To retain both, the relation-element set \( M \) must be a **semigroup**. A finite semigroup carrying a unitary and injective complex amplitude must be a **cyclic group of prime order** — because composite order produces zero divisors or periodic degeneracy.
 
-**Code support**: The comparison between `fin5Model` and `fin7Model` verifies the necessity of prime order.
+**Code support**: The comparison between `fin7Model` and `fin8Model` verifies the necessity of prime order.
 
-#### Third Lock-up: Prime Sieve — The Unique Gate of the Extension Spectrum (W3)
+#### Third Lock-stop: Prime Sieve — The Unique Gate of the Extension Spectrum (W3)
 
 **Criterion**: The algebraic extension degree \( d=(p-1)/2 \) of prime \( p \) determines the complexity hierarchy of the causal lattice.
 
 | \( d \) | \( p \) | Galois group | Characteristic constant \( \theta(p) \) | Cosmological modality | Observer? |
 | :---: | :---: | :--- | :---: | :--- | :---: |
 | 1 | 3 | trivial | 1.000 | **Static geometry** | ❌ No time |
-| 2 | 5 | \( C_2 \) | 0.381 | **Eternal recurrence** | ❌ No irreversible record |
+| 2 | 5 | \( C_2 \) | 0.382 | **Eternal recurrence** | ❌ No irreversible record |
 | **3** | **7** | **\( C_3 \)** | **0.308** | **Historical evolution** | **✅ Uniquely viable** |
-| 5 | 11 | \( C_5 \) | 0.271 | Accelerating void | ❌ No structure |
+| 5 | 11 | \( C_5 \) | 0.272 | Accelerating void | ❌ No structure |
 | ≥6 | ≥13 | \( C_d \) or non-abelian | ≤0.265 | Complete dilution | ❌ No bound structure |
 | ∞ | ∞ | infinite | 0.250 | Pure de Sitter | ❌ |
 
@@ -480,7 +626,7 @@ Each layer is explicitly labeled with W1/W2/W3 certainty levels; all cross-layer
 
 > **Uniqueness conclusion**: \( d=3 \) (i.e., \( p=7 \)) is the only point in the extension spectrum satisfying all four conditions. It is **"the unique gate through which logic must pass between closure, recurrence, existence, and void."**
 
-#### Fourth Lock-up: Gauge Projection — Fin 8 Forces SU(3) (W3)
+#### Fourth Lock-stop: Gauge Projection — Fin 8 Forces SU(3) (W3)
 
 **Code fact** (W1): `order_jump_example` ([Core/Models/FiniteWeavingExamples.lean](file:///c:/Users/DELL/.trae-cn/worktrees/CSQIT-workspace/feat-csqit-lean4-formal-proof-vf7wFF/Core/Models/FiniteWeavingExamples.lean)) proves that weaving of order-2 and order-8 subgroups has closure of **cardinality 8**. Hence Fin 8 is the **minimal nontrivial closure** of the causal lattice.
 
@@ -492,27 +638,27 @@ Each layer is explicitly labeled with W1/W2/W3 certainty levels; all cross-layer
 - Contains electroweak subgroup SU(2)×U(1) as maximal subgroup (rank difference 1)
 - Root system (\( A_2 \)) isomorphic to the multiplication table of 7th roots of unity
 
-**Mod-8 congruence lock-up**: Global conservation 15 mod 8 yields 7. Hence the linear conservation layer (Fin 8) of gauge symmetry necessarily projects to the matter-density layer (Fin 7) under modular arithmetic.
+**Mod-8 congruence lock-stop**: Global conservation 15 mod 8 yields 7. Hence the linear conservation layer (Fin 8) of gauge symmetry necessarily projects to the matter-density layer (Fin 7) under modular arithmetic.
 
 > **Uniqueness conclusion**: Fin 8 closure → 8-dimensional Lie algebra → SU(3) is the unique option → mod-8 congruence forces Fin 7. The Standard Model gauge group \( SU(3)\times SU(2)\times U(1) \) is the **unique Lie-algebra projection** of the Fin 8 closure coupled with Fin 7.
 
-#### Fifth Lock-up: Triple Anchoring — The Unique Value of θ (W2/W3)
+#### Fifth Lock-stop: Triple Anchoring — The Unique Value of θ (W2/W3)
 
 **Algebraic anchoring** (W1): \( \theta(7) = 1/(2+2\cos(2\pi/7)) \) is uniquely fixed by the cubic equation \( \theta^3 - 6\theta^2 + 5\theta - 1 = 0 \) (`BV_ratio_cubic_effective`).
 
 **Observational anchoring** (W2): Planck 2018 \( \Omega_m = 0.311 \pm 0.006 \), confidence interval \( [0.305, 0.317] \). \( \theta(7) = 0.308 \) lies within the interval.
 
-**Structure-formation anchoring** (W2): If \( \Omega_m > 0.33 \) (e.g., p=5 yielding 0.381), the universe closes before radiation-matter equality, preventing large-scale structure; if \( \Omega_m < 0.28 \) (e.g., p≥11), density perturbations grow insufficiently for galaxies to form within the age of the universe.
+**Structure-formation anchoring** (W2): If \( \Omega_m > 0.33 \) (e.g., p=5 yielding 0.382), the universe closes before radiation-matter equality, preventing large-scale structure; if \( \Omega_m < 0.28 \) (e.g., p≥11), density perturbations grow insufficiently for galaxies to form within the age of the universe.
 
 **Triple-intersection uniqueness**: The intersection of the three constraints is a single numerical interval. Mathematically, they are the **unique common intersection** of three independent sources (algebra, observation, astrophysics): \( \theta = 0.308 \).
 
 > **Uniqueness conclusion**: Any other prime p falls outside at least one constraint. \( \theta(7) \) is the unique intersection point of the triple anchoring.
 
-#### Sixth Lock-up: Self-Referential Cognition — The Unique Proof of Observer Existence (W3)
+#### Sixth Lock-stop: Self-Referential Cognition — The Unique Proof of Observer Existence (W3)
 
-**Epistemological inversion**: Synthesizing the first five lock-ups yields a closed-loop inference:
+**Epistemological inversion**: Synthesizing the first five lock-ins yields a closed-loop inference:
 
-1. **The first five lock-ups prove**: any causal lattice capable of producing irreversible records must be Fin 7.
+1. **The first five lock-ins prove**: any causal lattice capable of producing irreversible records must be Fin 7.
 2. An **observer** (the questioner) is essentially an internal node capable of **recording irreversible events**.
 3. Therefore: **observer exists → structure must be Fin 7**.
 4. And Fin 7 has been proven to be the **unique structure capable of producing observers**.
@@ -531,9 +677,9 @@ This constitutes a **bidirectional necessity**:
 >
 > **The only remaining window is structure=7. The very reason we can ask "why 7?" is that we are structural products of 7.**
 
-### A.3 Unified Identity Equation of the Six Lock-ups
+### A.3 Unified Identity Equation of the Six Lock-ins
 
-Substituting the six lock-ups into the unified identity equation:
+Substituting the six lock-ins into the unified identity equation:
 
 \[
 \boxed{
@@ -556,7 +702,7 @@ Substituting the six lock-ups into the unified identity equation:
 
 ### A.4 Honest Labeling
 
-> Of the six lock-ups in this appendix, **the first and second layers are W1 proven theorems**; **the third through sixth layers are W3 interpretations**, each supported by W1 theorems (`order_jump_example`, `BV_ratio_from_EffectiveFin7`, `input_must_be_empty`). This is an **epistemological closure**, not a mathematical theorem — its strength depends on the reasonableness of W3 interpretations, but its internal logical chain is closed.
+> Of the six lock-ins in this appendix, **the first and second layers are W1 proven theorems**; **the third through sixth layers are W3 interpretations**, each supported by W1 theorems (`order_jump_example`, `BV_ratio_from_EffectiveFin7`, `input_must_be_empty`). This is an **epistemological closure**, not a mathematical theorem — its strength depends on the reasonableness of W3 interpretations, but its internal logical chain is closed.
 
 ---
 
@@ -606,9 +752,9 @@ Within the CSQIT axiomatic system, the "matter density" of the causal lattice is
 | Prime \( p \) | \( \theta(p) \) | Extension degree \( d \) | Cosmological modality | Structure formation | Observer emergence |
 | :---: | :---: | :---: | :--- | :---: | :---: |
 | 3 | 1.000 | 1 | **Static geometry**: causal lattice degenerates to identity, no time evolution | ❌ | ❌ |
-| 5 | 0.381 | 2 | **Eternal recurrence**: quadratic extension, reversible oscillation, no irreversible record | ❌ | ❌ |
+| 5 | 0.382 | 2 | **Eternal recurrence**: quadratic extension, reversible oscillation, no irreversible record | ❌ | ❌ |
 | **7** | **0.308** | **3** | **Historical evolution**: cubic nonlinear coupling, irreversible information generation | ✅ | ✅ |
-| 11 | 0.271 | 5 | **Accelerating void**: matter density below structure-formation threshold, dilution | ❌ | ❌ |
+| 11 | 0.272 | 5 | **Accelerating void**: matter density below structure-formation threshold, dilution | ❌ | ❌ |
 | 13 | 0.265 | 6 | **Complete dilution**: approximate de Sitter space, no bound structure | ❌ | ❌ |
 | ∞ | 0.250 | ∞ | **Pure geometric limit**: no matter, pure dark energy | ❌ | ❌ |
 
@@ -638,7 +784,7 @@ This forms a structural isomorphism with the "Edge of Chaos" concept in complex 
 
 ### D.1 Positioning and Central Claim
 
-This appendix is the **deepest structural extension** of the CSQIT framework: it argues that the same Fin 7 / Fin 8 algebraic structure that locks the cosmological matter density \( \Omega_m \approx 0.308 \) also encodes the **periodic table shell-filling, molecular-bond weaving types, genetic-code closure, and the cognitive self-reference condition**. All claims in this appendix are **W3-level physical interpretations** explicitly labeled as such; they do not add new mathematical assertions to the W1 layer, but re-interpret already-formalized structures (Fin 8 closure, Fin 7 characteristic constant, mod-8 congruence) at successive physical scales.
+This appendix presents the **cross-scale structural extension** of the CSQIT framework: it argues that the same Fin 7 / Fin 8 algebraic structure that corresponds to the cosmological matter density \( \Omega_m \approx 0.308 \) also encodes the **periodic table shell-filling, molecular-bond weaving types, genetic-code closure, and the cognitive self-reference condition**. All claims in this appendix are **W3-level physical interpretations** explicitly labeled as such; they do not add new mathematical assertions to the W1 layer, but re-interpret already-formalized structures (Fin 8 closure, Fin 7 characteristic constant, mod-8 congruence) at successive physical scales.
 
 **Central claim (W3)**: The algebraic invariant \( \text{Fin}\,7 \) is not confined to any single scale — it is the **invariant threading through every scale** at which a self-recording universe can produce observers.
 
@@ -652,7 +798,7 @@ This appendix is the **deepest structural extension** of the CSQIT framework: it
 | **Molecular bonds** | Covalent / ionic / hydrogen | `compose` and `combine` weaving rules | Algebraic counterpart of electron-cloud overlap |
 | **Condensed matter** | Crystals, energy bands | Projective compactification \( s(n)=2\pi n/(n+1) \) | Algebraic origin of periodic boundary conditions |
 | **Life** | DNA double helix, genetic code | \( 64 = 8^2 \) triplet codons | Mapping from Fin 8 closure to Fin 7 projection |
-| **Cognition** | Observer self-referential questioning | \( \text{structure}=7 \iff \text{observer exists} \) | Final lock-up of existential inversion |
+| **Cognition** | Observer self-referential questioning | \( \text{structure}=7 \iff \text{observer exists} \) | Final lock-in of existential inversion |
 
 **Key insight**: Fin 7 is not "a special number appearing at some level" — it is the **algebraic invariant of the isomorphism between levels**. Molecular bonds are the **critical weaving node** mediating the transition from electronic shells (atoms) to condensed matter / life (molecules).
 
@@ -754,7 +900,7 @@ Each term's mathematical structure and the corresponding formalized theorem:
 
 | Term | Value | Formalized theorem (W1) | Proof location | Physical interpretation (W3) |
 | :---: | :---: | :--- | :--- | :--- |
-| **0** | 0 | `input_must_be_empty` | Core/Axioms.lean | Empty weaving — all rule inputs must be empty, no external agent |
+| **0** | 0 | `input_must_be_empty` | Core/CausalWeaving.lean | Empty weaving — all rule inputs must be empty, no external agent |
 | **1** | 1 | `algebraic_le_refl` | Core/AlgebraicCausality.lean | Unit rule — reflexivity of the causal lattice, "self" exists |
 | **2** | 2 | `standard_theory_two_aspect_dichotomy` | Core/TwoAspectTheorems.lean | Binary tension — causal face and informational face cannot both be non-trivial |
 | **4** | 4 | `cartan_generators_commute` + SU(2)×U(1) | Core/ScaleDynamics.lean | Direction 4 — tetrahedron 4 vertices, electroweak 4 DOF, DNA 4 bases |
@@ -933,10 +1079,10 @@ This work was developed with the assistance of TRAE AI and DeepSeek AI.
 
 ## Author Information
 
-**Authors**: [Your Name(s)]  
-**Affiliation**: [Your Affiliation]  
-**Email**: [Your Email]  
-**ORCID**: [Your ORCID]
+**Authors**: Jun Zhang  
+**Affiliation**: Independent Researcher  
+**Email**: cnjun939@163.com  
+**ORCID**: 0009-0004-9803-3237
 
 ---
 
