@@ -93,8 +93,11 @@ Dockerfile.csqit
 Cover_Letter*.md
 *_Submission_Guide.md
 *_投稿材料评审报告*.md
-CSQIT_SourceCodeOfUniverse_PRL*.tex
-CSQIT_SourceCodeOfUniverse_PRL*.pdf
+**/CSQIT_SourceCodeOfUniverse_PRL*.tex
+**/CSQIT_SourceCodeOfUniverse_PRL*.pdf
+PRD_Submission_Guide.md
+DOCKER_BUILD_GUIDE.md
+WORKFLOW_README.md
 
 # Temporary files
 commit_msg.txt

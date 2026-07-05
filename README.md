@@ -22,13 +22,14 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 
 **四闭合环**：代数（三次方程 $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$）→ 几何（3x3 仿射平面）→ 物理（$\Omega_m$）→ 生物（DNA 碱基）
 
-**论文**：
+**论文**（位于 `papers/` 目录）：
 - 英文版（PDF）: [The Source Code of the Universe](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf)
 - 中文版（PDF）: [宇宙的源代码](papers/CSQIT_宇宙的源代码_zh_v11.2.0.pdf)
-- LaTeX源文件（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex](CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex)
-- LaTeX源文件（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.tex](CSQIT_宇宙的源代码_zh_v11.2.0.tex)
-- Markdown版（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.md](CSQIT_SourceCodeOfUniverse_en_v11.2.0.md)
-- Markdown版（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.md](CSQIT_宇宙的源代码_zh_v11.2.0.md)
+- LaTeX源文件（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex)
+- LaTeX源文件（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.tex](papers/CSQIT_宇宙的源代码_zh_v11.2.0.tex)
+- Markdown版（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.md](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.md)
+- Markdown版（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.md](papers/CSQIT_宇宙的源代码_zh_v11.2.0.md)
+- 参考文献: [references.bib](papers/references.bib)
 
 ---
 
@@ -114,12 +115,14 @@ CSQIT/
 │   ├── AppendixD/BlackHoleThermo.lean # D: 黑洞热力学
 │   └── AppendixE/Mathematics.lean    # E: 数学基础
 ├── FutureWork/                       # 未来工作探索
-├── papers/                           # 论文预印本（PDF）
-│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf  # 英文完整版
-│   └── CSQIT_宇宙的源代码_zh_v11.2.0.pdf          # 中文完整版
-├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex  # 英文 LaTeX 源文件
-├── CSQIT_宇宙的源代码_zh_v11.2.0.tex            # 中文 LaTeX 源文件
-├── references.bib                    # 参考文献
+├── papers/                           # 论文预印本与源文件
+│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf  # 英文完整版 PDF
+│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.pdf          # 中文完整版 PDF
+│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex  # 英文 LaTeX 源文件
+│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.tex          # 中文 LaTeX 源文件
+│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.md   # 英文 Markdown 版
+│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.md           # 中文 Markdown 版
+│   └── references.bib                              # 参考文献
 ├── lakefile.lean                     # Lake 项目配置
 ├── lean-toolchain                    # Lean 版本锁定
 ├── LICENSE.txt                       # MIT 许可证
