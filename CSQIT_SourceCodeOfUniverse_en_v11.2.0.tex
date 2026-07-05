@@ -2,20 +2,58 @@
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{cleveref}
 \usepackage{braket}
+\usepackage{pifont}
+\usepackage{booktabs}
+\usepackage{hyperref}  % 必须在其他包之后加载
+\usepackage{cleveref}  % 必须在 hyperref 之后
+
+% 修复 revtex4-2 4.2f 初始化 bug：collaboration@sw 等开关未被预初始化
+\makeatletter
+\@booleanfalse\collaboration@sw
+\makeatother
+
+% revtex4-2 4.2f 缺少 \orcid 命令定义（导言区使用，不产生输出）
+\providecommand{\orcid}[1]{\gdef\@orcid{#1}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+% 标题层级样式（居中，符合APS规范，但放大字号让大段落标题更突出）
+\makeatletter
+\def\section{%
+  \@startsection{section}{1}{\z@}
+    {1.0cm \@plus1ex \@minus .2ex}{0.6cm}
+    {\normalfont\large\bfseries\centering}%
+}
+\def\subsection{%
+  \@startsection{subsection}{2}{\z@}
+    {.9cm \@plus1ex \@minus .2ex}{.5cm}
+    {\normalfont\normalsize\bfseries\centering}%
+}
+\def\subsubsection{%
+  \@startsection{subsubsection}{3}{\z@}
+    {.8cm \@plus1ex \@minus .2ex}{.5cm}
+    {\normalfont\normalsize\itshape\centering}%
+}
+\makeatother
+
+% 修复 revtex4-2 4.2f 初始化 bug：
+% 1. 手动触发 \frontmatter@init 初始化 \@affil@match 等开关
+% 2. 立即清空 \frontmatter@init，阻止 \AtBeginDocument 再次执行（否则会重置 \@title 为 "No title"）
+\makeatletter
+\frontmatter@init
+\let\frontmatter@init\@empty
+\makeatother
 
 \title{The Source Code of the Universe: Formal Deduction from Discrete Information to Cosmic Density}
 
-\author{Zhang Jun}
+\author{Jun Zhang}
 \affiliation{New Beginning Universe Research Group (Independent Researcher)}
 \email{cnjun939@163.com}
 \orcid{0009-0004-9803-3237}
 
 \begin{document}
-
-\maketitle
 
 \begin{abstract}
 We present CSQIT (Causal Structure Quantum Information Theory), a fully formalized discrete causal-information axiomatic framework implemented in Lean 4. Starting from a small set of axioms concerning causal relations, rule composition, and quantum amplitudes, we derive through machine-verifiable proofs a complete deductive chain from axioms to observable cosmology. A characteristic constant $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$ emerges naturally from the algebraic structure of cyclic group $\mathbb{Z}_7$. Under the duality interpretation, this constant corresponds to the observed total matter density $\Omega_m = 0.311$ (Planck 2018)~\cite{Planck2018} with a deviation of approximately 1\%. We further demonstrate that among primes $p=3,5,7,11,13,17,\ldots$, only $p=7$ yields $\theta(p)$ within the structure formation window $(0.28, 0.33)$, establishing a uniqueness constraint from algebraic structure to cosmological parameters. Epistemologically (W3), the theory frames observers as internal nodes of the causal lattice---what we observe is not a universe that ``chose'' 7, but rather that structure$=7$ is the necessary condition for observers like us to exist. This work demonstrates that a formalized axiomatic approach---with zero free parameters---can produce quantitative results comparable to observational data.
@@ -24,6 +62,8 @@ We present CSQIT (Causal Structure Quantum Information Theory), a fully formaliz
 \end{abstract}
 
 \keywords{Causal structure, quantum information, formalized verification, discrete physics, cosmology}
+
+\maketitle
 
 \section{Introduction}
 
@@ -39,9 +79,22 @@ The reconciliation of quantum mechanics and general relativity remains one of th
 
 CSQIT takes a different approach: starting from information-theoretic axioms and using formalized verification to derive consequences. The motivation is rooted in the idea that information is the primary substance of physical reality~\cite{Wheeler1989}.
 
-\subsection{Methodology}
+\subsection{Approach: Formal Deductive Chain from Axioms to Observation}
 
-\begin{table}[h]
+The methodology of CSQIT is: starting from information-theoretic axioms, through machine-verifiable formal proofs, derive numerical results that can be compared with observational cosmology. The entire process has zero free parameters. The structure of this deductive chain is as follows:
+
+\begin{enumerate}
+    \item \textbf{Source code layer}: 10 axioms (AxiomA--K, with AxiomE removed as it is derivable from AxiomA) define causal relations, rule composition, quantum amplitudes, and dynamical evolution.
+    \item \textbf{Compilation layer}: Starting from the axioms, formally prove structural theorems such as the Duality Two-One Theorem and algebraic causal order.
+    \item \textbf{Model layer}: Finite models (Fin 5, Fin 7, Fin 8) verify the consistency of the axiom system and generate characteristic values.
+    \item \textbf{Output layer}: The characteristic constant $\theta \approx 0.308$ is derived, deviating by approximately 1\% from the $\Omega_m \approx 0.311$ observed by Planck 2018.
+\end{enumerate}
+
+\subsection{Methodological Positioning}
+
+Three approaches to constructing physical theories are compared in \cref{tab:methodology}. CSQIT belongs to the third category: its starting point is neither observational data nor geometric intuition, but a minimal set of axioms about ``how information is structured.'' Formalized proofs ensure every step of the logical chain is machine-verifiable, and the agreement between the final numerical output and observation constitutes the empirical anchor.
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{llll}
 \hline
@@ -54,7 +107,9 @@ Principle-driven & Symmetry principles & Self-consistency & Multiple \\
 \end{tabular}
 \caption{Methodological comparison}
 \label{tab:methodology}
-\end{table}
+\end{table*}
+
+Precise boundary statement: the algebraic derivation from axioms to $\theta$ is a complete W1-level theorem; the correspondence from $\theta$ to $\Omega_m$ involves a W3-level interpretive leap; the convergence from discrete to continuous remains an open problem.
 
 \subsection{Contribution Summary}
 
@@ -70,7 +125,7 @@ This work makes seven key contributions:
     \item \textbf{Existential inversion (W3)}: structural necessity rather than cosmic choice as the epistemological framing
 \end{enumerate}
 
-\subsubsection{Epistemological Stance (W3)}
+\subsection{Epistemological Stance (W3)}
 
 The present work adopts a specific epistemological stance: \textbf{observers are internal nodes of the causal lattice, not external spectators}. This has the following consequences:
 
@@ -87,6 +142,22 @@ This stance is explicitly labeled W3 (interpretive layer) and is not required fo
 CSQIT extends and deepens the causal set program~\cite{Bombelli1987, Sorkin2005} in three ways: (1) deriving causal order from algebraic structure rather than taking it as primitive; (2) unifying causal and information aspects through the duality theorem; (3) providing an observational anchor through $\theta$. The relation to loop quantum gravity~\cite{Ambjorn1995} is more distant---CSQIT does not quantize geometry but starts from causal-informational primitives.
 
 All axioms and proofs are formalized in Lean 4~\cite{Lean2024} using the mathlib library. The complete source code (2196 compilation jobs, 0 errors) is available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+
+\subsection{Outline of This Paper}
+
+The narrative follows a growth path from simple to complex:
+
+\begin{itemize}
+    \item \textbf{\S 2 Source Code} (Seed): Axiomatic system---defining the rules of the game
+    \item \textbf{\S 3 First Bifurcation}: Duality Two-One Theorem---causality and information cannot both be realized
+    \item \textbf{\S 4 Emergence of Causality} (Roots): Algebraic causal order---causality grows out of algebraic structure
+    \item \textbf{\S 5 Numerical Anchor} (Trunk): Fin 7 model and the cosmological constant $\theta$---from structure to quantity
+    \item \textbf{\S 6 Scale Dynamics} (Branches): Projective compactification and gauge closure---time as a scale parameter
+    \item \textbf{\S 7 Arrow of Time} (Branches): Lattice-theoretic derivation of the second law---the necessity of entropy increase
+    \item \textbf{\S 8 Finiteness Boundary}: Fundamental limits of finite models---the boundary between the knowable and the unknowable
+    \item \textbf{\S 9 Honest Boundaries}: Open problems and incomplete proofs
+    \item \textbf{\S 10 Epistemology} (Fruit): The formal status of the internal observer
+\end{itemize}
 
 \section{Axiomatic System}
 
@@ -171,9 +242,9 @@ The honest labeling above does not preclude a deep structural argument for why $
 
 \subsubsection{Layer 1: Algebraic Structure---The Phase Transition from ``Linear'' to ``Cubic''}
 
-Consider the algebraic ``identity'' of $2\cos(2\pi/p)$ in algebraic number theory:
+Consider the algebraic ``identity'' of $2\cos(2\pi/p)$ in algebraic number theory. The algebraic correspondence is summarized in \cref{tab:algebraic}.
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -186,7 +257,7 @@ Prime $p$ & $2\cos(2\pi/p)$ & Degree & Number Field & CSQIT $\theta$ & Structura
 \end{tabular}
 \caption{Algebraic complexity threshold: why cubic is the minimal non-trivial degree}
 \label{tab:algebraic}
-\end{table}
+\end{table*}
 
 \textbf{Algebraic watershed}:
 \begin{itemize}
@@ -221,9 +292,9 @@ In the $\Lambda$CDM model, $\Omega_m \approx 0.311$ is a fitted parameter. But i
 
 \subsubsection{Expansion Spectrum and Structure Formation Window}
 
-To systematically assess the uniqueness of $p=7$, we define the expansion degree $d(p) = (p-1)/2$ for each prime $p \ge 3$, and compute $\theta(p) = 1/(2+2\cos(2\pi/p))$. The results form a monotonically decreasing sequence:
+To systematically assess the uniqueness of $p=7$, we define the expansion degree $d(p) = (p-1)/2$ for each prime $p \ge 3$, and compute $\theta(p) = 1/(2+2\cos(2\pi/p))$. The results form a monotonically decreasing sequence, as shown in \cref{tab:expansion_spectrum}:
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{ccclc}
 \hline
@@ -240,7 +311,7 @@ $\infty$ & $\infty$ & 0.250 & Continuum limit, pure de Sitter & No (below) \\
 \end{tabular}
 \caption{Algebraic expansion spectrum: $\theta(p)$ is strictly monotonically decreasing for primes $p \ge 3$. Only $p=7$ falls within the structure formation window $(0.28, 0.33)$.}
 \label{tab:expansion_spectrum}
-\end{table}
+\end{table*}
 
 \textbf{Mathematical property}: $\theta(p)$ is strictly monotonically decreasing for primes $p \ge 3$. As $p \to \infty$, $\theta(p) \to 0.25$.
 
@@ -323,7 +394,10 @@ Time is not a fundamental dimension---it is the scalar parameter of the causal l
 
 \textbf{Structural meaning of 3+1}:
 \[
-\text{Spacetime} = 3 + 1 \iff \text{stable closure of cubic extension (3)} + \text{projective tracking scale (1)}
+\begin{aligned}
+&\text{Spacetime} = 3 + 1 \\
+&\iff \text{stable closure (3)} + \text{projective tracking (1)}
+\end{aligned}
 \]
 
 In everyday language, ``the passage of time'' translates in the CSQIT framework to: the weaving structure of the causal lattice continuously approaches the projective circle along the refinement sequence, and the process of $s(n) = 2\pi n/(n+1) \to 2\pi$ is perceived as time by internal observers.
@@ -337,6 +411,8 @@ The entropy of a closed system never decreases.
 \begin{theorem}[Past Hypothesis as Theorem]
 The low-entropy initial state is a consequence of the causal structure, not an independent assumption~\cite{Penrose2004}.
 \end{theorem}
+
+\noindent\textbf{Precise statement of the information causality bound}: The causal monotonicity of entropy (AxiomI) implies a \textbf{cardinality bound on the entropy of finite causal sets} ($|S| \le |M|$), which is a \textit{combinatorial} counterpart of the Bekenstein bound~\cite{Bekenstein1973}. We do \textbf{not} claim to have derived the area law of black hole entropy; the relation between these two structures---if any---is an open problem at the W2/W3 level.
 
 \section{Limits of Finite Models}
 
@@ -358,7 +434,9 @@ We distinguish three levels of certainty:
     \item \textbf{W3 (Physical interpretation)}: Conjectural interpretations
 \end{itemize}
 
-\begin{table}[h]
+The three levels of certainty (W1/W2/W3) are summarized in \cref{tab:levels}.
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{lll}
 \hline
@@ -373,7 +451,7 @@ Thermodynamic arrow & W1 & \checkmark Proven \\
 \end{tabular}
 \caption{Certainty levels}
 \label{tab:levels}
-\end{table}
+\end{table*}
 
 \subsection{Sorry Audit}
 
@@ -455,11 +533,11 @@ Substituting the four closure loops into the CSQIT axiomatic system, we obtain t
 \[
 \boxed{
 \begin{aligned}
-&\Omega_m \equiv \theta(7) \approx 0.308 \quad &\text{(cosmological scale)} \\
-&\text{Periodic table} \iff \text{Fin 7 shell filling} \quad &\text{(atomic scale)} \\
-&\text{Molecular bonds} \iff \text{compose} + \text{combine} \quad &\text{(molecular scale)} \\
-&64\text{ codons} \iff 8^2\text{ weaving pairs} \quad &\text{(life scale)} \\
-&\text{Observer existence} \iff \text{structure}=7 \quad &\text{(cognitive scale)}
+&\Omega_m \equiv \theta(7) \approx 0.308 \;\; \text{(cosmological)} \\
+&\text{Periodic table} \iff \text{Fin 7 shell filling} \;\; \text{(atomic)} \\
+&\text{Molecular bonds} \iff \texttt{compose}+\texttt{combine} \;\; \text{(molecular)} \\
+&64\text{ codons} \iff 8^2\text{ weaving pairs} \;\; \text{(life)} \\
+&\text{Observer existence} \iff \text{structure}=7 \;\; \text{(cognitive)}
 \end{aligned}
 }
 \]
@@ -535,7 +613,7 @@ Each layer is explicitly labeled with W1/W2/W3 certainty levels; all cross-layer
 
 \textbf{Criterion}: The algebraic extension degree $d=(p-1)/2$ of prime $p$ determines the complexity hierarchy of the causal lattice.
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
@@ -550,7 +628,7 @@ $\infty$ & $\infty$ & infinite & 0.250 & Pure de Sitter & \ding{55} \\
 \hline
 \end{tabular}
 \caption{Prime sieve: extension spectrum and cosmological modality}
-\end{table}
+\end{table*}
 
 \textbf{Uniqueness argument} (W3 interpretation):
 \begin{itemize}
@@ -621,11 +699,11 @@ $$
 \boxed{
 \begin{aligned}
 &\text{Axiomatic closure} \implies \text{self-contained rules} \\
-&\text{Two-aspect conflict} \implies \text{prime-order cyclic group} \\
-&\text{Extension spectrum} \implies p=7 \quad (d=3, \text{unique gate}) \\
-&\text{Fin 8 closure} \implies \text{SU(3) unique projection} \\
+&\text{Two-aspect conflict} \implies \text{prime-order cyclic} \\
+&\text{Extension spectrum} \implies p=7 \;(d=3) \\
+&\text{Fin 8 closure} \implies \text{SU(3) projection} \\
 &\text{Triple anchoring} \implies \theta = 0.308 \equiv \Omega_m \\
-&\text{Self-referential closure} \implies \text{Observer exists} \iff \text{Structure}=7
+&\text{Self-ref. closure} \implies \text{Observer} \iff \text{Str.}=7
 \end{aligned}
 }
 $$
@@ -643,9 +721,9 @@ Of the six lock-ins in this appendix, \textbf{the first and second layers are W1
 
 This table presents in \textbf{simplest form}: each CSQIT axiom $\to$ corresponding physical principle $\to$ role in standard theory. It serves as the ``physical-motivation index'' of the main text.
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{|p{1.5cm}|p{3.5cm}|p{3.5cm}|p{4cm}|}
 \hline
 \textbf{CSQIT Axiom} & \textbf{Formal definition} & \textbf{Corresponding physical principle} & \textbf{Role in standard theory} \\
@@ -674,7 +752,7 @@ AxiomK & Total order, universality of past causal entropy & \textbf{Eternal pres
 \hline
 \end{tabular}
 \caption{CSQIT axiom --- physical principle correspondence}
-\end{table}
+\end{table*}
 
 \subsection{Table Note}
 
@@ -697,7 +775,9 @@ Within the CSQIT axiomatic system, the ``matter density'' of the causal lattice 
 
 \subsection{Qualitative Phase Diagram}
 
-\begin{table}[h]
+The qualitative phase diagram across primes $p$ is summarized in \cref{tab:phase_diagram}, showing how algebraic complexity determines cosmological modality, structure formation, and observer emergence.
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
@@ -712,7 +792,8 @@ $\infty$ & 0.250 & $\infty$ & Pure geometric limit: pure dark energy & \ding{55}
 \hline
 \end{tabular}
 \caption{Structure formation phase diagram across primes}
-\end{table}
+\label{tab:phase_diagram}
+\end{table*}
 
 \subsection{Phase Boundaries}
 
@@ -742,7 +823,9 @@ This appendix presents the \textbf{cross-scale structural extension} of the CSQI
 
 \subsection{Cross-Scale Chain}
 
-\begin{table}[h]
+The cross-scale chain from cosmological to cognitive scales is summarized in \cref{tab:cross_scale}, demonstrating that Fin 7 is not a ``special number appearing at a particular layer'' but an algebraic invariant running through all growth layers.
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
@@ -758,7 +841,8 @@ Cognition & Observer self-reference & structure=7 $\iff$ observer & Existential 
 \hline
 \end{tabular}
 \caption{Cross-scale holographic isomorphism chain}
-\end{table}
+\label{tab:cross_scale}
+\end{table*}
 
 \textbf{Key insight}: Fin 7 is not ``a special number appearing at some level'' --- it is the \textbf{algebraic invariant of the isomorphism between levels}. Molecular bonds are the \textbf{critical weaving node} mediating the transition from electronic shells (atoms) to condensed matter / life (molecules).
 
@@ -788,7 +872,7 @@ Molecular symmetries (e.g., the tetrahedron of CH$_4$, the hexagon of benzene) c
 
 The precise correspondence between \textbf{64 genetic codons} and the \textbf{complete closure of Fin 8} ($8^2 = 64$):
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
@@ -800,13 +884,16 @@ DNA double helix & Base pairing & Two-aspect theorem complementarity \\
 \hline
 \end{tabular}
 \caption{Genetic code as Fin 8 closure}
-\end{table}
+\end{table*}
 
 \textbf{Statement (W3)}: In CSQIT, \texttt{order\_jump\_example} proves that Fin 8 is the minimal non-trivial closure of the causal lattice; its complete set of internal ordered relation pairs is $8^2 = 64$, coinciding with the number of genetic codons. Even more strikingly, of the 64 codons, \textbf{61 encode amino acids} (visible-matter correspondence: non-zero amplitude) and \textbf{3 are stop codons} (dark-matter correspondence: zero amplitude) --- a precise isomorphism with CSQIT's matter-classification theorem (\S 5.4).
 
 \textbf{Syntactic compression}:
 \[
-\boxed{\text{Genetic code} = \text{Fin 8 complete closure projected onto Fin 7 matter classification}}
+\boxed{\begin{aligned}
+&\text{Genetic code} = \text{Fin 8 complete closure} \\
+&\quad\text{projected onto Fin 7 matter classification}
+\end{aligned}}
 \]
 
 This suggests that the genetic code is \textbf{not a chance product of natural selection}, but the \textbf{inevitable information-encoding pattern} when the causal lattice reaches complete closure ($8^2$).
@@ -817,11 +904,11 @@ Incorporating molecular bonds and the genetic code, the \textbf{extended unified
 \[
 \boxed{
 \begin{aligned}
-&\Omega_m \equiv \theta(7) \approx 0.308 \quad &&\text{(cosmological scale)} \\
-&\text{Periodic table} \iff \text{Fin 7 shell filling} \quad &&\text{(atomic scale)} \\
-&\text{Molecular bonds} \iff \texttt{compose} + \texttt{combine} \quad &&\text{(molecular scale)} \\
-&64\text{ codons} \iff 8^2\text{ weaving pairs} \quad &&\text{(life scale)} \\
-&\text{Observer exists} \iff \text{structure}=7 \quad &&\text{(cognitive scale)}
+&\Omega_m \equiv \theta(7) \approx 0.308 \;\; \text{(cosmological)} \\
+&\text{Periodic table} \iff \text{Fin 7 shell filling} \;\; \text{(atomic)} \\
+&\text{Molecular bonds} \iff \texttt{compose}+\texttt{combine} \;\; \text{(molecular)} \\
+&64\text{ codons} \iff 8^2\text{ weaving pairs} \;\; \text{(life)} \\
+&\text{Observer exists} \iff \text{structure}=7 \;\; \text{(cognitive)}
 \end{aligned}
 }
 \]
@@ -855,8 +942,9 @@ All interpretations in this appendix are \textbf{W3-level (physical interpretati
 
 Each term's mathematical structure and the corresponding formalized theorem:
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
+\scriptsize
 \begin{tabular}{|c|c|l|l|l|}
 \hline
 Term & Value & Formalized theorem (W1) & Proof location & Physical interpretation (W3) \\
@@ -871,7 +959,7 @@ $\infty$ & $\infty$ & \texttt{projectiveScale} limit & Core/ScaleDynamics.lean &
 \hline
 \end{tabular}
 \caption{Binary sequence with formalized theorem mapping}
-\end{table}
+\end{table*}
 
 \subsection{Physical Reality of Each Step}
 
@@ -950,7 +1038,7 @@ Infinity is not the square recursion but the projective compactification:
 \lim_{n\to\infty} s(n) = \lim_{n\to\infty} \frac{2\pi n}{n+1} = 2\pi
 \]
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|l|l|l|l|l|}
 \hline
@@ -962,7 +1050,7 @@ Refinement & $64 \to \infty$ & Projective compactification & Approaching the lim
 \hline
 \end{tabular}
 \caption{Two-phase structure of the binary sequence}
-\end{table}
+\end{table*}
 
 \subsection{Why the Sequence Turns at 8}
 
@@ -981,25 +1069,39 @@ Refinement & $64 \to \infty$ & Projective compactification & Approaching the lim
 
 \[
 \boxed{
-\text{Generation: } 0 \xrightarrow{1} 2 \xrightarrow{2} 4 \xrightarrow{2} 8 \quad \text{(powers of 2, stable closure)}
+\begin{aligned}
+&\text{Generation: } 0 \xrightarrow{1} 2 \xrightarrow{2} 4 \xrightarrow{2} 8 \\
+&\quad\text{(powers of 2, stable closure)}
+\end{aligned}
 }
 \]
 
 \[
 \boxed{
-\text{Saturation: } 8 \xrightarrow{8^2} 64 \xrightarrow{64^2} \infty \quad \text{(square recursion, full closure } \to \text{ continuum limit)}
+\begin{aligned}
+&\text{Saturation: } 8 \xrightarrow{8^2} 64 \xrightarrow{64^2} \infty \\
+&\quad\text{(square recursion, full closure } \to \text{ continuum limit)}
+\end{aligned}
 }
 \]
 
 \[
 \boxed{
-\text{Why no 16 and 32? Because they are algebraically forced out --- no composite-order lattice can carry a unitary and injective causal-information structure.}
+\begin{aligned}
+&\text{Why no 16 and 32? Because they are} \\
+&\text{algebraically forced out --- no composite-order} \\
+&\text{lattice can carry a unitary and injective} \\
+&\text{causal-information structure.}
+\end{aligned}
 }
 \]
 
 \[
 \boxed{
-\text{Time} = \text{tracking parameter from 64 to } \infty \quad \text{Direction 4} = \text{intrinsic four-fold symmetry of 3D space}
+\begin{aligned}
+&\text{Time} = \text{tracking parameter from 64 to } \infty \\
+&\text{Direction 4} = \text{intrinsic four-fold symmetry of 3D space}
+\end{aligned}
 }
 \]
 
@@ -1031,7 +1133,7 @@ The sequence structure ($0\to 1\to 2\to 8$) of this appendix has \textbf{complet
 
 \acknowledgments
 
-The author is an independent researcher and would like to thank TRAE AI and DeepSeek AI for assistance with Lean 4 formalization and manuscript preparation. This work was conducted independently without external funding. The author declares no conflicts of interest. The complete source code, formal proofs, and supplementary materials are publicly available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+I thank the Lean community and the mathlib contributors for making formalized mathematics accessible. I also thank TRAE AI and DeepSeek AI for their strong and efficient assistance with Lean 4 formalization and manuscript preparation. This work was conducted independently without external funding. The author declares no conflicts of interest. The complete source code, formal proofs, and supplementary materials are publicly available at \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
 
 \bibliography{references}
 

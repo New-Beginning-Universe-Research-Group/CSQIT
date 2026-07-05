@@ -2,18 +2,61 @@
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{cleveref}
 \usepackage{braket}
-\usepackage[UTF8]{ctex}
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}
+\setCJKsansfont{SimHei}
+\setCJKmonofont{FangSong}
+\setlength{\parindent}{2em}
+\normalsize
 \usepackage{pifont}    % 用于 \ding{51} (\checkmark) 和 \ding{55}
 \usepackage{booktabs}
+\usepackage{hyperref}  % 必须在其他包之后加载
+\usepackage{cleveref}  % 必须在 hyperref 之后
 
-% 中文字体配置（按需调整）
-\ctexset{
-  section/format = \Large\bfseries,
-  subsection/format = \large\bfseries
+% 修复 revtex4-2 4.2f 初始化 bug：collaboration@sw 等开关未被预初始化
+\makeatletter
+\@booleanfalse\collaboration@sw
+\makeatother
+
+% revtex4-2 4.2f 缺少 \orcid 命令定义（导言区使用，不产生输出）
+\providecommand{\orcid}[1]{\gdef\@orcid{#1}}
+
+\newtheorem{theorem}{定理}
+\newtheorem{definition}{定义}
+
+% 标题层级样式（左对齐，层级清晰，三级梯度）
+\makeatletter
+\def\section{%
+  \@startsection{section}{1}{\z@}
+    {1.0cm \@plus1ex \@minus .2ex}{0.6cm}
+    {\normalfont\Large\bfseries\raggedright}%
 }
+\def\subsection{%
+  \@startsection{subsection}{2}{\z@}
+    {.9cm \@plus1ex \@minus .2ex}{.5cm}
+    {\normalfont\large\bfseries\raggedright}%
+}
+\def\subsubsection{%
+  \@startsection{subsubsection}{3}{\z@}
+    {.8cm \@plus1ex \@minus .2ex}{.5cm}
+    {\normalfont\normalsize\bfseries\itshape\raggedright}%
+}
+\def\paragraph{%
+  \@startsection{paragraph}{4}{\parindent}{\z@}{-1em}
+    {\normalfont\normalsize\bfseries\raggedright}%
+}
+\makeatother
+
+% 中文字体配置（revtex4-2 自带 section 格式，无需额外 ctexset 配置）
+
+% 修复 revtex4-2 4.2f 初始化 bug：
+% 1. 手动触发 \frontmatter@init 初始化 \@affil@match 等开关
+% 2. 立即清空 \frontmatter@init，阻止 \AtBeginDocument 再次执行（否则会重置 \@title 为 "No title"）
+\makeatletter
+\frontmatter@init
+\let\frontmatter@init\@empty
+\makeatother
 
 \title{宇宙的源代码：从离散信息到宇宙密度的形式化演绎}
 
@@ -24,8 +67,6 @@
 
 \begin{document}
 
-\maketitle
-
 \begin{abstract}
 CSQIT（因果结构量子信息理论，Causal Structure Quantum Information Theory）是一个在 Lean 4 证明助手中完全形式化的离散因果-信息公理框架。从 10 条关于因果关系、规则复合与量子振幅的公理出发，通过机器可验证的形式化证明，我们推导出一条从公理到可观测宇宙学的完整演绎链。一个特征常数 $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$ 从循环群 $\mathbb{Z}_7$ 的代数结构中自然涌现。在两面性诠释下，该常数对应于观测到的宇宙总物质密度 $\Omega_m = 0.311$（Planck 2018）~\cite{Planck2018}，偏差约为 1\%。我们进一步证明，在素数 $p=3,5,7,11,13,17,\ldots$ 之中，仅有 $p=7$ 给出的 $\theta(p)$ 落在结构形成窗口 $(0.28, 0.33)$ 之内，从而建立了从代数结构到宇宙学参数的唯一性约束。在认识论层面（W3），本理论将观测者框定为因果格的内部节点——我们所观测到的，并非一个"选择了"7 的宇宙，而是"结构$=7$"是像我们这样的观测者得以存在的必要条件。本工作表明，一种形式化的公理化方法——零自由参数——能够产生与观测数据可比的定量结果。
 
@@ -35,6 +76,8 @@ CSQIT（因果结构量子信息理论，Causal Structure Quantum Information Th
 \end{abstract}
 
 \keywords{离散因果结构，量子信息，形式化验证，宇宙学，Lean 4，公理演绎，代数因果序}
+
+\maketitle
 
 \section{引言}
 
@@ -72,7 +115,7 @@ CSQIT 采用的方法论是：以信息论公理为起点，通过机器可验�
 
 三种构建物理理论的进路如表~\ref{tab:methodology} 所示。CSQIT 属于第三类。它的起点不是观测数据也不是几何直觉，而是关于"信息如何结构化"的一组最少公理。形式化证明确保逻辑链的每一步都是机器可验证的，最终数值与观测的吻合构成经验锚点。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{llll}
 \hline
@@ -85,7 +128,7 @@ CSQIT 采用的方法论是：以信息论公理为起点，通过机器可验�
 \end{tabular}
 \caption{方法论定位}
 \label{tab:methodology}
-\end{table}
+\end{table*}
 
 精确的边界陈述：从公理到 $\theta$ 的代数推导是完整的 W1 层定理；从 $\theta$ 到 $\Omega_m$ 的对应包含 W3 层诠释跳跃；从离散到连续的收敛性仍是开放问题。
 
@@ -103,7 +146,7 @@ CSQIT 采用的方法论是：以信息论公理为起点，通过机器可验�
     \item \textbf{存在性倒转（W3）}：结构性必然而非宇宙学选择的认识论框架
 \end{enumerate}
 
-\subsubsection{认识论立场（W3）}
+\subsection{认识论立场（W3）}
 
 本工作采取一个特定的认识论立场：\textbf{观测者是因果格的内部节点，而非外部旁观者}。其推论如下：
 
@@ -119,9 +162,9 @@ CSQIT 采用的方法论是：以信息论公理为起点，通过机器可验�
 
 CSQIT 与因果集理论共享"离散因果结构作为时空基底"的结构直觉，但在三个维度上深化了因果集纲领~\cite{Bombelli1987,Sorkin2005}：(1) 从代数结构导出因果序，而非作为基本假设；(2) 通过两面性定理统一因果与信息两个方面；(3) 通过 $\theta$ 提供观测锚点。与圈量子引力~\cite{Ambjorn1995} 的关系更远——CSQIT 不量子化几何，而是从因果-信息原语出发。
 
-CSQIT 与因果集理论存在结构性差异：
+CSQIT 与因果集理论的结构性差异如\cref{tab:causal_set} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{lll}
 \hline
@@ -137,7 +180,7 @@ CSQIT 与因果集理论存在结构性差异：
 \end{tabular}
 \caption{CSQIT 与因果集理论的结构性差异}
 \label{tab:causal_set}
-\end{table}
+\end{table*}
 
 \textbf{叙事原则（W3）}：本工作的叙事原则是客观生长——不预设任何物理结论，只从公理出发，沿着逻辑必然性逐层展开。每一步的生长都由前一步的数学结构强制决定——没有任何自由参数，也没有任何外部输入。
 
@@ -167,7 +210,7 @@ CSQIT 与因果集理论存在结构性差异：
 
 设 $M$ 为"关系元"（events）的类型，$C$ 为"规则"（causal operations）的类型：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 class AxiomA (M C : Type*) where
   input : C → List M
   output : C → M
@@ -175,16 +218,17 @@ class AxiomA (M C : Type*) where
   compose : C → C → C
   compose_input : ∀ α β, input (compose α β) = input α ++ input β
   compose_output : ∀ α β, output (compose α β) = output β
-  compose_assoc : ∀ α β γ, compose (compose α β) γ = compose α (compose β γ)
-\end{verbatim}
+  compose_assoc : ∀ α β γ,
+    compose (compose α β) γ = compose α (compose β γ)
+\end{verbatim}}
 
 \textbf{诠释}：规则是接受关系元列表为输入、产生一个关系元为输出的运算，并以结合律复合。复合的输出由第二条规则决定——这创造了根本性的不对称。
 
 \textbf{关键定理}：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem input_must_be_empty [A : AxiomA M C] (α : C) : A.input α = []
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{证明}：由 \texttt{compose\_input} 和 \texttt{input\_nodup} 推出。核心观察：若 \texttt{input α} 非空，则 \texttt{input(compose α α) = input α ++ input α} 会有重复元素，与 \texttt{input\_nodup} 矛盾。
 
@@ -194,24 +238,27 @@ theorem input_must_be_empty [A : AxiomA M C] (α : C) : A.input α = []
 
 \subsection{AxiomA'：非退化输出}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 class AxiomA' (M C : Type*) where
   input : C → List M
   output : C → M
   input_nodup : ∀ α, (input α).Nodup
   compose : C → C → C
   combine : M → M → M
-  combine_assoc : ∀ a b c, combine (combine a b) c = combine a (combine b c)
+  combine_assoc : ∀ a b c,
+    combine (combine a b) c = combine a (combine b c)
   compose_input : ∀ α β, input (compose α β) = input α ++ input β
-  compose_output' : ∀ α β, output (compose α β) = combine (output α) (output β)
-  compose_assoc : ∀ α β γ, compose (compose α β) γ = compose α (compose β γ)
-\end{verbatim}
+  compose_output' : ∀ α β, output (compose α β)
+                      = combine (output α) (output β)
+  compose_assoc : ∀ α β γ,
+    compose (compose α β) γ = compose α (compose β γ)
+\end{verbatim}}
 
 \textbf{诠释}：\texttt{combine} 运算合并两个规则的输出，保留双方信息。当 \texttt{combine(a, b) = b} 时，标准 AxiomA 作为特例恢复。\texttt{combine} 的结合律使 $M$ 成为半群。
 
 \subsection{AxiomB：因果偏序}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 class AxiomB (M C : Type*) [A : AxiomA M C] where
   le : M → M → Prop
   lt : M → M → Prop
@@ -219,19 +266,19 @@ class AxiomB (M C : Type*) [A : AxiomA M C] where
   lt_iff_le_not_le
   localFinite_past, localFinite_future
   weaving_axiom : ∀ α x, x ∈ input α → lt x (output α)
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{诠释}：因果序 $\leq$ 是偏序，$<$ 是其严格版本。局部有限性保证每个事件的因果过去和未来都是有限集。通过 \texttt{input\_must\_be\_empty}，\texttt{weaving\_axiom} 在标准模型中空虚为真。
 
 \subsection{AxiomC：量子振幅}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 class AxiomC (M C : Type*) [A : AxiomA M C] where
   amplitude : C → ℂ
   norm_one : ∀ α, |amplitude α|² = 1
   comp_rule : ∀ α β, amplitude (compose α β) = amplitude α * amplitude β
   amplitude_injective : Function.Injective amplitude
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{诠释}：每条规则携带单位复振幅。复合时振幅相乘——离散路径积分。\texttt{norm\_one} 保证幺正性，且 $\text{amplitude}(\beta) \neq 0$（这是两面性二一定理证明的关键）。单射性保证振幅唯一编码规则身份。
 
@@ -249,12 +296,14 @@ class AxiomC (M C : Type*) [A : AxiomA M C] where
 
 \subsection{理论框架层级}
 
-\begin{verbatim}
-Theory (标准理论)     = AxiomA + B + C + D + F + G + H + I + J
-Theory' (增强理论)    = AxiomA' + B' + C' + D' + F' + G' + H' + I' + J'
-PartialTheory'        = AxiomA' + 部分公理（允许破坏某些条件）
-TheoryEternalNow      = Theory' + AxiomK
-\end{verbatim}
+{\scriptsize\begin{verbatim}
+Theory (标准理论)  = AxiomA + B + C + D
+                    + F + G + H + I + J
+Theory' (增强理论) = AxiomA' + B' + C' + D'
+                    + F' + G' + H' + I' + J'
+PartialTheory'     = AxiomA' + 部分公理
+TheoryEternalNow   = Theory' + AxiomK
+\end{verbatim}}
 
 \textbf{关键设计}：标准 Theory 受两面性二一定理约束，增强 Theory' 通过 \texttt{combine} 运算打破此约束。
 
@@ -271,13 +320,13 @@ TheoryEternalNow      = Theory' + AxiomK
 
 \textbf{等价形式}（\texttt{standard\_theory\_no\_two\_aspect\_balance}）：若 $output$ 非平凡，则 $amplitude$ 非单射。
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem standard_theory_no_two_aspect_balance
     [A : AxiomA M C] [B : AxiomB M C] [Cx : AxiomC M C]
     [Finite C] [DecidableEq C]
     (h_output_nontrivial : ∃ α β, A.output α ≠ A.output β) :
     ¬ Function.Injective Cx.amplitude
-\end{verbatim}
+\end{verbatim}}
 
 \begin{theorem}[两面性二一定理]
 在标准框架中，若输出函数非退化（因果非平凡），则振幅函数非单射（信息退化）。反之，若振幅函数单射（信息非平凡），则输出函数为常函数（因果退化）。
@@ -301,9 +350,9 @@ theorem standard_theory_no_two_aspect_balance
 
 \subsection{物理诠释（W3 层）}
 
-两面性二一定理是\textbf{离散互补性原理}：因果结构（output）与量子信息（amplitude）在标准理论中不可同时完全实现。
+两面性二一定理是\textbf{离散互补性原理}：因果结构（output）与量子信息（amplitude）在标准理论中不可同时完全实现。两面性定理与连续量子力学的对比如\cref{tab:duality} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{ll}
 \hline
@@ -316,7 +365,7 @@ theorem standard_theory_no_two_aspect_balance
 \end{tabular}
 \caption{两面性定理与连续量子力学的对比}
 \label{tab:duality}
-\end{table}
+\end{table*}
 
 两面性定理更根本：它不是说"测量不能精确"，而是说"\textbf{结构本身不能同时非平凡}"。
 
@@ -340,7 +389,9 @@ theorem standard_theory_no_two_aspect_balance
 
 \subsubsection{从"揭示"到"创造"的本体论跃迁}
 
-\begin{table}[h]
+从"揭示"到"创造"的本体论跃迁如\cref{tab:ontology} 所示。
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{p{1.5cm}p{2.5cm}p{3cm}}
 \hline
@@ -354,7 +405,7 @@ theorem standard_theory_no_two_aspect_balance
 \end{tabular}
 \caption{从"揭示"到"创造"的本体论跃迁}
 \label{tab:ontology}
-\end{table}
+\end{table*}
 
 \subsubsection{主动第三方作用量的数学对应}
 
@@ -393,10 +444,10 @@ theorem standard_theory_no_two_aspect_balance
 \textbf{定义}（\texttt{algebraic\_le}，AlgebraicCausality.lean）：对 $x, y \in \mathbb{Z}_n$，$x \leq_{\text{alg}} y$ 当且仅当 $\exists k \in \mathbb{N}$ 使得 $x = k \cdot y$（在加法群中）。
 \end{definition}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 def algebraic_le {n : ℕ} [NeZero n] (x y : Fin n) : Prop :=
   ∃ k : ℕ, x = k • y
-\end{verbatim}
+\end{verbatim}}
 
 即 $x \leq_{\text{alg}} y \Leftrightarrow \exists k \in \mathbb{N},\, x = k \cdot y$。
 
@@ -410,11 +461,11 @@ def algebraic_le {n : ℕ} [NeZero n] (x y : Fin n) : Prop :=
 \textbf{定理}（\texttt{algebraic\_le\_trans}）：$\le_{\text{alg}}$ 是传递的：若 $x \le_{\text{alg}} y$ 且 $y \le_{\text{alg}} z$，则 $x \le_{\text{alg}} z$。
 \end{theorem}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem algebraic_le_trans {n : ℕ} [NeZero n] (x y z : Fin n)
     (hxy : algebraic_le x y) (hyz : algebraic_le y z) :
   algebraic_le x z
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{证明}：由 $hxy$，$\exists k_1,\, x = k_1 \cdot y$。由 $hyz$，$\exists k_2,\, y = k_2 \cdot z$。代入：
 \[
@@ -423,12 +474,12 @@ x = k_1 \cdot (k_2 \cdot z) = (k_1 \cdot k_2) \cdot z
 由 \texttt{mul\_nsmul'}：$(m * n) \cdot a = m \cdot (n \cdot a)$。$\square$
 
 \textbf{代码片段}：
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 obtain ⟨k₁, hk₁⟩ := hxy
 obtain ⟨k₂, hk₂⟩ := hyz
 refine ⟨k₁ * k₂, ?_⟩
 rw [hk₁, hk₂, ← mul_nsmul']
-\end{verbatim}
+\end{verbatim}}
 
 \subsection{反身性}
 
@@ -440,14 +491,14 @@ rw [hk₁, hk₂, ← mul_nsmul']
 
 \textbf{定义}：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 structure AlgebraicStableSubstructure' (n : ℕ) [NeZero n]
     extends AlgebraicCausalSubstructure n where
   rep : Fin n
   rep_in_carrier : rep ∈ carrier
   add_closed : ∀ x y, x ∈ carrier → y ∈ carrier → x + y ∈ carrier
   internally_connected : ∀ x, x ∈ carrier → algebraic_le x rep
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{核心洞察}：在加法群中，代数因果子结构恰好就是子群。\texttt{add\_closed} + \texttt{internally\_connected} 保证它由 \texttt{rep} 生成——即循环子群。
 
@@ -464,11 +515,11 @@ structure AlgebraicStableSubstructure' (n : ℕ) [NeZero n]
 
 \textbf{定理}（\texttt{order\_jump\_example}，FiniteWeavingExamples.lean）：阶 2 子群 $\{0, 4\}$ 与阶 8 子群编织，结果直接跳到阶 8。
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem order_jump_example :
   (generated_subgroup subgroup_order_2 subgroup_order_8).carrier =
   subgroup_order_8.carrier
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{证明关键}：
 \begin{itemize}
@@ -521,13 +572,14 @@ V = |M|
 
 \textbf{定义}（\texttt{EffectiveFin7Regular}，B\_V\_Naturalness.lean）：
 
-\begin{verbatim}
-def EffectiveFin7Regular (M : Type*) [BoundedCausalLattice M] [Fintype M] : Prop :=
+{\scriptsize\begin{verbatim}
+def EffectiveFin7Regular (M : Type*)
+    [BoundedCausalLattice M] [Fintype M] : Prop :=
   let k_in : ℝ := 1
   let k_out : ℝ := 1 + seventh_root_real_part 1
   (internalAverageOutDegree M = k_out) ∧
   (twoAspectParameter (M := M) = k_in / (k_in + k_out))
-\end{verbatim}
+\end{verbatim}}
 
 其中 \texttt{seventh\_root\_real\_part 1 = 2cos(2π/7)}。
 
@@ -535,11 +587,11 @@ def EffectiveFin7Regular (M : Type*) [BoundedCausalLattice M] [Fintype M] : Prop
 
 \textbf{辅助解释性定义}：为帮助理解统计平均过程，可定义辅助函数：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 def effectiveRegularity (n : ℕ) : ℝ :=
   (1 / (n - 1)) * ∑ k ∈ Finset.range (n - 1),
     Real.cos (2 * π * k / n) / (2 + 2 * Real.cos (2 * π * k / n))
-\end{verbatim}
+\end{verbatim}}
 
 此函数是\textbf{解释性辅助定义}，用于说明循环群结构下所有非平凡倍数的统计平均如何收敛到自洽值。核心形式化定义仍为 \texttt{EffectiveFin7Regular} 结构体（要求有界因果格满足的精确条件）。当 $n = 7$ 时，此辅助函数给出 $\theta_7 \approx 0.308$，与闭合形式表达式一致。
 
@@ -553,12 +605,12 @@ def effectiveRegularity (n : ℕ) : ℝ :=
 \theta = \frac{1}{2 + 2\cos(2\pi/7)}
 \]
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem BV_ratio_from_EffectiveFin7 (M : Type*)
     [BoundedCausalLattice M] [Fintype M]
     (h_Fin7 : EffectiveFin7Regular M) :
     twoAspectParameter (M := M) = 1 / (2 + seventh_root_real_part 1)
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{证明}：由 EffectiveFin7Regularity 定义直接代数推导：
 
@@ -589,10 +641,12 @@ Lean 证明使用 \texttt{ring\_nf}、\texttt{field\_simp}、\texttt{ring} 完�
 
 \textbf{定义}（DarkUniverse.lean）：
 
-\begin{verbatim}
-def visibleMatter : Set M := { x | ∃ c, output(c) = x ∧ amplitude(c) ≠ 0 }
-def darkMatterSet : Set M := { x | ∃ c, output(c) = x ∧ amplitude(c) = 0 }
-\end{verbatim}
+{\scriptsize\begin{verbatim}
+def visibleMatter : Set M :=
+  { x | ∃ c, output(c) = x ∧ amplitude(c) ≠ 0 }
+def darkMatterSet : Set M :=
+  { x | ∃ c, output(c) = x ∧ amplitude(c) = 0 }
+\end{verbatim}}
 
 \textbf{定理}（\texttt{total\_matter\_is\_visible\_plus\_dark}）：
 
@@ -617,9 +671,9 @@ def darkMatterSet : Set M := { x | ∃ c, output(c) = x ∧ amplitude(c) = 0 }
 
 \textbf{核心论点}：$\theta = 1/(2+2\cos(2\pi/7))$ 是公理体系的\textbf{纯数学推论}，推导过程零自由参数。
 
-若将 $\theta$ 诠释为宇宙总物质密度参数 $\Omega_m$，则：
+若将 $\theta$ 诠释为宇宙总物质密度参数 $\Omega_m$，理论值与 Planck 2018 观测值的对比如\cref{tab:observation} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{llll}
 \hline
@@ -631,7 +685,7 @@ $\Omega_{DE}$ & 0.692 & $0.689 \pm 0.006$ & $\sim 0.5\%$ \\
 \end{tabular}
 \caption{理论值与 Planck 2018 观测值对比}
 \label{tab:observation}
-\end{table}
+\end{table*}
 
 \textbf{关键声明}：
 \begin{quote}
@@ -679,9 +733,9 @@ $\Omega_{DE}$ & 0.692 & $0.689 \pm 0.006$ & $\sim 0.5\%$ \\
 
 \subsubsection{第一层：代数结构——从"线性"到"三次"的质变}
 
-考察 $2\cos(2\pi/p)$ 在代数数论中的"身份"：
+考察 $2\cos(2\pi/p)$ 在代数数论中的"身份"，代数复杂度门槛如\cref{tab:algebraic} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -694,7 +748,7 @@ $\Omega_{DE}$ & 0.692 & $0.689 \pm 0.006$ & $\sim 0.5\%$ \\
 \end{tabular}
 \caption{代数复杂度门槛：为何三次是最小非平凡次数}
 \label{tab:algebraic}
-\end{table}
+\end{table*}
 
 \textbf{代数分水岭}：
 \begin{itemize}
@@ -738,7 +792,9 @@ $\Omega_{DE}$ & 0.692 & $0.689 \pm 0.006$ & $\sim 0.5\%$ \\
 
 \subsubsection*{3、5、7 在 CSQIT 中的层级角色}
 
-\begin{table}[h]
+3、5、7 在 CSQIT 中的层级角色如\cref{tab:threefiveoseven} 所示。
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{p{1cm}p{4cm}p{4cm}}
 \hline
@@ -751,15 +807,15 @@ $\Omega_{DE}$ & 0.692 & $0.689 \pm 0.006$ & $\sim 0.5\%$ \\
 \end{tabular}
 \caption{3、5、7 在 CSQIT 中的层级角色}
 \label{tab:threefiveoseven}
-\end{table}
+\end{table*}
 
 \textbf{猜想（Fin 7 的自然性，W3）}：宇宙的因果结构选择素数 $p=7$，是因为 $7$ 是满足以下双重条件的最小正整数：(1) 循环群 $C_p$ 非退化（质数）；(2) 圆内接正 $p$ 边形的对角线所张成的代数数域扩张次数至少为 3（$\deg(\mathbb{Q}(2\cos(2\pi/p))) = \frac{p-1}{2} \ge 3$）。扩张次数为 1（$p=3$）导致因果性坍缩为几何背景；扩张次数为 2（$p=5$）导致因果性退化为可逆波；\textbf{唯有扩张次数为 3（$p=7$）赋予因果格一个不可约的三向编织流}，使得"过去（因果面）"、"现在（信息振幅）"、"未来（尺度紧化）"能在一个闭合的三次方程中达成动态平衡。
 
 \subsubsection{第四层：扩张谱系与结构形成窗口}
 
-将代数扩张次数 $d = (p-1)/2$ 从 1 延续至无穷，物质密度 $\theta(p) = 1/(2+2\cos(2\pi/p))$ 呈现单调递减序列，渐近于 0.25：
+将代数扩张次数 $d = (p-1)/2$ 从 1 延续至无穷，物质密度 $\theta(p) = 1/(2+2\cos(2\pi/p))$ 呈现单调递减序列，渐近于 0.25。代数扩张谱系如\cref{tab:expansion_spectrum} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{ccclc}
 \hline
@@ -776,7 +832,7 @@ $\infty$ & $\infty$ & 0.250 & 连续极限，纯 de Sitter & 否（下方） \\
 \end{tabular}
 \caption{代数扩张谱系：$\theta(p)$ 对素数 $p \ge 3$ 严格单调递减。仅 $p=7$ 落在结构形成窗口 $(0.28, 0.33)$ 内。}
 \label{tab:expansion_spectrum}
-\end{table}
+\end{table*}
 
 \textbf{数学性质}：$\theta(p)$ 对素数 $p \ge 3$ 严格单调递减。当 $p \to \infty$，$\theta(p) \to 0.25$。
 
@@ -888,9 +944,9 @@ S_{\text{phase}} = \sum_{\text{chains}} \arg\left(\prod_{c \in \text{chain}} \te
 S_{\text{weave}} = \sum_{\alpha,\beta} \mathbf{1}_{\text{compose}(\alpha,\beta) \neq \text{compose}(\beta,\alpha)} \quad \text{（非对易性）}
 \]
 
-\textbf{对应关系}（W2/W3 层诠释）：
+作用量各项的对应关系（W2/W3 层诠释）如\cref{tab:action} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{lll}
 \hline
@@ -903,7 +959,7 @@ $S_{\text{weave}}$ & Yang-Mills & 规范对称性 \\
 \end{tabular}
 \caption{统一作用量的三个分量}
 \label{tab:action}
-\end{table}
+\end{table*}
 
 \textbf{诚实标注}：变分原理 $\delta S_{\text{total}}/\delta t = 0$ 的严格证明目前为开放问题（见 \S 9.3）。
 
@@ -911,10 +967,10 @@ $S_{\text{weave}}$ & Yang-Mills & 规范对称性 \\
 
 \textbf{定义}（ScaleDynamics.lean）：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 def projectiveScale (n : ℕ) : ℝ :=
   2 * Real.pi * (n : ℝ) / ((n : ℝ) + 1)
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{定理}（W1 层）：
 \begin{itemize}
@@ -930,14 +986,14 @@ def projectiveScale (n : ℕ) : ℝ :=
 
 \textbf{定义}：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 def cartanGenerator (k : Fin 3) : Matrix (Fin 3) (Fin 3) ℝ :=
   Matrix.diagonal $
     match k with
     | 0 => ![1, -1, 0]
     | 1 => ![0, 1, -1]
     | 2 => ![-1, 0, 1]
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{定理}（\texttt{cartan\_generators\_commute}，W1 层）：Cartan 生成元两两对易。
 
@@ -959,10 +1015,10 @@ def cartanGenerator (k : Fin 3) : Matrix (Fin 3) (Fin 3) ℝ :=
 \textbf{定理}（\texttt{second\_law\_causal\_is\_theorem}，ThermodynamicArrow.lean）：因果熵沿因果序单调不减。
 \end{theorem}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
     causalEntropy x ≤ causalEntropy y
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{证明}：若 $x \leq y$，则 $\text{causalPast}(x) \subseteq \text{causalPast}(y)$。有限集合的子集基数不超过原集合。$\square$
 
@@ -1026,9 +1082,9 @@ theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
 
 \subsection{W1/W2/W3 分层体系}
 
-我们严格区分三个认知层次：
+我们严格区分三个认知层次，W1/W2/W3 三层认知体系如\cref{tab:wlevels} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{llll}
 \hline
@@ -1041,13 +1097,13 @@ theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
 \end{tabular}
 \caption{W1/W2/W3 三层认知体系}
 \label{tab:wlevels}
-\end{table}
+\end{table*}
 
-\textbf{具体分层示例}：
+具体分层示例（W1/W2/W3 在各文件中的体现）如\cref{tab:layering} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{p{3.5cm}p{1cm}p{1.5cm}p{1.5cm}}
 \hline
 断言 & 层次 & 生长阶段 & 状态 \\
@@ -1071,16 +1127,16 @@ Fin 7 选择原理 & W3 & 主干生成 & $\triangle$ 开放问题 \\
 \end{tabular}
 \caption{具体分层示例}
 \label{tab:layering}
-\end{table}
+\end{table*}
 
 \subsection{信息因果性边界的精确表述}
 
 \textbf{AxiomI} 定义了熵的因果单调性：
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 information_causal : ∀ x y : M, B.le x y →
   entropy {z | B.le z x} ≤ entropy {z | B.le z y}
-\end{verbatim}
+\end{verbatim}}
 
 \textbf{精确表述}：这是"\textbf{有限因果集的熵上界}"（基数律：$|S| \leq |M|$），而非贝肯斯坦边界的面积律（$S \leq A/4$，其中 $A$ 是视界面积）~\cite{Bekenstein1973}。
 
@@ -1096,9 +1152,9 @@ information_causal : ∀ x y : M, B.le x y →
 
 所有开放问题均以 \texttt{def ... : Prop} 形式在 \texttt{OpenProblems.lean} 中声明，无伪装成定理的未证明断言。
 
-\textbf{P0 级（核心）}：
+\textbf{P0 级（核心）}开放问题如\cref{tab:p0} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{p{1.5cm}p{4cm}p{2cm}}
 \hline
@@ -1112,11 +1168,11 @@ OP-P0-9 & \textbf{Fin 7 选择的理论原理} & Prop 声明 \\
 \end{tabular}
 \caption{P0 级开放问题}
 \label{tab:p0}
-\end{table}
+\end{table*}
 
-\textbf{P1 级（重要）}：
+\textbf{P1 级（重要）}开放问题如\cref{tab:p1} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{p{1.5cm}p{4cm}p{2cm}}
 \hline
@@ -1128,11 +1184,11 @@ OP-P1-2 & AxiomD 在 A+B+C 下独立性 & Prop 声明 \\
 \end{tabular}
 \caption{P1 级开放问题}
 \label{tab:p1}
-\end{table}
+\end{table*}
 
-\textbf{P2 级（长远）}：
+\textbf{P2 级（长远）}开放问题如\cref{tab:p2} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{p{1.5cm}p{4cm}p{2cm}}
 \hline
@@ -1145,7 +1201,7 @@ OP-P2-9 & 层级两面平衡态猜想 & Prop 声明 \\
 \end{tabular}
 \caption{P2 级开放问题}
 \label{tab:p2}
-\end{table}
+\end{table*}
 
 \subsection{sorry 审计：形式化工程的演进历程}
 
@@ -1153,12 +1209,12 @@ CSQIT 的形式化验证是一个跨越多个版本、持续迭代的工程。�
 
 \textbf{阶段一：基础框架搭建（v11.0.x）}
 
-初始版本包含大量占位符，涵盖公理体系、有限模型和动力学框架：
+初始版本包含大量占位符，涵盖公理体系、有限模型和动力学框架，阶段一 sorry 分布如\cref{tab:sorry1} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
-\begin{tabular}{p{4cm}p{1cm}p{3cm}}
+\scriptsize
+\begin{tabular}{p{5.5cm}p{1cm}p{8cm}}
 \hline
 文件 & sorry 数量 & 内容 \\
 \hline
@@ -1172,16 +1228,16 @@ CSQIT 的形式化验证是一个跨越多个版本、持续迭代的工程。�
 \end{tabular}
 \caption{阶段一 sorry 分布}
 \label{tab:sorry1}
-\end{table}
+\end{table*}
 
 \textbf{阶段二：核心定理攻坚（v11.1.x）}
 
-消除代数因果序和有限模型的关键证明：
+消除代数因果序和有限模型的关键证明，阶段二 sorry 消除情况如\cref{tab:sorry2} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
-\begin{tabular}{p{2.5cm}p{3cm}p{2cm}p{2cm}}
+\scriptsize
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{4cm}}
 \hline
 消除的 sorry & 文件 & 证明方法 & 意义 \\
 \hline
@@ -1192,16 +1248,16 @@ CSQIT 的形式化验证是一个跨越多个版本、持续迭代的工程。�
 \end{tabular}
 \caption{阶段二 sorry 消除}
 \label{tab:sorry2}
-\end{table}
+\end{table*}
 
 \textbf{阶段三：有限模型突破（v11.2.0）}
 
-攻克最困难的有限模型证明：
+攻克最困难的有限模型证明，阶段三 sorry 消除情况如\cref{tab:sorry3} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
-\begin{tabular}{p{2.5cm}p{3cm}p{2cm}p{2.5cm}}
+\scriptsize
+\begin{tabular}{p{4cm}p{4cm}p{4cm}p{4cm}}
 \hline
 消除的 sorry & 文件 & 证明方法 & 意义 \\
 \hline
@@ -1212,11 +1268,13 @@ B/V 自然性 3 极限 & B\_V\_Naturalness.lean & 极限分析 + 定义重构 & 
 \end{tabular}
 \caption{阶段三 sorry 消除}
 \label{tab:sorry3}
-\end{table}
+\end{table*}
 
 \textbf{当前状态（v11.2.0）}
 
-\begin{table}[h]
+当前状态（v11.2.0）如\cref{tab:current} 所示。
+
+\begin{table*}[!t]
 \centering
 \begin{tabular}{ll}
 \hline
@@ -1230,7 +1288,7 @@ B/V 自然性 3 极限 & B\_V\_Naturalness.lean & 极限分析 + 定义重构 & 
 \end{tabular}
 \caption{当前状态汇总}
 \label{tab:current}
-\end{table}
+\end{table*}
 
 \textbf{有意保留的 4 个 sorry}：
 
@@ -1434,10 +1492,12 @@ CSQIT 不是"关于宇宙的模型"。它是\textbf{"观测者如何可能"的�
 
 \section{关键定理与代码位置}
 
-\begin{table}[h]
+关键定理与代码位置如\cref{tab:theorems} 所示。
+
+\begin{table*}[!t]
 \centering
-\small
-\begin{tabular}{p{2.5cm}p{3cm}p{3.5cm}p{1cm}}
+\scriptsize
+\begin{tabular}{p{2.2cm}p{5cm}p{6.5cm}p{0.8cm}}
 \hline
 定理 & 文件 & Lean 名称 & 层次 \\
 \hline
@@ -1460,27 +1520,30 @@ Cartan 对易 & Core/ScaleDynamics.lean & \texttt{cartan\_generators\_commute} &
 \end{tabular}
 \caption{关键定理与代码位置}
 \label{tab:theorems}
-\end{table}
+\end{table*}
 
 \section{编译与复现}
 
-\begin{verbatim}
+{\scriptsize\begin{verbatim}
 # 依赖：elan, Lean 4 v4.29.0-rc6
 
-git clone https://github.com/New-Beginning-Universe-Research-Group/CSQIT
+git clone \
+  https://github.com/New-Beginning-Universe-Research-Group/CSQIT
 cd CSQIT
 lake update
 lake build
-\end{verbatim}
+\end{verbatim}}
 
 所有依赖通过 \texttt{lakefile.lean} 和 \texttt{lean-toolchain} 管理。
 
 \section{代码库文件清单}
 
-\begin{table}[h]
+代码库文件清单如\cref{tab:files} 所示。
+
+\begin{table*}[!t]
 \centering
-\small
-\begin{tabular}{p{4cm}p{1.5cm}p{3cm}}
+\scriptsize
+\begin{tabular}{p{5cm}p{1.5cm}p{5cm}}
 \hline
 文件 & 行数 & 核心内容 \\
 \hline
@@ -1501,7 +1564,7 @@ Core/OpenProblems.lean & $\sim$900 & 开放问题 Prop 声明 \\
 \end{tabular}
 \caption{代码库文件清单}
 \label{tab:files}
-\end{table}
+\end{table*}
 
 \section{六层唯一性锁定框架}
 
@@ -1529,11 +1592,11 @@ Core/OpenProblems.lean & $\sim$900 & 开放问题 Prop 声明 \\
 
 \subsubsection*{第三锁止点：素数筛选——扩张谱系的唯一窄门（W3）}
 
-\textbf{判据}：素数 $p$ 的代数扩张次数 $d=(p-1)/2$ 决定因果格的复杂性层级。
+\textbf{判据}：素数 $p$ 的代数扩张次数 $d=(p-1)/2$ 决定因果格的复杂性层级。素数筛法的扩张谱系如\cref{tab:sieve} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 $d$ & $p$ & 伽罗瓦群 & $\theta(p)$ & 宇宙学模态 & 观测者？ \\
@@ -1548,7 +1611,7 @@ $\infty$ & $\infty$ & 无限 & 0.250 & 纯 de Sitter & \ding{55} \\
 \end{tabular}
 \caption{素数筛选：扩张谱系与宇宙学模态}
 \label{tab:sieve}
-\end{table}
+\end{table*}
 
 \textbf{唯一性论证}（W3 层诠释）：
 \begin{itemize}
@@ -1649,9 +1712,9 @@ $\infty$ & $\infty$ & 无限 & 0.250 & 纯 de Sitter & \ding{55} \\
 
 \subsection{设计与定位}
 
-此表以\textbf{最简形式}呈现：每条 CSQIT 公理 $\to$ 对应的物理原理 $\to$ 在标准理论中的角色。作为正文的"物理动机索引"。
+此表以\textbf{最简形式}呈现：每条 CSQIT 公理 $\to$ 对应的物理原理 $\to$ 在标准理论中的角色。作为正文的"物理动机索引"。公理与物理原理的对照如\cref{tab:axiom_physics} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \scriptsize
 \begin{tabular}{|p{1.2cm}|p{2.8cm}|p{2.8cm}|p{3cm}|}
@@ -1683,7 +1746,7 @@ AxiomK & 全序性，因果过去熵的普适性 & \textbf{永恒此刻原理} &
 \end{tabular}
 \caption{CSQIT 公理——物理原理对照}
 \label{tab:axiom_physics}
-\end{table}
+\end{table*}
 
 \subsection{表后说明}
 
@@ -1708,9 +1771,11 @@ AxiomK & 全序性，因果过去熵的普适性 & \textbf{永恒此刻原理} &
 
 \subsection{定性相图}
 
-\begin{table}[h]
+各素数 $p$ 的定性相图如\Cref{tab:phase_diagram} 所示，展示代数复杂性如何决定宇宙学模态、结构形成与观测者涌现。
+
+\begin{table*}[!t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 素数 $p$ & $\theta(p)$ & 扩张 $d$ & 宇宙学模态 & 结构形成 & 观测者涌现 \\
@@ -1725,7 +1790,7 @@ $\infty$ & 0.250 & $\infty$ & 纯几何极限：纯暗能量 & \ding{55} & \ding
 \end{tabular}
 \caption{不同素数的结构形成相图}
 \label{tab:phase_diagram}
-\end{table}
+\end{table*}
 
 \subsection{相变边界}
 
@@ -1763,9 +1828,11 @@ $\infty$ & 0.250 & $\infty$ & 纯几何极限：纯暗能量 & \ding{55} & \ding
 
 \subsection{跨尺度链条}
 
-\begin{table}[h]
+从宇宙学到认知尺度的跨尺度链条如\Cref{tab:cross_scale} 所示，表明 Fin 7 不是"出现在某一层的特殊数字"，而是贯穿所有生长层级的代数不变量。
+
+\begin{table*}[!t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{|p{1.5cm}|p{2cm}|p{2.5cm}|p{3cm}|}
 \hline
 尺度层级 & 物理对象 & CSQIT 的 Fin 7 对应 & 跨尺度映射 \\
@@ -1783,7 +1850,7 @@ $\infty$ & 0.250 & $\infty$ & 纯几何极限：纯暗能量 & \ding{55} & \ding
 \end{tabular}
 \caption{跨尺度全息同构链条}
 \label{tab:cross_scale}
-\end{table}
+\end{table*}
 
 \textbf{关键洞察}：Fin 7 不是"出现在某一层的特殊数字"，而是\textbf{所有层级之间同构关系的代数不变量}。分子键是\textbf{临界编织节点}，介导从电子壳层（原子）到凝聚态/生命（分子）的过渡。
 
@@ -1807,9 +1874,9 @@ $\infty$ & 0.250 & $\infty$ & 纯几何极限：纯暗能量 & \ding{55} & \ding
 
 \subsection{遗传密码：$64=8^2$ 的终极验证}
 
-这是跨尺度链条中最令人震惊的环节——\textbf{遗传密码子（64 种）与 Fin 8 的完备闭包（$8^2=64$）}的精确对应：
+这是跨尺度链条中最令人震惊的环节——\textbf{遗传密码子（64 种）与 Fin 8 的完备闭包（$8^2=64$）}的精确对应如\cref{tab:genetic} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{|p{2.5cm}|p{2cm}|p{4cm}|}
 \hline
@@ -1822,7 +1889,7 @@ DNA 双螺旋 & 碱基对的互补配对 & 两面性定理——因果面与信�
 \end{tabular}
 \caption{遗传密码作为 Fin 8 闭包}
 \label{tab:genetic}
-\end{table}
+\end{table*}
 
 \textbf{关键观察}：64 种密码子中，有 61 种编码氨基酸（可见物质对应：非零振幅），3 种为终止密码子（暗物质对应：零振幅）。这一分类与 CSQIT 的"可见物质 = 振幅非零，暗物质 = 振幅为零"的物质分类定理形成\textbf{精确的同构}。
 
@@ -1892,9 +1959,10 @@ DNA 双螺旋 & 碱基对的互补配对 & 两面性定理——因果面与信�
 
 每一项的数学结构与对应的形式化定理如\Cref{tab:binary_sequence} 所示。
 
-\begin{table}[h]
+\begin{table*}[!t]
 \centering
-\begin{tabular}{ccccc}
+\scriptsize
+\begin{tabular}{p{1.2cm}p{0.8cm}p{4.5cm}p{5cm}p{4cm}}
 \hline
 序列项 & 数值 & 形式化定理（W1） & 证明位置 & 物理诠释（W3） \\
 \hline
@@ -1909,7 +1977,7 @@ DNA 双螺旋 & 碱基对的互补配对 & 两面性定理——因果面与信�
 \end{tabular}
 \caption{二进制序列各项的形式化定理与物理诠释}
 \label{tab:binary_sequence}
-\end{table}
+\end{table*}
 
 \subsection{H.2 每一步的物理实在性}
 
@@ -2003,7 +2071,7 @@ a_{n-1}^2 & n \ge 5 \quad (8^2 = 64, \dots) \quad \text{（饱和期，平方递
 
 \Cref{tab:binary_holographic} 展示了二进制序列的跨尺度全息同构。
 
-\begin{table*}[h]
+\begin{table*}[!t]
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -2024,35 +2092,55 @@ $\infty$ & $\infty$ & 连续极限（GR） & 无限原子轨道 & 无限分子�
 
 \subsection{H.8 终极句法压缩}
 
+{\small
 \[
 \boxed{
 \text{生成：} 0 \xrightarrow{1} 2 \xrightarrow{2} 4 \xrightarrow{2} 8 \quad \text{（2 的幂，稳定闭包）}
 }
 \]
+}
 
+{\small
 \[
 \boxed{
-\text{饱和：} 8 \xrightarrow{8^2} 64 \xrightarrow{\text{紧化}} \infty \quad \text{（平方递推，完全闭包} \to \text{连续极限）}
+\begin{gathered}
+\text{饱和：} 8 \xrightarrow{8^2} 64 \xrightarrow{\text{紧化}} \infty \\
+\text{（平方递推，完全闭包} \to \text{连续极限）}
+\end{gathered}
 }
 \]
+}
 
+{\small
 \[
 \boxed{
-\text{为什么没有16和32？因为它们被代数结构强制排除，无法承载幺正且单射的因果-信息结构。}
+\begin{gathered}
+\text{为什么没有16和32？} \\
+\text{因为它们被代数结构强制排除，} \\
+\text{无法承载幺正且单射的因果-信息结构。}
+\end{gathered}
 }
 \]
+}
 
+{\small
 \[
 \boxed{
-\text{时间} = \text{从64到}\infty\text{的追踪参数} \quad \text{方向4} = \text{三维空间的内在四重对称性}
+\begin{aligned}
+&\text{时间} = \text{从64到}\infty\text{的追踪参数} \\
+&\text{方向4} = \text{三维空间的内在四重对称性}
+\end{aligned}
 }
 \]
+}
 
+{\small
 \[
 \boxed{
 \text{存在} \iff \text{结构}=7 \iff \text{我们存在} \iff \text{序列抵达64}
 }
 \]
+}
 
 \subsection{H.9 为什么这个序列是"终极叙事"}
 
@@ -2078,9 +2166,9 @@ $\infty$ & $\infty$ & 连续极限（GR） & 无限原子轨道 & 无限分子�
 
 \acknowledgments
 
-本工作的方法论——用形式化验证构建物理理论——受到 Lean 社区和 mathlib 项目的启发。我们感谢形式化验证社区为理论物理提供的可能性。所有代码和证明均在 Lean 4 中完成，并依赖于 mathlib 中已建立的数学基础。
+本工作的方法论——用形式化验证构建物理理论——受到 Lean 社区和 mathlib 项目的启发。感谢形式化验证社区为理论物理提供的可能性。所有代码和证明均在 Lean 4 中完成，并依赖于 mathlib 中已建立的数学基础。
 
-感谢 TRAE AI 与 DeepSeek AI 给予的强力高效协助。
+感谢 TRAE AI 与 DeepSeek AI 在 Lean 4 形式化证明与文稿撰写方面提供的强力高效协助。本工作为独立研究，无外部资助。作者声明无利益冲突。完整源代码、形式化证明及补充材料可在 \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT} 公开获取。
 
 当然，任何错误或过度声称完全由作者负责。
 

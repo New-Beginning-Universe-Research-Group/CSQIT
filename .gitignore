@@ -1,11 +1,24 @@
 # Lean
 build/
 .lake/
+lake-packages
 lake-packages/
 lakefile.olean
 *.olean
 *.ilean
 *.trace
+
+# LaTeX build artifacts
+latex_build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*Notes.bib
+*.synctex.gz
+*.fdb_latexmk
+*.fls
 
 # Python
 __pycache__/
@@ -80,6 +93,8 @@ Dockerfile.csqit
 Cover_Letter*.md
 *_Submission_Guide.md
 *_投稿材料评审报告*.md
+CSQIT_SourceCodeOfUniverse_PRL*.tex
+CSQIT_SourceCodeOfUniverse_PRL*.pdf
 
 # Temporary files
 commit_msg.txt
@@ -108,4 +123,3 @@ lakefile_wsl.lean
 
 # Git
 .git/
-lake-packages/
