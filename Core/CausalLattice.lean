@@ -46,6 +46,7 @@ import Mathlib.Data.Set.Lattice
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Real.Basic
 
 namespace CSQIT.CausalLattice
 
@@ -84,6 +85,21 @@ class CausalLattice (M : Type*) extends Lattice M where
 section CausalLatticeBasic
 
 variable {M : Type*} [CausalLattice M]
+
+/--
+**离散因果距离**
+
+在因果格上定义一个简化的离散距离：
+相同事件的距离为 0，不同事件的距离为 1。
+
+注意：这是一个最小可行定义，用于支持序参量等概念性计算。
+更精细的因果距离（如最短因果路径长度）可在此基础上扩展。
+-/
+noncomputable def causalDistance (x y : M) : ℝ :=
+  if x = y then 0 else 1
+
+/-- `dist` 作为 `causalDistance` 的别名，方便各附录使用。 -/
+noncomputable abbrev dist (x y : M) : ℝ := causalDistance x y
 
 /--
 **定理 2.1: 格序的等价刻画**

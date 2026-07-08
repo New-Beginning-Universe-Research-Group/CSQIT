@@ -634,7 +634,7 @@ noncomputable def internalAverageOutDegree (M : Type*)
 
   物理上可实现的是 W2 层的 EffectiveFin7Regular（平均正则性）。
 -/
-def IsFin7Regular (M : Type*) [BoundedCausalLattice M] [Finite M] : Prop :=
+def IsFin7Regular (M : Type*) [BoundedCausalLattice M] [Fintype M] : Prop :=
   let k_in : ℝ := 1
   let k_out : ℝ := 1 + seventh_root_real_part 1
   (∀ (x : M), x ≠ (⊥ : M) → x ≠ (⊤ : M) →
@@ -708,7 +708,7 @@ def EffectiveFin7Regular (M : Type*) [BoundedCausalLattice M] [Fintype M] : Prop
   这就是宇宙常数的出生证明。
 -/
 theorem BV_ratio_from_Fin7 (M : Type*)
-    [BoundedCausalLattice M] [Finite M]
+    [BoundedCausalLattice M] [Fintype M]
     (h_Fin7 : IsFin7Regular M) :
     twoAspectParameter (M := M) = 1 / (2 + seventh_root_real_part 1) := by
   have h2 : twoAspectParameter (M := M) = (1 : ℝ) / (1 + (1 + seventh_root_real_part 1)) :=
@@ -732,7 +732,7 @@ theorem BV_ratio_from_Fin7 (M : Type*)
   这不是一个任意的实数，而是一个具有深刻代数结构的常数。
 -/
 theorem BV_ratio_cubic (M : Type*)
-    [BoundedCausalLattice M] [Finite M]
+    [BoundedCausalLattice M] [Fintype M]
     (h_Fin7 : IsFin7Regular M) :
     let θ := twoAspectParameter (M := M)
     θ^3 - 6 * θ^2 + 5 * θ - 1 = 0 := by
@@ -741,7 +741,7 @@ theorem BV_ratio_cubic (M : Type*)
   rw [hθ]
   have h1 : (seventh_root_real_part 1)^3 + (seventh_root_real_part 1)^2 - 2 * (seventh_root_real_part 1) - 1 = 0 :=
     cos2pi7_cubic_equation
-  simpa using by
+  simpa [seventh_root_real_part] using by
     field_simp
     <;> rw [show (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 by linarith]
     <;> ring_nf
@@ -828,12 +828,16 @@ theorem BV_ratio_cubic_effective (M : Type*)
     have h3 : (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 := by linarith
     have h4 : (2 + seventh_root_real_part 1) ≠ 0 := by
       have h5 : 0 < seventh_root_real_part 1 := by
-        have h6 : 0 < 2 * Real.pi / 7 := by positivity
-        have h7 : 2 * Real.pi / 7 < Real.pi / 2 := by
+        have h6 : 2 * Real.pi / 7 < Real.pi / 3 := by
           linarith [Real.pi_pos]
-        have h8 : 0 < Real.cos (2 * Real.pi / 7) := Real.cos_pos_of_mem_Ioo ⟨by linarith, by linarith⟩
+        have h7 : Real.cos (2 * Real.pi / 7) > 1 / 2 := by
+          have h8 : Real.cos (Real.pi / 3) = 1 / 2 := Real.cos_pi_div_three
+          have h9 : Real.cos (2 * Real.pi / 7) > Real.cos (Real.pi / 3) := by
+            apply Real.cos_lt_cos_of_nonneg_of_le_pi
+            all_goals linarith [Real.pi_pos]
+          linarith [h8, h9]
         dsimp only [seventh_root_real_part]
-        <;> positivity
+        linarith
       linarith
     field_simp [h4]
     <;> rw [h3]

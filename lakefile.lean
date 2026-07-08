@@ -15,8 +15,7 @@ package csqit where
   version := v!"11.2.0"
   leanOptions := #[⟨`linter.unreachableTactic, false⟩, ⟨`linter.unusedTactic, false⟩]
 
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0-rc6"
+require mathlib from "/mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib"
 
 @[default_target]
 lean_lib CSQIT where
@@ -42,5 +41,18 @@ lean_lib CSQIT where
     `Core.Models.FiniteWeavingExamples,
     `Core.Models.PeriodicTable,
     `Core.Models.EnhancedModels,
-    `Core.Models.FinModels
+    `Core.Models.FinModels,
+    `FutureWork.Appendices.AppendixJ.ElectricPotential,
+    `FutureWork.Appendices.AppendixK.NuclearFusionFission,
+    `FutureWork.Appendices.AppendixL.PhysicsCorrespondence,
+    `FutureWork.Appendices.AppendixM.Magnetism,
+    `FutureWork.Appendices.AppendixN.ElectromagneticUnification,
+    `FutureWork.Appendices.AppendixO.Conductivity,
+    `FutureWork.Appendices.AppendixP.PhaseStates,
+    `FutureWork.Appendices.AppendixQ.CrystalGrowth,
+    `FutureWork.Appendices.AppendixR.Transparency,
+    `FutureWork.Appendices.AppendixS.MatterEnergyUnification,
+    `FutureWork.Appendices.AppendixT.GrandUnification,
+    `FutureWork.Appendices.AppendixU.PhotoelectricRelation,
+    `FutureWork.Appendices.AppendixV.PhiUnification
   ]
