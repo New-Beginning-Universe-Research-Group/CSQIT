@@ -292,16 +292,24 @@ noncomputable def theta_QCD : ℝ :=
   (1 : ℝ) / (137 : ℝ)^2 * (9 : ℝ) / 250
 
 /-
-**定理 4.1: θ_QCD 极小性**
+**定理 4.1: θ_QCD 精确值与极小性**
 
-θ_QCD ≈ 1.9 × 10⁻⁶
+精确计算：θ_QCD = 1/137² × 9/250
+  = 9 / (137² × 250)
+  = 9 / (18769 × 250)
+  = 9 / 4692250
+  ≈ 1.9179 × 10⁻⁶
 
 这个值虽然远大于实验上限（~10⁻⁹），
 但它揭示了强CP相角与精细结构常数的代数关联。
 注：完整的强CP解释需要引入轴子机制，
 此处仅给出代数结构的初步线索。
 -/
-theorem theta_QCD_very_small : theta_QCD < 1e-5 := by
+theorem theta_QCD_very_small : theta_QCD < 2e-6 := by
+  unfold theta_QCD
+  norm_num
+
+theorem theta_QCD_positive : 0 < theta_QCD := by
   unfold theta_QCD
   norm_num
 
@@ -318,6 +326,33 @@ theorem theta_QCD_very_small : theta_QCD < 1e-5 := by
 -/
 noncomputable def axionDecayConstant (M_P : ℝ) : ℝ :=
   (137 : ℝ) * (4 * 7 - (2 : ℝ) / 9) / 2 * M_P
+
+/-
+**定理 4.2: 轴子衰变常数的正性**
+
+如果 M_P > 0，则 f_a > 0。
+-/
+theorem axionDecayConstant_positive (M_P : ℝ) (h_MP_pos : 0 < M_P) :
+    0 < axionDecayConstant M_P := by
+  unfold axionDecayConstant
+  have h1 : (0 : ℝ) < 137 := by norm_num
+  have h2 : (0 : ℝ) < 4 * 7 - (2 : ℝ) / 9 := by norm_num
+  have h3 : (0 : ℝ) < 2 := by norm_num
+  exact mul_pos (mul_pos (mul_pos (div_pos (mul_pos h1 h2) h3) h_MP_pos) (by norm_num))
+
+/-
+**定理 4.3: 轴子衰变常数与观测者桥的关系**
+
+f_a = 137 × (250/9) / 2 × M_P
+
+轴子衰变常数直接由精细结构常数和观测者桥决定。
+-/
+theorem axionDecayConstant_bridgeForm (M_P : ℝ) :
+    axionDecayConstant M_P = (137 : ℝ) * (250 : ℝ) / 9 / 2 * M_P := by
+  unfold axionDecayConstant
+  have h : (4 * 7 - (2 : ℝ) / 9) = (250 : ℝ) / 9 := by norm_num
+  rw [h]
+  <;> ring
 
 end StrongCP
 
