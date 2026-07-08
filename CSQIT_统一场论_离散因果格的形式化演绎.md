@@ -190,7 +190,7 @@ CSQIT通过Lean 4形式化体系，将量子电动力学、宇宙学标准模型
 
 ---
 
-**代码库位置**：GitHub仓库 `CSQIT-workspace`  
+**代码库位置**：GitHub仓库 `New-Beginning-Universe-Research-Group/CSQIT`  
 **分支**：`feat-deep-analysis-future-work-tuzSOx`  
 **验证编译器**：Lean 4 + Mathlib  
 **编译状态**：核心模块全部通过
