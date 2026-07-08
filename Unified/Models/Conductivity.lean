@@ -1,7 +1,7 @@
 /-
 ================================================================================
-CSQIT Future Work - 附录 O：导电率与元素周期律
-文件: FutureWork/Appendices/AppendixO/Conductivity.lean
+CSQIT 应用物理模型 - 导电率与元素周期律
+文件: Unified/Models/Conductivity.lean
 版本: v11.2.1
 日期: 2026-07-08
 状态: 严格证明完成 ✅
@@ -59,7 +59,7 @@ import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
-namespace CSQIT.FutureWork.AppendixO.Conductivity
+namespace CSQIT.Unified.Models.Conductivity
 
 open Classical Finset BigOperators
 
@@ -342,4 +342,4 @@ theorem noble_gas_insulator (Z : ℕ) (h_noble : Z % 8 = 0) :
 
 end PeriodicTableConductivity
 
-end CSQIT.FutureWork.AppendixO.Conductivity
+end CSQIT.Unified.Models.Conductivity

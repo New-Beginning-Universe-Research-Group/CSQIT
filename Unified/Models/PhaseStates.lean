@@ -1,7 +1,7 @@
 /-
 ================================================================================
-CSQIT Future Work - 附录 P：固液气三态的因果格模型
-文件: FutureWork/Appendices/AppendixP/PhaseStates.lean
+CSQIT 应用物理模型 - 固液气三态的因果格模型
+文件: Unified/Models/PhaseStates.lean
 版本: v11.2.1
 日期: 2026-07-08
 状态: 严格证明完成 ✅
@@ -63,7 +63,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
-namespace CSQIT.FutureWork.AppendixP.PhaseStates
+namespace CSQIT.Unified.Models.PhaseStates
 
 open Classical Finset BigOperators
 
@@ -289,4 +289,4 @@ noncomputable def boilingPoint (psi_pos : X → ℝ) (S : Finset X) : ℝ :=
 
 end PhaseTransition
 
-end CSQIT.FutureWork.AppendixP.PhaseStates
+end CSQIT.Unified.Models.PhaseStates

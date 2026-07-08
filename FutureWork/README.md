@@ -1,13 +1,45 @@
 ================================================================================
-CSQIT Future Work - 已升级为正式附录模块
+CSQIT Future Work - 探索性附录模块
 ================================================================================
 
-本目录包含已完成形式化验证的附录模块，代表从概念框架到严格证明的重大飞跃。
+本目录包含探索性的附录模块，处于概念框架到严格证明的不同阶段。
+
+**重要说明**：三锁统一的核心成果（W/X/Y/Z）已正式迁移至
+`Unified/Constants/` 目录，作为项目的核心成果层。
+本目录中的 W/X/Y/Z 为旧路径保留，仅供兼容参考。
 
 **版本**: v11.2.1
-**状态**: 正式附录 / 已验证 ✅
-**目标**: 完成"量子-宇宙-引力"的三位一体统一
-**编译状态**: ✅ 参与 lake build，3267 jobs 全部通过
+**状态**: 探索性 / 不同成熟度
+**目标**: 从概念框架逐步向严格证明演进
+**编译状态**: ✅ 参与 lake build
+
+================================================================================
+成熟度分层说明
+================================================================================
+
+✅ **已毕业 → 迁入 Unified/Constants/**
+   - AppendixW (精细结构常数) → Unified/Constants/FineStructure.lean
+   - AppendixX (ΛCDM组分)     → Unified/Constants/LambdaCDM.lean
+   - AppendixY (哈勃常数)     → Unified/Constants/Hubble.lean
+   - AppendixZ (引力常数)     → Unified/Constants/Gravity.lean
+
+✅ **已毕业 → 迁入 Unified/Models/**
+   - AppendixJ (电势差)       → Unified/Models/Electrostatics.lean
+   - AppendixM (磁性)         → Unified/Models/Magnetism.lean
+   - AppendixO (导电率)       → Unified/Models/Conductivity.lean
+   - AppendixP (物态)         → Unified/Models/PhaseStates.lean
+   - AppendixR (透明度)       → Unified/Models/Transparency.lean
+
+📝 **概念框架 / 草稿阶段**
+   - AppendixK (核物理)
+   - AppendixL (物理对应)
+   - AppendixN (电磁统一)
+   - AppendixQ (晶体生长)
+   - AppendixS (质能统一)
+   - AppendixT (大统一)
+   - AppendixU (光电关系)
+   - AppendixV (Phi统一)
+   - AppendixB/C/G/I (其他探索)
 
 ================================================================================
 内容目录

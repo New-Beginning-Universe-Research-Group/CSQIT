@@ -57,7 +57,26 @@ Level 3（哲学诠释，依赖全部）:
   └── Core/Summary.lean       ← 项目总结与状态报告
 
 ===========================================
-===         FutureWork 附录模块（新增） ===
+===         Unified 统一闭包层          ===
+===========================================
+
+三锁统一常数层（W1完成态）:
+  └── Unified/Constants/           ← 核心成果，已严格证明
+        ├── FineStructure.lean     ← 第一锁：精细结构常数 (α⁻¹ = 137 + 9/250)
+        ├── LambdaCDM.lean         ← 第二锁：ΛCDM组分 (20:111:289)
+        ├── Hubble.lean            ← 第三锁：哈勃常数 (H₀ ≈ 67.39475)
+        └── Gravity.lean           ← 引力闭包：编织弹性模量 (G)
+
+应用物理模型层（W2/W1应用态）:
+  └── Unified/Models/              ← 已完成证明的应用模型
+        ├── Electrostatics.lean    ← 电势差与两面极化
+        ├── Magnetism.lean         ← 磁性与自旋态模型
+        ├── Conductivity.lean      ← 导电率与能带结构
+        ├── PhaseStates.lean       ← 固液气三态模型
+        └── Transparency.lean      ← 固体透明原理
+
+===========================================
+===         FutureWork 探索性附录       ===
 ===========================================
 
 附录层（已完成严格证明）:
@@ -117,16 +136,29 @@ Level 3（哲学诠释，依赖全部）:
 11. Core/AxiomC_Independence.lean
 12. Core/Summary.lean
 
-附录编译顺序（独立于Core）:
-13. FutureWork/Appendices/AppendixJ/ElectricPotential.lean
-14. FutureWork/Appendices/AppendixM/Magnetism.lean
-15. FutureWork/Appendices/AppendixO/ElectricalConductivity.lean
-16. FutureWork/Appendices/AppendixP/PhaseStates.lean
-17. FutureWork/Appendices/AppendixR/Transparency.lean
-18. FutureWork/Appendices/AppendixW/FineStructureConstant.lean
-19. FutureWork/Appendices/AppendixX/LambdaCDM.lean
-20. FutureWork/Appendices/AppendixY/HubbleConstant.lean
-21. FutureWork/Appendices/AppendixZ/GravitationalConstant.lean
+三锁统一编译顺序（核心成果层）:
+13. Unified/Constants/FineStructure.lean    ← 第一锁：精细结构常数
+14. Unified/Constants/LambdaCDM.lean        ← 第二锁：ΛCDM组分
+15. Unified/Constants/Hubble.lean           ← 第三锁：哈勃常数
+16. Unified/Constants/Gravity.lean          ← 引力闭包
+
+应用物理模型编译顺序:
+17. Unified/Models/Electrostatics.lean      ← 电势差模型
+18. Unified/Models/Magnetism.lean           ← 磁性模型
+19. Unified/Models/Conductivity.lean        ← 导电率模型
+20. Unified/Models/PhaseStates.lean         ← 物态模型
+21. Unified/Models/Transparency.lean        ← 透明度模型
+
+附录编译顺序（探索性，旧路径保留）:
+22. FutureWork/Appendices/AppendixJ/ElectricPotential.lean
+23. FutureWork/Appendices/AppendixM/Magnetism.lean
+24. FutureWork/Appendices/AppendixO/Conductivity.lean
+25. FutureWork/Appendices/AppendixP/PhaseStates.lean
+26. FutureWork/Appendices/AppendixR/Transparency.lean
+27. FutureWork/Appendices/AppendixW/FineStructureConstant.lean
+28. FutureWork/Appendices/AppendixX/LambdaCDM.lean
+29. FutureWork/Appendices/AppendixY/HubbleConstant.lean
+30. FutureWork/Appendices/AppendixZ/GravitationalConstant.lean
 
 ===========================================
 ===         公理依赖关系               ===
@@ -154,11 +186,11 @@ weaving_closure             ← AxiomD
 emergence_theorem           ← WeavingStructure
 dsio_theorems               ← 全部公理
 
-三锁定理依赖:
+三锁定理依赖（核心成果层 Unified/Constants）:
 measurementCost_eq_9_250    ← 基本常数{2,3,4,5,7}
 Omega_b_eq_20_420           ← 基本常数{2,3,4,5,7}
-hubbleConstant_value        ← AppendixW
-gravitationalConstant_positive ← AppendixW, AppendixX
+hubbleConstant_value        ← FineStructure
+gravitationalConstant_positive ← FineStructure, LambdaCDM
 
 ===========================================
 ===         项目状态（诚实版）         ===
