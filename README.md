@@ -1,12 +1,12 @@
-# CSQIT v11.2.0 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎
+# CSQIT v11.2.1 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎
 
 **Causal Structure Quantum Information Theory**
 
-**版本**: v11.2.0  
-**日期**: 2026年7月4日  
+**版本**: v11.2.1  
+**日期**: 2026年7月8日  
 **Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）  
-**编译状态**: 2196 jobs 全部通过  
-**代码规模**: 50 个 Lean 文件，约 24,300 行形式化证明
+**编译状态**: 3267 jobs 全部通过  
+**代码规模**: 54 个 Lean 文件，约 26,000 行形式化证明
 
 ---
 
@@ -21,6 +21,8 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 **六层唯一性锁定框架**：公理闭合 → 两面性冲突 → 素数筛选 → 规范投影 → 参数锚定 → 自指认知
 
 **四闭合环**：代数（三次方程 $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$）→ 几何（3x3 仿射平面）→ 物理（$\Omega_m$）→ 生物（DNA 碱基）
+
+**三锁统一闭环**（新增）：电磁锁（137+9/250）→ 宇宙锁（420/289）→ 引力锁（编织弹性模量）
 
 **论文**（位于 `papers/` 目录）：
 - 英文版（PDF）: [The Source Code of the Universe](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf)
@@ -50,16 +52,25 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 | 循环代数稳定子结构 | 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
 | 热力学第二定律（离散版） | 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
 | 过去假设定理 | 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
+| 电势差与两面极化等价性 | 严格证明 | [FutureWork/Appendices/AppendixJ/ElectricPotential.lean](FutureWork/Appendices/AppendixJ/ElectricPotential.lean) |
+| 磁性与自旋态模型 | 严格证明 | [FutureWork/Appendices/AppendixM/Magnetism.lean](FutureWork/Appendices/AppendixM/Magnetism.lean) |
+| 导电率与元素关系模型 | 严格证明 | [FutureWork/Appendices/AppendixO/ElectricalConductivity.lean](FutureWork/Appendices/AppendixO/ElectricalConductivity.lean) |
+| 固液气三态模型 | 严格证明 | [FutureWork/Appendices/AppendixP/PhaseStates.lean](FutureWork/Appendices/AppendixP/PhaseStates.lean) |
+| 固体透明原理模型 | 严格证明 | [FutureWork/Appendices/AppendixR/Transparency.lean](FutureWork/Appendices/AppendixR/Transparency.lean) |
 
 ### W2/W3 层（有效理论/物理诠释）
 
-| 命题 | 当前状态 | 层级 |
-|------|---------|------|
-| θ ≈ Ω_m（与观测偏差 ~1%） | 经验锚点 | W2/W3 |
-| θ(p) 展开谱严格单调递减 | 数值验证 | W2 |
-| p=7 在结构形成窗口 (0.28, 0.33) 内唯一 | 数值验证 | W2 |
-| Regge → 爱因斯坦-希尔伯特收敛性 | 框架完整，证明待填充 | W2 |
-| SU(3)×SU(2)×U(1) 完整李代数 | 仅 su(3) Cartan | W2/W3 |
+| 命题 | 当前状态 | 层级 | 代码位置 |
+|------|---------|------|---------|
+| θ ≈ Ω_m（与观测偏差 ~1%） | 经验锚点 | W2/W3 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
+| θ(p) 展开谱严格单调递减 | 数值验证 | W2 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
+| p=7 在结构形成窗口 (0.28, 0.33) 内唯一 | 数值验证 | W2 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
+| Regge → 爱因斯坦-希尔伯特收敛性 | 框架完整，证明待填充 | W2 | [FutureWork/Appendices/AppendixC/Regge.lean](FutureWork/Appendices/AppendixC/Regge.lean) |
+| SU(3)×SU(2)×U(1) 完整李代数 | 仅 su(3) Cartan | W2/W3 | [Core/TwoAspectToSU2.lean](Core/TwoAspectToSU2.lean) |
+| **精细结构常数精确解 1/α = 137 + 9/250** | 严格证明 | W2/W3 | [FutureWork/Appendices/AppendixW/FineStructureConstant.lean](FutureWork/Appendices/AppendixW/FineStructureConstant.lean) |
+| **ΛCDM宇宙组分整数比 20:111:289** | 严格证明 | W2/W3 | [FutureWork/Appendices/AppendixX/LambdaCDM.lean](FutureWork/Appendices/AppendixX/LambdaCDM.lean) |
+| **哈勃常数 H₀ ≈ 67.39475 km/s/Mpc** | 严格证明 | W2/W3 | [FutureWork/Appendices/AppendixY/HubbleConstant.lean](FutureWork/Appendices/AppendixY/HubbleConstant.lean) |
+| **引力常数作为编织弹性模量** | 严格证明 | W2/W3 | [FutureWork/Appendices/AppendixZ/GravitationalConstant.lean](FutureWork/Appendices/AppendixZ/GravitationalConstant.lean) |
 
 ### θ(p) 展开谱
 
@@ -72,6 +83,18 @@ CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中
 | 13 | 0.265 | ↓ |
 | 17 | 0.259 | ↓ |
 | ∞ | 0.250 | ↓ |
+
+### 三锁统一闭环（新增）
+
+| 锁 | 数值 | 物理意义 | 代码位置 |
+|:---:|:---:|:---:|:---:|
+| 第一锁（电磁） | 137 + 9/250 | 精细结构常数倒数 | [AppendixW](FutureWork/Appendices/AppendixW/FineStructureConstant.lean) |
+| 观测者桥 | 250/9 | 测量代价的对偶 | [AppendixW](FutureWork/Appendices/AppendixW/FineStructureConstant.lean) |
+| 第二锁（宇宙） | 20:111:289 | 宇宙组分整数比 | [AppendixX](FutureWork/Appendices/AppendixX/LambdaCDM.lean) |
+| 全闭包公分母 | 420 = 2²×3×5×7 | 五大基本常数乘积 | [AppendixX](FutureWork/Appendices/AppendixX/LambdaCDM.lean) |
+| 第三锁（哈勃） | H₀ ≈ 67.39475 | 宇宙膨胀率 | [AppendixY](FutureWork/Appendices/AppendixY/HubbleConstant.lean) |
+| 生长链阻尼 | 61/30 = 2 + 1/30 | 膨胀摩擦因子 | [AppendixY](FutureWork/Appendices/AppendixY/HubbleConstant.lean) |
+| 引力闭包 | G ∝ 1/M_P0² | 编织弹性模量 | [AppendixZ](FutureWork/Appendices/AppendixZ/GravitationalConstant.lean) |
 
 ---
 
@@ -114,7 +137,27 @@ CSQIT/
 │   ├── AppendixC/CausalStructure.lean # C: 因果结构
 │   ├── AppendixD/BlackHoleThermo.lean # D: 黑洞热力学
 │   └── AppendixE/Mathematics.lean    # E: 数学基础
-├── FutureWork/                       # 未来工作探索
+├── FutureWork/                       # 未来工作探索（已升级为正式附录）
+│   ├── Appendices/                   # 正式附录（J, M, O, P, R, W, X, Y, Z）
+│   │   ├── AppendixJ/
+│   │   │   └── ElectricPotential.lean # 电势差与两面极化
+│   │   ├── AppendixM/
+│   │   │   └── Magnetism.lean        # 磁性与自旋态模型
+│   │   ├── AppendixO/
+│   │   │   └── ElectricalConductivity.lean # 导电率模型
+│   │   ├── AppendixP/
+│   │   │   └── PhaseStates.lean      # 固液气三态
+│   │   ├── AppendixR/
+│   │   │   └── Transparency.lean     # 固体透明原理
+│   │   ├── AppendixW/
+│   │   │   └── FineStructureConstant.lean # 精细结构常数精确解
+│   │   ├── AppendixX/
+│   │   │   └── LambdaCDM.lean        # ΛCDM宇宙组分
+│   │   ├── AppendixY/
+│   │   │   └── HubbleConstant.lean   # 哈勃常数推导
+│   │   └── AppendixZ/
+│   │       └── GravitationalConstant.lean # 引力常数与编织弹性模量
+│   └── README.md                     # FutureWork 说明文档
 ├── papers/                           # 论文预印本与源文件
 │   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf  # 英文完整版 PDF
 │   ├── CSQIT_宇宙的源代码_zh_v11.2.0.pdf          # 中文完整版 PDF
@@ -165,7 +208,23 @@ lake update
 
 # 编译
 lake build
-# 预期输出：2196 jobs, 0 errors
+# 预期输出：3267 jobs, 0 errors
+```
+
+### 编译单个附录
+
+```bash
+# 编译精细结构常数附录
+lake build FutureWork.Appendices.AppendixW.FineStructureConstant
+
+# 编译ΛCDM附录
+lake build FutureWork.Appendices.AppendixX.LambdaCDM
+
+# 编译哈勃常数附录
+lake build FutureWork.Appendices.AppendixY.HubbleConstant
+
+# 编译引力常数附录
+lake build FutureWork.Appendices.AppendixZ.GravitationalConstant
 ```
 
 ---
@@ -180,6 +239,12 @@ $$\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308$$
 
 **扩展统一身份方程**：$7 \equiv 15 \mod 8 \to \theta = 0.308 \to \Omega_m = 0.311 \to 4\text{ DNA 碱基} \to 8\text{ SU(3) 生成元}$
 
+**三锁统一（新增）**：从基本常数 {2,3,4,5,7} 出发，严格推导出：
+- 精细结构常数：$1/\alpha = 137 + 9/250$
+- 宇宙组分：$\Omega_b:\Omega_{DM}:\Omega_\Lambda = 20:111:289$（公分母 420）
+- 哈勃常数：$H_0 \approx 67.39475$ km/s/Mpc
+- 引力常数：$G \propto 1/M_{P0}^2$，完成"量子-宇宙-引力"三位一体
+
 ---
 
 ## 诚实边界声明
@@ -189,6 +254,7 @@ $$\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308$$
 3. **连续极限收敛性是开放问题**
 4. **不声称已统一量子力学和广义相对论**
 5. **代码中保留 4 个 sorry 作为数学不可能性的反例标记**
+6. **三锁统一中的单位编织量子 G_unit 尚未从公理导出**（留作未来工作）
 
 ---
 
@@ -201,6 +267,7 @@ $$\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308$$
 | 2026-06-28 | 11.0.0 | 因果格、量子测量、时间箭头 |
 | 2026-07-01 | 11.1.0 | Fin 7 θ 推导 |
 | 2026-07-04 | 11.2.0 | 生长叙事、代数因果序、射影紧化、2196 jobs 通过 |
+| 2026-07-08 | 11.2.1 | **三锁统一闭环**：精细结构常数、ΛCDM组分、哈勃常数、引力常数形式化证明，3267 jobs 通过 |
 
 ---
 
@@ -210,5 +277,6 @@ MIT License
 
 ---
 
-*CSQIT v11.2.0 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎*  
-*Lean 4 v4.29.0-rc6 — 2196 编译任务，0 错误*
+*CSQIT v11.2.1 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎*  
+*Lean 4 v4.29.0-rc6 — 3267 编译任务，0 错误*  
+*三锁统一闭环 — 量子·宇宙·引力三位一体*

@@ -54,5 +54,9 @@ lean_lib CSQIT where
     `FutureWork.Appendices.AppendixS.MatterEnergyUnification,
     `FutureWork.Appendices.AppendixT.GrandUnification,
     `FutureWork.Appendices.AppendixU.PhotoelectricRelation,
-    `FutureWork.Appendices.AppendixV.PhiUnification
+    `FutureWork.Appendices.AppendixV.PhiUnification,
+    `FutureWork.Appendices.AppendixW.FineStructureConstant,
+    `FutureWork.Appendices.AppendixX.LambdaCDM,
+    `FutureWork.Appendices.AppendixY.HubbleConstant,
+    `FutureWork.Appendices.AppendixZ.GravitationalConstant
   ]
