@@ -54,6 +54,7 @@ lean_lib CSQIT where
     `Unified.Constants.LambdaCDM,
     `Unified.Constants.Hubble,
     `Unified.Constants.Gravity,
+    `Unified.Constants.CrossConsistency,
     -- 应用物理模型（W2/W1应用态）
     `Unified.Models.Electrostatics,
     `Unified.Models.Magnetism,

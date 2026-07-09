@@ -165,4 +165,56 @@ theorem unit_rule_amplitude_one [A : AxiomA M C] [Cx : AxiomC M C]
   apply mul_left_cancel₀ hne
   exact h4
 
+/-! ----------------------------------------------------------------------------
+   振幅的界与实部虚部性质
+   ---------------------------------------------------------------------------- -/
+
+/-- 振幅的模长为 1 -/
+theorem amplitude_abs_eq_one [A : AxiomA M C] [Cx : AxiomC M C] (α : C) :
+    Complex.abs (Cx.amplitude α) = 1 := by
+  have h : Complex.normSq (Cx.amplitude α) = 1 := Cx.norm_one α
+  have h2 : Complex.abs (Cx.amplitude α) = Real.sqrt (Complex.normSq (Cx.amplitude α)) := by
+    rfl
+  rw [h2, h]
+  <;> norm_num
+
+/-- 振幅实部的绝对值不超过 1 -/
+theorem amplitude_re_le_one [A : AxiomA M C] [Cx : AxiomC M C] (α : C) :
+    |Complex.re (Cx.amplitude α)| ≤ 1 := by
+  have h1 : (Complex.re (Cx.amplitude α)) ^ 2 ≤ Complex.normSq (Cx.amplitude α) := by
+    have h2 : Complex.normSq (Cx.amplitude α) =
+        (Complex.re (Cx.amplitude α)) ^ 2 + (Complex.im (Cx.amplitude α)) ^ 2 := by
+      simp [Complex.normSq]
+      <;> ring
+    rw [h2]
+    <;> nlinarith [sq_nonneg (Complex.im (Cx.amplitude α))]
+  have h3 : Complex.normSq (Cx.amplitude α) = 1 := Cx.norm_one α
+  rw [h3] at h1
+  rw [abs_le]
+  constructor <;> nlinarith
+
+/-- 振幅虚部的绝对值不超过 1 -/
+theorem amplitude_im_le_one [A : AxiomA M C] [Cx : AxiomC M C] (α : C) :
+    |Complex.im (Cx.amplitude α)| ≤ 1 := by
+  have h1 : (Complex.im (Cx.amplitude α)) ^ 2 ≤ Complex.normSq (Cx.amplitude α) := by
+    have h2 : Complex.normSq (Cx.amplitude α) =
+        (Complex.re (Cx.amplitude α)) ^ 2 + (Complex.im (Cx.amplitude α)) ^ 2 := by
+      simp [Complex.normSq]
+      <;> ring
+    rw [h2]
+    <;> nlinarith [sq_nonneg (Complex.re (Cx.amplitude α))]
+  have h3 : Complex.normSq (Cx.amplitude α) = 1 := Cx.norm_one α
+  rw [h3] at h1
+  rw [abs_le]
+  constructor <;> nlinarith
+
+/-- 振幅共轭的模方也是 1 -/
+theorem amplitude_conj_normSq [A : AxiomA M C] [Cx : AxiomC M C] (α : C) :
+    Complex.normSq (Complex.conj (Cx.amplitude α)) = 1 := by
+  have h : Complex.normSq (Complex.conj (Cx.amplitude α)) =
+      Complex.normSq (Cx.amplitude α) := by
+    simp [Complex.normSq]
+    <;> ring
+  rw [h, Cx.norm_one α]
+
 end CSQIT
