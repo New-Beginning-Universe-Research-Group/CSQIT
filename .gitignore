@@ -105,6 +105,7 @@ WORKFLOW_README.md
 
 # Temporary files
 commit_msg.txt
+commit_msg_*.txt
 *.ps1
 *.sh
 *.py
