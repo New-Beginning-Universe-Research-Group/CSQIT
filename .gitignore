@@ -53,6 +53,8 @@ _backup/
 _scripts/
 _reports/
 *.tar.gz
+papers/*.pdf
+papers/*.tex
 
 # Project-specific backup files
 CSQIT_*.txt
