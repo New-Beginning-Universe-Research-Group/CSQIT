@@ -1,8 +1,8 @@
 /-
-CSQIT v11.2.1 Lake 项目配置文件
-版本: 11.2.1
+CSQIT v11.2.4 Lake 项目配置文件
+版本: 11.2.4
 Lean 版本: v4.29.0-rc6
-日期: 2026-07-08
+日期: 2026-07-09
 
 本文件定义了 CSQIT 项目的 Lake 构建配置，
 包括 mathlib 依赖和各层级模块。
@@ -12,13 +12,21 @@ Lean 版本: v4.29.0-rc6
 - Unified/Constants/ : 三锁统一闭包（核心成果层，W1完成态）
 - Unified/Models/    : 应用物理模型（W2/W1应用态）
 - FutureWork/        : 探索性存根（W2/W3概念态）
+
+清理记录（v11.2.4）：
+- 已移除已迁移到 Unified/Models/ 的旧 FutureWork 附录条目：
+  * FutureWork.Appendices.AppendixJ.ElectricPotential → Unified.Models.Electrostatics
+  * FutureWork.Appendices.AppendixM.Magnetism → Unified.Models.Magnetism
+  * FutureWork.Appendices.AppendixO.Conductivity → Unified.Models.Conductivity
+  * FutureWork.Appendices.AppendixP.PhaseStates → Unified.Models.PhaseStates
+  * FutureWork.Appendices.AppendixR.Transparency → Unified.Models.Transparency（已删除）
 -/
 
 import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"11.2.2"
+  version := v!"11.2.4"
   leanOptions := #[⟨`linter.unreachableTactic, false⟩, ⟨`linter.unusedTactic, false⟩]
 
 require mathlib from "/mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib"
@@ -63,13 +71,15 @@ lean_lib CSQIT where
     `Unified.Models.PhaseStates,
     `Unified.Models.Transparency,
     -- 探索性附录（W2/W3概念态）
-    `FutureWork.Appendices.AppendixJ.ElectricPotential,
+    -- 注：以下模型已迁移至 Unified/Models/，旧文件保留在 FutureWork/ 仅作历史参考：
+    --   AppendixJ/ElectricPotential → Unified.Models.Electrostatics
+    --   AppendixM/Magnetism → Unified.Models.Magnetism
+    --   AppendixO/Conductivity → Unified.Models.Conductivity
+    --   AppendixP/PhaseStates → Unified.Models.PhaseStates
+    --   AppendixR/Transparency → Unified.Models.Transparency（已删除）
     `FutureWork.Appendices.AppendixK.NuclearFusionFission,
     `FutureWork.Appendices.AppendixL.PhysicsCorrespondence,
-    `FutureWork.Appendices.AppendixM.Magnetism,
     `FutureWork.Appendices.AppendixN.ElectromagneticUnification,
-    `FutureWork.Appendices.AppendixO.Conductivity,
-    `FutureWork.Appendices.AppendixP.PhaseStates,
     `FutureWork.Appendices.AppendixQ.CrystalGrowth,
     `FutureWork.Appendices.AppendixS.MatterEnergyUnification,
     `FutureWork.Appendices.AppendixT.GrandUnification,
