@@ -139,6 +139,31 @@ theorem twoAspectBalance_max_one (k m : ℝ) (h_pos : 0 ≤ k ∧ 0 ≤ m ∧ (k
       nlinarith [sq_nonneg (k - m)]
     exact (div_le_one (by positivity)).mpr h2
 
+/-
+**定理 1.2: 两面平衡度的非负性**
+
+  B(k, m) ≥ 0
+
+当k, m ≥ 0时，平衡度非负。
+-/
+theorem twoAspectBalance_nonneg (k m : ℝ) (h_pos : 0 ≤ k ∧ 0 ≤ m) :
+    0 ≤ twoAspectBalance k m := by
+  unfold twoAspectBalance
+  by_cases h : k = 0 ∧ m = 0
+  · rw [if_pos h] <;> norm_num
+  · rw [if_neg h]
+    have h_k_nonneg : 0 ≤ k := h_pos.1
+    have h_m_nonneg : 0 ≤ m := h_pos.2
+    have h1 : 0 ≤ 4 * k * m := by positivity
+    have h2 : 0 < (k + m)^2 := by
+      by_contra h3
+      have h4 : (k + m)^2 = 0 := by nlinarith [sq_nonneg (k + m)]
+      have h5 : k + m = 0 := by nlinarith
+      have h6 : k = 0 := by linarith
+      have h7 : m = 0 := by linarith
+      exact h ⟨h6, h7⟩
+    exact div_nonneg h1 (by positivity)
+
 end BasicConstants
 
 /-! ============================================================================

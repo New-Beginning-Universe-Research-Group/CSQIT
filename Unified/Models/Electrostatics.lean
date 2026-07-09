@@ -369,6 +369,30 @@ theorem potentialDiffIffPolarization (S : Set X) (h_nonempty : Set.Nonempty S) :
   · exact h_main_mp
   · exact h_main_mpr
 
+/-
+**定理 3.2: 两面极化度非负**
+
+  P(S) ≥ 0
+
+极化度总是非负的。
+-/
+theorem twoAspectPolarization_nonneg (S : Set X) :
+    0 ≤ twoAspectPolarization psi S := by
+  let s_finset := S.toFinset
+  have h_nonneg : ∀ z ∈ s_finset, 0 ≤ (electricPotential psi z -
+      ((∑ x ∈ s_finset, electricPotential psi x) / (s_finset.card : ℝ))) ^ 2 := by
+    intro z _
+    exact sq_nonneg _
+  have h_sum_nonneg : 0 ≤ ∑ z ∈ s_finset, (electricPotential psi z -
+      ((∑ x ∈ s_finset, electricPotential psi x) / (s_finset.card : ℝ))) ^ 2 := by
+    apply Finset.sum_nonneg
+    exact h_nonneg
+  unfold twoAspectPolarization
+  by_cases h : s_finset.card = 0
+  · rw [if_pos h] <;> norm_num
+  · rw [if_neg h]
+    exact div_nonneg h_sum_nonneg (by positivity)
+
 end Polarization
 
 end CSQIT.Unified.Models.Electrostatics

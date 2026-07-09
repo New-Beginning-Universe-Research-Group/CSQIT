@@ -204,14 +204,139 @@ noncomputable def exchangeInteraction (x y : X) : ℝ :=
 
   H = -∑_{⟨x,y⟩} J(x, y) · S_x · S_y
 
-在简化模型中：
-  H = ∑_{x,y} J(x, y)
+在简化模型中，我们采用标准的负号约定：
+  H = -∑_{x,y} J(x, y)
 
-注：符号约定可能因模型而异，
-    这里定义为所有相邻对的相互作用之和。
+物理意义：
+  - H < 0：负交换能，相邻自旋平行更稳定（铁磁性）
+  - H > 0：正交换能，相邻自旋反平行更稳定（反铁磁性）
+  - H = 0：无交换相互作用（顺磁性）
 -/
 noncomputable def heisenbergHamiltonian (s : Finset X) : ℝ :=
-  ∑ x ∈ s, ∑ y ∈ s, exchangeInteraction psi x y
+  -∑ x ∈ s, ∑ y ∈ s, exchangeInteraction psi x y
+
+/-
+**定理 2.1: 交换相互作用非负性**
+
+  J(x, y) ≥ 0
+
+交换相互作用强度总是非负的。
+-/
+theorem exchangeInteraction_nonneg (x y : X) :
+    0 ≤ exchangeInteraction psi x y := by
+  unfold exchangeInteraction
+  split_ifs
+  · exact Complex.normSq_nonneg _
+  · norm_num
+
+/-
+**定理 2.2: 交换相互作用的对称性**
+
+  J(x, y) = J(y, x)
+
+交换相互作用是对称的。
+-/
+theorem exchangeInteraction_symmetric (x y : X) :
+    exchangeInteraction psi x y = exchangeInteraction psi y x := by
+  unfold exchangeInteraction isNearestNeighbor
+  have h_comm : ((x < y ∧ ¬ ∃ z : X, x < z ∧ z < y) ∨
+                 (y < x ∧ ¬ ∃ z : X, y < z ∧ z < x)) ↔
+                ((y < x ∧ ¬ ∃ z : X, y < z ∧ z < x) ∨
+                 (x < y ∧ ¬ ∃ z : X, x < z ∧ z < y)) := by
+    tauto
+  simp only [h_comm]
+  <;> ring
+
+/-
+**定义 2.4: 最近邻自旋关联函数**
+
+相邻格点的自旋关联强度：
+  C(x, y) = Re(ψ(x) * conj(ψ(y))) / (|ψ(x)| · |ψ(y)|)
+
+当 C > 0 时，自旋趋向平行（铁磁倾向）
+当 C < 0 时，自旋趋向反平行（反铁磁倾向）
+-/
+noncomputable def spinCorrelation (x y : X) : ℝ :=
+  if isNearestNeighbor x y ∧ psi x ≠ 0 ∧ psi y ≠ 0 then
+    Complex.re (psi x * Complex.conj (psi y)) /
+      (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)))
+  else
+    0
+
+/-
+**定义 2.5: 总自旋关联**
+
+系统的总自旋关联度：
+  C_total = ∑_{⟨x,y⟩} C(x, y)
+-/
+noncomputable def totalSpinCorrelation (s : Finset X) : ℝ :=
+  ∑ x ∈ s, ∑ y ∈ s, spinCorrelation psi x y
+
+/-
+**定理 2.4: 自旋关联函数有界**
+
+  -1 ≤ C(x, y) ≤ 1
+
+这是柯西-施瓦茨不等式的直接结果。
+-/
+theorem spinCorrelation_bounded (x y : X) :
+    -1 ≤ spinCorrelation psi x y ∧ spinCorrelation psi x y ≤ 1 := by
+  unfold spinCorrelation
+  split_ifs with h
+  · rcases h with ⟨h_nn, hx, hy⟩
+    have h1 : 0 ≤ Complex.normSq (psi x) := Complex.normSq_nonneg (psi x)
+    have h2 : 0 ≤ Complex.normSq (psi y) := Complex.normSq_nonneg (psi y)
+    have h3 : 0 < Real.sqrt (Complex.normSq (psi x)) := by
+      apply Real.sqrt_pos.mpr
+      exact Complex.normSq_pos.mpr hx
+    have h4 : 0 < Real.sqrt (Complex.normSq (psi y)) := by
+      apply Real.sqrt_pos.mpr
+      exact Complex.normSq_pos.mpr hy
+    constructor
+    · -- 下界 -1
+      have h5 : Complex.re (psi x * Complex.conj (psi y)) ≥
+                -Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)) := by
+        have h6 : (Complex.re (psi x * Complex.conj (psi y))) ^ 2 ≤
+                  Complex.normSq (psi x) * Complex.normSq (psi y) := by
+          simpa [Complex.normSq_mul] using sq_abs_le (psi x * Complex.conj (psi y))
+        have h7 : (Complex.re (psi x * Complex.conj (psi y))) ^ 2 ≤
+                  (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) ^ 2 := by
+          rw [← Real.sqrt_mul h1]
+          <;> simp [h1, h2]
+        nlinarith [Real.sqrt_nonneg (Complex.normSq (psi x)),
+                   Real.sqrt_nonneg (Complex.normSq (psi y))]
+      have h6 : Complex.re (psi x * Complex.conj (psi y)) /
+               (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) ≥ -1 := by
+        have h_pos : 0 < Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)) := mul_pos h3 h4
+        calc
+          Complex.re (psi x * Complex.conj (psi y)) / (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)))
+            ≥ (-Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) / (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) := by
+              gcongr
+          _ = -1 := by
+            field_simp [h_pos.ne'] <;> ring
+      exact h6
+    · -- 上界 1
+      have h5 : Complex.re (psi x * Complex.conj (psi y)) ≤
+                Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)) := by
+        have h6 : (Complex.re (psi x * Complex.conj (psi y))) ^ 2 ≤
+                  Complex.normSq (psi x) * Complex.normSq (psi y) := by
+          simpa [Complex.normSq_mul] using sq_abs_le (psi x * Complex.conj (psi y))
+        have h7 : (Complex.re (psi x * Complex.conj (psi y))) ^ 2 ≤
+                  (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) ^ 2 := by
+          rw [← Real.sqrt_mul h1] <;> simp [h1, h2]
+        nlinarith [Real.sqrt_nonneg (Complex.normSq (psi x)),
+                   Real.sqrt_nonneg (Complex.normSq (psi y))]
+      have h6 : Complex.re (psi x * Complex.conj (psi y)) /
+               (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) ≤ 1 := by
+        have h_pos : 0 < Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)) := mul_pos h3 h4
+        calc
+          Complex.re (psi x * Complex.conj (psi y)) / (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y)))
+            ≤ (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) / (Real.sqrt (Complex.normSq (psi x)) * Real.sqrt (Complex.normSq (psi y))) := by
+              gcongr
+          _ = 1 := by
+            field_simp [h_pos.ne'] <;> ring
+      exact h6
+  · simp <;> norm_num
 
 end ExchangeInteraction
 
@@ -227,47 +352,47 @@ variable (psi : X → ℂ)
 /-
 **定义 3.1: 铁磁性（Ferromagnetism）**
 
-当系统的海森堡哈密顿量为负时，
+当系统的总自旋关联为正时，
 系统处于铁磁有序相：
-  H < 0 → 铁磁性
+  C_total > 0 → 铁磁性
 
 物理意义：
-  负的交换能意味着相邻自旋平行排列更稳定，
+  正的自旋关联意味着相邻自旋平行排列占主导，
   整体表现出自发磁化。
 -/
 def isFerromagnetic (s : Finset X) : Prop :=
-  heisenbergHamiltonian psi s < 0
+  totalSpinCorrelation psi s > 0
 
 /-
 **定义 3.2: 反铁磁性（Antiferromagnetism）**
 
-当系统的海森堡哈密顿量为正时，
+当系统的总自旋关联为负时，
 系统处于反铁磁有序相：
-  H > 0 → 反铁磁性
+  C_total < 0 → 反铁磁性
 
 物理意义：
-  正的交换能意味着相邻自旋反平行排列更稳定，
+  负的自旋关联意味着相邻自旋反平行排列占主导，
   整体磁矩为零但有磁有序结构。
 -/
 def isAntiferromagnetic (s : Finset X) : Prop :=
-  heisenbergHamiltonian psi s > 0
+  totalSpinCorrelation psi s < 0
 
 /-
 **定义 3.3: 顺磁性（Paramagnetism）**
 
-当系统的海森堡哈密顿量为零时，
+当系统的总自旋关联为零时，
 系统处于顺磁无序相：
-  H = 0 → 顺磁性
+  C_total = 0 → 顺磁性
 
 物理意义：
-  交换相互作用可以忽略，
-  自旋随机取向，没有宏观磁矩。
+  自旋关联为零，自旋随机取向，
+  没有宏观磁有序。
 -/
 def isParamagnetic (s : Finset X) : Prop :=
-  heisenbergHamiltonian psi s = 0
+  totalSpinCorrelation psi s = 0
 
 /-
-**定理 3.1: 三相的互斥性**
+**定理 3.1: 三相的互斥性与完备性**
 
 对于给定系统，铁磁、反铁磁、顺磁三者互斥，
 且必居其一。
@@ -275,15 +400,39 @@ def isParamagnetic (s : Finset X) : Prop :=
 theorem three_phases_exhaustive (s : Finset X) :
     isFerromagnetic psi s ∨ isAntiferromagnetic psi s ∨ isParamagnetic psi s := by
   unfold isFerromagnetic isAntiferromagnetic isParamagnetic
-  have h : (heisenbergHamiltonian psi s < 0) ∨
-           (heisenbergHamiltonian psi s > 0) ∨
-           (heisenbergHamiltonian psi s = 0) := by
-    by_cases h1 : heisenbergHamiltonian psi s < 0
+  have h : (totalSpinCorrelation psi s < 0) ∨
+           (totalSpinCorrelation psi s > 0) ∨
+           (totalSpinCorrelation psi s = 0) := by
+    by_cases h1 : totalSpinCorrelation psi s < 0
     · exact Or.inl h1
-    · by_cases h2 : heisenbergHamiltonian psi s > 0
+    · by_cases h2 : totalSpinCorrelation psi s > 0
       · exact Or.inr (Or.inl h2)
       · exact Or.inr (Or.inr (by linarith))
-  exact h
+  rcases h with (h | h | h)
+  · exact Or.inr (Or.inl h)
+  · exact Or.inl h
+  · exact Or.inr (Or.inr h)
+
+theorem ferro_antiferro_exclusive (s : Finset X) :
+    ¬ (isFerromagnetic psi s ∧ isAntiferromagnetic psi s) := by
+  intro h
+  have h1 : totalSpinCorrelation psi s > 0 := h.1
+  have h2 : totalSpinCorrelation psi s < 0 := h.2
+  linarith
+
+theorem ferro_para_exclusive (s : Finset X) :
+    ¬ (isFerromagnetic psi s ∧ isParamagnetic psi s) := by
+  intro h
+  have h1 : totalSpinCorrelation psi s > 0 := h.1
+  have h2 : totalSpinCorrelation psi s = 0 := h.2
+  linarith
+
+theorem antiferro_para_exclusive (s : Finset X) :
+    ¬ (isAntiferromagnetic psi s ∧ isParamagnetic psi s) := by
+  intro h
+  have h1 : totalSpinCorrelation psi s < 0 := h.1
+  have h2 : totalSpinCorrelation psi s = 0 := h.2
+  linarith
 
 end MagneticPhases
 

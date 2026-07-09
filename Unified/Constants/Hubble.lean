@@ -188,6 +188,17 @@ theorem hubbleConstant_value :
   · norm_num
   · norm_num
 
+/-
+**定理 2.2: 哈勃常数的正性**
+
+  H₀ > 0
+
+哈勃常数严格为正，对应宇宙膨胀。
+-/
+theorem hubbleConstant_pos : 0 < hubbleConstant := by
+  unfold hubbleConstant inverseFineStructure
+  norm_num
+
 end HubbleFormula
 
 /-! ============================================================================

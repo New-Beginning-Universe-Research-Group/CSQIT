@@ -280,6 +280,63 @@ theorem insulator_large_bandgap (S : Finset ℂ) (h_ins : isInsulator S) :
       exact h7
     exact h3
 
+/-
+**定理 2.3: 导电率非负性**
+
+  σ ≥ 0
+
+导电率总是非负的。
+-/
+theorem conductivity_nonneg (S : Finset ℂ) :
+    0 ≤ conductivity S := by
+  unfold conductivity
+  by_cases h : bandGap S = 0
+  · rw [if_pos h] <;> norm_num
+  · rw [if_neg h]
+    have h_pos : 0 < bandGap S := by
+      have h_nonneg := bandGap_nonneg S
+      by_contra h'
+      have h'' : bandGap S = 0 := by linarith
+      exact h h''
+    positivity
+
+/-
+**定理 2.4: 导体、半导体、绝缘体的互斥性与完备性**
+
+任何物质必居其一且仅居其一。
+-/
+theorem three_conductivity_classes_exhaustive (S : Finset ℂ) :
+    isConductor S ∨ isSemiconductor S ∨ isInsulator S := by
+  unfold isConductor isSemiconductor isInsulator
+  by_cases h1 : conductivity S > 0.9
+  · exact Or.inl h1
+  · by_cases h2 : conductivity S < 0.1
+    · exact Or.inr (Or.inr h2)
+    · have h3 : 0.1 ≤ conductivity S ∧ conductivity S ≤ 0.9 := by
+        constructor <;> linarith
+      exact Or.inr (Or.inl h3)
+
+theorem conductor_semiconductor_exclusive (S : Finset ℂ) :
+    ¬ (isConductor S ∧ isSemiconductor S) := by
+  intro h
+  have h1 : conductivity S > 0.9 := h.1
+  have h2 : conductivity S ≤ 0.9 := h.2.2
+  linarith
+
+theorem conductor_insulator_exclusive (S : Finset ℂ) :
+    ¬ (isConductor S ∧ isInsulator S) := by
+  intro h
+  have h1 : conductivity S > 0.9 := h.1
+  have h2 : conductivity S < 0.1 := h.2
+  linarith
+
+theorem semiconductor_insulator_exclusive (S : Finset ℂ) :
+    ¬ (isSemiconductor S ∧ isInsulator S) := by
+  intro h
+  have h1 : 0.1 ≤ conductivity S := h.1.1
+  have h2 : conductivity S < 0.1 := h.2
+  linarith
+
 end ConductivityModel
 
 /-! ============================================================================

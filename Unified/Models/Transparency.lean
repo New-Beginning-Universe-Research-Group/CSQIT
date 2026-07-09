@@ -159,6 +159,60 @@ noncomputable def absorptionCoefficient (S : Finset ℂ) (E_photon : ℝ) : ℝ 
 noncomputable def transmittance (S : Finset ℂ) (E_photon : ℝ) : ℝ :=
   1 - absorptionCoefficient S E_photon
 
+/-
+**定理 2.1: 吸收系数严格正且不超过1**
+
+  0 < α ≤ 1
+
+吸收系数总是在(0, 1]范围内。
+-/
+theorem absorptionCoefficient_pos (S : Finset ℂ) (E_photon : ℝ) :
+    0 < absorptionCoefficient S E_photon := by
+  unfold absorptionCoefficient
+  apply Real.exp_pos
+
+theorem absorptionCoefficient_le_one (S : Finset ℂ) (E_photon : ℝ) :
+    absorptionCoefficient S E_photon ≤ 1 := by
+  unfold absorptionCoefficient
+  have h1 : -|E_photon - bandGap S| ≤ 0 := by
+    have h2 : 0 ≤ |E_photon - bandGap S| := abs_nonneg _
+    linarith
+  have h3 : Real.exp (-|E_photon - bandGap S|) ≤ Real.exp 0 := Real.exp_le_exp.mpr h1
+  simpa using h3
+
+/-
+**定理 2.2: 透射率的取值范围**
+
+  0 ≤ T < 1
+
+透射率总是在[0, 1)范围内。
+-/
+theorem transmittance_nonneg (S : Finset ℂ) (E_photon : ℝ) :
+    0 ≤ transmittance S E_photon := by
+  unfold transmittance
+  have h : absorptionCoefficient S E_photon ≤ 1 := absorptionCoefficient_le_one S E_photon
+  linarith
+
+theorem transmittance_lt_one (S : Finset ℂ) (E_photon : ℝ) :
+    transmittance S E_photon < 1 := by
+  unfold transmittance
+  have h : 0 < absorptionCoefficient S E_photon := absorptionCoefficient_pos S E_photon
+  linarith
+
+/-
+**定理 2.3: 光子能量与频率的互逆性**
+
+  photonEnergy (photonFrequency E) = E
+  photonFrequency (photonEnergy nu) = nu
+-/
+theorem photon_energy_freq_inverse1 (E : ℝ) :
+    photonEnergy (photonFrequency E) = E := by
+  simp [photonEnergy, photonFrequency]
+
+theorem photon_energy_freq_inverse2 (nu : ℝ) :
+    photonFrequency (photonEnergy nu) = nu := by
+  simp [photonEnergy, photonFrequency]
+
 end OpticalResponse
 
 /-! ============================================================================

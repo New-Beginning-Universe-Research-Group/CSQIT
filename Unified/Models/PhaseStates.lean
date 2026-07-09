@@ -143,6 +143,73 @@ noncomputable def orientationalOrder (psi_spin : X → ℂ) (S : Finset X) : ℝ
 noncomputable def density (S : Finset X) (V : ℝ) : ℝ :=
   (S.card : ℝ) / V
 
+/-
+**定理 1.1: 位置序参量非负**
+
+  P_pos ≥ 0
+-/
+theorem positionalOrder_nonneg (psi_pos : X → ℝ) (S : Finset X) :
+    0 ≤ positionalOrder psi_pos S := by
+  unfold positionalOrder
+  by_cases h : S.card ≤ 1
+  · rw [if_pos h]
+    <;> norm_num
+  · rw [if_neg h]
+    apply one_div_nonneg.mpr
+    have h1 : 0 ≤ (∑ x ∈ S, ∑ y ∈ S, dist x y) / ((S.card * S.card : ℕ) : ℝ) := by
+      apply div_nonneg
+      · apply sum_nonneg
+        intro x _
+        apply sum_nonneg
+        intro y _
+        unfold dist
+        split_ifs <;> norm_num
+      · positivity
+    linarith
+
+/-
+**定理 1.2: 位置序参量有上界**
+
+  P_pos ≤ 1
+-/
+theorem positionalOrder_le_one (psi_pos : X → ℝ) (S : Finset X) :
+    positionalOrder psi_pos S ≤ 1 := by
+  unfold positionalOrder
+  by_cases h : S.card ≤ 1
+  · rw [if_pos h]
+    <;> norm_num
+  · rw [if_neg h]
+    have h1 : 0 ≤ (∑ x ∈ S, ∑ y ∈ S, dist x y) / ((S.card * S.card : ℕ) : ℝ) := by
+      apply div_nonneg
+      · apply sum_nonneg
+        intro x _
+        apply sum_nonneg
+        intro y _
+        unfold dist
+        split_ifs <;> norm_num
+      · positivity
+    have h2 : 1 / ((∑ x ∈ S, ∑ y ∈ S, dist x y) / ((S.card * S.card : ℕ) : ℝ) + 1) ≤ 1 := by
+      apply one_le_one_div
+      <;> linarith
+    exact h2
+
+/-
+**定理 1.3: 取向序参量非负**
+
+  P_orient ≥ 0
+-/
+theorem orientationalOrder_nonneg (psi_spin : X → ℂ) (S : Finset X) :
+    0 ≤ orientationalOrder psi_spin S := by
+  unfold orientationalOrder
+  by_cases h : S.card = 0
+  · rw [if_pos h] <;> norm_num
+  · rw [if_neg h]
+    have h1 : 0 ≤ ((∑ x ∈ S, Complex.re (psi_spin x)) / (S.card : ℝ)) ^ 2 := by
+      exact sq_nonneg _
+    have h2 : 0 ≤ ((∑ x ∈ S, Complex.im (psi_spin x)) / (S.card : ℝ)) ^ 2 := by
+      exact sq_nonneg _
+    linarith
+
 end OrderParameters
 
 /-! ============================================================================
@@ -286,6 +353,55 @@ noncomputable def meltingPoint (psi_pos : X → ℝ) (S : Finset X) : ℝ :=
 -/
 noncomputable def boilingPoint (psi_pos : X → ℝ) (S : Finset X) : ℝ :=
   positionalOrder psi_pos S * 200
+
+/-
+**定理 5.1: 熔点与沸点的关系**
+
+  T_m < T_b
+
+熔点总是低于沸点。
+-/
+theorem melting_lt_boiling (psi_pos : X → ℝ) (S : Finset X) :
+    meltingPoint psi_pos S < boilingPoint psi_pos S := by
+  unfold meltingPoint boilingPoint
+  have h_pos : 0 < positionalOrder psi_pos S := by
+    have h := positionalOrder_nonneg psi_pos S
+    by_cases h' : positionalOrder psi_pos S = 0
+    · rw [h'] <;> norm_num
+    · have h'' : 0 < positionalOrder psi_pos S := by
+        by_contra h'''
+        have : positionalOrder psi_pos S ≤ 0 := by linarith
+        have : positionalOrder psi_pos S = 0 := by linarith
+        exact h' this
+      exact h''
+  nlinarith
+
+/-
+**定理 5.2: 固液气三态互斥性**
+
+同一系统不能同时是固态和液态，也不能同时是液态和气态，
+也不能同时是固态和气态。
+-/
+theorem solid_liquid_exclusive (psi_pos : X → ℝ) (psi_spin : X → ℂ) (S : Finset X) :
+    ¬ (isSolid psi_pos psi_spin S ∧ isLiquid psi_pos psi_spin S) := by
+  intro h
+  have h1 : positionalOrder psi_pos S > 0.9 := h.1.1
+  have h2 : positionalOrder psi_pos S ≤ 0.9 := h.2.2.1
+  linarith
+
+theorem liquid_gas_exclusive (psi_pos : X → ℝ) (psi_spin : X → ℂ) (S : Finset X) :
+    ¬ (isLiquid psi_pos psi_spin S ∧ isGas psi_pos psi_spin S) := by
+  intro h
+  have h1 : positionalOrder psi_pos S > 0.5 := h.1.1
+  have h2 : positionalOrder psi_pos S ≤ 0.5 := h.2.1
+  linarith
+
+theorem solid_gas_exclusive (psi_pos : X → ℝ) (psi_spin : X → ℂ) (S : Finset X) :
+    ¬ (isSolid psi_pos psi_spin S ∧ isGas psi_pos psi_spin S) := by
+  intro h
+  have h1 : positionalOrder psi_pos S > 0.9 := h.1.1
+  have h2 : positionalOrder psi_pos S ≤ 0.5 := h.2.1
+  linarith
 
 end PhaseTransition
 
