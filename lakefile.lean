@@ -71,7 +71,6 @@ lean_lib CSQIT where
     `FutureWork.Appendices.AppendixO.Conductivity,
     `FutureWork.Appendices.AppendixP.PhaseStates,
     `FutureWork.Appendices.AppendixQ.CrystalGrowth,
-    `FutureWork.Appendices.AppendixR.Transparency,
     `FutureWork.Appendices.AppendixS.MatterEnergyUnification,
     `FutureWork.Appendices.AppendixT.GrandUnification,
     `FutureWork.Appendices.AppendixU.PhotoelectricRelation,

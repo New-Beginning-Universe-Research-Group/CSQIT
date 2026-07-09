@@ -87,7 +87,7 @@ import FutureWork.Appendices.AppendixN.ElectromagneticUnification
 import FutureWork.Appendices.AppendixO.Conductivity
 import FutureWork.Appendices.AppendixP.PhaseStates
 import FutureWork.Appendices.AppendixQ.CrystalGrowth
-import FutureWork.Appendices.AppendixR.Transparency
+import Unified.Models.Transparency
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finset.Basic
