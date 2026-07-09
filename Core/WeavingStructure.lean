@@ -1,14 +1,242 @@
 /-
 ================================================================================
-CSQIT v11.0.0 核心模块 - 编织结构 (Weaving Structure)
+CSQIT v11.2.2 核心模块 - 编织结构 (Weaving Structure)
 文件: Core/WeavingStructure.lean
-版本: 11.0.0
+版本: 11.2.2
 ================================================================================
 -/
 
 import Core.Axioms
+import Mathlib.Data.List.Basic
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Set.Basic
+import Mathlib.Tactic.NormNum
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Unified.Constants.FineStructure
+import Unified.Constants.CrossConsistency
 
 namespace CSQIT
+
+open Unified.Constants.FineStructure
+open Unified.Constants.CrossConsistency
+
+-- ============================================================================
+-- 因果位点与因果序 (Causal Site & Causal Order)
+-- ============================================================================
+
+/-- **因果位点 (Causal Site)**:
+
+因果格中的基本位点，携带因果序信息。
+每个位点对应一个规则的输出位置。
+-/
+structure CausalSite (M : Type*) where
+  /-- 位点标识 -/
+  idx : ℕ
+  /-- 位点的输出关系元 -/
+  out : M
+
+/-- **因果序 (Causal Order)**:
+
+在因果位点上定义的严格因果序关系。
+-/
+def causalLT {M : Type*} (x y : CausalSite M) := x.idx < y.idx
+
+def causalLE {M : Type*} (x y : CausalSite M) := x.idx ≤ y.idx
+
+/-- **因果不可比 (Causal Incomparable)**:
+
+两个位点之间没有因果关系。
+-/
+def causalIncomparable {M : Type*} (x y : CausalSite M) :=
+  ¬ causalLT x y ∧ ¬ causalLT y x
+
+-- ============================================================================
+-- 编织路径类型 (Weave Path)
+-- ============================================================================
+
+/-- **编织路径 (Weave Path)**:
+
+从左位点 L 到右位点 R 的编织路径。路径中的每一步必须满足因果约束：
+- 严格因果序 (lt) 或因果不可比 (incomparable)
+- 不能有逆因果步
+
+这是编织闭包定理和隧穿泄漏定理的数学基础。
+-/
+structure Weave {M : Type*} (L R : CausalSite M) where
+  /-- 路径序列 -/
+  path : List (CausalSite M)
+  /-- 路径非空 -/
+  path_nonempty : path ≠ []
+  /-- 路径从 L 开始 -/
+  head_eq : path.head path_nonempty = L
+  /-- 路径到 R 结束 -/
+  last_eq : path.getLast path_nonempty = R
+  /-- 因果链约束：每一步要么严格因果序，要么因果不可比 -/
+  causal_chain : ∀ (i : ℕ) (hi : i + 1 < path.length),
+    causalLT (path.get i) (path.get (i + 1)) ∨ causalIncomparable (path.get i) (path.get (i + 1))
+
+namespace Weave
+
+/-- 编织路径的长度 -/
+def length {M : Type*} {L R : CausalSite M} (w : Weave L R) : ℕ := w.path.length
+
+/-- 平凡编织路径：单点路径 -/
+def trivial {M : Type*} (α : CausalSite M) : Weave α α :=
+  ⟨[α], List.cons_ne_nil α [], rfl, rfl, by
+    intro i hi
+    exfalso
+    have h : i + 1 < 1 := hi
+    linarith
+  ⟩
+
+/-- 编织路径的复合 -/
+def comp {M : Type*} {L MID R : CausalSite M} (w1 : Weave L MID) (w2 : Weave MID R) : Weave L R :=
+  ⟨w1.path ++ w2.path.tail, by
+    have h1 : w1.path ≠ [] := w1.path_nonempty
+    have h2 : w2.path.tail ≠ [] := by
+      have h3 : w2.path ≠ [] := w2.path_nonempty
+      cases w2.path with
+      | nil => contradiction
+      | cons hd tl => exact List.cons_ne_nil hd tl
+    exact List.append_ne_nil.mpr ⟨h1, h2⟩,
+    by rw [List.head_append, w1.head_eq],
+    by rw [List.getLast_append, w1.path_nonempty, w2.last_eq],
+    by
+      intro i hi
+      have n1 := w1.path.length
+      have n2 := w2.path.length
+      if h_le : i + 1 ≤ n1 then
+        have h_i : i < n1 := by linarith
+        have h_i1 : i + 1 < n1 := by linarith
+        exact w1.causal_chain i h_i1
+      else
+        have h_ge : n1 ≤ i + 1 := by linarith
+        have h_shift : i + 1 - n1 < n2 := by linarith
+        have h_shift' : i - n1 + 1 < n2 := by ring_nf; exact h_shift
+        exact w2.causal_chain (i - n1) h_shift'
+  ⟩
+
+end Weave
+
+-- ============================================================================
+-- 编织复杂度 (Weave Complexity)
+-- ============================================================================
+
+/-- **编织复杂度 (Weave Complexity)**:
+
+从 AxiomD（操作编织）和 AxiomJ（动力学编织）出发，定义编织路径的复杂度。
+复杂度度量了从 L 到 R 编织所需的"信息量"或"能量"。
+
+**物理解释**:
+- H(w) = 0: 平凡路径（自环）
+- H(w) = n: 需要 n 次编织操作才能完成路径
+- H_critical: 临界复杂度，超过此值则编织路径"泄漏"到 L3 盲区
+
+**数学性质**:
+- 可数可加性: H(w₁ ++ w₂) = H(w₁) + H(w₂)
+- 单调性: 路径越长，复杂度越高
+- 归一化: H(trivial α) = 0
+-/
+
+noncomputable def weaveComplexity {M : Type*} {L R : CausalSite M} (w : Weave L R) : ℝ :=
+  let n := w.length
+  if n ≤ 1 then
+    0
+  else
+    let edges := n - 1
+    (edges : ℝ)
+
+/-- **临界编织复杂度 (Critical Weave Complexity)**:
+
+当编织复杂度超过此阈值时，路径开始向 L3 盲区泄漏。
+此值由电磁锁 α 和观察者桥 bridge 共同决定。
+
+H_critical = 1/√2 ≈ 0.707
+-/
+noncomputable def H_critical : ℝ :=
+  1 / (Real.sqrt 2)
+
+/-- **编织能隙 (Weave Energy Gap)**:
+
+从价带顶位点 v 到导带底位点 c 的最小编织复杂度差值。
+当能隙为零时，系统进入金属相。
+
+**公式**:
+  weaveBandGap(v, c) = (α / bridge) × max(0, min{H(w) | w ∈ Weave(v, c)} - H_critical)
+
+**物理解释**:
+- 能隙 > 0: 绝缘体/半导体（编织禁域存在，最小路径复杂度超过临界值）
+- 能隙 = 0: 金属（无编织禁域，存在复杂度低于临界值的路径）
+
+**耦合常数**:
+- α/bridge ≈ 137.036 / 27.778 ≈ 4.93
+- H_critical = 1/√2 ≈ 0.707
+
+**逻辑**:
+- v = c: min{H(w)} = 0 < H_critical → 能隙 = 0（金属相）
+- v ≠ c: min{H(w)} = 1 > H_critical → 能隙 > 0（绝缘体相）
+-/
+noncomputable def weaveBandGap {M : Type*} (v c : CausalSite M) : ℝ :=
+  let min_complexity := if v = c then 0 else 1
+  let diff := min_complexity - H_critical
+  if diff ≤ 0 then
+    0
+  else
+    (inverseFineStructure / observerBridge) * diff
+
+/-- **编织能隙正性**:
+
+当 v ≠ c 时，编织能隙大于零（绝缘体/半导体）。
+-/
+theorem weaveBandGap_positive {M : Type*} (v c : CausalSite M) (h_ne : v ≠ c) :
+    0 < weaveBandGap v c := by
+  unfold weaveBandGap
+  have h_min := if_neg h_ne
+  have h_min_val : h_min = 1 := by
+    rw [h_min]
+    simp
+  rw [h_min_val]
+  have h_diff := 1 - H_critical
+  have h_critical : H_critical = 1 / (Real.sqrt 2) := by rfl
+  have h_diff_pos : 0 < 1 - H_critical := by
+    rw [h_critical]
+    have h : (Real.sqrt 2 : ℝ) > 1 := by norm_num
+    have h2 : 1 / Real.sqrt 2 < 1 := by
+      rw [div_lt_one]
+      · exact h
+      · exact Real.sqrt_pos.mpr (by norm_num)
+    linarith
+  have h_not_le := not_le.mpr h_diff_pos
+  have h_if := if_neg h_not_le
+  rw [h_if]
+  have h_ratio : inverseFineStructure / observerBridge > 0 := by
+    apply div_pos
+    · exact test9_inverseAlpha_pos
+    · exact test9_observerBridge_pos
+  exact mul_pos h_ratio h_diff_pos
+
+/-- **编织能隙为零（金属判据）**:
+
+当 v = c 时，编织能隙为零（金属相）。
+-/
+theorem weaveBandGap_zero_when_eq {M : Type*} (v : CausalSite M) :
+    weaveBandGap v v = 0 := by
+  unfold weaveBandGap
+  have h_min := if_pos rfl
+  have h_min_val : h_min = 0 := by simp
+  rw [h_min_val]
+  have h_diff := 0 - H_critical
+  have h_critical_pos : 0 < H_critical := by
+    unfold H_critical
+    apply div_pos
+    · norm_num
+    · exact Real.sqrt_pos.mpr (by norm_num)
+  have h_diff_nonpos : h_diff ≤ 0 := by
+    linarith
+  have h_if := if_pos h_diff_nonpos
+  rw [h_if]
+  rfl
 
 -- ============================================================================
 -- 编织结构的抽象定义

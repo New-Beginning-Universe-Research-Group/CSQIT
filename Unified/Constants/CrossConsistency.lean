@@ -214,9 +214,8 @@ section Test3_HubbleFromFineStructure
 -/
 theorem test3_hubble_fineStructure_ratio :
     hubbleRatio / inverseAlpha = 30 / 61 := by
-  rw [hubbleRatio]
-  <;> field_simp
-  <;> ring
+  unfold hubbleRatio inverseAlpha
+  field_simp
 
 /-
 **定理 4.2: 哈勃常数的数值范围**
@@ -304,23 +303,27 @@ theorem test5_threeLock_product :
 theorem test5_planckMass_positive :
     0 < planckMassRatio := by
   unfold planckMassRatio inverseAlpha observerBridge
-  have h1 : (0 : ℝ) < 137 + 9 / 250 := by norm_num
-  have h2 : (0 : ℝ) < 250 / 9 := by norm_num
+  have h1 : (0 : ℝ) < (137 : ℝ) + (9 : ℝ) / 250 := by norm_num
+  have h2 : (0 : ℝ) < (250 : ℝ) / 9 := by norm_num
   have h3 : (0 : ℝ) < (420 : ℝ) := by norm_num
   have h4 : (0 : ℝ) < (289 : ℝ) := by norm_num
-  have h12 : 0 < (137 + 9 / 250) * (250 / 9) := mul_pos h1 h2
-  have h123 : 0 < (137 + 9 / 250) * (250 / 9) * (420 : ℝ) := mul_pos h12 h3
+  have h12 : (0 : ℝ) < ((137 : ℝ) + (9 : ℝ) / 250) * ((250 : ℝ) / 9) := mul_pos h1 h2
+  have h123 : (0 : ℝ) < ((137 : ℝ) + (9 : ℝ) / 250) * ((250 : ℝ) / 9) * (420 : ℝ) := mul_pos h12 h3
   exact div_pos h123 h4
 
 /-
 **定理 6.3: 编织刚度的数值范围**
 
-  5540 < M_P0 < 5545
+  5532 < M_P0 < 5533
+
+精确值：M_P0 ≈ 5532.02
 -/
 theorem test5_planckMass_range :
-    5540 < planckMassRatio ∧ planckMassRatio < 5545 := by
-  rw [test5_threeLock_product.symm]
-  constructor <;> norm_num [inverseAlpha, observerBridge]
+    5532 < planckMassRatio ∧ planckMassRatio < 5533 := by
+  unfold planckMassRatio inverseAlpha observerBridge
+  constructor
+  · norm_num
+  · norm_num
 
 end Test5_ThreeLockProduct
 
@@ -443,8 +446,7 @@ CSQIT: H₀_ratio ≈ 67.39475
 theorem test8_shoes_tension_resolved :
     |hubbleRatio - 73.0| > 5.0 := by
   rw [hubbleRatio, inverseAlpha]
-  rw [abs_lt] at *
-  <;> norm_num
+  norm_num
 
 end Test8_PlanckConsistency
 
@@ -463,6 +465,27 @@ section Test9_GlobalPositivity
   H₀ > 0
   M_P0 > 0
 -/
+theorem test9_inverseAlpha_pos : 0 < inverseAlpha := by
+  unfold inverseAlpha <;> norm_num
+
+theorem test9_observerBridge_pos : 0 < observerBridge := by
+  unfold observerBridge <;> norm_num
+
+theorem test9_Omega_b_pos : 0 < Omega_b := by
+  unfold Omega_b <;> norm_num
+
+theorem test9_Omega_DM_pos : 0 < Omega_DM := by
+  unfold Omega_DM <;> norm_num
+
+theorem test9_Omega_Lambda_pos : 0 < Omega_Lambda := by
+  unfold Omega_Lambda <;> norm_num
+
+theorem test9_hubbleRatio_pos : 0 < hubbleRatio := by
+  rw [hubbleRatio]
+  have h1 : 0 < inverseAlpha := test9_inverseAlpha_pos
+  have h2 : (0 : ℝ) < 30 / 61 := by norm_num
+  exact mul_pos h1 h2
+
 theorem test9_all_positive :
     0 < inverseAlpha ∧
     0 < observerBridge ∧
@@ -472,21 +495,17 @@ theorem test9_all_positive :
     0 < hubbleRatio ∧
     0 < planckMassRatio := by
   constructor
-  · unfold inverseAlpha <;> norm_num
+  · exact test9_inverseAlpha_pos
   · constructor
-    · unfold observerBridge <;> norm_num
+    · exact test9_observerBridge_pos
     · constructor
-      · unfold Omega_b <;> norm_num
+      · exact test9_Omega_b_pos
       · constructor
-        · unfold Omega_DM <;> norm_num
+        · exact test9_Omega_DM_pos
         · constructor
-          · unfold Omega_Lambda <;> norm_num
+          · exact test9_Omega_Lambda_pos
           · constructor
-            · rw [hubbleRatio]
-              have h1 : 0 < inverseAlpha := by
-                unfold inverseAlpha <;> norm_num
-              have h2 : (0 : ℝ) < 30 / 61 := by norm_num
-              exact mul_pos h1 h2
+            · exact test9_hubbleRatio_pos
             · exact test5_planckMass_positive
 
 /-

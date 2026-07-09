@@ -18,7 +18,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"11.2.1"
+  version := v!"11.2.2"
   leanOptions := #[⟨`linter.unreachableTactic, false⟩, ⟨`linter.unusedTactic, false⟩]
 
 require mathlib from "/mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib"
@@ -41,6 +41,7 @@ lean_lib CSQIT where
     `Core.Theorems,
     `Core.CausalWeaving,
     `Core.AmplitudeTheorems,
+    `Core.WeavingStructure,
     `Core.TwoAspectTheorems,
     `Core.HierarchicalWeaving,
     `Core.Hierarchy,

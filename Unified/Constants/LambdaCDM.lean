@@ -338,7 +338,10 @@ theorem axionDecayConstant_positive (M_P : ℝ) (h_MP_pos : 0 < M_P) :
   have h1 : (0 : ℝ) < 137 := by norm_num
   have h2 : (0 : ℝ) < 4 * 7 - (2 : ℝ) / 9 := by norm_num
   have h3 : (0 : ℝ) < 2 := by norm_num
-  exact mul_pos (mul_pos (mul_pos (div_pos (mul_pos h1 h2) h3) h_MP_pos) (by norm_num))
+  have h4 : (0 : ℝ) < 137 * (4 * 7 - 2/9) := mul_pos h1 h2
+  have h5 : (0 : ℝ) < (137 * (4 * 7 - 2/9)) / 2 := div_pos h4 h3
+  have h6 : (0 : ℝ) < ((137 * (4 * 7 - 2/9)) / 2) * M_P := mul_pos h5 h_MP_pos
+  exact h6
 
 /-
 **定理 4.3: 轴子衰变常数与观测者桥的关系**
@@ -352,7 +355,7 @@ theorem axionDecayConstant_bridgeForm (M_P : ℝ) :
   unfold axionDecayConstant
   have h : (4 * 7 - (2 : ℝ) / 9) = (250 : ℝ) / 9 := by norm_num
   rw [h]
-  <;> ring
+  ring
 
 end StrongCP
 
