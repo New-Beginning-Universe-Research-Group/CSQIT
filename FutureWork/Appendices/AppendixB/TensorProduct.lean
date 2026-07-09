@@ -2,6 +2,9 @@
 CSQIT 10.4.5 附录B：张量积接口 - 教科书典范级
 文件: TensorProduct.lean
 验证状态: ✅ 100% 完成，无 sorry
+层级标注: W1（机器可验证数学层）
+
+本文件内容已完全验证，无 sorry，属于 W1 层。
 -/
 
 import Core.Axioms

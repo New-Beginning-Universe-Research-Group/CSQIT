@@ -405,23 +405,32 @@ def thirdLaw (M : Type*) [CausalLattice M] : Prop := True
 /--
 定理 D.15: 第二定律的熵增形式（基于因果格）
 
-当一个因果封闭区域 R 被包含在另一个区域 S 中时，
+当一个因果封闭区域 R 被包含在另一个区域 S 中，
+且 R 的因果边界是 S 的因果边界的子集时，
 R 的黑洞熵小于等于 S 的黑洞熵。
 
 **证明程度**: 完整证明
 
+注：`R ⊆ S` 并不必然推出 `causalBoundary R ⊆ causalBoundary S`，
+    因为 S 中可能存在比 R 的极大元更大的元素。
+    因此需要添加边界包含作为前提条件。
+
 物理意义：
   这是热力学第二定律在黑洞系统中的体现——
-  更大的黑洞有更大的熵，黑洞合并时总熵增加。
+  更大的黑洞有更大的视界面积，因此有更大的熵，
+  黑洞合并时总熵增加。
 -/
 theorem secondLaw_entropy_version (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (R S : Set M) (hR_closed : causallyClosed M R) (hS_closed : causallyClosed M S)
-    (h_subset : R ⊆ S) :
+    (h_subset : R ⊆ S) (h_boundary_subset : causalBoundary R ⊆ causalBoundary S) :
     blackHoleEntropy M R hR_closed ≤ blackHoleEntropy M S hS_closed := by
   unfold blackHoleEntropy
   let B_R := (Finset.univ.filter (· ∈ causalBoundary R)).card
   let B_S := (Finset.univ.filter (· ∈ causalBoundary S)).card
-  have h_boundary_le : B_R ≤ B_S := sorry
+  have h_boundary_le : B_R ≤ B_S := by
+    apply Finset.card_le_card
+    intro x hx
+    exact h_boundary_subset hx
   have hB_le : (B_R : ℝ) ≤ (B_S : ℝ) := by norm_cast; exact h_boundary_le
   have hDenom_pos : 0 < 4 * weavingStiffnessBase := by
     apply mul_pos
