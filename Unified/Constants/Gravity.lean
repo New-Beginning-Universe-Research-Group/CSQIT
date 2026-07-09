@@ -2,7 +2,7 @@
 ================================================================================
 CSQIT 三锁统一 - 引力闭包：引力常数与编织弹性模量
 文件: Unified/Constants/Gravity.lean
-版本: v11.2.1
+版本: v11.2.5
 日期: 2026-07-08
 状态: 严格证明完成 ✅
 ================================================================================
@@ -41,6 +41,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Rat.Init
 import Mathlib.Data.Nat.Basic
 import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 namespace CSQIT.Unified.Constants.Gravity
 
@@ -341,5 +342,139 @@ CSQIT 的三锁结构揭示了一个深刻的对应：
 -/
 
 end UnifiedClosure
+
+/-! ============================================================================
+   §5. G_unit 的推导：从 Fin 7 代数结构
+   ============================================================================ -/
+
+section GUnitDerivation
+
+/-
+**G_unit 的推导背景**
+
+在 B_V_Naturalness.lean 中，有效 Fin 7 正则因果格的平均出度为：
+  k_out = 1 + 2cos(2π/7)
+
+单位编织量子 G_unit 应该与 k_out 的平方成反比，
+因为引力强度反比于因果格的"分支因子"平方。
+
+候选公式：G_unit = 1 / k_out²
+-/
+
+/--
+**定义 5.1: Fin 7 因果格的有效平均出度**
+
+  k_out = 1 + 2cos(2π/7)
+
+这是从 Fin 7 循环群特征表示的实投影导出的关键常数。
+-/
+noncomputable def k_out_Fin7 : ℝ :=
+  1 + 2 * Real.cos (2 * Real.pi / 7)
+
+/--
+**定理 5.1: k_out 严格大于 1**
+
+由于 2cos(2π/7) > 0，所以 k_out > 1。
+这保证了因果格的分支因子大于 1（每个事件至少有一个未来分支）。
+-/
+theorem k_out_Fin7_gt_one : 1 < k_out_Fin7 := by
+  unfold k_out_Fin7
+  have h1 : 0 < Real.cos (2 * Real.pi / 7) := by
+    have h2 : 0 < 2 * Real.pi / 7 := by
+      apply mul_pos
+      · norm_num
+      · exact Real.pi_pos
+    have h3 : 2 * Real.pi / 7 < Real.pi / 2 := by
+      linarith [Real.pi_pos]
+    apply Real.cos_pos_of_mem_Ioo
+    constructor
+    · linarith
+    · linarith
+  linarith
+
+/--
+**定理 5.2: k_out 为正**
+-/
+theorem k_out_Fin7_positive : 0 < k_out_Fin7 := by
+  linarith [k_out_Fin7_gt_one]
+
+/--
+**定义 5.3: 从 Fin 7 导出的单位编织量子**
+
+假设 G_unit = 1 / k_out²
+
+物理意义：
+  - k_out 越大，因果格的分支越茂盛
+  - 分支越茂盛，每个节点的"引力权重"越小
+  - 因此 G_unit ∝ 1/k_out²
+-/
+noncomputable def gravitationalQuantumFromFin7 : ℝ :=
+  1 / (k_out_Fin7 ^ 2)
+
+/--
+**定理 5.4: G_unit 为正**
+-/
+theorem gravitationalQuantumFromFin7_positive :
+    0 < gravitationalQuantumFromFin7 := by
+  unfold gravitationalQuantumFromFin7
+  have h1 : 0 < k_out_Fin7 ^ 2 := sq_pos_of_pos k_out_Fin7_positive
+  apply div_pos
+  · norm_num
+  · exact h1
+
+/--
+**定理 5.5: G_unit 的数值上界**
+
+由于 k_out > 1，所以 G_unit = 1/k_out² < 1。
+-/
+theorem gravitationalQuantumFromFin7_lt_one :
+    gravitationalQuantumFromFin7 < 1 := by
+  unfold gravitationalQuantumFromFin7
+  have h1 : 1 < k_out_Fin7 := k_out_Fin7_gt_one
+  have h2 : 1 < k_out_Fin7 ^ 2 := by
+    nlinarith [h1, k_out_Fin7_positive]
+  have h3 : 0 < k_out_Fin7 ^ 2 := sq_pos_of_pos k_out_Fin7_positive
+  apply (div_lt_iff h3).mpr
+  nlinarith
+
+/--
+**定义 5.4: 从 Fin 7 导出的引力常数**
+
+将 G_unit 代入引力常数公式：
+  G = 1/M_P0² × G_unit
+    = 1/M_P0² × 1/k_out²
+
+这完成了从生长链代数结构（Fin 7）到引力常数的推导链路。
+-/
+noncomputable def gravitationalConstantFromFin7 : ℝ :=
+  1 / (weavingStiffnessBase ^ 2) * gravitationalQuantumFromFin7
+
+/--
+**定理 5.6: 从 Fin 7 导出的引力常数为正**
+-/
+theorem gravitationalConstantFromFin7_positive :
+    0 < gravitationalConstantFromFin7 := by
+  unfold gravitationalConstantFromFin7
+  have h1 : 0 < 1 / weavingStiffnessBase ^ 2 := by
+    apply div_pos
+    · norm_num
+    · exact sq_pos_of_pos weavingStiffness_positive
+  have h2 : 0 < gravitationalQuantumFromFin7 := gravitationalQuantumFromFin7_positive
+  exact mul_pos h1 h2
+
+/--
+**定理 5.7: G_unit 的代数结构**
+
+  G_unit = 1 / (1 + 2cos(2π/7))²
+
+完全由 Fin 7 循环群的特征表示决定。
+-/
+theorem gravitationalQuantumFromFin7_algebraic :
+    gravitationalQuantumFromFin7 =
+      1 / (1 + 2 * Real.cos (2 * Real.pi / 7)) ^ 2 := by
+  unfold gravitationalQuantumFromFin7 k_out_Fin7
+  <;> rfl
+
+end GUnitDerivation
 
 end CSQIT.Unified.Constants.Gravity

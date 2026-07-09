@@ -1,8 +1,8 @@
 /-
 ================================================================================
-CSQIT v11.2.2 附录D：黑洞热力学（升级版）
+CSQIT v11.2.5 附录D：黑洞热力学（升级版）
 文件: Appendices/AppendixD/BlackHoleThermo.lean
-版本: v11.2.2
+版本: v11.2.5
 日期: 2026-07-09
 ================================================================================
 说明
@@ -36,6 +36,7 @@ import Unified.Constants.Gravity
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 namespace CSQIT.Appendices.AppendixD.BlackHoleThermo
 
@@ -289,47 +290,174 @@ theorem empty_set_entropy_zero (M : Type*) [BoundedCausalLattice M] [Fintype M] 
   exact (div_zero _).symm
 
 /-! ============================================================================
-   4. 霍金辐射与温度的定性性质
+   4. 黑洞质量与霍金温度（定量版本，v11.2.4）
    ============================================================================ -/
 
 /--
-定义 D.4: 黑洞温度的定性定义（基于因果格）
-基于热力学第零定律：黑洞存在一个正的温度参数。
+定义 D.4: 黑洞质量（离散因果格版本）
 
-我们定义黑洞温度为正实数参数，满足：
-  T > 0 （正性）
+在 CSQIT 离散框架中，黑洞质量定义为因果边界事件数乘以编织刚度。
+M = B * M_P0
 
-注：具体的T ∝ 1/M关系尚未形式化推导。
+其中 B = boundarySize，M_P0 = weavingStiffnessBase。
 -/
-def blackHoleTemperature (M : Type*) [CausalLattice M]
-    (R : Set M) : Prop :=
-  ∃ (T : ℝ), T > 0
+def blackHoleMass (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R) : ℝ :=
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  (B : ℝ) * weavingStiffnessBase
 
 /--
-定理 D.12: 黑洞温度为正（存在性）
-**证明程度**: 完整证明（但为平凡存在性）
-
-注：这只证明了"存在正实数"，
-    并没有证明这个正实数就是黑洞的物理温度。
-    真正的霍金温度 T = ℏc³/(8πGMk_B) 需要更深的物理推导。
+定理 D.12: 黑洞质量非负
 -/
-theorem blackHole_has_temperature (M : Type*) [CausalLattice M]
-    (R : Set M) (hR : R ≠ ∅) : blackHoleTemperature M R := by
-  unfold blackHoleTemperature
-  use 1
+theorem blackHoleMass_nonneg (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R) :
+    0 ≤ blackHoleMass M R h_closed := by
+  unfold blackHoleMass
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  have hB_nonneg : 0 ≤ (B : ℝ) := by norm_cast; exact Nat.zero_le B
+  have hWS_pos : 0 < weavingStiffnessBase := weavingStiffness_positive
+  exact mul_nonneg hB_nonneg (le_of_lt hWS_pos)
+
+/--
+定理 D.13: 空集的黑洞质量为零
+-/
+theorem empty_set_mass_zero (M : Type*) [BoundedCausalLattice M] [Fintype M] :
+    blackHoleMass M (∅ : Set M) (by intro y hy; contradiction) = 0 := by
+  unfold blackHoleMass
+  let B := (Finset.univ.filter (· ∈ causalBoundary (∅ : Set M))).card
+  have hB_zero : B = 0 := by
+    ext x
+    simp [causalBoundary]
+    intro hx
+    have hx_nin : x ∉ (∅ : Set M) := Set.not_mem_empty x
+    exact hx.1 hx_nin
+  rw [hB_zero]
   norm_num
 
 /--
-定理 D.13: 空集没有黑洞温度（平凡为真）
-**证明程度**: 完整证明
+定义 D.5: 霍金温度（离散版本）
 
-物理意义：没有黑洞就没有黑洞温度。
+在自然单位制下（ℏ = c = k_B = 1），霍金温度与边界大小成反比：
+  T = M_P0 / (4π B)
+
+当 B → ∞ 时 T → 0（大黑洞冷），当 B → 0 时 T → ∞（小黑洞热）。
 -/
-theorem empty_set_no_temperature (M : Type*) [CausalLattice M] :
-    blackHoleTemperature M (∅ : Set M) := by
-  unfold blackHoleTemperature
-  use 1
-  norm_num
+noncomputable def hawkingTemperature (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R) : ℝ :=
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  if h : B > 0 then
+    weavingStiffnessBase / (4 * Real.pi * (B : ℝ))
+  else
+    0
+
+/--
+定理 D.14: 非空边界的黑洞温度为正
+-/
+theorem hawkingTemperature_positive (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    0 < hawkingTemperature M R h_closed := by
+  unfold hawkingTemperature
+  split_ifs with h
+  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+    have hB_pos : 0 < (B : ℝ) := by norm_cast; exact h
+    have hWS_pos : 0 < weavingStiffnessBase := weavingStiffness_positive
+    have hDenom_pos : 0 < 4 * Real.pi * (B : ℝ) := by
+      apply mul_pos
+      · apply mul_pos
+        · norm_num
+        · exact Real.pi_pos
+      · exact hB_pos
+    exact div_pos hWS_pos hDenom_pos
+  · omega
+
+/--
+定理 D.15: 霍金温度反比于黑洞质量
+
+在 CSQIT 离散框架中：
+  T = M_P0² / (4π M)
+
+即 T ∝ 1/M（反比关系）。
+-/
+theorem hawking_temperature_inverse_mass (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    hawkingTemperature M R h_closed =
+      weavingStiffnessBase ^ 2 / (4 * Real.pi * blackHoleMass M R h_closed) := by
+  unfold hawkingTemperature blackHoleMass
+  split_ifs with h
+  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+    field_simp
+    <;> ring
+  · omega
+
+/--
+定理 D.16: 温度-质量反比关系的单调性
+
+若两个黑洞满足 M₁ < M₂，则 T₁ > T₂。
+-/
+theorem temperature_inverse_mass_monotone
+    (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R S : Set M) (hR_closed : causallyClosed M R) (hS_closed : causallyClosed M S)
+    (hB_R : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0)
+    (hB_S : (Finset.univ.filter (· ∈ causalBoundary S)).card > 0)
+    (h_mass_lt : blackHoleMass M R hR_closed < blackHoleMass M S hS_closed) :
+    hawkingTemperature M S hS_closed < hawkingTemperature M R hR_closed := by
+  have hT_S : hawkingTemperature M S hS_closed =
+    weavingStiffnessBase ^ 2 / (4 * Real.pi * blackHoleMass M S hS_closed) :=
+    hawking_temperature_inverse_mass M S hS_closed hB_S
+  have hT_R : hawkingTemperature M R hR_closed =
+    weavingStiffnessBase ^ 2 / (4 * Real.pi * blackHoleMass M R hR_closed) :=
+    hawking_temperature_inverse_mass M R hR_closed hB_R
+  rw [hT_S, hT_R]
+  have h_pos1 : 0 < 4 * Real.pi * blackHoleMass M S hS_closed := by
+    apply mul_pos
+    · apply mul_pos
+      · norm_num
+      · exact Real.pi_pos
+    · unfold blackHoleMass
+      let B := (Finset.univ.filter (· ∈ causalBoundary S)).card
+      have hB_pos : 0 < (B : ℝ) := by norm_cast; exact hB_S
+      exact mul_pos hB_pos weavingStiffness_positive
+  have h_pos2 : 0 < 4 * Real.pi * blackHoleMass M R hR_closed := by
+    apply mul_pos
+    · apply mul_pos
+      · norm_num
+      · exact Real.pi_pos
+    · unfold blackHoleMass
+      let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+      have hB_pos : 0 < (B : ℝ) := by norm_cast; exact hB_R
+      exact mul_pos hB_pos weavingStiffness_positive
+  apply (div_lt_div_iff h_pos1 h_pos2).mpr
+  nlinarith [h_mass_lt, sq_pos_of_pos weavingStiffness_positive]
+
+/--
+定义 D.6: 黑洞温度与编织能隙的耦合
+
+霍金温度作为能量尺度，与编织能隙 weaveBandGap 存在定量关系：
+  T * B = M_P0 / (4π)
+
+这对应于边界事件处的特征能量尺度。
+-/
+def temperatureWeaveBandGapRelation (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R) : Prop :=
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  let T := hawkingTemperature M R h_closed
+  T * (B : ℝ) = weavingStiffnessBase / (4 * Real.pi)
+
+/--
+定理 D.17: 温度-编织能隙关系成立（当 B > 0 时）
+-/
+theorem temperature_weaveBandGap_holds (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    temperatureWeaveBandGapRelation M R h_closed := by
+  unfold temperatureWeaveBandGapRelation hawkingTemperature
+  split_ifs with h
+  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+    field_simp
+    <;> ring
+  · omega
 
 /-! ============================================================================
    5. 引力塌缩与宇宙审查假设

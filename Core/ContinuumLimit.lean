@@ -1,8 +1,8 @@
 /-
 ================================================================================
-CSQIT v11.0.0 连续极限与 Regge 作用量收敛性框架
+CSQIT v11.2.5 连续极限与 Regge 作用量收敛性框架
 文件: Core/ContinuumLimit.lean
-版本: 11.0.0 (框架设计)
+版本: v11.2.5 (2维收敛性框架已搭建)
 日期: 2026-07-01
 
 ================================================================================
@@ -234,8 +234,119 @@ theorem reggeCurvatureAtVertex_empty
   simp [reggeCurvatureAtVertex]
   <;> ring
 
+/-! ============================================================================
+   §2. 2维三角格点收敛性框架（W2 层）
+   ============================================================================ -/
+
 /--
-**定义 2.1: 爱因斯坦-希尔伯特作用量（简化形式）**
+**定义 2.1: 2维三角格点上的三角形**
+
+在2维三角剖分中，一个三角形由三个顶点组成，
+其边长由因果距离定义。
+
+W2 层框架：边长和内角的具体几何实现待填充。
+-/
+structure Triangle2D (V : Type*) [CausalLattice V] where
+  a : V
+  b : V
+  c : V
+  le_ab : a ≤ b
+  le_bc : b ≤ c
+  le_ac : a ≤ c
+
+/--
+**定义 2.2: 三角形的边长平方**
+
+在2维离散几何中，边长平方由因果距离给出。
+-/
+def edgeLengthSq {V : Type*} [CausalLattice V]
+    (x y : V) (h : x ≤ y) : ℕ :=
+  causalDistance x y h
+
+/--
+**定义 2.3: 三角形面积（海伦公式的离散版本）**
+
+对于边长为 a_len, b_len, c_len 的三角形，面积由海伦公式给出：
+  A = √(s(s-a_len)(s-b_len)(s-c_len))
+  其中 s = (a_len+b_len+c_len)/2
+
+在离散版本中，边长为自然数（因果距离），面积是实数。
+
+⚠️ W2 层：海伦公式在离散因果距离上的适用性
+    需要额外条件（三角不等式），此处作为框架陈述。
+-/
+noncomputable def triangleAreaHeron {V : Type*} [CausalLattice V]
+    (a b c : V) (h_ab : a ≤ b) (h_bc : b ≤ c) (h_ac : a ≤ c) : ℝ :=
+  let a_len := (edgeLengthSq a b h_ab : ℝ)
+  let b_len := (edgeLengthSq b c h_bc : ℝ)
+  let c_len := (edgeLengthSq a c h_ac : ℝ)
+  let s := (a_len + b_len + c_len) / 2
+  Real.sqrt (s * (s - a_len) * (s - b_len) * (s - c_len))
+
+/--
+**定义 2.4: 2维 Regge 作用量**
+
+2维三角格点上的 Regge 作用量：
+  S_Regge = Σ_v A_v · δ(v)
+
+其中 δ(v) = 2π - Σ_t θ_t(v) 是顶点 v 处的亏格角。
+-/
+noncomputable def reggeAction2D {V : Type*} [CausalLattice V] [Fintype V]
+    (triangles : Finset (Triangle2D V))
+    (angle : Triangle2D V → V → ℝ)
+    (area : V → ℝ) : ℝ :=
+  ∑ x : V, area x * (2 * Real.pi - ∑ t ∈ triangles, angle t x)
+
+/--
+**定理 2.1: 空三角剖分的 Regge 作用量**
+
+如果没有三角形，每个顶点的亏格角都是 2π。
+-/
+theorem reggeAction2D_empty {V : Type*} [CausalLattice V] [Fintype V]
+    (angle : Triangle2D V → V → ℝ) (area : V → ℝ) :
+    reggeAction2D (∅ : Finset (Triangle2D V)) angle area =
+      2 * Real.pi * ∑ x : V, area x := by
+  simp [reggeAction2D, mul_sum]
+  <;> ring
+
+/--
+**定理 2.2: 2维 Gauss-Bonnet 定理（离散版本，框架）**
+
+对于闭合的2维三角剖分，总曲率等于 2π χ，
+其中 χ 是欧拉示性数。
+
+在三角格点上：Σ_v δ(v) = 2π χ
+
+这是收敛性证明的关键引理。W2 层：证明待填充。
+-/
+def eulerCharacteristic2D {V : Type*} [CausalLattice V] [Fintype V]
+    (triangles : Finset (Triangle2D V)) : ℤ :=
+  (Fintype.card V : ℤ) - (triangles.card : ℤ) + (triangles.card : ℤ) / 3
+
+/--
+**猜想 2.3: 2维 Regge 作用量收敛到标量曲率积分（W2 层框架）**
+
+当三角剖分的格间距趋于零时，Regge 作用量收敛：
+  lim_{δ→0} S_Regge(Δ_δ) = (1/2) ∫_M R dA
+
+这是 W2 层定理的陈述框架，具体 ε-δ 证明待填充。
+-/
+def ReggeConverges2D : Prop :=
+  ∀ (ε : ℝ), ε > 0 →
+    ∃ (δ : ℝ), δ > 0 ∧
+      ∀ (V : Type*) [CausalLattice V] [Fintype V]
+        (tri : Finset (Triangle2D V))
+        (ang : Triangle2D V → V → ℝ)
+        (area : V → ℝ),
+        latticeSpacing V < δ →
+        abs (reggeAction2D tri ang area) < ε
+
+/-! ============================================================================
+   §2.5 爱因斯坦-希尔伯特作用量（简化形式）
+   ============================================================================ -/
+
+/--
+**定义 2.5: 爱因斯坦-希尔伯特作用量（简化形式）**
 
 连续广义相对论中的引力作用量：
 
