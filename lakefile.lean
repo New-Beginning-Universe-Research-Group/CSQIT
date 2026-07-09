@@ -1,6 +1,6 @@
 /-
-CSQIT v11.2.5 Lake 项目配置文件
-版本: 11.2.5
+CSQIT v11.2.6 Lake 项目配置文件
+版本: 11.2.6
 Lean 版本: v4.29.0-rc6
 日期: 2026-07-09
 
@@ -26,7 +26,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"11.2.5"
+  version := v!"11.2.6"
   leanOptions := #[⟨`linter.unreachableTactic, false⟩, ⟨`linter.unusedTactic, false⟩]
 
 require mathlib from "/mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib"

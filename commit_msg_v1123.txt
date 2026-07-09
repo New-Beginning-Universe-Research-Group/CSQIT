@@ -1,0 +1,12 @@
+v11.2.3: 黑洞热力学升级 + 清理重复内容
+
+- Appendices/AppendixD/BlackHoleThermo.lean (升级):
+  * 与 Core/CausalLattice 严格对接，使用 CausalLattice 偏序
+  * 黑洞熵从振幅模方升级为因果边界定义: S = B/(4×M_P0)
+  * 新增贝肯斯坦-霍金熵面积定律离散版本 (entropy_area_law_discrete)
+  * 新增熵单调性定理 (entropy_monotone_with_boundary)
+  * 新增热力学第二定律熵增形式 (secondLaw_entropy_version)
+
+- 删除重复的 FutureWork/Appendices/AppendixR/Transparency.lean
+  * 该文件已被 Unified/Models/Transparency.lean 取代
+  * 修复 MatterEnergyUnification.lean 和 lakefile.lean 的引用

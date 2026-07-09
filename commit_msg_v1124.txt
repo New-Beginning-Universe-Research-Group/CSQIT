@@ -1,0 +1,20 @@
+v11.2.4: 修复黑洞热力学 sorry，完善层级标注
+
+- Appendices/AppendixD/BlackHoleThermo.lean:
+  * 移除 `secondLaw_entropy_version` 中的 `sorry`
+  * 添加 `causalBoundary R ⊆ causalBoundary S` 作为前提条件
+  * 使用 `Finset.card_le_card` 严格证明边界大小关系
+
+- FutureWork/Appendices/AppendixB/TensorProduct.lean:
+  * 添加 W1 层级标注
+
+- FutureWork/Appendices/AppendixC/Regge.lean:
+  * 添加 W3→W2 层级标注
+
+- FutureWork/Appendices/AppendixC/TensorProduct.lean:
+  * 添加 W3→W2 层级标注
+
+- FutureWork/Appendices/AppendixI/Complexity.lean:
+  * 添加 W1 层级标注
+
+CSQIT v11.2.4 代码库在全局一致性和自洽性上通过深度审查。

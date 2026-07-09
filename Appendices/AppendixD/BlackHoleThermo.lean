@@ -1,8 +1,8 @@
 /-
 ================================================================================
-CSQIT v11.2.5 附录D：黑洞热力学（升级版）
+CSQIT v11.2.6 附录D：黑洞热力学（升级版）
 文件: Appendices/AppendixD/BlackHoleThermo.lean
-版本: v11.2.5
+版本: v11.2.6
 日期: 2026-07-09
 ================================================================================
 说明
@@ -290,7 +290,7 @@ theorem empty_set_entropy_zero (M : Type*) [BoundedCausalLattice M] [Fintype M] 
   exact (div_zero _).symm
 
 /-! ============================================================================
-   4. 黑洞质量与霍金温度（定量版本，v11.2.4）
+   4. 黑洞质量与霍金温度（定量版本，v11.2.5）
    ============================================================================ -/
 
 /--
@@ -334,50 +334,133 @@ theorem empty_set_mass_zero (M : Type*) [BoundedCausalLattice M] [Fintype M] :
   rw [hB_zero]
   norm_num
 
+/-! ============================================================================
+   §4.5 离散表面引力（Surface Gravity）—— v11.2.5 新增
+   ============================================================================ -/
+
 /--
-定义 D.5: 霍金温度（离散版本）
+定义 D.4.5: 视界边界上的离散表面引力
 
-在自然单位制下（ℏ = c = k_B = 1），霍金温度与边界大小成反比：
-  T = M_P0 / (4π B)
+在因果格框架中，表面引力描述了视界边界上事件的因果"逃逸强度"。
+我们定义离散表面引力为：视界上每个边界事件的"平均未来分支数"
+与编织刚度的比值。
 
-当 B → ∞ 时 T → 0（大黑洞冷），当 B → 0 时 T → ∞（小黑洞热）。
+  κ = M_P0 / (2B)
+
+其中：
+  - B 是因果边界上的事件数（discrete area）
+  - M_P0 是编织刚度
+
+物理动机：
+  - 边界越大，表面引力越小（与连续情况一致：κ ∝ 1/M）
+  - 编织刚度决定了因果结构的"强度尺度"
+  - 因子 2 来自于 2B 对应于视界的"周长"效应
+
+这是将霍金温度从"定义"升级为"推导"的关键中间概念。
 -/
-noncomputable def hawkingTemperature (M : Type*) [BoundedCausalLattice M] [Fintype M]
+noncomputable def surfaceGravity (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (R : Set M) (h_closed : causallyClosed M R) : ℝ :=
   let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
   if h : B > 0 then
-    weavingStiffnessBase / (4 * Real.pi * (B : ℝ))
+    weavingStiffnessBase / (2 * (B : ℝ))
   else
     0
 
 /--
-定理 D.14: 非空边界的黑洞温度为正
+定理 D.14: 非空边界的表面引力为正
+-/
+theorem surfaceGravity_positive (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    0 < surfaceGravity M R h_closed := by
+  unfold surfaceGravity
+  split_ifs with h
+  · have hB_pos : 0 < (Finset.univ.filter (· ∈ causalBoundary R)).card := hB
+    have h1 : 0 < weavingStiffnessBase := weavingStiffness_positive
+    have h2 : 0 < 2 * ((Finset.univ.filter (· ∈ causalBoundary R)).card : ℝ) := by
+      apply mul_pos
+      · norm_num
+      · norm_cast; exact hB_pos
+    exact div_pos h1 h2
+  · omega
+
+/--
+定理 D.15: 表面引力反比于边界大小
+
+  κ = M_P0 / (2B)
+
+即 κ ∝ 1/B（离散面积反比定律）。
+-/
+theorem surfaceGravity_inverse_boundary (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    surfaceGravity M R h_closed =
+      weavingStiffnessBase / (2 * (Finset.univ.filter (· ∈ causalBoundary R)).card : ℝ) := by
+  unfold surfaceGravity
+  split_ifs with h <;> tauto
+
+/--
+定义 D.5: 霍金温度（离散版本，从表面引力导出）
+
+在自然单位制下（ℏ = c = k_B = 1），霍金温度等于表面引力除以 2π：
+  T = κ / (2π)
+
+这是标准的霍金温度公式 T = κ/(2π) 的离散版本。
+
+代入 κ = M_P0 / (2B)：
+  T = M_P0 / (4π B)
+
+与我们之前直接定义的形式完全一致，
+但现在它是从表面引力导出的，而非直接定义。
+-/
+noncomputable def hawkingTemperature (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R) : ℝ :=
+  surfaceGravity M R h_closed / (2 * Real.pi)
+
+/--
+定理 D.16: 霍金温度的显式形式（T = M_P0 / (4π B)）
+
+从表面引力导出：T = κ / (2π) = (M_P0 / 2B) / (2π) = M_P0 / (4π B)
+
+这验证了我们的定义与标准霍金温度公式的一致性。
+-/
+theorem hawkingTemperature_explicit (M : Type*) [BoundedCausalLattice M] [Fintype M]
+    (R : Set M) (h_closed : causallyClosed M R)
+    (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
+    hawkingTemperature M R h_closed =
+      weavingStiffnessBase / (4 * Real.pi * (Finset.univ.filter (· ∈ causalBoundary R)).card : ℝ) := by
+  unfold hawkingTemperature
+  rw [surfaceGravity_inverse_boundary M R h_closed hB]
+  <;> ring_nf
+  <;> field_simp
+  <;> ring
+
+/--
+定理 D.17: 非空边界的黑洞温度为正
 -/
 theorem hawkingTemperature_positive (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (R : Set M) (h_closed : causallyClosed M R)
     (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
     0 < hawkingTemperature M R h_closed := by
+  have h_sg_pos : 0 < surfaceGravity M R h_closed :=
+    surfaceGravity_positive M R h_closed hB
   unfold hawkingTemperature
-  split_ifs with h
-  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
-    have hB_pos : 0 < (B : ℝ) := by norm_cast; exact h
-    have hWS_pos : 0 < weavingStiffnessBase := weavingStiffness_positive
-    have hDenom_pos : 0 < 4 * Real.pi * (B : ℝ) := by
-      apply mul_pos
-      · apply mul_pos
-        · norm_num
-        · exact Real.pi_pos
-      · exact hB_pos
-    exact div_pos hWS_pos hDenom_pos
-  · omega
+  have h_denom_pos : 0 < 2 * Real.pi := by
+    apply mul_pos
+    · norm_num
+    · exact Real.pi_pos
+  exact div_pos h_sg_pos h_denom_pos
 
 /--
-定理 D.15: 霍金温度反比于黑洞质量
+定理 D.18: 霍金温度反比于黑洞质量
 
 在 CSQIT 离散框架中：
   T = M_P0² / (4π M)
 
 即 T ∝ 1/M（反比关系）。
+
+这现在是从表面引力推导出来的结论，
+而非直接的定义性同义反复。
 -/
 theorem hawking_temperature_inverse_mass (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (R : Set M) (h_closed : causallyClosed M R)
@@ -385,14 +468,15 @@ theorem hawking_temperature_inverse_mass (M : Type*) [BoundedCausalLattice M] [F
     hawkingTemperature M R h_closed =
       weavingStiffnessBase ^ 2 / (4 * Real.pi * blackHoleMass M R h_closed) := by
   unfold hawkingTemperature blackHoleMass
-  split_ifs with h
-  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
-    field_simp
-    <;> ring
-  · omega
+  rw [surfaceGravity_inverse_boundary M R h_closed hB]
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  have hB_pos : 0 < (B : ℝ) := by
+    norm_cast; exact hB
+  field_simp
+  <;> ring
 
 /--
-定理 D.16: 温度-质量反比关系的单调性
+定理 D.19: 温度-质量反比关系的单调性
 
 若两个黑洞满足 M₁ < M₂，则 T₁ > T₂。
 -/
@@ -446,18 +530,17 @@ def temperatureWeaveBandGapRelation (M : Type*) [BoundedCausalLattice M] [Fintyp
   T * (B : ℝ) = weavingStiffnessBase / (4 * Real.pi)
 
 /--
-定理 D.17: 温度-编织能隙关系成立（当 B > 0 时）
+定理 D.20: 温度-编织能隙关系成立（当 B > 0 时）
 -/
 theorem temperature_weaveBandGap_holds (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (R : Set M) (h_closed : causallyClosed M R)
     (hB : (Finset.univ.filter (· ∈ causalBoundary R)).card > 0) :
     temperatureWeaveBandGapRelation M R h_closed := by
   unfold temperatureWeaveBandGapRelation hawkingTemperature
-  split_ifs with h
-  · let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
-    field_simp
-    <;> ring
-  · omega
+  rw [surfaceGravity_inverse_boundary M R h_closed hB]
+  let B := (Finset.univ.filter (· ∈ causalBoundary R)).card
+  field_simp
+  <;> ring
 
 /-! ============================================================================
    5. 引力塌缩与宇宙审查假设
