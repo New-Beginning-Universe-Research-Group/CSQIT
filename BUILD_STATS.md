@@ -126,7 +126,28 @@ Appendices/ (5 files)
 - .git/（版本控制目录）
 
 ==================================
-六、备注
+六、Lean 文件导出统计
+==================================
+
+导出目录：lean_export/
+导出时间：2026-07-10
+排除项：_backup/, .lake/, __pycache__/
+
+| 目录 | 文件数 |
+|:---|:---:|
+| Core/ | 20 |
+| Core/Models/ | 7 |
+| Unified/Constants/ | 5 |
+| Unified/Models/ | 5 |
+| Appendices/ | 5 |
+| 根目录 (lakefile) | 1 |
+| **总计** | **61** |
+
+导出文件命名规则：lean_000.lean ~ lean_060.lean
+映射关系：lean_export/mapping.csv
+
+==================================
+七、备注
 ==================================
 
 本报告用于论文修订参考，展示 CSQIT 形式化框架的完整性和正确性。
@@ -135,3 +156,5 @@ Appendices/ (5 files)
 1. 数学定义和定理陈述正确无误
 2. Lean 4 类型系统验证通过
 3. 证明逻辑结构完整
+
+编译统计与文件导出已同步至 GitHub feat-deep-analysis-future-work-tuzSOx 分支。
