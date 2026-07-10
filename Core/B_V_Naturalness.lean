@@ -69,7 +69,7 @@ open CSQIT.CausalLattice
 
 注意：这目前是一个 W3 层的物理猜想，不是严格的数学推导。
 -/
-def dimensionSurfaceVolumeRatio (d : ℕ) (R : ℝ) : ℝ :=
+noncomputable def dimensionSurfaceVolumeRatio (d : ℕ) (R : ℝ) : ℝ :=
   (d : ℝ) / R
 
 /--
@@ -83,14 +83,14 @@ R 必须满足 R = d/θ。
 **问题**: 这个 R 在离散因果格中对应什么？
 **候选答案**: R 可能对应于因果格的"平均路径长度"或"平均度"。
 -/
-def dimensionRadiusCorrespondence (d : ℕ) (θ : ℝ) : ℝ :=
+noncomputable def dimensionRadiusCorrespondence (d : ℕ) (θ : ℝ) : ℝ :=
   (d : ℝ) / θ
 
 /-! ============================================================================
    第二部分：因果集的自发维度
    ============================================================================ -/
 
-/--
+/-
 **候选理论 2: 因果集的自发维度**
 
 因果集（causal set）的维度不是预先给定的，
@@ -148,7 +148,7 @@ def intermediateScaleDimension : Prop := True  -- 占位
    第三部分：格的正则性条件
    ============================================================================ -/
 
-/--
+/-
 **候选理论 3: 格的正则性条件**
 
 在有限因果格中，定义：
@@ -197,7 +197,7 @@ def intermediateScaleDimension : Prop := True  -- 占位
 ⚠️ 这是一个简化的模型，真实情况可能更复杂。
 -/
 
-/--
+/-
 **定义 3.1: 格的平均度（Average Degree）**
 
 定义格 M 的平均直接后继数为：
@@ -216,9 +216,9 @@ def intermediateScaleDimension : Prop := True  -- 占位
 
 物理意义：k_avg 描述了因果格的"分支因子"。
 -/
-def averageDegree (M : Type*)
+noncomputable def averageDegree (M : Type*)
     [BoundedCausalLattice M] [Fintype M] : ℝ :=
-  (∑ x : M, (Finset.card {y : M | isImmediateSuccessor x y}.toFinset)) / (Fintype.card M)
+  (∑ x : M, (Set.ncard {y : M | isImmediateSuccessor x y} : ℝ)) / (Fintype.card M : ℝ)
 
 /--
 **猜想 3.1: 正则因果格的 B/V 公式**
@@ -251,10 +251,10 @@ B/V 可以近似为：
   - 但只有 1 个成为内部事件
   - 其余的继续留在边界
 -/
-def regularLatticeBVFormula (k_in k_out : ℕ) : ℝ :=
+noncomputable def regularLatticeBVFormula (k_in k_out : ℕ) : ℝ :=
   (k_in : ℝ) / (k_in + k_out : ℝ)
 
-/--
+/-
 **数值验证**:
 
 设 k_in = 1, k_out = 3，则：
@@ -272,7 +272,7 @@ def regularLatticeBVFormula (k_in k_out : ℕ) : ℝ :=
   (c) 需要更复杂的模型来解释这个非整数值
 -/
 
-/--
+/-
 **定理 3.1: B/V 与度的关系（简化模型）**
 
 在一个简化的离散宇宙模型中，假设：
@@ -313,7 +313,7 @@ def BVFromGrowthRateConjecture : Prop := True
    第三部分续：2cos(2π/7) —— 从 Fin 7 代数结构涌现的关键常数
    ============================================================================ -/
 
-/--
+/-
 **核心发现：Fin 7 的代数结构自然涌现 2cos(2π/7)**
 
 在 Fin 7 模型中，振幅被设定为 7 次单位根：
@@ -351,7 +351,7 @@ def BVFromGrowthRateConjecture : Prop := True
   因果格是实的（偏序关系是实的），
   因此其几何不变量 B/V 应当由这个实投影决定。
 -/
-def seventh_root_real_part (k : ℕ) : ℝ :=
+noncomputable def seventh_root_real_part (k : ℕ) : ℝ :=
   2 * Real.cos (2 * (k : ℝ) * Real.pi / 7)
 
 /-! ### 外部数学知识引入：分圆域 ℚ(ζ₇) 的基本恒等式
@@ -416,7 +416,7 @@ axiom cos2pi7_cubic_equation :
     let α := seventh_root_real_part 1
     α^3 + α^2 - 2 * α - 1 = 0
 
-/--
+/-
 **数值验证**：
 
 2cos(2π/7) ≈ 1.247
@@ -461,7 +461,7 @@ axiom cos2pi7_cubic_equation :
   - 出度的具体值由 Fin 7 的代数结构决定
   - 2cos(2π/7) 是 7 次单位根在实方向上的投影
 -/
-def effective_regular_degree_from_Fin7 : ℝ × ℝ :=
+noncomputable def effective_regular_degree_from_Fin7 : ℝ × ℝ :=
   (1, 1 + seventh_root_real_part 1)
 
 /--
@@ -487,10 +487,9 @@ theorem BV_from_Fin7_algebra :
     let (k_in, k_out) := effective_regular_degree_from_Fin7
     let BV := k_in / (k_in + k_out)
     BV = 1 / (2 + seventh_root_real_part 1) := by
-  dsimp only [effective_regular_degree_from_Fin7, seventh_root_real_part]
-  ring_nf
-  <;> field_simp
-  <;> ring
+  dsimp only [effective_regular_degree_from_Fin7]
+  congr 1
+  linarith
 
 /--
 **推论 3.5.1: B/V 的三次方程**
@@ -517,13 +516,32 @@ theorem BV_cubic_equation :
     let BV := k_in / (k_in + k_out)
     BV^3 - 6 * BV^2 + 5 * BV - 1 = 0 := by
   dsimp only [effective_regular_degree_from_Fin7]
+  -- BV = 1 / (1 + (1 + s)) = 1 / (2 + s)
   have h1 : (seventh_root_real_part 1)^3 + (seventh_root_real_part 1)^2 - 2 * (seventh_root_real_part 1) - 1 = 0 :=
     cos2pi7_cubic_equation
-  simpa [seventh_root_real_part] using by
-    field_simp
-    <;> rw [show (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 by linarith]
-    <;> ring_nf
-    <;> linarith
+  have h3 : (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 := by linarith
+  have h4 : (2 + seventh_root_real_part 1) ≠ 0 := by
+    have h5 : 0 < seventh_root_real_part 1 := by
+      have h6 : 2 * Real.pi / 7 < Real.pi / 3 := by linarith [Real.pi_pos]
+      have h7 : Real.cos (2 * Real.pi / 7) > 1 / 2 := by
+        have h8 : Real.cos (Real.pi / 3) = 1 / 2 := Real.cos_pi_div_three
+        have h9 : Real.cos (2 * Real.pi / 7) > Real.cos (Real.pi / 3) := by
+          apply Real.cos_lt_cos_of_nonneg_of_le_pi
+          all_goals linarith [Real.pi_pos]
+        linarith [h8, h9]
+      dsimp only [seventh_root_real_part]
+      linarith
+    linarith
+  -- 简化 1 + (1 + s) = 2 + s（在所有位置）
+  have h_simp : (1 : ℝ) + (1 + seventh_root_real_part 1) = 2 + seventh_root_real_part 1 := by ring
+  simp only [h_simp]
+  field_simp [h4]
+  rw [show (2 + seventh_root_real_part 1)^3 * 0 = 0 from by ring]
+  have h_expand : (2 + seventh_root_real_part 1)^3 =
+    8 + 12 * seventh_root_real_part 1 + 6 * (seventh_root_real_part 1)^2
+      + (seventh_root_real_part 1)^3 := by ring
+  rw [h_expand, h3]
+  ring
 
 /-! ### §3.6 最终通行证：BV_ratio_from_Fin7
 
@@ -531,7 +549,7 @@ theorem BV_cubic_equation :
 从 Fin 7 的纯代数结构，推导出因果格的几何不变量 B/V。
 -/
 
-/--
+/-
 **最终通行证定理：BV_ratio_from_Fin7**
 
 这是"创造者时刻"的核心数学命题。
@@ -604,11 +622,9 @@ noncomputable def averageOutDegree (M : Type*)
 -/
 noncomputable def internalAverageOutDegree (M : Type*)
     [BoundedCausalLattice M] [Fintype M] : ℝ :=
-  let internalNodes := Finset.univ.filter (fun x : M => x ≠ (⊥ : M) ∧ x ≠ (⊤ : M))
-  if internalNodes.Nonempty then
-    (∑ x ∈ internalNodes, Set.ncard {y : M | isImmediateSuccessor x y}) / internalNodes.card
-  else
-    0
+  let internalEdges := Set.ncard {p : M × M | p.1 ≠ (⊥ : M) ∧ p.1 ≠ (⊤ : M) ∧ isImmediateSuccessor p.1 p.2}
+  let internalCount := Set.ncard {x : M | x ≠ (⊥ : M) ∧ x ≠ (⊤ : M)}
+  if internalCount = 0 then 0 else (internalEdges : ℝ) / (internalCount : ℝ)
 
 /-! ### §3.6 IsFin7Regular 与 EffectiveFin7Regular：
        两层正则性定义（W1 理想极限 / W2 有效平均）
@@ -714,9 +730,8 @@ theorem BV_ratio_from_Fin7 (M : Type*)
   have h2 : twoAspectParameter (M := M) = (1 : ℝ) / (1 + (1 + seventh_root_real_part 1)) :=
     h_Fin7.2
   rw [h2]
-  <;> ring_nf
-  <;> field_simp
-  <;> ring
+  congr 1
+  linarith
 
 /--
 **推论 3.7.1: B/V 是三次方程的根**
@@ -741,11 +756,27 @@ theorem BV_ratio_cubic (M : Type*)
   rw [hθ]
   have h1 : (seventh_root_real_part 1)^3 + (seventh_root_real_part 1)^2 - 2 * (seventh_root_real_part 1) - 1 = 0 :=
     cos2pi7_cubic_equation
-  simpa [seventh_root_real_part] using by
-    field_simp
-    <;> rw [show (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 by linarith]
-    <;> ring_nf
-    <;> linarith
+  have h3 : (seventh_root_real_part 1)^3 = -((seventh_root_real_part 1)^2) + 2 * (seventh_root_real_part 1) + 1 := by linarith
+  have h4 : (2 + seventh_root_real_part 1) ≠ 0 := by
+    have h5 : 0 < seventh_root_real_part 1 := by
+      have h6 : 2 * Real.pi / 7 < Real.pi / 3 := by
+        linarith [Real.pi_pos]
+      have h7 : Real.cos (2 * Real.pi / 7) > 1 / 2 := by
+        have h8 : Real.cos (Real.pi / 3) = 1 / 2 := Real.cos_pi_div_three
+        have h9 : Real.cos (2 * Real.pi / 7) > Real.cos (Real.pi / 3) := by
+          apply Real.cos_lt_cos_of_nonneg_of_le_pi
+          all_goals linarith [Real.pi_pos]
+        linarith [h8, h9]
+      dsimp only [seventh_root_real_part]
+      linarith
+    linarith
+  field_simp [h4]
+  rw [show (2 + seventh_root_real_part 1)^3 * 0 = 0 from by ring]
+  have h_expand : (2 + seventh_root_real_part 1)^3 =
+    8 + 12 * seventh_root_real_part 1 + 6 * (seventh_root_real_part 1)^2
+      + (seventh_root_real_part 1)^3 := by ring
+  rw [h_expand, h3]
+  ring
 
 /-! ### §3.7.2 W2 层有效版本：基于 EffectiveFin7Regular 的定理
 
@@ -793,9 +824,8 @@ theorem BV_ratio_from_EffectiveFin7 (M : Type*)
   have h2 : twoAspectParameter (M := M) = (1 : ℝ) / (1 + (1 + seventh_root_real_part 1)) :=
     h_Fin7.2
   rw [h2]
-  <;> ring_nf
-  <;> field_simp
-  <;> ring
+  congr 1
+  linarith
 
 /--
 **推论 3.7.2: W2 层 B/V 是三次方程的根**
@@ -840,11 +870,17 @@ theorem BV_ratio_cubic_effective (M : Type*)
         linarith
       linarith
     field_simp [h4]
-    <;> rw [h3]
-    <;> ring
+    -- 右边 (2+s)^3 * 0 = 0，先化简
+    rw [show (2 + seventh_root_real_part 1)^3 * 0 = 0 from by ring]
+    -- 展开 (2+s)^3 = 8 + 12s + 6s² + s³，然后替换 s³
+    have h_expand : (2 + seventh_root_real_part 1)^3 =
+      8 + 12 * seventh_root_real_part 1 + 6 * (seventh_root_real_part 1)^2
+        + (seventh_root_real_part 1)^3 := by ring
+    rw [h_expand, h3]
+    ring
   exact h2
 
-/--
+/-
 **数值验证与物理诠释（重大更新）**
 
 ================================================================================
@@ -913,7 +949,7 @@ theorem BV_ratio_cubic_effective (M : Type*)
   因果面（B）= 总物质，信息面（V-B）= 暗能量。
 -/
 
-/--
+/-
 **推论：从 Fin 7 到总物质密度参数 Ω_m**
 
 在 EffectiveFin7Regular 的因果格宇宙中，

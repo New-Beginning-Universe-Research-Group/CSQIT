@@ -42,6 +42,7 @@ lean_lib CSQIT where
     `Core.AlgebraicCausality,
     `Core.TwoAspectToSU2,
     `Core.CausalLattice,
+    `Core.B_V_Naturalness,
     `Core.ShellCapacityDerivation,
     `Core.ScaleDynamics,
     `Core.Unified,
@@ -54,6 +55,7 @@ lean_lib CSQIT where
     `Core.HierarchicalWeaving,
     `Core.Hierarchy,
     `Core.HDST,
+    `Core.ContinuumLimit,
     `Core.Models.FiniteWeavingExamples,
     `Core.Models.PeriodicTable,
     `Core.Models.EnhancedModels,
@@ -69,24 +71,5 @@ lean_lib CSQIT where
     `Unified.Models.Magnetism,
     `Unified.Models.Conductivity,
     `Unified.Models.PhaseStates,
-    `Unified.Models.Transparency,
-    -- 探索性附录（W2/W3概念态）
-    -- 注：以下模型已迁移至 Unified/Models/，旧文件保留在 FutureWork/ 仅作历史参考：
-    --   AppendixJ/ElectricPotential → Unified.Models.Electrostatics
-    --   AppendixM/Magnetism → Unified.Models.Magnetism
-    --   AppendixO/Conductivity → Unified.Models.Conductivity
-    --   AppendixP/PhaseStates → Unified.Models.PhaseStates
-    --   AppendixR/Transparency → Unified.Models.Transparency（已删除）
-    `FutureWork.Appendices.AppendixK.NuclearFusionFission,
-    `FutureWork.Appendices.AppendixL.PhysicsCorrespondence,
-    `FutureWork.Appendices.AppendixN.ElectromagneticUnification,
-    `FutureWork.Appendices.AppendixQ.CrystalGrowth,
-    `FutureWork.Appendices.AppendixS.MatterEnergyUnification,
-    `FutureWork.Appendices.AppendixT.GrandUnification,
-    `FutureWork.Appendices.AppendixU.PhotoelectricRelation,
-    `FutureWork.Appendices.AppendixV.PhiUnification,
-    `FutureWork.Appendices.AppendixW.FineStructureConstant,
-    `FutureWork.Appendices.AppendixX.LambdaCDM,
-    `FutureWork.Appendices.AppendixY.HubbleConstant,
-    `FutureWork.Appendices.AppendixZ.GravitationalConstant
+    `Unified.Models.Transparency
   ]
