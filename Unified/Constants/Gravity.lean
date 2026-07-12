@@ -2,7 +2,7 @@
 ================================================================================
 CSQIT 三锁统一 - 引力闭包：引力常数与编织弹性模量
 文件: Unified/Constants/Gravity.lean
-版本: v11.2.6
+版本: v11.6.0
 日期: 2026-07-08
 状态: 严格证明完成 ✅
 ================================================================================
@@ -42,8 +42,8 @@ import Mathlib.Data.Rat.Init
 import Mathlib.Data.Nat.Basic
 import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Core.CausalLattice
-import Core.B_V_Naturalness
+import Core.W1.CausalLattice
+import Core.W2.B_V_Naturalness
 
 namespace CSQIT.Unified.Constants.Gravity
 

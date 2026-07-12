@@ -1,8 +1,8 @@
 /-
 ================================================================================
-CSQIT v11.2.6 附录D：黑洞热力学（升级版）
+CSQIT — 附录D：黑洞热力学（升级版）
 文件: Appendices/AppendixD/BlackHoleThermo.lean
-版本: v11.2.6
+版本: v11.6.0
 日期: 2026-07-09
 ================================================================================
 说明
@@ -28,10 +28,10 @@ CSQIT v11.2.6 附录D：黑洞热力学（升级版）
 ================================================================================
 -/
 
-import Core.Axioms
+import Core.W1.Axioms
 import Core.Theorems
-import Core.CausalWeaving
-import Core.CausalLattice
+import Core.W1.CausalWeaving
+import Core.W1.CausalLattice
 import Unified.Constants.Gravity
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Set.Basic

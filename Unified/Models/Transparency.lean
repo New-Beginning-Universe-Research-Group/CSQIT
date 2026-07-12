@@ -2,7 +2,7 @@
 ================================================================================
 CSQIT 应用物理模型 - 固体透明原理的编织能隙模型
 文件: Unified/Models/Transparency.lean
-版本: v11.2.2 (重构版)
+版本: v11.6.0 (重构版)
 日期: 2026-07-09
 状态: W2 层有效理论，已接入编织公理和三锁常数
 ================================================================================
@@ -62,7 +62,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Core.WeavingStructure
+import Core.W1.WeavingStructure
 import Unified.Constants.FineStructure
 import Unified.Constants.LambdaCDM
 import Unified.Constants.CrossConsistency

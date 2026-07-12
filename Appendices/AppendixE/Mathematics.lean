@@ -1,8 +1,8 @@
 /-
 ================================================================================
-CSQIT v11.0.0 附录E：数学基础与代数结构
+CSQIT — 附录E：数学基础与代数结构
 文件: Appendices/AppendixE/Mathematics.lean
-版本: 11.0.0
+版本: v11.6.0
 ================================================================================
 CSQIT 公理体系的数学结构性质：
 - 规则组合构成半群
@@ -12,9 +12,9 @@ CSQIT 公理体系的数学结构性质：
 ================================================================================
 -/
 
-import Core.Axioms
+import Core.W1.Axioms
 import Core.Theorems
-import Core.WeavingStructure
+import Core.W1.WeavingStructure
 import Mathlib.Data.Complex.Basic
 
 namespace CSQIT.Appendices.AppendixE.Mathematics

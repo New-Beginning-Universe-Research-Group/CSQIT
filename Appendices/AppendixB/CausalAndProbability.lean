@@ -1,16 +1,16 @@
 /-
 ================================================================================
-CSQIT v11.0.0 附录B：因果序、概率与基础定义
+CSQIT — 附录B：因果序、概率与基础定义
 文件: Appendices/AppendixB/CausalAndProbability.lean
-版本: 11.0.0
+版本: v11.6.0
 ================================================================================
 因果序的基本性质、概率定义以及其他基础定义。
 ================================================================================
 -/
 
-import Core.Axioms
+import Core.W1.Axioms
 import Core.Theorems
-import Core.Models.FinModels
+import Core.W1.Models.FinModels
 import Mathlib.Data.Complex.Basic
 
 namespace CSQIT.Appendices.AppendixB
