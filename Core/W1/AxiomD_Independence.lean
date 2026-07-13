@@ -22,7 +22,7 @@ CSQIT — - AxiomD 独立性证明
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Set.Finite.Basic

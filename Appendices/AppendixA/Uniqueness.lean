@@ -9,7 +9,7 @@ CSQIT — 附录A：振幅性质与唯一性定理
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Mathlib.Data.Complex.Basic
 
 namespace CSQIT.Appendices.AppendixA.Uniqueness

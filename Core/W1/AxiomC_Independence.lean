@@ -45,7 +45,7 @@ CSQIT — 公理C独立性论证
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Mathlib.Data.Complex.Basic
 
 namespace CSQIT.AxiomC_Independence

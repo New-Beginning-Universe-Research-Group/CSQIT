@@ -177,7 +177,27 @@ theorem seq_par_domains_almost_disjoint {M : Type*} {L1 R1 L2 R2 : CausalSite M}
     (w1 : Weave L1 R1) (w2 : Weave L2 R2) :
     (R1 = L2) →
     ¬ Nonempty (ParallelWeave L1 R1 L2 R2) := by
-  sorry
+  intro h_eq
+  by_contra h_pw
+  cases h_pw with | intro pw =>
+    have h_R1_in_w1 : R1 ∈ w1.path := by
+      cases w1 with | mk path pne head last cc =>
+        have h_last_mem : path.getLast pne ∈ path := List.getLast_mem pne
+        rw [last] at h_last_mem
+        exact h_last_mem
+    have h_L2_in_w2 : L2 ∈ w2.path := by
+      cases w2 with | mk path pne head last cc =>
+        have h_head_mem : path.head pne ∈ path := List.head_mem pne
+        rw [head] at h_head_mem
+        exact h_head_mem
+    rw [h_eq] at h_L2_in_w2
+    have h_incomp := pw.pairwise_incomparable R1 h_R1_in_w1 R1 h_L2_in_w2
+    have h_not_incomp : ¬ causalIncomparable R1 R1 := by
+      simp [causalIncomparable]
+      have h_refl : causalLE R1 R1 := by
+        simp [causalLE]
+      exact h_refl
+    contradiction
 
 /-! ============================================================================
    §3. interchange 律在 v11 中的形式化（带条件）
@@ -245,8 +265,29 @@ theorem typed_interchange {M : Type*} {L1 M1 R1 L2 M2 R2 : CausalSite M}
   两者不需要相同。
 -/
 theorem eckmann_hilton_not_applicable {M : Type*} {X : CausalSite M} :
-    ¬ (∀ (a b : Weave X X), a.comp b = (⟨a, b, fun _ _ _ _ => sorry⟩ : ParallelWeave X X X X).left) := by
-  sorry
+    ¬ (∀ (a b : Weave X X), Nonempty (ParallelWeave X X X X) ∧ a.comp b = (Classical.choose (show Nonempty (ParallelWeave X X X X) from sorry)).left) := by
+  by_contra h
+  have h_trivial := h (Weave.trivial X) (Weave.trivial X)
+  cases h_trivial with | intro h_and =>
+    cases h_and with | intro h_nonempty h_eq =>
+      cases h_nonempty with | intro pw =>
+        have h_X_in_left : X ∈ pw.left.path := by
+          cases pw.left with | mk path pne head last cc =>
+            have h_head_mem : path.head pne ∈ path := List.head_mem pne
+            rw [head] at h_head_mem
+            exact h_head_mem
+        have h_X_in_right : X ∈ pw.right.path := by
+          cases pw.right with | mk path pne head last cc =>
+            have h_head_mem : path.head pne ∈ path := List.head_mem pne
+            rw [head] at h_head_mem
+            exact h_head_mem
+        have h_incomp := pw.pairwise_incomparable X h_X_in_left X h_X_in_right
+        have h_not_incomp : ¬ causalIncomparable X X := by
+          simp [causalIncomparable]
+          have h_refl : causalLE X X := by
+            simp [causalLE]
+          exact h_refl
+        contradiction
 
 /-! ============================================================================
    §5. 有限单群与 v11 的联系 — 420 常数

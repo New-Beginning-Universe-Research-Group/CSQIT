@@ -9,7 +9,7 @@ CSQIT — 附录B：因果序、概率与基础定义
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Core.W1.Models.FinModels
 import Mathlib.Data.Complex.Basic
 

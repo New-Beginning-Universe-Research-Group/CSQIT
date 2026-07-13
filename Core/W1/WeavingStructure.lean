@@ -103,7 +103,11 @@ def comp {M : Type*} {L MID R : CausalSite M} (w1 : Weave L MID) (w2 : Weave MID
     | nil => exact absurd rfl w1_pne
     | cons hd tl => exact w1_head
   have h_last : (w1_path ++ w2_path.tail).getLast h_pne = R := by
-    sorry
+    cases w2_path with
+    | nil => contradiction
+    | cons hd tl =>
+      simp [List.getLast_append, w2_last]
+      <;> aesop
   have h_cc : ∀ (i : ℕ) (hi : i + 1 < (w1_path ++ w2_path.tail).length),
     causalLT ((w1_path ++ w2_path.tail)[i]'(by omega)) ((w1_path ++ w2_path.tail)[i + 1]'(by omega)) ∨
     causalIncomparable ((w1_path ++ w2_path.tail)[i]'(by omega)) ((w1_path ++ w2_path.tail)[i + 1]'(by omega)) := by
@@ -600,13 +604,33 @@ def X : CausalSite M := ⟨0, (1 : Fin 4)⟩
 def Y : CausalSite M := ⟨0, (2 : Fin 4)⟩
 
 /-- **路径 w1**: A → A（平凡路径）-/
-def w1 : Weave A A := sorry
+def w1 : Weave A A := Weave.trivial A
 
 /-- **路径 w2**: A → B（单步路径）-/
-def w2 : Weave A B := sorry
+def w2 : Weave A B :=
+  ⟨[A, B], by simp, by simp, by simp, by
+    intro i hi
+    have h : i + 1 < 2 := hi
+    have h' : i < 1 := by omega
+    induction i with
+    | zero =>
+      simpa [causalLT, A, B] using Or.inl (by norm_num)
+    | succ i ih =>
+      exfalso
+      linarith⟩
 
 /-- **路径 w3**: X → Y（单步路径）-/
-def w3 : Weave X Y := sorry
+def w3 : Weave X Y :=
+  ⟨[X, Y], by simp, by simp, by simp, by
+    intro i hi
+    have h : i + 1 < 2 := hi
+    have h' : i < 1 := by omega
+    induction i with
+    | zero =>
+      simpa [causalIncomparable, causalLT, X, Y] using Or.inr (by norm_num)
+    | succ i ih =>
+      exfalso
+      linarith⟩
 
 /-- **定理 1**: seq 和 par 在定义域上不同
 
@@ -615,13 +639,36 @@ theorem seq_domain_ne_par_domain :
     (∃ (w : Weave A B), w = w1.comp w2) ∧
     (¬ Nonempty (ParallelWeave A A A B)) := by
   constructor
-  · sorry
-  · sorry
+  · exact ⟨w1.comp w2, rfl⟩
+  · intro h
+    rcases h with ⟨pw⟩
+    have h_incomp : ∀ x ∈ pw.left.path, ∀ y ∈ pw.right.path, causalIncomparable x y := pw.pairwise_incomparable
+    have h_pne_left : pw.left.path ≠ [] := pw.left.path_nonempty
+    have hA : A ∈ pw.left.path := by
+      have h_head : pw.left.path.head h_pne_left = A := pw.left.head_eq
+      have h : pw.left.path.head h_pne_left ∈ pw.left.path := by
+        exact List.head_mem _
+      rw [h_head] at h
+      exact h
+    have h_pne_right : pw.right.path ≠ [] := pw.right.path_nonempty
+    have hB : B ∈ pw.right.path := by
+      have h_last : pw.right.path.getLast h_pne_right = B := pw.right.last_eq
+      have h : pw.right.path.getLast h_pne_right ∈ pw.right.path := by
+        exact List.getLast_mem _
+      rw [h_last] at h
+      exact h
+    have h1 : causalIncomparable A B := h_incomp A hA B hB
+    rcases h1 with ⟨h_nlt1, h_nlt2⟩
+    have h_lt : A.idx < B.idx := by
+      dsimp only [A, B] <;> norm_num
+    have h_lt2 : causalLT A B := h_lt
+    exact h_nlt1 h_lt2
 
 /-- **定理 2**: seq 和 par 在类型层面不同
 
 seq 产生 `Weave L R`，par 产生 `ParallelWeave L1 R1 L2 R2`，类型不同。 -/
 theorem seq_par_types_distinct : True := by
   trivial
+
 
 end CSQIT.Models.FiniteWeaveCounterexample

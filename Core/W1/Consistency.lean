@@ -85,7 +85,7 @@ CSQIT — 一致性证明
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Core.W2.HDST
 import Core.W1.BasicModels
 import Core.W1.Models.FinModels
@@ -307,7 +307,7 @@ theorem layer1_core_witness :
     exact instA.compose_assoc α β γ
   · constructor
     · intro M C instA instB x
-      sorry
+      exact lt_irrefl x
     · intro M C instA instC α
       exact instC.norm_one α
 

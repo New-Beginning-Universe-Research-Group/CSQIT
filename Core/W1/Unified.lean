@@ -33,7 +33,7 @@ HDST（Hierarchical Discrete Spacetime Theory）层级结构与 CSQIT 融合：
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Core.W1.Hierarchy
 import Core.W1.BasicModels
 

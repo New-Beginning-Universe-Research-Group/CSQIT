@@ -9,7 +9,7 @@ CSQIT — 附录C：因果结构
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 
 namespace CSQIT.Appendices.AppendixD
 

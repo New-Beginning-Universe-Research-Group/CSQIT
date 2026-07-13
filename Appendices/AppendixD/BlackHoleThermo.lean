@@ -29,7 +29,7 @@ CSQIT — 附录D：黑洞热力学（升级版）
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Core.W1.CausalWeaving
 import Core.W1.CausalLattice
 import Unified.Constants.Gravity

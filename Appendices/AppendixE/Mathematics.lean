@@ -13,7 +13,7 @@ CSQIT 公理体系的数学结构性质：
 -/
 
 import Core.W1.Axioms
-import Core.Theorems
+import Core.W1.CausalWeaving
 import Core.W1.WeavingStructure
 import Mathlib.Data.Complex.Basic
 
