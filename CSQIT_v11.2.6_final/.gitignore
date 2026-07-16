@@ -1,0 +1,135 @@
+# Lean
+build/
+.lake/
+lake-packages
+lake-packages/
+lakefile.olean
+*.olean
+*.ilean
+*.trace
+
+# LaTeX build artifacts
+latex_build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*Notes.bib
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+*.egg-info/
+dist/
+pip-log.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archive & History (exclude from Git)
+_archive/
+_backup/
+_scripts/
+_reports/
+*.tar.gz
+papers/*.pdf
+papers/*.tex
+
+# Project-specific backup files
+CSQIT_*.txt
+*_Backup_*/
+*_FinalBackup_*/
+*_Final_*/
+*_CoreBackup_*/
+*_LeanCore_*/
+*_TextbookFinal_*/
+*_历史版本*/
+*backup*.md
+_backup/
+CSQIT_10.*
+CSQIT_11.*
+CSQIT_FinalBackup_*
+CSQIT_All_Lean_*
+CSQIT_all_lean_files_*
+优化历史备份/
+2026-06-28_*/
+All_Lean_Code_*.md
+All_Lean_Code_Full_*.txt
+All_Lean_Code_Complete_*.md
+All_Lean_Code_Export_*
+Core_Lean_Code_*.txt
+*_深度梳理*.md
+*_Review*.md
+*_审查推进*.md
+*_令人印象深刻*.md
+theorems_base64.txt
+test_mex3.lean
+*.zip
+
+# Docker build files (not part of core repo)
+csqsit_docker_build/
+DOCKER_BUILD_GUIDE.md
+Dockerfile.csqit
+*.tar.zst
+
+# Submission materials (keep local only)
+*_PRL/
+*_PRD/
+Cover_Letter*.md
+*_Submission_Guide.md
+*_投稿材料评审报告*.md
+**/CSQIT_SourceCodeOfUniverse_PRL*.tex
+**/CSQIT_SourceCodeOfUniverse_PRL*.pdf
+PRD_Submission_Guide.md
+DOCKER_BUILD_GUIDE.md
+WORKFLOW_README.md
+
+# Temporary files
+commit_msg.txt
+commit_msg_*.txt
+*.ps1
+*.sh
+*.py
+cat
+echo
+encode_*.py
+decode_*.py
+fix_*.py
+transfer_wsl*.py
+export_backup.py
+test_real*.lean
+theorems.*
+WORKFLOW_README.md
+lake-manifest.json
+requirements.txt
+TUTORIAL.md
+texlive.profile
+lakefile_minimal.lean
+lakefile_wsl.lean
+
+# Trae IDE
+.trae/
+
+# Git
+.git/
