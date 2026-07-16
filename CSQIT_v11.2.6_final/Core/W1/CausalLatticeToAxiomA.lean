@@ -223,6 +223,35 @@ theorem sup_monotone {M : Type*} [Lattice M] {x₁ x₂ y₁ y₂ : M}
    ============================================================================ -/
 
 /--
+**输入规则空间**：由格元素生成的有限多重集
+
+    每个规则 α 由其输入列表 [a₁, a₂, ..., aₙ] 和输出 b 组成，
+    满足 ⨆{a₁, ..., aₙ} = b。
+-/
+def listSup {M : Type*} [Lattice M] [OrderBot M] (xs : List M) : M :=
+  xs.foldr (· ⊔ ·) ⊥
+
+structure InputRule (M : Type*) [Lattice M] [OrderBot M] where
+  inputs : List M
+  output : M
+  closure_prop : listSup inputs = output
+
+/-- **单位规则**：空输入，输出为格的最小元 -/
+def inputRuleUnit {M : Type*} [Lattice M] [OrderBot M] : InputRule M :=
+  ⟨[], ⊥, rfl⟩
+
+/-- **单点规则**：输入为单个元素，输出为同一元素 -/
+def inputRuleSingl {M : Type*} [Lattice M] [OrderBot M] (a : M) : InputRule M :=
+  ⟨[a], a, by
+    unfold listSup
+    rw [List.foldr_cons]
+    apply sup_bot_eq⟩
+
+/-- **规则复合**：输入合并，输出取并 -/
+def inputRuleComp {M : Type*} [Lattice M] [OrderBot M] (r₁ r₂ : InputRule M) : InputRule M :=
+  ⟨r₁.inputs ++ r₂.inputs, r₁.output ⊔ r₂.output, sorry⟩
+
+/--
 **猜想 6.1: 因果格诱导完整 AxiomA' 实例**
 
 存在一个从格 M 构造的规则空间 C，
@@ -246,6 +275,17 @@ def CausalLatticeInducesAxiomA' (M : Type u) [Lattice M] : Prop :=
 -/
 def CausalLatticeSolvesThreeDecouplings (M : Type u) [Lattice M] : Prop :=
   CausalLatticeInducesAxiomA' M → True
+
+/--
+**猜想 6.3: 输入规则空间构成幺半群**
+
+在有限格上，输入规则的复合运算构成幺半群。
+-/
+def InputRuleMonoid (M : Type*) [Lattice M] [OrderBot M] : Prop :=
+  ∀ (r₁ r₂ r₃ : InputRule M),
+    (inputRuleComp (inputRuleComp r₁ r₂) r₃) = inputRuleComp r₁ (inputRuleComp r₂ r₃) ∧
+    inputRuleComp r₁ inputRuleUnit = r₁ ∧
+    inputRuleComp inputRuleUnit r₁ = r₁
 
 /-! ============================================================================
    总结
