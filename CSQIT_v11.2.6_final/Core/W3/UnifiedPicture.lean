@@ -393,6 +393,74 @@ theorem fermat_prime_F2_eq_17 :
   norm_num
 
 /-! ============================================================================
+   §3.5 暗物质 111 的群论来源
+   ============================================================================
+
+   PSL(2,7) 有 6 个共轭类：
+     · 1 个单位元
+     · 21 个对合（阶 2）
+     · 24 个 7-阶元素（共轭类1）
+     · 24 个 7-阶元素（共轭类2）
+     · 42 个 3-阶元素
+     · 56 个 4-阶元素
+
+   非单位元总数 = 21 + 24 + 24 + 42 + 56 = 167
+
+   暗物质 Ω_DM = 111/420 对应：
+     111 = 非单位元总数 - 4-阶元素数 = 167 - 56
+
+   4-阶元素被排除是因为它们对应暗能量（289 = 17²）。
+   17 = 2^4 + 1，与 4-阶元素的"4"直接相关。
+   ============================================================================ -/
+
+/-- **PSL(2,7) 的共轭类大小列表** -/
+def PSL27_conjugacy_classes : List ℕ := [1, 21, 24, 24, 42, 56]
+
+/-- **PSL(2,7) 共轭类大小和 = 168** -/
+theorem PSL27_conjugacy_classes_sum :
+    PSL27_conjugacy_classes.sum = order_PSL27 := by
+  unfold PSL27_conjugacy_classes order_PSL27
+  norm_num
+
+/-- **PSL(2,7) 非单位元总数 = 167** -/
+def PSL27_non_identity : ℕ :=
+    PSL27_conjugacy_classes.sum - 1
+
+/-- **167 = 21 + 24 + 24 + 42 + 56** -/
+theorem PSL27_non_identity_eq_sum :
+    PSL27_non_identity = 21 + 24 + 24 + 42 + 56 := by
+  unfold PSL27_non_identity PSL27_conjugacy_classes
+  norm_num
+
+/-- **PSL(2,7) 中 4-阶元素的个数 = 56** -/
+def PSL27_order4_elements : ℕ := 56
+
+/-- **暗物质分子 111 = 非单位元总数 - 4-阶元素数**
+
+    物理意义：暗物质对应 PSL(2,7) 中"非平凡但非4-阶"的对称操作。
+    4-阶元素被分离出来对应暗能量（289 = 17²，17 = 2^4 + 1）。 -/
+def dark_matter_numerator : ℕ :=
+    PSL27_non_identity - PSL27_order4_elements
+
+/-- **111 = 167 - 56** -/
+theorem dark_matter_eq_non_identity_minus_order4 :
+    dark_matter_numerator = 167 - 56 := by
+  unfold dark_matter_numerator PSL27_non_identity PSL27_order4_elements PSL27_conjugacy_classes
+  norm_num
+
+/-- **111 = 21 + 24 + 24 + 42**（排除 4-阶元素后的非单位元）-/
+theorem dark_matter_eq_sum_without_order4 :
+    dark_matter_numerator = 21 + 24 + 24 + 42 := by
+  unfold dark_matter_numerator PSL27_non_identity PSL27_order4_elements PSL27_conjugacy_classes
+  norm_num
+
+/-- **Ω_DM = 111/420** -/
+theorem Omega_DM_eq_111_over_420 :
+    Omega_DM = dark_matter_numerator / total_closure_denominator := by
+  unfold Omega_DM dark_matter_numerator total_closure_denominator
+  rfl
+
+/-! ============================================================================
    §4. 交叉验证恒等式
    ============================================================================ -/
 

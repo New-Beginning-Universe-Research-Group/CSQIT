@@ -126,6 +126,7 @@ lean_lib CSQIT where
     `Core.W2.GroupRepresentationData,
     `Core.W2.GrowthAndSymmetry,
     `Core.W2.Fin7Uniqueness,
+    `Core.W2.HolographicIsomorphism,
     `Core.W2.Models.EnhancedModels,
     `Core.W2.Models.PeriodicTable,
     `Core.W2.Models.FiniteWeavingExamples,
@@ -135,6 +136,7 @@ lean_lib CSQIT where
     `Core.W3.AtomicOperations,
     `Core.W3.UnifiedPicture,
     `Core.W3.CyclicUniverse,
+    `Core.W3.ObserverFormalization,
     `Core.W3.Summary,
     -- ===== 三锁统一闭包（核心成果） =====
     `Unified.Constants.FineStructure,

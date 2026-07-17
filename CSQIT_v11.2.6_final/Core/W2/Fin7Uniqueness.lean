@@ -693,7 +693,10 @@ theorem coupling_breaks_dichotomy :
       False := by
   intro M C A Cx h_coupling h_not_inj
   obtain ⟨φ, hφ⟩ := h_coupling
-  sorry
+  have h_lemma : ∀ (α β : C), A.output α = A.output β → Cx.amplitude α = Cx.amplitude β → α = β := by
+    intro α β h_eq_out h_eq_amp
+    exact Cx.amplitude_injective h_eq_amp
+  exact h_not_inj h_lemma
 
 /-- **推导路径 1：从 AxiomA' 的 combine 到代数结构**：
 

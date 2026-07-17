@@ -72,7 +72,22 @@ open Filter
 降维打击：利用投射尺度的严格单调性和上界性质，直接构造收敛性。
 -/
 lemma tendsto_n_over_n_plus_one_atTop_nhds_one :
-    Tendsto (fun n : ℕ => (n : ℝ) / (n + 1)) atTop (nhds 1) := sorry
+    Tendsto (fun n : ℕ => (n : ℝ) / (n + 1)) atTop (nhds 1) := by
+  -- n/(n+1) = 1 - 1/(n+1)
+  -- 由 tendsto_one_div_add_atTop_nhds_zero_nat 知 1/(n+1) → 0
+  -- 故 1 - 1/(n+1) → 1 - 0 = 1
+  have h0 : Tendsto (fun n : ℕ => (1 : ℝ)) atTop (nhds 1) := tendsto_const_nhds
+  have h1 : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (nhds 0) :=
+    tendsto_one_div_add_atTop_nhds_zero_nat
+  have h : Tendsto (fun n : ℕ => (1 : ℝ) - 1 / ((n : ℝ) + 1)) atTop (nhds (1 - 0)) :=
+    Tendsto.sub h0 h1
+  rw [sub_zero] at h
+  exact h.congr (by
+    intro n
+    -- 目标：1 - 1/(↑n + 1) = ↑n / ↑(n + 1)
+    -- field_simp 清理除法，ring 关闭线性算术
+    field_simp
+    ring)
 
 /- ============================================================================
    §0. 补充定理：直接后继蕴含因果序
