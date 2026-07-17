@@ -51,6 +51,7 @@ namespace CSQIT.W2.Fin7Uniqueness
 open CSQIT.AlgebraicCausality
 open CSQIT.BVNaturalness
 open CSQIT.CausalLattice
+open CSQIT.Models
 
 /-! ============================================================================
    §1. 代数扩张次数的形式化定义
@@ -675,7 +676,10 @@ theorem fin7_satisfies_coupling :
     @AmplitudeCausalityCoupling (Fin 7) (Fin 7) _ _ := by
   refine ⟨fun x => Complex.exp (Complex.I * (2 * Real.pi * (x.val : ℝ) / 7)), ?_⟩
   intro α
-  sorry
+  simp [cyclicAmplitude]
+  <;> congr
+  <;> push_cast
+  <;> ring
 
 /-- **耦合条件排除了标准 Theory 中的两面性二一定理**：
 
