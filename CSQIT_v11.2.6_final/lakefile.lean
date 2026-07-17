@@ -125,6 +125,7 @@ lean_lib CSQIT where
     `Core.W2.GravityDerivation,
     `Core.W2.GroupRepresentationData,
     `Core.W2.GrowthAndSymmetry,
+    `Core.W2.Fin7Uniqueness,
     `Core.W2.Models.EnhancedModels,
     `Core.W2.Models.PeriodicTable,
     `Core.W2.Models.FiniteWeavingExamples,
