@@ -276,7 +276,79 @@ theorem p7_satisfies_WAP_conditions :
   unfold WeakAnthropicPrinciple
   constructor
   · exact p7_is_first_irreversible
-  · sorry
+  · dsimp only [structureFormationWindow]
+    set α := seventh_root_real_part 1 with hα_def
+    set x := theta_p 7 (by norm_num : (7 : ℕ).Prime) with hx_def
+    have hθ_val : x = 1 / (2 + α) := theta_7_value
+    have h_cubic_alpha : α^3 + α^2 - 2 * α - 1 = 0 := cos2pi7_cubic_equation
+    have h_alpha_gt1 : 1 < α := by
+      dsimp only [α, seventh_root_real_part]
+      have h6 : 2 * Real.pi / 7 < Real.pi / 3 := by linarith [Real.pi_pos]
+      have h7 : Real.cos (2 * Real.pi / 7) > 1 / 2 := by
+        have h8 : Real.cos (Real.pi / 3) = 1 / 2 := Real.cos_pi_div_three
+        have h9 : Real.cos (2 * Real.pi / 7) > Real.cos (Real.pi / 3) := by
+          apply Real.cos_lt_cos_of_nonneg_of_le_pi
+          all_goals linarith [Real.pi_pos]
+        linarith [h8, h9]
+      linarith
+    have f_mono : ∀ (y z : ℝ), 1 ≤ y → y < z → y^3 + y^2 - 2*y - 1 < z^3 + z^2 - 2*z - 1 := by
+      intro y z hy1 hlt
+      have h_pos1 : 0 < z - y := by linarith
+      have h_pos2 : 0 < z^2 + z*y + y^2 + z + y - 2 := by nlinarith
+      have h : z^3 + z^2 - 2*z - 1 - (y^3 + y^2 - 2*y - 1) = (z - y) * (z^2 + z*y + y^2 + z + y - 2) := by ring
+      linarith
+    have h_f34_33_lt0 : (34 / 33 : ℝ)^3 + (34 / 33 : ℝ)^2 - 2 * (34 / 33 : ℝ) - 1 < 0 := by norm_num
+    have h_f11_7_gt0 : (11 / 7 : ℝ)^3 + (11 / 7 : ℝ)^2 - 2 * (11 / 7 : ℝ) - 1 > 0 := by norm_num
+    have h_alpha_gt34_33 : α > 34 / 33 := by
+      by_contra h
+      have h' : α ≤ 34 / 33 := by linarith
+      have h1 : 1 ≤ (34 / 33 : ℝ) := by norm_num
+      have h2 : α^3 + α^2 - 2*α - 1 ≤ (34 / 33 : ℝ)^3 + (34 / 33 : ℝ)^2 - 2 * (34 / 33 : ℝ) - 1 := by
+        by_cases h3 : α = 34 / 33
+        · rw [h3]
+        · have h4 : α < 34 / 33 := by linarith
+          have h5 := f_mono α (34 / 33) (by linarith) h4
+          linarith
+      linarith [h_cubic_alpha, h_f34_33_lt0]
+    have h_alpha_lt11_7 : α < 11 / 7 := by
+      by_contra h
+      have h' : α ≥ 11 / 7 := by linarith
+      have h1 : 1 ≤ (11 / 7 : ℝ) := by norm_num
+      have h2 : (11 / 7 : ℝ)^3 + (11 / 7 : ℝ)^2 - 2 * (11 / 7 : ℝ) - 1 ≤ α^3 + α^2 - 2*α - 1 := by
+        by_cases h3 : α = 11 / 7
+        · rw [h3]
+        · have h4 : (11 / 7 : ℝ) < α := by linarith
+          have h5 := f_mono (11 / 7) α h1 h4
+          linarith
+      linarith [h_cubic_alpha, h_f11_7_gt0]
+    have h_pos2 : 0 < 2 + α := by linarith
+    constructor
+    · have h1 : α < 11 / 7 := h_alpha_lt11_7
+      have h2 : 2 + α < 2 + 11 / 7 := by linarith
+      have h3 : 2 + 11 / 7 = 25 / 7 := by norm_num
+      have h4 : 2 + α < 25 / 7 := by linarith
+      have h5 : 0 < 25 / 7 := by norm_num
+      have h6 : 1 / (2 + α) > 1 / (25 / 7 : ℝ) := by
+        apply one_div_lt_one_div_of_lt
+        all_goals linarith
+      have h7 : 1 / (25 / 7 : ℝ) = 7 / 25 := by norm_num
+      have h8 : 1 / (2 + α) > 7 / 25 := by linarith
+      have h9 : x = 1 / (2 + α) := hθ_val
+      rw [h9]
+      linarith
+    · have h1 : α > 34 / 33 := h_alpha_gt34_33
+      have h2 : 2 + α > 2 + 34 / 33 := by linarith
+      have h3 : 2 + 34 / 33 = 100 / 33 := by norm_num
+      have h4 : 2 + α > 100 / 33 := by linarith
+      have h5 : 0 < 100 / 33 := by norm_num
+      have h6 : 1 / (2 + α) < 1 / (100 / 33 : ℝ) := by
+        apply one_div_lt_one_div_of_lt
+        all_goals linarith
+      have h7 : 1 / (100 / 33 : ℝ) = 33 / 100 := by norm_num
+      have h8 : 1 / (2 + α) < 33 / 100 := by linarith
+      have h9 : x = 1 / (2 + α) := hθ_val
+      rw [h9]
+      linarith
 
 /-- **弱人择原理与 Fin 7 唯一性的连接**
 

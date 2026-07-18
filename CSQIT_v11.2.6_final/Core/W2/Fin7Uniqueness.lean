@@ -109,26 +109,17 @@ theorem char_real_d1_eq_minus_one : char_real_d1 = -1 := by
     ring
   rw [h]; ring
 
-/-- **d=2 的特征实数**：2cos(2π/5) = (√5 - 1)/2 （黄金分割共轭） -/
+/-- **d=2 的特征实数**：2cos(2π/5) = (√5 - 1)/2 = 1/φ（黄金分割比倒数） -/
 noncomputable def char_real_d2 : ℝ := 2 * Real.cos (2 * Real.pi / 5)
 
 /-- **黄金分割比** φ = (1 + √5)/2 -/
 noncomputable def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
 
-/-- **黄金分割共轭** Φ = (1 - √5)/2 = 2cos(2π/5) -/
+/-- **黄金分割共轭** Φ = (1 - √5)/2 = -1/φ（注意：此为负值，≠ 2cos(2π/5)） -/
 noncomputable def goldenConjugate : ℝ := (1 - Real.sqrt 5) / 2
 
-/-- **d=2 的特征实数满足二次方程 x² + x - 1 = 0** -/
-theorem char_real_d2_quadratic :
-    char_real_d2^2 + char_real_d2 - 1 = 0 := by
-  -- 2cos(2π/5) 满足 x² + x - 1 = 0
-  -- 这是分圆域 Q(ζ₅) 的极大实子域 Q(√5) 的极小多项式
-  sorry
-
-/-- **d=2 的特征实数是黄金分割共轭** -/
-theorem char_real_d2_eq_golden_conjugate :
-    char_real_d2 = goldenConjugate := by
-  sorry
+/-! 注：`char_real_d2_quadratic` 与 `char_real_d2_eq_neg_golden_conjugate` 的证明
+   依赖 `cos_pi_fifth_value`（定义在本文件后段），故移至该定理之后。 -/
 
 /-- **d=3 的特征实数**：2cos(2π/7) -/
 noncomputable def char_real_d3 : ℝ := 2 * Real.cos (2 * Real.pi / 7)
@@ -351,13 +342,51 @@ theorem fin7_uniqueness_W2 :
       isReversible p hp →
       p = 3 ∨ p = 5 := by
   intro p hp h_odd h_rev
-  -- isReversible 意味着 algebraicDegree ≤ 2，即 (p-1)/2 ≤ 2，即 p ≤ 5
-  have h_le5 : p ≤ 5 := by sorry
-  -- 加上 p > 2，所以 p ∈ {3, 4, 5}，但 4 非素数
-  interval_cases p
-  · left; rfl
-  · exfalso; exact (by norm_num : ¬ (4 : ℕ).Prime) hp
-  · right; rfl
+  let d := algebraicDegree p hp
+  have h_d_eq : d = (p - 1) / 2 := by rfl
+  have h_cases : d = 0 ∨ d = 1 ∨ d = 2 ∨ d ≥ 3 := by omega
+  rcases h_cases with (h0 | h1 | h2 | h3)
+  · -- d = 0: (p-1)/2 = 0 蕴含 p ≤ 2，与 p > 2 矛盾
+    exfalso
+    have h_d0 : (p - 1) / 2 = 0 := by rw [←h_d_eq, h0]
+    omega
+  · -- d = 1: (p-1)/2 = 1 蕴含 p ∈ {3, 4}；4 非素数，故 p = 3
+    have h_p_eq3 : p = 3 := by
+      have h : (p - 1) / 2 = 1 := by rw [←h_d_eq, h1]
+      have h_bounds : p = 3 ∨ p = 4 := by omega
+      rcases h_bounds with h3 | h4
+      · exact h3
+      · rw [h4] at hp; norm_num at hp
+    left
+    exact h_p_eq3
+  · -- d = 2: (p-1)/2 = 2 蕴含 p ∈ {5, 6}；6 非素数，故 p = 5
+    have h_p_eq5 : p = 5 := by
+      have h : (p - 1) / 2 = 2 := by rw [←h_d_eq, h2]
+      have h_bounds : p = 5 ∨ p = 6 := by omega
+      rcases h_bounds with h5 | h6
+      · exact h5
+      · rw [h6] at hp; norm_num at hp
+    right
+    exact h_p_eq5
+  · -- d ≥ 3: isReversible 的 match 落入 _ => False 分支
+    -- 关键：clear_value 把 let 绑定转为普通变量，再 cases d 强制 match 归约
+    --   d = 0 / 1 / 2：与 h3 : d ≥ 3 矛盾（omega）
+    --   d = succ (succ (succ k))：match 归约到 _ => False，h : False
+    have h_contra : ¬ isReversible p hp := by
+      intro h
+      unfold isReversible at h
+      rw [show algebraicDegree p hp = d from rfl] at h
+      clear_value d
+      cases d with
+      | zero => omega
+      | succ n =>
+        cases n with
+        | zero => omega
+        | succ m =>
+          cases m with
+          | zero => omega
+          | succ k => exact h
+    exact False.elim (h_contra h_rev)
 
 /-! ============================================================================
    §6.5 素数排除引理（多方向倒推的数值验证）
@@ -469,6 +498,41 @@ theorem cos_pi_fifth_value :
     have h6 : (1 - Real.sqrt 5) / 4 < 0 := by linarith
     rw [h3] at h_pos
     linarith
+
+/-! ----------------------------------------------------------------------------
+   §2.5 d=2 特征实数的二次方程与黄金分割关系
+   ----------------------------------------------------------------------------
+
+   此处依赖上述 `cos_pi_fifth_value`，证明 `char_real_d2` 满足的代数关系。
+   -/
+
+/-- **d=2 的特征实数满足二次方程 x² + x - 1 = 0** -/
+theorem char_real_d2_quadratic :
+    char_real_d2^2 + char_real_d2 - 1 = 0 := by
+  -- 2cos(2π/5) 满足 x² + x - 1 = 0
+  -- 这是分圆域 Q(ζ₅) 的极大实子域 Q(√5) 的极小多项式
+  -- 证明：cos(2π/5) = 2cos²(π/5) - 1，代入 cos(π/5) = (1+√5)/4
+  unfold char_real_d2
+  have h_cos : Real.cos (2 * Real.pi / 5) = 2 * Real.cos (Real.pi / 5)^2 - 1 := by
+    have h := Real.cos_two_mul (Real.pi / 5)
+    rw [show 2 * (Real.pi / 5) = 2 * Real.pi / 5 from by ring] at h
+    exact h
+  rw [h_cos, cos_pi_fifth_value]
+  have h_sqrt : (Real.sqrt 5)^2 = 5 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 5)
+  nlinarith [h_sqrt]
+
+/-- **d=2 的特征实数是黄金分割共轭的相反数** -/
+theorem char_real_d2_eq_neg_golden_conjugate :
+    char_real_d2 = -goldenConjugate := by
+  -- char_real_d2 = 2cos(2π/5) = (√5-1)/2 = -((1-√5)/2) = -goldenConjugate
+  unfold char_real_d2 goldenConjugate
+  have h_cos : Real.cos (2 * Real.pi / 5) = 2 * Real.cos (Real.pi / 5)^2 - 1 := by
+    have h := Real.cos_two_mul (Real.pi / 5)
+    rw [show 2 * (Real.pi / 5) = 2 * Real.pi / 5 from by ring] at h
+    exact h
+  rw [h_cos, cos_pi_fifth_value]
+  have h_sqrt : (Real.sqrt 5)^2 = 5 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 5)
+  linarith [h_sqrt]
 
 /-- **cos(π/5) > 11/14**：
 
@@ -765,7 +829,8 @@ def FullDerivationChain {M : Type*} [BoundedCausalLattice M] [Fintype M]
    - 推导路径 1-3 的框架定义
 
    🔶 W1 层待完成（标为 sorry 或 def）：
-   - char_real_d2_quadratic: 需严格证明 2cos(2π/5) 的二次方程
+   - char_real_d2_quadratic: ✅ 已严格证明（用 cos_two_mul + cos_pi_fifth_value）
+   - char_real_d2_eq_neg_golden_conjugate: ✅ 已严格证明（修正原定理数学错误：2cos(2π/5) = -goldenConjugate，非 = goldenConjugate）
    - fin7_satisfies_coupling: 需对接 fin7Model 的具体构造
    - coupling_breaks_dichotomy: 需严格证明耦合条件的影响
    - DerivationPath1/2/3: 需从 W1 公理推导

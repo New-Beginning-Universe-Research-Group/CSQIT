@@ -82,6 +82,66 @@ structure Weave {M : Type*} (L R : CausalSite M) where
 
 namespace Weave
 
+/-- 辅助引理：非空列表与其后接任意列表，头部保持不变 -/
+private lemma head_append {α : Type*} (l1 l2 : List α) (h1 : l1 ≠ []) :
+    ∃ (h : l1 ++ l2 ≠ []), (l1 ++ l2).head h = l1.head h1 := by
+  cases l1 with
+  | nil => contradiction
+  | cons x xs =>
+    refine' ⟨by simp, _⟩
+    rfl
+
+/-- 辅助引理：列表后接非空列表，尾部等于第二个列表的尾部 -/
+private lemma getLast_append_right {α : Type*} (l1 l2 : List α) (h2 : l2 ≠ []) :
+    ∃ (h : l1 ++ l2 ≠ []), (l1 ++ l2).getLast h = l2.getLast h2 := by
+  induction l1 with
+  | nil =>
+    refine' ⟨h2, _⟩
+    simp
+  | cons x xs ih =>
+    have h_ne : (x :: xs) ++ l2 ≠ [] := by simp
+    refine' ⟨h_ne, _⟩
+    rcases ih with ⟨h_xs_ne, h_ih_eq⟩
+    have h_ih' : ((x :: xs) ++ l2).getLast h_ne = (xs ++ l2).getLast h_xs_ne := by
+      simp [List.getLast_cons, h_xs_ne]
+      <;> rfl
+    rw [h_ih']
+    exact h_ih_eq
+
+/-- 辅助引理：非空 tail 的 getLast 等于原列表的 getLast -/
+private lemma tail_getLast_eq_getLast {α : Type*} (l : List α) (h1 : l ≠ []) (h2 : l.tail ≠ []) :
+    l.tail.getLast h2 = l.getLast h1 := by
+  cases l with
+  | nil => contradiction
+  | cons x xs =>
+    by_cases h3 : xs = []
+    · exfalso; exact h2 h3
+    · simp [List.getLast_cons, h3, List.tail_cons]
+      <;> rfl
+
+/-- 辅助引理：单元素列表的 head 等于 getLast -/
+private lemma head_eq_getLast_of_tail_eq_nil {α : Type*} (l : List α) (h1 : l ≠ []) (h2 : l.tail = []) :
+    l.head h1 = l.getLast h1 := by
+  cases l with
+  | nil => contradiction
+  | cons x xs =>
+    have h3 : xs = [] := by simpa [List.tail_cons] using h2
+    subst h3
+    simp [List.head_cons, List.getLast_cons]
+    <;> rfl
+
+/-- 辅助引理：getLast 对列表相等的 congruence -/
+private lemma getLast_congr {α : Type*} {l1 l2 : List α} (h1 : l1 ≠ []) (h2 : l2 ≠ []) (h_eq : l1 = l2) :
+    l1.getLast h1 = l2.getLast h2 := by
+  subst h_eq
+  rfl
+
+/-- 辅助引理：head 对列表相等的 congruence -/
+private lemma head_congr {α : Type*} {l1 l2 : List α} (h1 : l1 ≠ []) (h2 : l2 ≠ []) (h_eq : l1 = l2) :
+    l1.head h1 = l2.head h2 := by
+  subst h_eq
+  rfl
+
 /-- 编织路径的长度 -/
 def length {M : Type*} {L R : CausalSite M} (w : Weave L R) : ℕ := w.path.length
 
@@ -99,47 +159,144 @@ def trivial {M : Type*} (α : CausalSite M) : Weave α α :=
 
 将两条首尾相接的编织路径 w1 : L→MID 和 w2 : MID→R 复合为一条路径 w1∘w2 : L→R。
 
-⚠️ **编译状态说明**：本定义的核心构造已经明确，但四项证明义务因
-Lean 4 List API 的细微类型不匹配问题暂时使用 sorry：
-1. 复合路径非空性
-2. 复合路径头部等于 w1 的头部
-3. 复合路径尾部等于 w2 的尾部
-4. 复合路径满足因果链约束
+构造：复合路径 = w1.path ++ w2.path.tail
+（去掉 w2 的头部，因为它与 w1 的尾部重合于 MID）
 
-当前策略：保留函数定义框架，待后续版本修复证明。
+**证明状态**：
+- path_nonempty: 已证明（w1.path 非空保证）
+- head_eq: 已证明（通过列表析构）
+- last_eq: 已证明（分情况讨论 tail 是否为空）
+- causal_chain: 已证明（三情况分析：全在 w1、跨越连接点、全在 w2.tail）
 -/
 
 /-- 编织路径的复合 -/
 def comp {M : Type*} {L MID R : CausalSite M} (w1 : Weave L MID) (w2 : Weave MID R) : Weave L R :=
+  have h_ne : w1.path ++ w2.path.tail ≠ [] := by
+    intro h
+    have h1 : w1.path = [] := (List.eq_nil_of_append_eq_nil h).1
+    exact w1.path_nonempty h1
   ⟨w1.path ++ w2.path.tail,
-    -- path_nonempty: 复合路径非空
+    h_ne,
+    -- head_eq
     by
-      -- ⚠️ 证明暂时使用 sorry，待后续版本修复
-      -- 原错误：Lean 4 List API 在依赖类型下对空列表推理的类型不匹配
-      -- 核心思路：w1.path ≠ [] 保证 w1.path ++ w2.path.tail ≠ []
-      sorry,
-    -- head_eq: 复合路径的头部等于 w1 的头部
+      have h_main := head_append w1.path w2.path.tail w1.path_nonempty
+      rcases h_main with ⟨h', h_eq⟩
+      have h_final : (w1.path ++ w2.path.tail).head h_ne = w1.path.head w1.path_nonempty := by
+        exact h_eq
+      rw [h_final, w1.head_eq],
+    -- last_eq
     by
-      -- ⚠️ 证明暂时使用 sorry，待后续版本修复
-      -- 原错误：List.head_append 在依赖类型（path_nonempty 证明）下的精确匹配失败
-      -- 核心思路：w1.path 非空时，(w1.path ++ q).head = w1.path.head = L
-      sorry,
-    -- last_eq: 复合路径的尾部等于 w2 的尾部
+      by_cases h_tl : w2.path.tail = []
+      · -- w2.path.tail 为空
+        have h1 : w1.path ++ w2.path.tail = w1.path := by
+          rw [h_tl, List.append_nil]
+        have h_mid_eq : w2.path.head w2.path_nonempty = w2.path.getLast w2.path_nonempty :=
+          head_eq_getLast_of_tail_eq_nil w2.path w2.path_nonempty h_tl
+        have h_mid : MID = R := by
+          have h1' : w2.path.head w2.path_nonempty = MID := w2.head_eq
+          have h2' : w2.path.getLast w2.path_nonempty = R := w2.last_eq
+          calc
+            MID
+              = w2.path.head w2.path_nonempty := h1'.symm
+            _ = w2.path.getLast w2.path_nonempty := h_mid_eq
+            _ = R := h2'
+        have h_getLast_eq : (w1.path ++ w2.path.tail).getLast h_ne = w1.path.getLast w1.path_nonempty :=
+          getLast_congr h_ne w1.path_nonempty h1
+        rw [h_getLast_eq, ←h_mid, w1.last_eq]
+      · -- w2.path.tail 非空
+        have h_l2_ne : w2.path.tail ≠ [] := h_tl
+        have h1 := getLast_append_right w1.path w2.path.tail h_l2_ne
+        rcases h1 with ⟨h', h_main_eq⟩
+        have h2 : (w1.path ++ w2.path.tail).getLast h_ne = w2.path.tail.getLast h_l2_ne := by
+          exact h_main_eq
+        have h3 : w2.path.tail.getLast h_l2_ne = w2.path.getLast w2.path_nonempty :=
+          tail_getLast_eq_getLast w2.path w2.path_nonempty h_l2_ne
+        rw [h2, h3, w2.last_eq],
+    -- causal_chain
     by
-      -- ⚠️ 证明暂时使用 sorry，待后续版本修复
-      -- 原错误：List.getLast_append / List.cons_head_tail 与依赖证明的协调失败
-      -- 核心思路：若 w2.path.tail 为空则 R = MID 且结果等于 w1.last_eq；
-      --          否则用 List.getLast_tail 得到结果等于 w2.last_eq。
-      sorry,
-    -- causal_chain: 复合路径满足因果链约束
-    by
-      -- ⚠️ 证明暂时使用 sorry，待后续版本修复
-      -- 原错误：拼接点处索引边界与 getElem 依赖证明的协调复杂
-      -- 核心思路：分三种情况
-      --   1. i+1 < w1.path.length：两步都在 w1 中，用 w1.causal_chain
-      --   2. i = w1.path.length - 1：跨拼接点，用 w1.last_eq 和 w2.head_eq
-      --   3. i ≥ w1.path.length：两步都在 w2.path.tail 中，用 w2.causal_chain
-      sorry
+      intro i hi
+      have h_len : (w1.path ++ w2.path.tail).length = w1.path.length + w2.path.tail.length := by
+        rw [List.length_append]
+      have hi_len : i + 1 < w1.path.length + w2.path.tail.length := by
+        rw [←h_len]; exact hi
+      have h_tail_len : w2.path.tail.length = w2.path.length - 1 := List.length_tail
+      by_cases h_le : i + 1 < w1.path.length
+      · -- 情况 1：都在 w1 中
+        have h_i : i < w1.path.length := by omega
+        have h := w1.causal_chain i h_le
+        have h_eq1 : (w1.path ++ w2.path.tail)[i] = w1.path[i] := List.getElem_append_left h_i
+        have h_eq2 : (w1.path ++ w2.path.tail)[i + 1] = w1.path[i + 1] := List.getElem_append_left h_le
+        simp only [h_eq1, h_eq2]
+        exact h
+      · -- 情况 2 或 3
+        by_cases h_cross : i + 1 = w1.path.length
+        · -- 情况 2：跨越连接点
+          have h_i_lt : i < w1.path.length := by omega
+          have h_tail_pos : 0 < w2.path.tail.length := by omega
+          have h_eq1 : (w1.path ++ w2.path.tail)[i] = w1.path[i] := List.getElem_append_left h_i_lt
+          have h_ge : w1.path.length ≤ i + 1 := by omega
+          have h_eq2 : (w1.path ++ w2.path.tail)[i + 1] = w2.path.tail[(i + 1) - w1.path.length] :=
+            List.getElem_append_right h_ge
+          have h_tail_0 : w2.path.tail[0] = w2.path[0 + 1] := List.getElem_tail h_tail_pos
+          have h_w1_last : w1.path[i] = w1.path.getLast w1.path_nonempty := by
+            have h_i_last : i = w1.path.length - 1 := by omega
+            subst h_i_last
+            exact (List.getLast_eq_getElem w1.path_nonempty).symm
+          have h_w2_head : w2.path.head w2.path_nonempty = w2.path[0] :=
+            List.head_eq_getElem w2.path_nonempty
+          have h_mid : w1.path.getLast w1.path_nonempty = w2.path[0] :=
+            (w1.last_eq.trans w2.head_eq.symm).trans h_w2_head
+          have h_combined_left : (w1.path ++ w2.path.tail)[i] = w2.path[0] :=
+            h_eq1.trans (h_w1_last.trans h_mid)
+          have h_combined_right : (w1.path ++ w2.path.tail)[i + 1] = w2.path[0 + 1] := by
+            have h_tail_via :
+                (w1.path ++ w2.path.tail)[i + 1] = w2.path[((i + 1) - w1.path.length) + 1] := by
+              have h2 : w2.path.tail[(i + 1) - w1.path.length] =
+                  w2.path[((i + 1) - w1.path.length) + 1] :=
+                List.getElem_tail (by omega)
+              exact h_eq2.trans h2
+            have h_idx2 : ((i + 1) - w1.path.length) + 1 = 0 + 1 := by omega
+            have h_congr : w2.path[((i + 1) - w1.path.length) + 1] = w2.path[0 + 1] :=
+              getElem_congr rfl (by omega) (by omega)
+            exact h_tail_via.trans h_congr
+          have h_w2_chain :
+              causalLT (w2.path[0]) (w2.path[0 + 1]) ∨ causalIncomparable (w2.path[0]) (w2.path[0 + 1]) :=
+            w2.causal_chain 0 (by omega)
+          simp only [h_combined_left, h_combined_right]
+          exact h_w2_chain
+        · -- 情况 3：都在 w2.tail 中
+          have h_ge : w1.path.length ≤ i := by omega
+          have h_i1_ge : w1.path.length ≤ i + 1 := by omega
+          have h_eq1 : (w1.path ++ w2.path.tail)[i] = w2.path.tail[i - w1.path.length] :=
+            List.getElem_append_right h_ge
+          have h_eq2 : (w1.path ++ w2.path.tail)[i + 1] = w2.path.tail[(i + 1) - w1.path.length] :=
+            List.getElem_append_right h_i1_ge
+          have h_j_lt : i - w1.path.length < w2.path.tail.length := by omega
+          have h_j1_lt : (i + 1) - w1.path.length < w2.path.tail.length := by omega
+          have h_tail_j : w2.path.tail[i - w1.path.length] = w2.path[(i - w1.path.length) + 1] :=
+            List.getElem_tail h_j_lt
+          have h_tail_j1 :
+              w2.path.tail[(i + 1) - w1.path.length] = w2.path[((i + 1) - w1.path.length) + 1] :=
+            List.getElem_tail h_j1_lt
+          have h_combined_left :
+              (w1.path ++ w2.path.tail)[i] = w2.path[(i - w1.path.length) + 1] :=
+            h_eq1.trans h_tail_j
+          have h_combined_right :
+              (w1.path ++ w2.path.tail)[i + 1] = w2.path[((i - w1.path.length) + 1) + 1] := by
+            have h_via :
+                (w1.path ++ w2.path.tail)[i + 1] = w2.path[((i + 1) - w1.path.length) + 1] :=
+              h_eq2.trans h_tail_j1
+            have h_idx2 : ((i + 1) - w1.path.length) + 1 = ((i - w1.path.length) + 1) + 1 := by omega
+            have h_congr :
+                w2.path[((i + 1) - w1.path.length) + 1] = w2.path[((i - w1.path.length) + 1) + 1] :=
+              getElem_congr rfl (by omega) (by omega)
+            exact h_via.trans h_congr
+          have h_w2_chain :
+              causalLT (w2.path[(i - w1.path.length) + 1]) (w2.path[((i - w1.path.length) + 1) + 1]) ∨
+              causalIncomparable (w2.path[(i - w1.path.length) + 1]) (w2.path[((i - w1.path.length) + 1) + 1]) :=
+            w2.causal_chain ((i - w1.path.length) + 1) (by omega)
+          simp only [h_combined_left, h_combined_right]
+          exact h_w2_chain
   ⟩
 
 end Weave

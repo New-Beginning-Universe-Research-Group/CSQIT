@@ -47,6 +47,7 @@ import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Real.Basic
+import Mathlib.Order.Basic
 
 namespace CSQIT.CausalLattice
 
@@ -114,7 +115,7 @@ noncomputable abbrev dist (x y : M) : ℝ := causalDistance x y
 theorem sup_determines_order :
     ∀ (x y : M), x ≤ y ↔ x ⊔ y = y := by
   intro x y
-  exact?
+  exact sup_eq_right.symm
 
 /--
 **定理 2.2: 并运算的单调性**
@@ -373,11 +374,8 @@ variable {M : Type*} [BoundedCausalLattice M]
 
 物理意义：如果宇宙有开端，那么这个开端是唯一的。
 -/
-theorem bot_unique (x : M) (h : ∀ y, x ≤ y) : x = (⊥ : M) := by
-  have h₁ : x ≤ (⊥ : M) := h ⊥
-  have h₂ : (⊥ : M) ≤ x := bot_le
-  have : (⊥ : M) ≤ x := h₂
-  exact?
+theorem bot_unique (x : M) (h : ∀ y, x ≤ y) : x = (⊥ : M) :=
+  eq_bot_iff.mpr (h ⊥)
 
 /--
 **定理 3.2: 最终状态的唯一性**
@@ -386,10 +384,8 @@ theorem bot_unique (x : M) (h : ∀ y, x ≤ y) : x = (⊥ : M) := by
 
 物理意义：宇宙的最终状态是唯一确定的。
 -/
-theorem top_unique (x : M) (h : ∀ y, y ≤ x) : x = (⊤ : M) := by
-  have h₁ : (⊤ : M) ≤ x := h ⊤
-  have h₂ : x ≤ (⊤ : M) := le_top
-  exact?
+theorem top_unique (x : M) (h : ∀ y, y ≤ x) : x = (⊤ : M) :=
+  eq_top_iff.mpr (h ⊤)
 
 /-! ============================================================================
    §10. 宇宙初始边界与两面性参数 θ

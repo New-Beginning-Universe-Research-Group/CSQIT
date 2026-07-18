@@ -332,10 +332,33 @@ theorem omega_sum_eq_one :
     H₀ / α⁻¹ = 30/61 -/
 def hubble_ratio : ℚ := 30/61
 
-/-- **哈勃常数预测 = α⁻¹ × 30/61** -/
+/-- **哈勃常数预测 = α⁻¹ × 30/61**
+
+    H₀ ≈ 67.39475 km/s/Mpc（以分数 269579/4000 表示，避免十进制字面量）
+    误差界 1e-4 = 1/10000（以分数表示） -/
 theorem hubble_prediction :
-    abs ((inverse_fine_structure * hubble_ratio : ℝ) - 67.39475) < 1e-4 := by
-  sorry
+    abs ((inverse_fine_structure * hubble_ratio : ℝ) - 269579/4000) < 1/10000 := by
+  -- 精确计算：
+  --   inverse_fine_structure = 137 + 9/250 = 34259/250
+  --   hubble_ratio = 30/61
+  --   乘积 = 34259/250 * 30/61 = 1027770/15250 = 102777/1525
+  --   269579/4000 = 67.39475
+  --   差值 = 102777/1525 - 269579/4000 = 1/244000
+  --   1/244000 < 1/10000 ✓
+  -- 策略：全分数形式避开 OfScientific 缺陷。
+  --       先用 have + norm_num 证明内部差值等式（norm_num 可处理纯分数等式），
+  --       再 rw 代入并用 abs_of_pos 去除 abs，最后 norm_num 关闭不等式。
+  unfold inverse_fine_structure hubble_ratio
+  push_cast
+  -- 关键：先证明差值 = 1/244000（正数）
+  have h_diff : (137 + 9/250 : ℝ) * (30/61) - 269579/4000 = 1/244000 := by norm_num
+  rw [h_diff, abs_of_pos (show (0 : ℝ) < 1/244000 by norm_num)]
+  -- 最终：1/244000 < 1/10000 ⟺ 10000 < 244000（同分子，用 div_lt_div_iff_of_pos_left）
+  rw [div_lt_div_iff_of_pos_left (show (0 : ℝ) < 1 by norm_num)
+                                 (show (0 : ℝ) < 244000 by norm_num)
+                                 (show (0 : ℝ) < 10000 by norm_num)]
+  -- 10000 < 244000：norm_num 在 cast 上下文下可能失效，用 Nat 版本 + cast
+  exact_mod_cast (by omega : (10000 : ℕ) < 244000)
 
 /-! ============================================================================
    §3. 群论与物理常数的对应

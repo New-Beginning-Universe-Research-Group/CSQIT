@@ -249,7 +249,22 @@ def inputRuleSingl {M : Type*} [Lattice M] [OrderBot M] (a : M) : InputRule M :=
 
 /-- **规则复合**：输入合并，输出取并 -/
 def inputRuleComp {M : Type*} [Lattice M] [OrderBot M] (r₁ r₂ : InputRule M) : InputRule M :=
-  ⟨r₁.inputs ++ r₂.inputs, r₁.output ⊔ r₂.output, sorry⟩
+  ⟨r₁.inputs ++ r₂.inputs, r₁.output ⊔ r₂.output, by
+    -- 辅助引理: listSup (xs ++ ys) = listSup xs ⊔ listSup ys
+    have h_split : ∀ (xs ys : List M), listSup (xs ++ ys) = listSup xs ⊔ listSup ys := by
+      intro xs ys
+      induction xs with
+      | nil =>
+        simp [listSup]
+      | cons x xs ih =>
+        rw [List.cons_append]
+        have h_def1 : listSup (x :: (xs ++ ys)) = x ⊔ listSup (xs ++ ys) :=
+          List.foldr_cons
+        have h_def2 : listSup (x :: xs) = x ⊔ listSup xs :=
+          List.foldr_cons
+        rw [h_def1, h_def2, ih]
+        exact (sup_assoc x (listSup xs) (listSup ys)).symm
+    rw [h_split, r₁.closure_prop, r₂.closure_prop]⟩
 
 /--
 **猜想 6.1: 因果格诱导完整 AxiomA' 实例**
