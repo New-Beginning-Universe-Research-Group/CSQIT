@@ -80,34 +80,34 @@ DerivedLaws/
 
 | 定律 | 层级 | 现有位置 | 目标文件 | 状态 |
 |------|------|---------|---------|------|
-| 因果决定论 | 🔵 W1 严格 | `CausalLattice.lean:670` | `ClassicalMechanics/Determinism.lean` | ✅ 已有 |
-| 热力学第二定律（熵增） | 🔵 W1 严格 | `Axioms.lean` (AxiomK) | `Thermodynamics/SecondLaw.lean` | ✅ 已有 |
-| 过去假设 | 🔵 W1 严格 | `CausalLattice.lean` | `Thermodynamics/PastHypothesis.lean` | ✅ 已有 |
-| 壳层容量 2n² | 🔵 W1 严格 | `ShellCapacityDerivation.lean` | `Chemistry/ShellCapacity.lean` | ✅ 已有 |
-| 时间箭头 | 🔵 W1 严格 | `CausalLattice.lean` | `Spacetime/TimeArrow.lean` | ✅ 已有 |
-| 振幅幺正性 | 🔵 W1 严格 | `AmplitudeTheorems.lean` | `Quantum/Unitarity.lean` | ✅ 已有 |
+| 因果决定论 | 🔵 W1 严格 | `CausalLattice.lean:670` | `ClassicalMechanics/Determinism.lean` | ✅ 已完成 |
+| 热力学第二定律（熵增） | 🔵 W1 严格 | `Axioms.lean` (AxiomK) | `Thermodynamics/SecondLaw.lean` | ✅ 已完成 |
+| 过去假设 | 🔵 W1 严格 | `CausalLattice.lean` | `Thermodynamics/PastHypothesis.lean` | ✅ 已完成 |
+| 壳层容量 2n² | 🔵 W1 严格 | `ShellCapacityDerivation.lean` | `Chemistry/ShellCapacity.lean` | ✅ 已完成 |
+| 时间箭头 | 🔵 W1 严格 | `CausalLattice.lean` | `Spacetime/TimeArrow.lean` | ✅ 已完成 |
+| 振幅幺正性 | 🔵 W1 严格 | `AmplitudeTheorems.lean` | `Quantum/Unitarity.lean` | ✅ 已完成 |
 
-### 阶段 1：容易推导的（1-2 天可完成）
+### 阶段 1：容易推导的（已完成 4/4）
 
 这些可以从现有 W1 定理直接导出，难度较低：
 
-| 定律 | 层级 | 推导思路 | 依赖的 W1 定理 | 目标文件 |
-|------|------|---------|---------------|---------|
-| 能量守恒（离散版） | 🔵 W1 严格 | 从振幅幺正性 + 时间平移对称性导出 | `amplitude_normSq_eq_one` | `ClassicalMechanics/ConservationLaws.lean` |
-| 热力学第零定律（热平衡传递性） | 🔵 W1 严格 | 从因果序的传递性导出 | `le_trans` | `Thermodynamics/ZerothLaw.lean` |
-| 因果结构的相对论性约束 | 🔵 W1 严格 | 从因果序的性质直接导出 | `CausalLattice` 公理 | `Spacetime/CausalStructure.lean` |
-| 叠加原理（离散版） | 🟢 W2 条件 | 从编织结构的并行复合导出 | `par` 操作 | `Quantum/Superposition.lean` |
+| 定律 | 层级 | 推导思路 | 依赖的 W1 定理 | 目标文件 | 状态 |
+|------|------|---------|---------------|---------|------|
+| 能量守恒（离散版） | 🟢 W2 条件 | 从振幅幺正性 + 时间平移对称性导出 | `amplitude_normSq_eq_one` | `ClassicalMechanics/ConservationLaws.lean` | ✅ 已完成 |
+| 热力学第零定律（热平衡传递性） | 🔵 W1 严格 | 从因果序的传递性导出 | `le_trans` | `Thermodynamics/ZerothLaw.lean` | ✅ 已完成 |
+| 因果结构的相对论性约束 | 🔵 W1 严格 | 从因果序的性质直接导出 | `CausalLattice` 公理 | `Spacetime/CausalStructure.lean` | ✅ 已完成 |
+| 叠加原理（离散版） | 🔵 W1 严格 | 从编织结构的并行复合导出 | `par` 操作 | `Quantum/Superposition.lean` | ✅ 已完成 |
 
-### 阶段 2：中等难度的（1-2 周可完成）
+### 阶段 2：中等难度的（进行中）
 
 需要建立新的数学工具，但方向明确：
 
-| 定律 | 层级 | 推导思路 | 关键难点 | 目标文件 |
-|------|------|---------|---------|---------|
-| 最小作用量原理（离散版） | 🟡 W2 框架 | 从变分原理导出，需要离散微积分工具 | 离散变分的定义 | `ClassicalMechanics/LeastAction.lean` |
-| 热力学第一定律（能量守恒+热功当量） | 🟢 W2 条件 | 能量守恒 + 因果熵与能量的关系 | 熵-能量对应关系 | `Thermodynamics/FirstLaw.lean` |
-| 元素周期律（两面性全息模型） | 🟢 W2 条件 | 从壳层容量 + 两面性导出 | 电子构型的形式化 | `Chemistry/PeriodicLaw.lean` |
-| 化学键理论（编织模型） | 🟡 W2 框架 | 原子间编织操作 = 化学键 | 键型分类 | `Chemistry/ChemicalBond.lean` |
+| 定律 | 层级 | 推导思路 | 关键难点 | 目标文件 | 状态 |
+|------|------|---------|---------|---------|------|
+| 最小作用量原理（离散版） | 🟡 W2 框架 | 从变分原理导出，需要离散微积分工具 | 离散变分的定义 | `ClassicalMechanics/LeastAction.lean` | ⏳ 待做 |
+| 热力学第一定律（能量守恒+热功当量） | 🟢 W2 条件 | 能量守恒 + 因果熵与能量的关系 | 熵-能量对应关系 | `Thermodynamics/FirstLaw.lean` | ⏳ 待做 |
+| 元素周期律（两面性全息模型） | 🟢 W2 条件 | 从壳层容量 + 两面性导出 | 电子构型的形式化 | `Chemistry/PeriodicLaw.lean` | ✅ 已完成（框架） |
+| 化学键理论（编织模型） | 🟡 W2 框架 | 原子间编织操作 = 化学键 | 键型分类 | `Chemistry/ChemicalBond.lean` | ⏳ 待做 |
 
 ### 阶段 3：深度探索（长期方向）
 
