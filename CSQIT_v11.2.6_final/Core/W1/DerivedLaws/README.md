@@ -109,6 +109,17 @@ DerivedLaws/
 | 元素周期律（两面性全息模型） | 🟢 W2 条件 | 从壳层容量 + 两面性导出 | 电子构型的形式化 | `Chemistry/PeriodicLaw.lean` | ✅ 已完成（框架） |
 | 化学键理论（编织模型） | 🟡 W2 框架 | 原子间编织操作 = 化学键 | 键型分类 | `Chemistry/ChemicalBond.lean` | ✅ 已完成（框架） |
 
+### 阶段 2.5：高可行性扩展（已完成 4/4）
+
+从现有定理可以直接延伸出来的重要定律：
+
+| 定律 | 层级 | 推导思路 | 关键难点 | 目标文件 | 状态 |
+|------|------|---------|---------|---------|------|
+| 动量守恒 + 角动量守恒 | 🟡 W2 框架 | 诺特定理的空间对称性版本 | 动量/角动量的定义 | `ClassicalMechanics/MomentumConservation.lean` | ✅ 已完成 |
+| 玻尔兹曼熵公式 S = k ln Ω | 🟢 W2 条件 | 因果熵 → 微观态数 → 对数熵 | 微观态的计数 | `Thermodynamics/BoltzmannEntropy.lean` | ✅ 已完成 |
+| 泡利不相容原理 | 🟢 W2 条件 | 两面性 → 自旋 1/2 → 费米子 | 自旋统计定理 | `Quantum/PauliExclusion.lean` | ✅ 已完成 |
+| 质量守恒 + 定比/倍比定律 | 🟡 W2 框架 | 振幅守恒 → 能量守恒 → 质量守恒 | 质能等价假设 | `Chemistry/MassConservation.lean` | ✅ 已完成 |
+
 ### 阶段 3：深度探索（进行中）
 
 这些是雄心勃勃的目标，可能需要新的理论突破：
@@ -117,9 +128,12 @@ DerivedLaws/
 |------|------|---------|---------|---------|------|
 | 热力学第三定律（绝对零度不可达） | 🟢 W2 条件 | 初始边界唯一性 + 有限不可达 | 冷却过程形式化 | `Thermodynamics/ThirdLaw.lean` | ✅ 已完成（框架） |
 | 不确定性原理（离散版） | 🟡 W2 框架 | 两面性二一定理的定量版本 | 不确定度的量化 | `Quantum/Uncertainty.lean` | ✅ 已完成（框架） |
+| 全同粒子 / 自旋统计定理 | 🟡 W2 框架 | 编织的交换对称性 | 辫子群表示 | `Quantum/SpinStatistics.lean` | ⏳ 待做 |
+| 库仑定律 / 高斯定律 | 🟡 W2 框架 | 两面性 → 电荷 → 平方反比 | 场的形式化 | `Electromagnetism/CoulombLaw.lean` | ⏳ 待做 |
+| 麦克斯韦关系（热力学） | 🟡 W2 框架 | 热力学势的偏导关系 | 麦克斯韦关系的离散版本 | `Thermodynamics/MaxwellRelations.lean` | ⏳ 待做 |
 | 洛伦兹不变性 | 🟠 W3 诠释 | 从因果格的对称性导出 | 连续极限 + 洛伦兹群 | `Spacetime/LorentzInvariance.lean` | ⏳ 待做 |
 | 测量理论（坍缩诠释） | 🟠 W3 诠释 | 从两面性二一定理导出 | 测量过程的形式化 | `Quantum/Measurement.lean` | ⏳ 待做 |
-| 等效原理 | 🔴 猜想 | 从因果格的均匀性导出 | 引力的形式化 | `ClassicalMechanics/Gravity.lean` | ⏳ 待做 |
+| 等效原理 / 引力 | 🔴 猜想 | 从因果格的均匀性导出 | 引力的形式化 | `ClassicalMechanics/Gravity.lean` | ⏳ 待做 |
 
 ---
 
