@@ -120,7 +120,19 @@ DerivedLaws/
 | 泡利不相容原理 | 🟢 W2 条件 | 两面性 → 自旋 1/2 → 费米子 | 自旋统计定理 | `Quantum/PauliExclusion.lean` | ✅ 已完成 |
 | 质量守恒 + 定比/倍比定律 | 🟡 W2 框架 | 振幅守恒 → 能量守恒 → 质量守恒 | 质能等价假设 | `Chemistry/MassConservation.lean` | ✅ 已完成 |
 
-### 阶段 3：深度探索（进行中）
+### 阶段 3：中等难度扩展（已完成 5/5）
+
+需要建立新框架，但方向明确：
+
+| 定律 | 层级 | 推导思路 | 关键难点 | 目标文件 | 状态 |
+|------|------|---------|---------|---------|------|
+| 全同粒子 / 自旋统计定理 | 🟡 W2 框架 | 编织的交换对称性 | 辫子群表示 | `Quantum/SpinStatistics.lean` | ✅ 已完成 |
+| 麦克斯韦关系（热力学） | 🟡 W2 框架 | 状态函数的混合偏导相等 | 离散微分定义 | `Thermodynamics/MaxwellRelations.lean` | ✅ 已完成 |
+| 库仑定律 / 高斯定律 | 🟡 W2 框架 | 两面性 → 电荷 → 平方反比 | 场的形式化 | `Electromagnetism/CoulombLaw.lean` | ✅ 已完成（框架） |
+| 光速不变原理 | 🟡 W2 框架 | 因果结构的最大传播速度 | 速度定义+参考系 | `Spacetime/SpeedOfLight.lean` | ✅ 已完成（框架） |
+| 阿伏伽德罗定律 / 理想气体方程 | 🟡 W2 框架 | 全同性 + 玻尔兹曼统计 | 统计力学框架 | `Chemistry/IdealGas.lean` | ✅ 已完成（框架） |
+
+### 阶段 4：深度探索（进行中）
 
 这些是雄心勃勃的目标，可能需要新的理论突破：
 
@@ -128,11 +140,9 @@ DerivedLaws/
 |------|------|---------|---------|---------|------|
 | 热力学第三定律（绝对零度不可达） | 🟢 W2 条件 | 初始边界唯一性 + 有限不可达 | 冷却过程形式化 | `Thermodynamics/ThirdLaw.lean` | ✅ 已完成（框架） |
 | 不确定性原理（离散版） | 🟡 W2 框架 | 两面性二一定理的定量版本 | 不确定度的量化 | `Quantum/Uncertainty.lean` | ✅ 已完成（框架） |
-| 全同粒子 / 自旋统计定理 | 🟡 W2 框架 | 编织的交换对称性 | 辫子群表示 | `Quantum/SpinStatistics.lean` | ⏳ 待做 |
-| 库仑定律 / 高斯定律 | 🟡 W2 框架 | 两面性 → 电荷 → 平方反比 | 场的形式化 | `Electromagnetism/CoulombLaw.lean` | ⏳ 待做 |
-| 麦克斯韦关系（热力学） | 🟡 W2 框架 | 热力学势的偏导关系 | 麦克斯韦关系的离散版本 | `Thermodynamics/MaxwellRelations.lean` | ⏳ 待做 |
-| 洛伦兹不变性 | 🟠 W3 诠释 | 从因果格的对称性导出 | 连续极限 + 洛伦兹群 | `Spacetime/LorentzInvariance.lean` | ⏳ 待做 |
+| 洛伦兹不变性 / 狭义相对论 | 🟠 W3 诠释 | 从因果格的对称性导出 | 连续极限 + 洛伦兹群 | `Spacetime/LorentzInvariance.lean` | ⏳ 待做 |
 | 测量理论（坍缩诠释） | 🟠 W3 诠释 | 从两面性二一定理导出 | 测量过程的形式化 | `Quantum/Measurement.lean` | ⏳ 待做 |
+| 麦克斯韦方程组 | 🟠 W3 诠释 | 两面性 + 规范原理 | 完整场论框架 | `Electromagnetism/MaxwellEquations.lean` | ⏳ 待做 |
 | 等效原理 / 引力 | 🔴 猜想 | 从因果格的均匀性导出 | 引力的形式化 | `ClassicalMechanics/Gravity.lean` | ⏳ 待做 |
 
 ---
