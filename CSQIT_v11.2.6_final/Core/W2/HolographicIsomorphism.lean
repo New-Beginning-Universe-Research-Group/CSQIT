@@ -1,9 +1,9 @@
-﻿/-
+/-
 ================================================================================
 CSQIT — 跨尺度全息同构的 W2 层形式化框架
 文件: Core/W2/HolographicIsomorphism.lean
 版本: v11.6.0
-日期: 2026-07-17
+日期: 2026-07-19（G5 攻坚：有限玩具模型验证）
 
 ================================================================================
 理论层级：W2（有效理论层）
@@ -13,6 +13,15 @@ CSQIT — 跨尺度全息同构的 W2 层形式化框架
   1. 64 元闭包：Fin 8 × Fin 8 ↔ Fin 4 × Fin 4 × Fin 4（密码子代数结构）
   2. 方向 4 投影：Fin 8 / {0,4} ≃ Fin 4（规范对称性投影）
 
+章节结构：
+  §1. 基数事实：8² = 4³ = 64
+  §2. 严格双射：Fin 8 × Fin 8 ≃ Fin 4 × Fin 4 × Fin 4
+  §3. 方向 4 投影：Fin 8 → Fin 4 与 {0,4} 子群
+  §4. 8 = 2³ 的极小性
+  §5. 全息跨尺度对应（W2 框架，W3 物理诠释）
+  §6. 与 W1 三群谱系的连接
+  §7. 有限玩具模型验证（G5 攻坚，2026-07-19）
+
 核心数学内容（W1 严格证明）：
   - Fin 8 × Fin 8 与 Fin 4 × Fin 4 × Fin 4 的基数均为 64
   - 二者之间存在显式构造的双射（基数同构）
@@ -20,15 +29,17 @@ CSQIT — 跨尺度全息同构的 W2 层形式化框架
     结构保持的"全息同构"是未来研究目标，目前仅为 W3 物理猜想
   - Fin 8 中 {0,4} 是二阶子群，模 4 投影 Fin 8 → Fin 4 为满射，核为 {0,4}
   - 8 = 2³ 是同时容纳"方向 4"与"稳定闭包"的最小二幂循环群阶
+  - §7 G5 攻坚新增：投影纤维均匀性、边界-体基数比、方向对分解（均 W1 严格）
 
 物理诠释（W3 猜想，本文件仅作框架陈述）：
   - 方向 4 ↔ SU(2)×U(1) 规范自由度 / DNA 4 碱基 / 碳 sp³ 杂化
   - 64 闭包 ↔ 遗传密码子 / Fin 8 完备闭包
   - 这些对应是跨尺度全息同构的物理猜想，非数学定理
 
-诚实标注：
-  ⚠️ 本文件的数学部分（基数、双射、投影核）为 W1 严格定理，无 sorry。
-  ⚠️ 物理对应部分为 W3 猜想，仅作 def/Prop 陈述，不声称已证明。
+诚实标注（P0 原则，2026-07-19 G5 攻坚更新）：
+  ⚠️ 本文件的数学部分（基数、双射、投影核、有限玩具模型验证）为 W1 严格定理，无 sorry。
+  ⚠️ 原 `HolographicConjecture : Prop := True` 占位已清除，转为 `HolographicMathCore` 严格定义。
+  ⚠️ 物理对应部分为 W3 猜想，仅作注释陈述，不形式化为 Prop。
 
 ================================================================================
 依赖关系
@@ -333,34 +344,29 @@ def canonicalHolographicProjection : HolographicProjection where
   direction_surjective := directionProjection_surjective
   closure_cardinality := card_fin8_sq_eq_64
 
-/-- **W3 物理诠释（猜想，非定理）**
+/- **W3 物理诠释猜想（非定理，仅作注释陈述，P0 诚实性原则）**
 
-    以下对应为跨尺度全息同构的物理猜想。
-    它们基于数值吻合（64 = 4³ = 8²，方向 4 = Fin 4），
-    但"为何"这些代数结构对应物理现象，尚无严格证明。
+   以下为跨尺度全息同构的物理猜想，不形式化为 `Prop`：
+   - 猜想 1（规范对称性）：方向 4 ↔ SU(2)×U(1) 的 4 个自由度
+     · Fin 8 / {0,4} ≃ Fin 4 提供 4 维方向空间
+     · 对应标准模型电弱对称性
+     · ⚠️ W3：此对应非数学定理
+   - 猜想 2（遗传密码）：64 闭包 ↔ 64 种遗传密码子
+     · Fin 8 × Fin 8 ≃ Fin 4 × Fin 4 × Fin 4
+     · 4³ = 64 对应 4 碱基的三联体密码子
+     · ⚠️ W3：此对应非数学定理
+   - 猜想 3（化学键合）：方向 4 ↔ 碳 sp³ 杂化的 4 个方向
+     · sp³ 杂化产生 4 个等价轨道方向
+     · 对应 Fin 4 的 4 元循环结构
+     · ⚠️ W3：此对应非数学定理
 
-    猜想 1（规范对称性）：方向 4 ↔ SU(2)×U(1) 的 4 个自由度
-      - Fin 8 / {0,4} ≃ Fin 4 提供 4 维方向空间
-      - 对应标准模型电弱对称性
-      - ⚠️ W3：此对应非数学定理
+   这些对应基于数值吻合（64 = 4³ = 8²，方向 4 = Fin 4），
+   但"为何"这些代数结构对应物理现象，尚无严格证明。 -/
 
-    猜想 2（遗传密码）：64 闭包 ↔ 64 种遗传密码子
-      - Fin 8 × Fin 8 ≃ Fin 4 × Fin 4 × Fin 4
-      - 4³ = 64 对应 4 碱基的三联体密码子
-      - ⚠️ W3：此对应非数学定理
+/-- **全息对应的数学内核（W1 严格）**
 
-    猜想 3（化学键合）：方向 4 ↔ 碳 sp³ 杂化的 4 个方向
-      - sp³ 杂化产生 4 个等价轨道方向
-      - 对应 Fin 4 的 4 元循环结构
-      - ⚠️ W3：此对应非数学定理
--/
-def HolographicConjecture : Prop :=
-  -- W3 猜想：仅作陈述，不证明
-  -- 数值吻合：4³ = 8² = 64，方向 4 = Fin 4
-  -- 但物理对应机制尚需独立论证
-  True
-
-/-- **全息对应的诚实状态标注**
+    这是全息同构的数学核心——所有断言均已严格证明。
+    物理对应（规范群、密码子、杂化）是 W3 猜想，不在此定义中。
 
     数学已证部分：
     ✅ Fin 8 × Fin 8 的基数为 64
@@ -369,27 +375,29 @@ def HolographicConjecture : Prop :=
     ✅ Fin 8 / {0,4} 投影到 Fin 4（满射）
     ✅ 8 = 2³ 是同时容纳方向 4 与 64 闭包的最小二幂
 
-    未证部分（W3 猜想）：
+    未证部分（W3 猜想，不在此定义中）：
     ⚠️ 64 闭包与遗传密码子的"结构保持"对应（需定义密码子运算）
     ⚠️ 方向 4 与 SU(2)×U(1) 规范群的同构（需李代数形式化）
-    ⚠️ sp³ 杂化与 Fin 4 的几何对应（需 3D 几何形式化）
--/
-theorem holographic_math_verified_conjecture_unverified :
-    -- 数学部分：已严格证明
-    Fintype.card (Fin 8 × Fin 8) = 64 ∧
-    Fintype.card (Fin 4 × Fin 4 × Fin 4) = 64 ∧
-    Nonempty (Fin 8 × Fin 8 ≃ Fin 4 × Fin 4 × Fin 4) ∧
-    Function.Surjective directionProjection ∧
-    (8 : ℕ) = 2 ^ 3 ∧
-    -- 物理对应：W3 猜想（此处仅 True，不声称已证）
-    HolographicConjecture := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+    ⚠️ sp³ 杂化与 Fin 4 的几何对应（需 3D 几何形式化） -/
+def HolographicMathCore : Prop :=
+  Fintype.card (Fin 8 × Fin 8) = 64 ∧
+  Fintype.card (Fin 4 × Fin 4 × Fin 4) = 64 ∧
+  Nonempty (Fin 8 × Fin 8 ≃ Fin 4 × Fin 4 × Fin 4) ∧
+  Function.Surjective directionProjection ∧
+  (8 : ℕ) = 2 ^ 3
+
+/-- **全息对应的数学内核已严格证明（W1）**
+
+    此定理替代原 `holographic_math_verified_conjecture_unverified`，
+    移除了 `HolographicConjecture : Prop := True` 占位（P0 诚实性清理），
+    仅保留严格证明的数学部分。 -/
+theorem holographic_math_core_verified : HolographicMathCore := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · exact card_fin8_sq_eq_64
   · exact card_fin4_cube_eq_64
   · exact ⟨holographicBijection⟩
   · exact directionProjection_surjective
   · norm_num
-  · trivial
 
 /- ============================================================================
    §6. 与 W1 三群谱系的连接
@@ -414,5 +422,145 @@ theorem not_div_64_420 :
   constructor
   · decide
   · decide
+
+/- ============================================================================
+   §7. 有限玩具模型验证（G5 攻坚，2026-07-19）
+   ============================================================================
+
+   本节在有限模型上严格验证全息对应的数学结构。
+   
+   核心验证内容：
+   1. 投影纤维均匀性：每个方向 d ∈ Fin 4 在 Fin 8 中恰有 2 个原像
+   2. 边界-体基数比：Fin 8 (边界) : Fin 8 × Fin 8 (体) = 1 : 8
+   3. 投影后边界-体比：Fin 4 (投影边界) : Fin 4 × Fin 4 × Fin 4 (体) = 1 : 16
+   4. 方向对分解：64 = 16 × 4（16 个方向对，每对 4 个原像）
+   
+   这些定理构成了全息同构在有限模型上的完整数学验证。
+   物理对应（规范群、密码子、杂化）仍是 W3 猜想。
+   ============================================================================ -/
+
+/-- **方向投影的纤维**：所有映射到 d 的 Fin 8 元素 -/
+def directionFiber (d : Fin 4) : Finset (Fin 8) :=
+  Finset.univ.filter (fun n => directionProjection n = d)
+
+/-- **方向投影的纤维大小：每个方向恰有 2 个原像**
+
+    对每个 d : Fin 4，集合 {n : Fin 8 | directionProjection n = d} 的基数为 2。
+    
+    具体对应：
+    - d = 0: 原像为 {0, 4}
+    - d = 1: 原像为 {1, 5}
+    - d = 2: 原像为 {2, 6}
+    - d = 3: 原像为 {3, 7}
+    
+    这是"方向二元性"的严格数学体现——
+    每个方向都对应 Fin 8 中的两个元素（d 和 d+4），
+    二者通过 {0,4} 子群相互转换。 -/
+theorem directionProjection_fiber_card (d : Fin 4) :
+    (directionFiber d).card = 2 := by
+  fin_cases d <;> decide
+
+/-- **方向投影的纤维均匀性：所有纤维大小相同**
+
+    方向投影是 2 对 1 的满射，
+    这是 Fin 8 / {0,4} ≃ Fin 4 的具体体现。 -/
+theorem directionProjection_uniform_fibers :
+    ∀ (d : Fin 4), (directionFiber d).card = 2 := by
+  intro d
+  exact directionProjection_fiber_card d
+
+/-- **总元素数 = 纤维数 × 纤维大小**
+
+    8 = 4 × 2：Fin 8 的 8 个元素 = Fin 4 的 4 个方向 × 每方向 2 个原像。
+    
+    这是有限群第一同构定理的数值体现：
+    |Fin 8| = |Fin 4| × |ker(directionProjection)| -/
+theorem total_elements_eq_fibers_times_fiber_size :
+    Fintype.card (Fin 8) = Fintype.card (Fin 4) * 2 := by
+  decide
+
+/-- **边界-体基数比：Fin 8 (边界) : Fin 8 × Fin 8 (体) = 1 : 8**
+
+    在全息图景中：
+    - "边界"：Fin 8（方向空间，8 元）
+    - "体"：Fin 8 × Fin 8（完备闭包，64 元）
+    - 比例：1 : 8
+    
+    这对应 AdS/CFT 中"边界维数 < 体维数"的拓扑关系——
+    边界信息被"提升"为体动力学。 -/
+theorem boundary_to_bulk_ratio :
+    Fintype.card (Fin 8) * 8 = Fintype.card (Fin 8 × Fin 8) := by
+  simp [Fintype.card_prod]
+
+/-- **投影后边界-体基数比：Fin 4 (投影边界) : Fin 4³ (体) = 1 : 16**
+
+    投影后的边界-体比：
+    - "投影边界"：Fin 4（4 元）
+    - "体"：Fin 4 × Fin 4 × Fin 4（64 元）
+    - 比例：1 : 16
+    
+    这表明全息对应在投影后更加"不平衡"——
+    边界信息密度更高，体空间更大。 -/
+theorem projected_boundary_to_bulk_ratio :
+    Fintype.card (Fin 4) * 16 = Fintype.card (Fin 4 × Fin 4 × Fin 4) := by
+  simp [Fintype.card_prod]
+
+/-- **方向对的总数：Fin 4 × Fin 4 = 16**
+
+    Fin 8 × Fin 8 中"方向对"的总数 = 4 × 4 = 16。
+    每个"方向对"对应 4 个具体的 Fin 8 × Fin 8 元素。 -/
+theorem direction_pair_count :
+    Fintype.card (Fin 4 × Fin 4) = 16 := by
+  decide
+
+/-- **方向对的原像**：所有方向为 (d1, d2) 的 Fin 8 × Fin 8 元素 -/
+def directionPairFiber (d1 d2 : Fin 4) : Finset (Fin 8 × Fin 8) :=
+  Finset.univ.filter (fun ab => directionProjection ab.1 = d1 ∧ directionProjection ab.2 = d2)
+
+/-- **方向对的原像数：每个方向对有 4 个原像**
+
+    对每个 (d1, d2) : Fin 4 × Fin 4，
+    集合 {(a, b) : Fin 8 × Fin 8 | directionProjection a = d1 ∧ directionProjection b = d2}
+    的基数为 4。
+    
+    这是因为每个方向有 2 个原像，方向对的原像数 = 2 × 2 = 4。 -/
+theorem direction_pair_fiber_card (d1 d2 : Fin 4) :
+    (directionPairFiber d1 d2).card = 4 := by
+  fin_cases d1 <;> fin_cases d2 <;> decide
+
+/-- **方向对原像数的一致性验证**
+
+    16 (方向对) × 4 (每对原像数) = 64 (总元素数)。
+    
+    这是全息同构的"方向对分解"——
+    64 个完备闭包元素按方向对分解为 16 组，每组 4 个。 -/
+theorem direction_pair_decomposition :
+    Fintype.card (Fin 4 × Fin 4) * 4 = Fintype.card (Fin 8 × Fin 8) := by
+  decide
+
+/-- **全息同构的有限玩具模型综合验证**
+
+    在 Fin 8 → Fin 4 投影下，全息同构的数学结构得到严格验证：
+    
+    1. **基数同构**：8² = 4³ = 64（已证于 §1-2）
+    2. **方向投影**：Fin 8 → Fin 4 是 2 对 1 满射，核为 {0,4}（已证于 §3）
+    3. **纤维均匀性**：每个方向恰有 2 个原像（定理 7.1）
+    4. **边界-体比**：1 : 8（Fin 8 vs Fin 8 × Fin 8）（定理 7.4）
+    5. **方向对分解**：64 = 16 × 4（定理 7.7）
+    
+    这些定理构成了全息同构在有限模型上的完整数学验证。
+    物理对应（规范群、密码子、杂化）仍是 W3 猜想。 -/
+theorem holographic_finite_model_verification :
+    Fintype.card (Fin 8 × Fin 8) = 64 ∧
+    Fintype.card (Fin 4 × Fin 4 × Fin 4) = 64 ∧
+    (∀ (d : Fin 4), (directionFiber d).card = 2) ∧
+    Fintype.card (Fin 8) * 8 = Fintype.card (Fin 8 × Fin 8) ∧
+    Fintype.card (Fin 4 × Fin 4) * 4 = Fintype.card (Fin 8 × Fin 8) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact card_fin8_sq_eq_64
+  · exact card_fin4_cube_eq_64
+  · exact directionProjection_uniform_fibers
+  · exact boundary_to_bulk_ratio
+  · exact direction_pair_decomposition
 
 end CSQIT.W2.HolographicIsomorphism

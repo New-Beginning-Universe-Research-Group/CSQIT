@@ -1,4 +1,4 @@
-﻿/-
+/-
 ================================================================================
 CSQIT — Fin 7 唯一性的 W2 层形式化推导
 文件: Core/W2/Fin7Uniqueness.lean
@@ -708,6 +708,103 @@ theorem prime_exclusion_theorem :
       · exfalso; exact (by norm_num : ¬ (10 : ℕ).Prime) (by rwa [h7] at hp)
     have h_contra : theta_p p hp < 0.28 := prime_exclusion_upper p hp h_ge11
     linarith
+
+/-! ============================================================================
+   §6.6 G3 攻坚：Fin 7 唯一性的最小性定理（2026-07-19）
+   ============================================================================
+
+   本节实施 W2 攻坚计划中 G3 的核心目标：
+   证明"7 是最小满足所有约束的素数"。
+
+   关键洞察：
+   - isIrreversible p 定义为 algebraicDegree p ≥ 3
+   - algebraicDegree p = (p-1)/2
+   - 因此 isIrreversible p ⟺ (p-1)/2 ≥ 3 ⟺ p ≥ 7
+   - 即 isIrreversible 本身就蕴含 p ≥ 7
+
+   结合 prime_exclusion_theorem（p≠7 → θ ∉ 窗口），
+   我们得到 Fin 7 的完整唯一性定理。
+   ============================================================================ -/
+
+/-- **引理 6.6.1：不可逆性蕴含 p ≥ 7**
+
+isIrreversible p 定义为 algebraicDegree p ≥ 3，
+而 algebraicDegree p = (p-1)/2，
+因此 isIrreversible p ⟺ (p-1)/2 ≥ 3 ⟺ p ≥ 7。
+
+这是 G3 攻坚的基础——不可逆性条件本身就锁定了 p ≥ 7。
+-/
+theorem irreversible_implies_ge_7 (p : ℕ) (hp : p.Prime) (h_odd : p > 2)
+    (h_irr : isIrreversible p hp) : p ≥ 7 := by
+  unfold isIrreversible algebraicDegree at h_irr
+  -- h_irr : (p-1)/2 ≥ 3，所以 p-1 ≥ 6，所以 p ≥ 7
+  have h : p - 1 ≥ 6 := by omega
+  omega
+
+/-- **定理 6.6.2：7 是最小满足不可逆性的素数（G3 核心定理）**
+
+在所有奇素数 p > 2 中，如果 p 满足不可逆性条件
+（允许时间箭头存在），则 p ≥ 7。
+
+这从"排除法"升级为"最小性原理"——
+7 不是任意选择，而是满足不可逆性的最小素数。
+
+状态：🔵 W1 严格（直接从定义推论）
+-/
+theorem seven_is_minimal_irreversible :
+    ∀ (p : ℕ) (hp : p.Prime), p > 2 →
+      isIrreversible p hp → p ≥ 7 := by
+  intro p hp h_odd h_irr
+  exact irreversible_implies_ge_7 p hp h_odd h_irr
+
+/-- **定理 6.6.3：Fin 7 唯一性综合定理（G3 完整目标）**
+
+在所有奇素数 p > 2 中，p = 7 是唯一同时满足以下条件的素数：
+  1. 不可逆性（isIrreversible）：允许时间箭头存在
+  2. 结构形成（IsStructureForming）：θ(p) 落在结构形成窗口内
+
+证明逻辑：
+  - 条件 1（isIrreversible）⟹ p ≥ 7（定理 6.6.2）
+  - 条件 2（IsStructureForming）+ p ≠ 7 ⟹ False（prime_exclusion_theorem）
+  - 因此 p = 7
+
+这完成了从"排除法"到"唯一性定理"的升级——
+7 不是经验选择，而是数学约束的唯一解。
+
+状态：🟢 W2 条件性（综合 W1 严格定理 + W2 经验窗口）
+  - 不可逆性 → p ≥ 7：🔵 W1 严格（定义推论）
+  - p ≠ 7 → θ ∉ 窗口：🔵 W1 严格（prime_exclusion_theorem）
+  - 结构形成窗口 (0.28, 0.33)：🟢 W2 经验约束（宇宙学观测）
+-/
+theorem fin7_unique_satisfying_both_constraints :
+    ∀ (p : ℕ) (hp : p.Prime), p > 2 →
+      isIrreversible p hp →
+      IsStructureForming (theta_p p hp) →
+      p = 7 := by
+  intro p hp h_odd h_irr h_sf
+  -- 步骤 1：由不可逆性，p ≥ 7
+  have h_ge7 : p ≥ 7 := seven_is_minimal_irreversible p hp h_odd h_irr
+  -- 步骤 2：假设 p ≠ 7，则 p ≥ 11
+  by_contra h_ne7
+  -- 步骤 3：由 prime_exclusion_theorem，p ≠ 7 ⟹ θ ∉ 窗口
+  have h_contra : IsStructureForming (theta_p p hp) → False :=
+    prime_exclusion_theorem p hp h_odd h_ne7
+  exact h_contra h_sf
+
+/-- **推论 6.6.4：Fin 7 唯一性的最小性表述**
+
+7 是同时满足不可逆性和结构形成条件的最小素数。
+
+这是 G3 攻坚计划的最终表述——
+将 W3 层的"唯一窄门"猜想形式化为 W2 层定理。
+-/
+theorem seven_is_minimal_satisfying_all_constraints :
+    ∀ (p : ℕ) (hp : p.Prime), p > 2 →
+      isIrreversible p hp →
+      IsStructureForming (theta_p p hp) →
+      p ≥ 7 := by
+  intro p hp h_odd h_irr h_sf
+  exact seven_is_minimal_irreversible p hp h_odd h_irr
 
 /-! ============================================================================
    §7. amplitude-le 耦合的 W2 层框架

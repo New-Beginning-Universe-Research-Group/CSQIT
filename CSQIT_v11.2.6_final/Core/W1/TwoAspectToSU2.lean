@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 两面性 → SO(3) → 2n² 的概念性推导
 文件: Core/W1/TwoAspectToSU2.lean
 版本: v11.6.0

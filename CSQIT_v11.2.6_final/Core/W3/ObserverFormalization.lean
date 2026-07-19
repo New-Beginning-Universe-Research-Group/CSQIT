@@ -1,4 +1,4 @@
-﻿/-
+/-
 ================================================================================
 CSQIT — 观测者形式化与弱人择原理
 文件: Core/W3/ObserverFormalization.lean
@@ -40,6 +40,7 @@ CSQIT — 观测者形式化与弱人择原理
 
 import Core.W1.CausalLattice
 import Core.W1.AlgebraicCausality
+import Core.W2.B_V_Naturalness
 import Core.W2.HolographicIsomorphism
 import Core.W2.Fin7Uniqueness
 import Mathlib.Data.Fintype.Basic
@@ -49,6 +50,7 @@ namespace CSQIT.W3.ObserverFormalization
 
 open CSQIT.CausalLattice
 open CSQIT.AlgebraicCausality
+open CSQIT.BVNaturalness
 open CSQIT.W2.HolographicIsomorphism
 open CSQIT.W2.Fin7Uniqueness
 
@@ -296,6 +298,7 @@ theorem p7_satisfies_WAP_conditions :
       have h_pos1 : 0 < z - y := by linarith
       have h_pos2 : 0 < z^2 + z*y + y^2 + z + y - 2 := by nlinarith
       have h : z^3 + z^2 - 2*z - 1 - (y^3 + y^2 - 2*y - 1) = (z - y) * (z^2 + z*y + y^2 + z + y - 2) := by ring
+      have h_prod_pos : 0 < (z - y) * (z^2 + z*y + y^2 + z + y - 2) := by positivity
       linarith
     have h_f34_33_lt0 : (34 / 33 : ℝ)^3 + (34 / 33 : ℝ)^2 - 2 * (34 / 33 : ℝ) - 1 < 0 := by norm_num
     have h_f11_7_gt0 : (11 / 7 : ℝ)^3 + (11 / 7 : ℝ)^2 - 2 * (11 / 7 : ℝ) - 1 > 0 := by norm_num
@@ -306,18 +309,18 @@ theorem p7_satisfies_WAP_conditions :
       have h2 : α^3 + α^2 - 2*α - 1 ≤ (34 / 33 : ℝ)^3 + (34 / 33 : ℝ)^2 - 2 * (34 / 33 : ℝ) - 1 := by
         by_cases h3 : α = 34 / 33
         · rw [h3]
-        · have h4 : α < 34 / 33 := by linarith
+        · have h4 : α < 34 / 33 := by exact lt_of_le_of_ne h' h3
           have h5 := f_mono α (34 / 33) (by linarith) h4
           linarith
       linarith [h_cubic_alpha, h_f34_33_lt0]
     have h_alpha_lt11_7 : α < 11 / 7 := by
       by_contra h
-      have h' : α ≥ 11 / 7 := by linarith
+      have h' : 11 / 7 ≤ α := by linarith
       have h1 : 1 ≤ (11 / 7 : ℝ) := by norm_num
       have h2 : (11 / 7 : ℝ)^3 + (11 / 7 : ℝ)^2 - 2 * (11 / 7 : ℝ) - 1 ≤ α^3 + α^2 - 2*α - 1 := by
-        by_cases h3 : α = 11 / 7
+        by_cases h3 : 11 / 7 = α
         · rw [h3]
-        · have h4 : (11 / 7 : ℝ) < α := by linarith
+        · have h4 : 11 / 7 < α := by exact lt_of_le_of_ne h' h3
           have h5 := f_mono (11 / 7) α h1 h4
           linarith
       linarith [h_cubic_alpha, h_f11_7_gt0]
