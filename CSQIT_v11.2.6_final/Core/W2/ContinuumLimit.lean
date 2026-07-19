@@ -1240,8 +1240,10 @@ theorem timelike_defect_telescoping
 
 **形式化状态**：
   ✅ 定理证明体：W1 严格（使用 Tendsto.mul + tendsto_const_nhds）
-  🟡 前提 h_decomp：理想极限假设（全集特性）
-  🟡 前提 h_reg_seq：理想极限假设（全集特性，见 G1）
+  🟡 前提 h_decomp：理想极限假设（全集特性，未严格化）
+  🟡 前提 h_reg_seq：EffectiveFin7Regular 在有限格上已被严格证明为不可满足
+                    （由 `finite_lattice_cannot_satisfy_EffectiveFin7Regular` 给出）
+                    ——即对有限格而言此前提是空虚真理
   ✅ 条件性定理整体：W2 条件性（"如果理想条件满足，则..."）
 ================================================================================
 -/
@@ -1549,6 +1551,19 @@ lemma projective_scale_tendsto_two_pi :
   simpa [mul_one] using h_scale
 
 
+/-- **引理 9.4：Regge 作用量的射影分解（完整版，W2 条件性）**
+
+    在 EffectiveFin7Regular + 面积归一化 + 曲率常数 三个前提下，
+    Regge 作用量精确分解为射影尺度因子 × 4D 爱因斯坦-希尔伯特作用量。
+
+    状态：🟢 W2 条件性
+    - 证明体无 sorry（在前提假设下严格推导）
+    - 前提 h_fin7：理想极限假设——EffectiveFin7Regular 在有限格上不可满足
+      （由 `finite_lattice_cannot_satisfy_EffectiveFin7Regular` 严格证明）
+    - 前提 h_area_norm：理想极限假设——面积归一化（全集特性）
+    - 前提 h_curvature_const：理想极限假设——曲率常数（全集特性）
+    - 因此本引理是"如果理想条件满足，则..."的条件性结论，
+      类似于理想气体定律——有限系统永不精确成立，但作为极限是正确的 -/
 lemma reggeAction_projection_decomposition_full
     (seq : ℕ → Type*)
     [∀ n, BoundedCausalLattice (seq n)]

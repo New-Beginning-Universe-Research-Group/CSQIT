@@ -866,6 +866,12 @@ theorem BV_ratio_cubic (M : Type*)
   这条逻辑链的每一环都被严格地形式化了。
 
   这就是 W2 层的"从逻辑中诞生宇宙"。
+
+  状态：🔵 W1 严格（条件性）
+  - 证明体无 sorry（EffectiveFin7Regular 定义展开 + linarith）
+  - 前提 h_Fin7（EffectiveFin7Regular M）：在有限格上已被严格证明为不可满足
+    （由 `finite_lattice_cannot_satisfy_EffectiveFin7Regular` 给出）
+    ——对有限格而言，本定理是空虚真理；作为理想极限下的结构性陈述仍有意义
 -/
 theorem BV_ratio_from_EffectiveFin7 (M : Type*)
     [BoundedCausalLattice M] [Fintype M]
@@ -893,6 +899,12 @@ theorem BV_ratio_from_EffectiveFin7 (M : Type*)
   重要的是：这个结论在 W1 和 W2 层都成立——
   无论是理想逐点正则还是有效平均正则，
   θ 的代数性质完全相同。
+
+  状态：🔵 W1 严格（条件性）
+  - 证明体无 sorry（基于 BV_ratio_from_EffectiveFin7 + cos2pi7_cubic_equation axiom）
+  - 前提 h_Fin7：在有限格上已被严格证明为不可满足
+    （由 `finite_lattice_cannot_satisfy_EffectiveFin7Regular` 给出）
+    ——对有限格而言，本定理是空虚真理；作为理想极限下的结构性陈述仍有意义
 -/
 theorem BV_ratio_cubic_effective (M : Type*)
     [BoundedCausalLattice M] [Fintype M]
