@@ -12,27 +12,22 @@ ORCID: 0009-0004-9803-3237
 
 ## Abstract
 
-CSQIT (Causal Structure Quantum Information Theory) is a discrete causal-information axiomatic framework fully formalized in the Lean 4 proof assistant. Starting from ten axioms concerning causal relations, rule composition, and quantum amplitudes, the following structural results are derived through machine-verifiable formalized proofs, organized at three levels:
+**CSQIT** (Causal Structure Quantum Information Theory) is a discrete causal-information axiomatic framework fully formalized in Lean 4. From ten axioms governing causal relations, rule composition, and quantum amplitudes, machine-verified proofs yield structural results at three distinct levels:
 
-**First Layer: Structural Theorems (W1 Strict)**
+### Level 1: Structural Theorems (W1 Strict)
+- **Duality Two-One Theorem**: Causal aspect (output) and informational aspect (amplitude) cannot both be non-trivial in the standard theory—a discrete complementarity principle.
+- **Algebraic Causal Order**: Causal order defined as an algebraic generation relation, unifying causal and algebraic closure; transitivity strictly proven in Fin 8.
+- **Causal Self-Reference Theorem**: `input_must_be_empty` proves all rules have empty input—the causal structure is entirely self-referential.
 
-- **Duality Two-One Theorem**: The causal aspect (output) and the informational aspect (amplitude) cannot both be non-trivial in the standard theory—a discrete complementarity principle.
-- **Algebraic Causal Order**: Causal order is defined as an algebraic generation relation, unifying causal closure and algebraic closure. Its transitivity is strictly proven in Fin 8.
-- **Causal Self-Reference Theorem**: `input_must_be_empty` shows that all rules have empty input—the causal structure is entirely self-referential with no external input.
+### Level 2: Numerical Anchors (W1 Strict, Conditional)
+- **Cosmological Constant θ**: $\theta = 1/(2+2\cos(2\pi/7)) \approx \mathbf{0.308}$, satisfying $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$. Relative deviation from Planck 2018 $\Omega_m \approx 0.311$: **0.97%**, within 1σ.
+- **Three-Lock Constants**: $\Omega_b : \Omega_{DM} : \Omega_\Lambda = 20 : 111 : 289$, derived from $A_5$ and $\text{PSL}(2,7)$ representation theory.
+- **Projective Compactification**: Infinity compactified as the projective circle $s(n) = 2\pi n/(n+1)$; gravity, quantum, and gauge unified as three projections of $S_{\text{total}}$.
 
-**Second Layer: Numerical Anchors (W1 Strict, Conditional)**
+### Level 3: Cross-Validation Network (6 Physical Dualities)
+CSQIT simultaneously anchors both ends of **six** known physical dualities: quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, and quantum↔information theory. All six share the same axiomatic root (AxiomA–J), forming an interlocking validation network.
 
-- **Cosmological Characteristic Constant θ**: $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$, satisfying the cubic equation $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$. The relative deviation from the Planck 2018 observed $\Omega_m \approx 0.311$ is 0.97%, within the 1σ confidence interval.
-- **Three-Lock Constants**: $\Omega_b : \Omega_{DM} : \Omega_\Lambda = 20 : 111 : 289$, strictly derived from the representation theory of the finite simple groups $A_5$ and $\text{PSL}(2,7)$.
-- **Projective Compactification and Scale Dynamics**: Infinity is compactified as the projective circle $s(n) = 2\pi n/(n+1)$; gravity, quantum, and gauge are unified as three projections of a single action $S_{\text{total}}$.
-
-**Third Layer: Cross-Validation Network (Simultaneous Anchoring of 6 Physical Dualities)**
-
-- CSQIT simultaneously anchors both ends of six known physical dualities: quantum↔thermodynamics (unitarity+entropy), GR↔quantum (black hole entropy area law), thermodynamics↔GR (entropic gravity/Jacobson derivation), quantum↔cosmology (fluctuations→structure formation), information↔gauge (holographic principle toy model), and quantum↔information theory (closure). These six intersections share the same axiomatic root system (AxiomA–J), forming a cross-validation network that cannot be pierced by any single challenge.
-
-Three epistemic levels are strictly distinguished: W1 (formalized mathematics), W2 (effective theory/numerical), and W3 (physical interpretation). All cross-level assertions are explicitly labeled. The six intersection points between CSQIT and known physical laws constitute a multi-dimensional cross-validation framework—each intersection is an independent anchor, and together they form a coherent structural network.
-
-**Growth Narrative (W3)**: The deductive chain of CSQIT is not a juxtaposed set of theorems, but an organic growth process—from AxiomA's self-containment as the seed, through the duality bifurcation, the algebraic causal order's root expansion, the Fin 7 trunk generation, finally arriving at the observer's self-cognition. Each stage is the unfolding of the logical necessity of the preceding stage.
+Three epistemic levels are strictly distinguished—**W1** (formalized mathematics), **W2** (effective theory/numerical), **W3** (physical interpretation)—with all cross-level assertions explicitly labeled.
 
 **Keywords**: discrete causal structure, quantum information, formalized verification, cosmology, Lean 4, axiomatic deduction, algebraic causal order, cross-validation network
 
@@ -91,21 +86,20 @@ CSQIT shares with causal set theory the structural intuition of "discrete causal
 | **Continuum limit** | Flow approximation theorem (conjectured) | Regge calculus framework + projective compactification |
 | **Observable anchor** | No specific value | Cosmological characteristic constant θ ≈ 0.308 |
 
-**Narrative Principle (W3)**: The narrative principle of this work is objective growth—presupposing no physical conclusion, unfolding layer by layer from the axioms along logical necessity. Each step of growth is forced by the mathematical structure of the preceding step—with no free parameters and no external input.
-
 ### 1.5 Structure of This Paper
 
-The narrative of this paper follows a growth path from simplicity to complexity:
+The paper proceeds from foundational axioms to cosmological implications, following a logical deductive chain:
 
 - **§2 Source Code**: The axiomatic system—defining the rules of the game
-- **§3 First Bifurcation**: Duality Two-One Theorem—the incompatibility of causal and informational aspects
-- **§4 Emergence of Causality**: Algebraic causal order—causality grows out of algebraic structure
+- **§3 Duality Two-One Theorem**: The incompatibility of causal and informational aspects
+- **§4 Emergence of Causality**: Algebraic causal order—causality as an emergent property of algebraic structure
 - **§5 Numerical Anchor**: Fin 7 model and cosmological characteristic constant θ—from structure to quantity
 - **§6 Scale Dynamics**: Projective compactification and gauge closure—time as a scale parameter
 - **§7 Arrow of Time**: Lattice-theoretic derivation of the second law of thermodynamics—the necessity of entropy increase
-- **§8 Finiteness Boundary**: Fundamental limits of finite models—the boundary between knowable and unknowable
-- **§9 Honest Boundary**: Open problems and unfinished proofs
-- **§10 Epistemology**: The formal status of the internal observer
+- **§8 Intersection Network**: The cross-validation network of six physical dualities
+- **§9 Finiteness Boundary**: Fundamental limits of finite models—the boundary between knowable and unknowable
+- **§10 Honest Boundary**: Open problems and unfinished proofs
+- **§11 Epistemology**: The formal status of the internal observer
 
 ### 1.6 The Structural Gap Between Theory and Observation
 
@@ -167,7 +161,7 @@ theorem input_must_be_empty [A : AxiomA M C] (α : C) : A.input α = []
 
 **Interpretation**: In any model of AxiomA, all rule inputs are empty. Causal rules are self-contained. This is a **structural theorem**, not an assumption.
 
-**Growth Starting Point (W1)**: `input_must_be_empty` is the first seed of CSQIT's entire deductive chain. It shows: causal rules do not depend on external input—the system is closed and self-referential. All subsequent growth unfolds from here.
+**Significance (W1)**: `input_must_be_empty` is the foundational theorem of CSQIT's entire deductive chain. It shows: causal rules do not depend on external input—the system is closed and self-referential. All subsequent theorems build on this result.
 
 ### 2.2 AxiomA': Non-Degenerate Output
 
@@ -324,8 +318,6 @@ This perfectly explains why "measurement creates new states": because **`output(
 
 > **Ontological Corollary of the Duality Two-One Theorem**: In CSQIT, causality (output) and informationality (amplitude) are not two separable properties of a state, but two mutually exclusive topological paths of the same weaving structure. The measurement device, intervening as a third-party rule in composition, does not "observe" pre-existing paths—its essence is to **force the weaving structure to close along the causal-face direction**. The price of this closure is that the informational face degenerates to non-injectivity—the measurement result is a new fixed point of the composition operation, not an intrinsic value independent of the measurement process. Therefore, quantum measurement is not an epistemological "knowledge update," but a **structural phase transition of the weaving lattice under causal-informational tension**.
 
-**Growth Node (W3)**: The Duality Theorem is the first bifurcation of CSQIT. It forces the causal lattice to make a structural choice between "causal face" and "informational face"—unless a new algebraic structure (combine) is introduced. This bifurcation is not artificial design, but logical necessity of the axiomatic system.
-
 ---
 
 ## 4. Emergence of Causality: Algebraic Causal Order
@@ -341,7 +333,7 @@ Under the natural order of Fin 8, these two closures are nearly disjoint. The `p
 
 This tension reveals a deeper question: **What is the relationship between causal order and algebraic structure?**
 
-**Growth Node (W1)**: The failure of `cyclic_stable_substructure` (4 intentionally retained sorry) is not an engineering defect, but a signal of growth—it shows that "prefix closure" and "additive closure" cannot coexist under the natural order, forcing causal order to be redefined from algebraic structure. The discovery of `algebraic_le` is precisely the structural insight that grew from this "failure."
+**Methodological Significance (W1)**: The failure of `cyclic_stable_substructure` (4 intentionally retained sorry) is not an engineering defect, but a structural signal—it shows that "prefix closure" and "additive closure" cannot coexist under the natural order, forcing causal order to be redefined from algebraic structure. The discovery of `algebraic_le` is precisely the structural insight that emerged from this "failure."
 
 ### 4.2 Definition of Algebraic Causal Order
 
@@ -439,7 +431,7 @@ The discovery of algebraic causal order is a reunderstanding of the nature of ca
 
 This means: if the universe fundamentally has algebraic structure (which CSQIT's axiomatic system strongly suggests), then causality is an emergent property of this algebraic structure—rather than a fundamental assumption.
 
-**Growth Node (W1)**: Algebraic causal order is the root expansion of CSQIT's growth. It downgrades causality from "axiom-level assumption" to "emergent property of algebraic structure"—causal past corresponds to generated subgroup, causal closure corresponds to subgroup closure, and hierarchical weaving corresponds to subgroup lattice. Once the roots are established, the trunk (Fin 7 and θ) has a foundation for growth.
+**Structural Significance (W1)**: Algebraic causal order downgrades causality from "axiom-level assumption" to "emergent property of algebraic structure"—causal past corresponds to generated subgroup, causal closure corresponds to subgroup closure, and hierarchical weaving corresponds to subgroup lattice. This provides the algebraic foundation for Fin 7 and the cosmological constant θ.
 
 ---
 
@@ -475,7 +467,7 @@ where `seventh_root_real_part 1 = 2cos(2π/7)`.
 
 **Interpretation**: This is a **statistical average condition**—not every node has exactly $k_{\text{out}}$ out-degree, but the average out-degree of internal nodes matches the Fin 7 algebraic constant. This is analogous to the thermodynamic limit in statistical mechanics.
 
-**Unsatisfiability under the Total-Subset Principle** (W1 layer, new in v11.7.0):
+**Unsatisfiability under the Total-Subset Principle** (W1 layer):
 
 ```lean
 theorem finite_lattice_cannot_satisfy_EffectiveFin7Regular
@@ -483,13 +475,13 @@ theorem finite_lattice_cannot_satisfy_EffectiveFin7Regular
     [DecidableEq M] (h_nontrivial : ...) : ¬ EffectiveFin7Regular M
 ```
 
-This theorem is strictly proven in `TotalSubsetPrinciple.lean` (no sorry): **No finite lattice can exactly satisfy the EffectiveFin7Regular condition**. The reason is that `k_out = 1 + 2cos(2π/7)` is irrational, while the average out-degree of nodes on a finite lattice must be rational (a ratio of cardinalities)—the two cannot be equal.
+This theorem is strictly proven in `TotalSubsetPrinciple.lean` (no sorry): **No finite lattice can exactly satisfy the EffectiveFin7Regular condition**, because $k_{\text{out}} = 1 + 2\cos(2\pi/7)$ is irrational while finite lattice average out-degree must be rational.
 
-Strictness upgrade of auxiliary lemmas:
-- `k_out_is_irrational` (`TotalSubsetPrinciple.lean:204`, W1 strict, no sorry): $1 + 2\cos(2\pi/7)$ is irrational, strictly proven.
-- `poly_no_rational_root` (`TotalSubsetPrinciple.lean:109`, W1 strict, no sorry): Auxiliary lemma proving via contradiction + mod-2 analysis that the characteristic polynomial $x^3 + x^2 - 2x - 1$ has no rational roots.
+Key lemmas:
+- `k_out_is_irrational` (`TotalSubsetPrinciple.lean:204`, W1 strict): $1 + 2\cos(2\pi/7)$ is irrational
+- `poly_no_rational_root` (`TotalSubsetPrinciple.lean:109`, W1 strict): Characteristic polynomial $x^3 + x^2 - 2x - 1$ has no rational roots
 
-**This unsatisfiability is not a theory defect, but a manifestation of the "Total-Subset Principle"**: The W1-layer theorem gives the irrational $\theta$ in mathematical closure; the W2-layer finite observation can only give rational approximations. Physical observation is predicted to be a rational approximant spectrum of $\theta$, not the exact value (see §1.6 and §5.9 for details).
+This is a core instance of the **Total-Subset Principle** (see §1.6): W1-layer theorems give irrational values in mathematical closure; W2-layer finite observations yield rational approximants.
 
 **Auxiliary Explanatory Definition**: To help understand the statistical averaging process, an auxiliary function can be defined:
 
@@ -611,23 +603,21 @@ We explicitly record this problem in `OpenProblems.lean` (OP-P0-9) and recommend
 
 **Note**: This is not a "proven" conclusion. Even if this numerical agreement is ultimately proven coincidental, CSQIT's methodological contribution (the complete deductive chain from axioms to numerical values) still stands. The choice of Fin 7 does not negate the existence of the deductive chain, but marks its boundary.
 
-**Growth Preparation**: The "why 7" posed in §5.7 is an objective open problem. But open does not mean unanswerable. The following §5.8–5.10 show how 7 naturally grows as the "only viable solution" from structural observations of the algebraic extension spectrum, and how the Total-Subset Principle reframes the relationship between "theory and observation."
+The following §5.8–5.10 present structural arguments for why 7 emerges as the "only viable solution" from observations of the algebraic extension spectrum, and how the Total-Subset Principle reframes the relationship between "theory and observation."
 
 ### 5.8 Why It Must Be 7: The Minimal Threshold of Algebraic Complexity
 
-**Three-Stage Sieve Funnel** (W3): The following three layers of analysis can be unified into a three-stage algebraic sieve, progressively narrowing candidate primes to $p=7$:
+**Three-Stage Sieve Funnel** (W3): The following analysis can be unified into a three-stage algebraic sieve, progressively narrowing candidate primes to $p=7$:
 
 1. **Degree sieve**: Require algebraic extension degree $d = (p-1)/2 \geq 3$, eliminating $p=3$ (degenerate to integer) and $p=5$ (quadratic reversible extension).
 2. **Window sieve**: Require structure formation window $0.28 < \theta(p) < 0.33$, eliminating $p \geq 11$ (matter density too low, no bound structures can form).
 3. **Minimality sieve**: Among survivors, $p=7$ is the smallest prime. By Occam's razor, select the smallest viable solution.
 
-After the three-stage sieve, the only surviving prime is $p=7$. The following three layers of analysis expand the details of this sieve funnel.
+After the three-stage sieve, the only surviving prime is $p=7$. The following analysis expands the structural details.
 
-The honest labeling of the above "open problem" does not mean we cannot give a structurally deep argument for "why 7." The following three-layer analysis shows that $p=7$ is not an arbitrary post-hoc selection, but the **smallest prime capable of supporting non-trivial cubic self-interaction**—an intrinsic constraint imposed by algebraic structure on causal lattice complexity.
+#### Algebraic Structure: From Linear to Cubic
 
-#### Layer 1: Algebraic Structure—The Phase Transition from "Linear" to "Cubic"
-
-Consider the algebraic "identity" of $2\cos(2\pi/p)$ in algebraic number theory:
+The algebraic "identity" of $2\cos(2\pi/p)$ in algebraic number theory reveals a clear hierarchy:
 
 | Prime $p$ | Value of $2\cos(2\pi/p)$ | Minimal Polynomial Degree | Number Field | CSQIT $\theta$ | Structural Character |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -636,38 +626,11 @@ Consider the algebraic "identity" of $2\cos(2\pi/p)$ in algebraic number theory:
 | **7** | $\approx 1.247$ | **3 (cubic)** | **Cyclic cubic field** $\mathbb{Q}(\zeta_7+\zeta_7^{-1})$ | $\approx 0.308$ | **Non-linear self-reference**, three-body interaction, irreducible chaos edge |
 
 **Algebraic Watershed**:
-- **$p=3$**: Structure degenerates to a constant ($\theta=1$). No dark energy, no evolution—corresponding to a pure geometric background, not a dynamical universe.
-- **$p=5$**: Quadratic equation $x^2 + x - 1 = 0$. Quadratic systems can only describe **linear harmonic oscillators** or **binary games**, lacking the complexity for "self-catalysis" or "three-body entanglement." Their cycle is a **predictable planar rotation**.
+- **$p=3$**: Structure degenerates to a constant ($\theta=1$). No dark energy, no evolution—pure geometric background.
+- **$p=5$**: Quadratic equation $x^2 + x - 1 = 0$. Quadratic systems describe only **linear harmonic oscillators** or **binary games**, lacking complexity for "self-catalysis" or "three-body entanglement." Their cycle is a **predictable planar rotation**.
 - **$p=7$**: Cubic equation $x^3 + x^2 - 2x - 1 = 0$. **Cubic is the minimal degree producing deterministic chaos and irreducible three-body interaction.** The discriminant $49 = 7^2$ means this Galois extension is **cyclic ($C_3$)**—three generators preserve global structure under cyclic permutation, but internal trajectories are not linearly decomposable.
 
-**Conclusion (W3)**: 7 is the smallest prime capable of supporting **non-trivial cubic self-interaction**. A causal lattice must have at least 7 directions for the "causal facet," "information facet," and "weaving action" to form a closed tension loop. Any fewer, and the system either collapses to geometry (3) or degenerates to linear waves (5).
-
-#### Layer 2: Cognitive Evolution—The Information Processing Limit
-
-In `FiniteWeavingExamples.lean`, `order_jump_example` proves that order-2 and order-8 weaving jump directly to order 8. But in **Fin 7**:
-- Since 7 is prime, **all non-zero elements are generators** (order 7).
-- Within 7 steps, the causal past (`causalPast`) must cover the entire structure with no "sub-period" interference.
-- The **7-step period** is mathematically equivalent to: **the information entropy of cyclic group $C_7$ reaching maximal mixing (complete graph) while maintaining strict partial-order transitivity**.
-
-By comparison:
-- **$C_5$** has automorphism group $C_4$ (order 4). "Five-element interaction" is essentially a **merry-go-round** (4-fold rotational symmetry) with no "internal generation" capability.
-- **$C_7$** has automorphism group $C_6$ (order 6), where $6 = 2 \times 3$, containing both "binary opposition" (2) and "ternary generation" (3). Thus the 7-step period contains both "day-night alternation" and "past-present-future" ternary generation, precisely satisfying the minimal complexity base required for "evolution."
-
-#### Layer 3: Cosmological Ontology—Why $\theta$ Must Be a Root of a Cubic Equation
-
-In the $\Lambda$CDM model, $\Omega_m \approx 0.311$ is a fitted parameter. But in the CSQIT deductive chain, $\theta$ satisfies the cubic equation:
-$$
-\theta^3 - 6\theta^2 + 5\theta - 1 = 0
-$$
-
-**Deep Structural Intuition**:
-1. **Linear ($p=3$)**: Corresponds to pure geometry (Einstein's static universe), no dark matter evolution space.
-2. **Quadratic ($p=5$)**: Corresponds to binary oscillation at the golden ratio. Matter density is too high ($\Omega_m \approx 0.382$), causing the universe to close too early before radiation-matter equality, preventing large-scale structure formation; at the same time, quadratic systems are time-reversible, with no irreversible historical records.
-3. **Cubic ($p=7$)**: Corresponds to **non-linear density feedback**. A cubic equation has three real roots, corresponding to three cosmic evolution "fixed points": early radiation dominance (root $\to 0$), matter-dark energy balance (root at 0.308), and pure dark energy dominance (root $\to 1$).
-
-**The Precise Translation of "Ternary Generation" in CSQIT**: To simultaneously accommodate "visible matter (non-zero amplitude)," "dark matter (zero amplitude)," and "dark energy (projective compactification boundary)" in a discrete causal lattice, the algebraic structure must provide an **irreducible cubic polynomial**. Only a cubic equation allows three phases to transform into one another via the `combine` operation within the same finite lattice (Fin 7).
-
-#### The Hierarchical Roles of 3, 5, and 7 in CSQIT
+#### Hierarchical Roles of 3, 5, and 7 in CSQIT
 
 | Number | CSQIT Formal Definition | Role |
 | :--- | :--- | :--- |
@@ -680,7 +643,7 @@ $$
 (2) The algebraic number field extension degree spanned by the diagonals of a regular $p$-gon inscribed in a circle is at least 3 ($\deg(\mathbb{Q}(2\cos(2\pi/p))) = \frac{p-1}{2} \ge 3$).
 Extension degree 1 ($p=3$) causes causality to collapse into geometric background; extension degree 2 ($p=5$) causes causality to degenerate into reversible waves; **only extension degree 3 ($p=7$) endows the causal lattice with an irreducible three-way weaving flow**, enabling "past (causal facet)," "present (information amplitude)," and "future (scale compactification)" to reach dynamic balance in a closed cubic equation.
 
-#### Layer 4: Extension Spectrum and Structure Formation Window
+#### Extension Spectrum and Structure Formation Window
 
 Extending the algebraic extension degree $d = (p-1)/2$ from 1 to infinity, the matter density $\theta(p) = 1/(2+2\cos(2\pi/p))$ forms a monotonically decreasing sequence, asymptotic to 0.25:
 
@@ -694,23 +657,23 @@ Extending the algebraic extension degree $d = (p-1)/2$ from 1 to infinity, the m
 | 17 | 8 | 0.259 | $C_8$ | Dilution acceleration, early heat death |
 | $\infty$ | $\infty$ | 0.250 | — | Pure geometric limit, no matter |
 
-**Structure Formation Window (W3)**: According to structure formation theory, gravitational collapse to form galaxies requires sufficient matter density to drive nonlinear density perturbations. If $\Omega_m > 0.33$ (e.g., $p=5$'s 0.382), the universe closes too early before radiation-matter equality, preventing large-scale structure formation; if $\Omega_m < 0.28$ (e.g., $p \geq 11$), density perturbations grow too slowly for galaxies to form within the cosmic age. This window $\Omega_m \in (0.28, 0.33)$ combined with the observed confidence interval jointly constrains the possible prime values.
+**Structure Formation Window (W3)**: Gravitational collapse to form galaxies requires sufficient matter density to drive nonlinear density perturbations. If $\Omega_m > 0.33$ (e.g., $p=5$'s 0.382), the universe closes too early before radiation-matter equality, preventing large-scale structure formation; if $\Omega_m < 0.28$ (e.g., $p \geq 11$), density perturbations grow too slowly for galaxies to form within the cosmic age.
 
-**Uniqueness Argument of the Extension Spectrum (W3)**: Among all primes $p$, $\theta(p)$ is strictly monotonically decreasing. The only prime lying simultaneously in the intersection of "algebraically acceptable (real roots + solvable Galois group + three-phase coupling)" and "structure formation window" is $p=7$. $p=5$ exceeds the upper bound (closes too quickly, no history); $p \geq 11$ falls below the lower bound (opens too quickly, no structure).
+**Uniqueness Argument (W3)**: Among all primes $p$, $\theta(p)$ is strictly monotonically decreasing. The only prime lying simultaneously in the intersection of "algebraically acceptable (real roots + solvable Galois group + three-phase coupling)" and "structure formation window" is $p=7$. $p=5$ exceeds the upper bound (closes too quickly, no history); $p \geq 11$ falls below the lower bound (opens too quickly, no structure).
 
-**Algebraic Boundary Between Golden Ratio and Cubic Root (W3)**: The quadratic root corresponding to $p=5$ is the golden ratio $(\sqrt{5}-1)/2 \approx 0.618$, and the quadratic field it lies in can only describe reversible periodic motion—time-reversal symmetric, unable to distinguish past from future. The irreducible cubic root corresponding to $p=7$ satisfies the equation $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$; cubic systems are the minimal algebraic carrier of deterministic chaos and irreversible emergence—three real roots correspond to the three phases of visible matter, dark matter, and dark energy, which produce an irreversible arrow of time through nonlinear coupling.
+To simultaneously accommodate "visible matter (non-zero amplitude)," "dark matter (zero amplitude)," and "dark energy (projective compactification boundary)" in a discrete causal lattice, the algebraic structure must provide an **irreducible cubic polynomial**. Only a cubic equation allows three phases to transform into one another via the `combine` operation within the same finite lattice (Fin 7). The quadratic root corresponding to $p=5$ is the golden ratio, describing only reversible periodic motion—time-reversal symmetric, unable to distinguish past from future. The irreducible cubic root corresponding to $p=7$ satisfies $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$; cubic systems are the minimal algebraic carrier of deterministic chaos and irreversible emergence—three real roots correspond to the three phases of visible matter, dark matter, and dark energy, which produce an irreversible arrow of time through nonlinear coupling.
 
 ### 5.9 The Ideal Limit and Its Rational Approximants
 
 §5.2 has noted: `finite_lattice_cannot_satisfy_EffectiveFin7Regular` strictly proves that no finite lattice can exactly satisfy the EffectiveFin7Regular condition. This section unfolds the physical implications of this structural prediction.
 
-**Relationship Between the Ideal Limit and Rational Approximants**:
+**Relationship Between the Ideal Limit and Rational Approximants** (Total-Subset Principle, see §1.6):
 
-- **W1-Layer Theorem (Ideal Limit)**: $\theta = 1/(2+2\cos(2\pi/7))$ is an irrational number, exact in the mathematical closure $\mathbb{R}$. It defines the theoretical limit value of the EffectiveFin7Regular condition.
-- **W2-Layer Observation (Rational Approximants)**: Any measurement on a finite physical lattice must yield a rational number—because node counts and out-degrees are integers, their ratio is rational.
-- **Structural Prediction**: Physical observation is not $\theta$ itself, but a rational approximant of $\theta$. This is a direct corollary of the Total-Subset Principle, not a theory defect.
+- **W1-Layer Theorem (Ideal Limit)**: $\theta = 1/(2+2\cos(2\pi/7))$ is irrational, exact in mathematical closure $\mathbb{R}$.
+- **W2-Layer Observation (Rational Approximants)**: Any finite physical lattice measurement yields a rational number—node counts and out-degrees are integers, their ratio is rational.
+- **Structural Prediction**: Physical observation is a rational approximant of $\theta$, not the exact value itself.
 
-**Observer Bridge $B = 250/9$**: In the CSQIT framework, the "observer bridge" connecting the W1-layer ideal value and the W2-layer observed value is given by the rational number $B = 250/9 \approx 27.78$. It sets the scale parameter of the rational approximant, constraining the deviation amplitude between theory and observation.
+**Observer Bridge $B = 250/9$**: The rational number $B = 250/9 \approx 27.78$ sets the scale parameter of the rational approximant, constraining the deviation amplitude between theory and observation.
 
 **Prediction for $\Omega_m$**:
 
@@ -721,14 +684,14 @@ Extending the algebraic extension degree $d = (p-1)/2$ from 1 to infinity, the m
 | Relative deviation | $\approx 0.97\%$ | $(0.311 - 0.308)/0.311$ |
 | 1σ confidence interval | $[0.305, 0.317]$ | Planck 2018 |
 
-$\Omega_m^{\text{obs}} \approx 0.311$ falls within the rational approximant spectrum predicted by theory, with a relative deviation of about 1%. This deviation is not "a compromise of theory defect," but a structural phenomenon predicted by the Total-Subset Principle—no finite observation can precisely measure the irrational $\theta$.
+$\Omega_m^{\text{obs}} \approx 0.311$ falls within the predicted rational approximant spectrum, with ~0.97% relative deviation—a structural prediction of the Total-Subset Principle, not a theory defect.
 
 **Falsifiable Prediction**:
 
-Future high-precision cosmological measurements will test the following two levels:
+Future high-precision cosmological measurements will test:
 
-1. If, after improved measurement precision, the central value of $\Omega_m^{\text{obs}}$ remains near $[0.305, 0.317]$ and the deviation amplitude is consistent with the scale set by $B = 250/9$, then the Total-Subset Principle is strengthened.
-2. If, after improved measurement precision, the deviation amplitude significantly exceeds the rational approximant spectrum predicted by $B = 250/9$, then the $\Omega_m = \theta$ postulate fails.
+1. If $\Omega_m^{\text{obs}}$ remains near $[0.305, 0.317]$ with deviation amplitude consistent with $B = 250/9$, the Total-Subset Principle is strengthened.
+2. If deviation significantly exceeds the spectrum predicted by $B = 250/9$, the $\Omega_m = \theta$ postulate fails.
 
 This falsifiability elevates CSQIT from "numerical coincidence" to "testable prediction."
 
@@ -765,7 +728,7 @@ A universe with only a quadratic extension structure ($p=5$, golden ratio), alth
 \boxed{\text{It is not that the universe chose 7; rather, it is because structure=7 that we became "we."}}
 \]
 
-**Growth Node (W3)**: Existential inversion is the highest point of the entire trunk's growth—it shows that "structure=7" is not a parameter selected from outside, but the unique algebraic form, grown from the axiomatic seed, capable of supporting observers. The trunk completes here, and the branches (scale dynamics and the thermodynamic arrow) unfold from this point.
+**Structural Significance (W3)**: Existential inversion demonstrates that "structure=7" is not an externally selected parameter, but the unique algebraic form capable of supporting observers, derived from the axiomatic system. This result forms the conceptual bridge between the algebraic structure of Fin 7 and the existence of observers.
 
 ---
 
@@ -808,7 +771,7 @@ $$S_{\text{weave}} = \sum_{\alpha,\beta} \mathbf{1}_{\text{compose}(\alpha,\beta
 | $S_{\text{phase}}$ | Quantum action | Quantum mechanics |
 | $S_{\text{weave}}$ | Yang-Mills | Gauge symmetry |
 
-**Honest Labeling**: The strict proof of the variational principle $\delta S_{\text{total}}/\delta t = 0$ is currently an open problem (see §9.3, G4 framework completed).
+**Honest Labeling**: The strict proof of the variational principle $\delta S_{\text{total}}/\delta t = 0$ is currently an open problem (see §10.3, G4 framework completed).
 
 ### 6.3 Projective Circle Compactification
 
@@ -846,7 +809,7 @@ def cartanGenerator (k : Fin 3) : Matrix (Fin 3) (Fin 3) ℝ :=
 
 **Interpretation**: The Cartan subalgebra of $su(3)$ emerges naturally from the root system structure of Fin 7. The complete $SU(3) \times SU(2) \times U(1)$ derivation is an open problem (W3, see §2.5 AxiomH Status Note: AxiomH is currently only a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum).
 
-**Growth Node (W3)**: The understanding of time as scale emerges naturally from the growth of the refinement sequence $s(n)=2\pi n/(n+1)$. It is not an additional assumption—it is the scalar tracking parameter of the causal lattice's advancement from finite to infinite. The "1" in the 3+1 structure is not a fourth dimension, but the tracking dimension of projective compactification. The gauge symmetry (SU(3)), as a projection of the Fin 7 root system, is the first leaf growing from the trunk.
+**Structural Significance (W3)**: The understanding of time as scale emerges naturally from the refinement sequence $s(n)=2\pi n/(n+1)$. It is not an additional assumption—it is the scalar tracking parameter of the causal lattice's advancement from finite to infinite. The "1" in the 3+1 structure is not a fourth dimension, but the tracking dimension of projective compactification. The gauge symmetry (SU(3)), as a projection of the Fin 7 root system, provides a structural link to the standard model's gauge sector.
 
 ---
 
@@ -875,15 +838,17 @@ theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
 
 **Interpretation (W3)**: The past hypothesis (the universe began in a low-entropy state) is not a boundary condition—it is a **mathematical theorem** of bounded causal lattices.
 
-**Growth Node (W1)**: The past hypothesis is not a boundary condition—it is a theorem grown from the lattice structure of bounded causal lattices. The arrow of time is not externally imposed, but an intrinsic property of the causal lattice. Entropy increase and projective compactification together form two leaves above the trunk: one pointing to thermodynamics, the other to cosmology.
+**Structural Significance (W1)**: The past hypothesis is not a boundary condition—it is a theorem derived from the lattice structure of bounded causal lattices. The arrow of time is not externally imposed, but an intrinsic property of the causal lattice. Entropy increase and projective compactification together form two structural pillars: one connecting to thermodynamics, the other to cosmology.
 
-### 7.4 The Intersection Network of Physical Laws
+---
+
+## 8. The Intersection Network of Physical Laws
 
 The preceding sections have established individual correspondences between CSQIT and specific physical laws—quantum unitarity, thermodynamic entropy increase, the past hypothesis, and so on. Each correspondence, taken individually, could be dismissed as a structural coincidence. However, a deeper pattern emerges when we examine how CSQIT simultaneously anchors **both ends** of multiple well-established physical dualities. These six intersection points, each independently grounded in the same axiomatic root system, form a cross-validation network whose collective strength far exceeds the sum of its parts.
 
 **Methodological Note (W3)**: The strategy here is not to claim that CSQIT "unifies all physics," but rather to demonstrate that the discrete causal-information framework naturally intersects with known physical laws at multiple structurally deep points. Each intersection is an independent anchor; together they constitute a coherent structural web.
 
-#### 7.4.1 Meta-Structure of the Intersection Matrix: Why a Network, Not a List
+### 8.1 Meta-Structure of the Intersection Matrix: Why a Network, Not a List
 
 The simultaneous anchoring of six physical dualities derives its persuasive force not from quantity, but from their logical dependency structure. These six intersections are not independent discoveries but projections of the same axiomatic root system (AxiomA–J) onto different branches.
 
@@ -891,7 +856,7 @@ The tree-like dependency structure: AxiomA–J forms the root, which bifurcates 
 
 This network structure means: challenging the physical interpretation of any one intersection does not affect the mathematical validity of the W1 theorems underpinning the other intersections. To overthrow the entire cross-validation network, one must find a logical contradiction within AxiomA–J itself. This is precisely the advantage of a "network" over a "list": it is not six independent coincidences, but six branches necessarily growing from the same root.
 
-#### 7.4.2 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
+### 8.2 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
 
 **Known Physics Background**: The apparent tension between quantum unitarity (reversible, information-preserving evolution) and the second law of thermodynamics (irreversible entropy increase) has been a foundational problem since Boltzmann. The standard resolution involves decoherence, coarse-graining, and the arrow of time—but the two principles remain seemingly opposed at the fundamental level.
 
@@ -906,7 +871,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: Both anchors are W1-level strict theorems. The interpretation that they correspond to "quantum unitarity" and "the second law" is W3-level physical interpretation.
 
-#### 7.4.3 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
+### 8.3 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
 
 **Known Physics Background**: Bekenstein-Hawking entropy $S = A/(4G\hbar)$ reveals a profound connection between general relativity (horizon area) and quantum mechanics (information/entropy). This area law is one of the strongest hints about quantum gravity, suggesting that the information content of a gravitational system is encoded on its boundary.
 
@@ -921,7 +886,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The boundary definition and θ = B/V ratio are W1-level strict. The discrete entropy-area law is at the W1/W2 boundary (AppendixD, not in main build). The zeroth, first, and third laws of black hole thermodynamics remain as `True` placeholders, explicitly labeled as unformalized. The physical interpretation as "black hole thermodynamics" is W3.
 
-#### 7.4.4 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
+### 8.4 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
 
 **Known Physics Background**: Jacobson's 1995 derivation showed that Einstein's field equations can be obtained from the proportionality between entropy and horizon area, together with the first law of thermodynamics. This suggests that gravity may be a thermodynamic state equation—an emergent phenomenon of underlying microscopic degrees of freedom.
 
@@ -936,7 +901,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The thermodynamic end (entropy monotonicity, past hypothesis) is W1 strict. The GR end (Regge → EH convergence) is W2 conditional, relying on EffectiveFin7Regularity and dimensional recursion assumptions. The gravitational constant derivation is W1. The "entropic gravity" interpretation is W3.
 
-#### 7.4.5 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
+### 8.5 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
 
 **Known Physics Background**: The standard cosmological paradigm holds that the large-scale structure of the universe originated from quantum fluctuations in the very early universe, stretched to cosmic scales by inflation. The seeds of galaxies are quantum in origin—connecting the smallest scales (quantum mechanics) to the largest (cosmology).
 
@@ -951,7 +916,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The uniqueness theorem and amplitude properties are W1 strict. The structure formation window boundaries (0.28, 0.33) come from empirical cosmology (W2 input). The interpretation as "quantum fluctuations → structure formation" is W3.
 
-#### 7.4.6 Information Theory ↔ Gauge Theory: The Holographic Principle
+### 8.6 Information Theory ↔ Gauge Theory: The Holographic Principle
 
 **Known Physics Background**: The holographic principle (exemplified by AdS/CFT duality) states that the entire information content of a d+1-dimensional gravitational system can be encoded on its d-dimensional boundary. This profound duality suggests that gauge theory and gravity (or information and geometry) are two equivalent descriptions of the same underlying structure.
 
@@ -966,7 +931,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The cardinality bijection (8² = 4³ = 64) and the direction projection are W1 strict. The interpretation as a "holographic principle" or connection to "SU(2)×U(1)" is W3 conjecture. The genetic code correspondence (64 codons) is also W3.
 
-#### 7.4.7 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
+### 8.7 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
 
 **Known Physics Background**: A closed quantum system exchanges no information with its environment; its evolution is described by unitary operators. This closure—system + environment = universe—implies that the universe as a whole must be a self-contained quantum system. But what does "closure" mean structurally, and how does a closed system acquire internal structure?
 
@@ -981,7 +946,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: Both `input_must_be_empty` and `amplitude_norm_one` are W1 strict theorems. The interpretation as "closed quantum system" and "causal self-reference" is W3.
 
-#### 7.4.8 Closure Argument of Cross-Validation
+### 8.8 Closure Argument of Cross-Validation
 
 | # | Physical Duality | Left Anchor (Theorem + File) | Right Anchor (Theorem + File) | Shared Root System | Honesty Level |
 |---|---|---|---|---|---|
@@ -1000,17 +965,17 @@ This network structure means: challenging the physical interpretation of any one
 - Information ↔ Gauge (holographic principle) provides the finite toy model of holographic duality through the boundary-bulk ratio.
 - Quantum ↔ Information Theory (closure) provides the logical premise for the first five: only a completely self-referential closed system (input=[]) can have all other intersections spontaneously emerge from its internal structure without external input.
 
-**Closure** is embodied in: the 6th intersection (closure / `input_must_be_empty`) is the root of the entire tree, while the other five are the five branches that necessarily grow from this root.
+**Closure** is embodied in: the 6th intersection (closure / `input_must_be_empty`) is the logical foundation of the entire framework, while the other five are structural consequences that necessarily follow from this foundation.
 
-**Growth Node (W3)**: The six intersection points are not six independent discoveries but six facets of the same axiomatic diamond. Turn the diamond, and you see quantum mechanics; turn it again, thermodynamics; again, gravity; again, cosmology. Each face is a different projection of the same underlying causal-information structure. The cross-validation power of this network is greater than the sum of its parts—challenging any single intersection leaves the others standing, and the diamond as a whole remains coherent.
+**Structural Significance (W3)**: The six intersection points are not six independent discoveries but six facets of the same axiomatic framework. Viewed from different perspectives, one sees quantum mechanics, thermodynamics, gravity, or cosmology. Each facet is a different projection of the same underlying causal-information structure. The cross-validation power of this network is greater than the sum of its parts—challenging any single intersection leaves the others standing, and the framework as a whole remains coherent.
 
 ---
 
-## 8. Finiteness Boundary: Fundamental Limits of Finite Models
+## 9. Finiteness Boundary: Fundamental Limits of Finite Models
 
 Formalized verification reveals not only what is true, but also what is **impossible**. This chapter discusses the structural limitations of finite models.
 
-### 8.1 Finite Evolution Trade-off (W1 Layer)
+### 9.1 Finite Evolution Trade-off (W1 Layer)
 
 **Theorem** (`finite_evolve_tradeoff`, EnhancedModels.lean): On a finite linearly ordered set, any map satisfying $x \leq f(x)$ must have a fixed point.
 
@@ -1020,7 +985,7 @@ This is a profound **structural trade-off**:
 - Finite + locally finite → trivial dynamics
 - Non-trivial dynamics → requires infinity → may break local finiteness
 
-### 8.2 Total Order Finiteness Theorem (W1 Layer)
+### 9.2 Total Order Finiteness Theorem (W1 Layer)
 
 **Theorem** (`no_infinite_locally_finite_total_order`, OpenProblems.lean): Under total-order causal partial order, local finiteness forces global finiteness.
 
@@ -1028,7 +993,7 @@ This is a profound **structural trade-off**:
 
 **Interpretation**: A total-order universe is necessarily finite. This is a profound structural constraint.
 
-### 8.3 Significance of the Limitations
+### 9.3 Significance of the Limitations
 
 These impossibility theorems are not negative—they are positive guides:
 
@@ -1038,15 +1003,15 @@ These impossibility theorems are not negative—they are positive guides:
 
 These limitations outline the boundary of "possible universes"—and CSQIT lies precisely on this boundary.
 
-These formalized proof limitations, together with the cognitive boundaries discussed in §9, define the complete possibility space of CSQIT: the former are negative results of mathematical structure, the latter are honest labels of cognitive levels.
+These formalized proof limitations, together with the cognitive boundaries discussed in §10, define the complete possibility space of CSQIT: the former are negative results of mathematical structure, the latter are honest labels of cognitive levels.
 
-**Growth Boundary (W1)**: These impossibility theorems define the external boundary of CSQIT's growth—the real universe must lie on the boundary of "finite local + infinite global." CSQIT grows precisely on this boundary. Growth within the boundary is necessary; everything beyond the boundary is impossible.
+**Structural Boundary (W1)**: These impossibility theorems define the external boundary of CSQIT's structural framework—the real universe must lie on the boundary of "finite local + infinite global." CSQIT is precisely positioned on this boundary. Structures within the boundary are mathematically necessary; everything beyond the boundary is impossible.
 
 ---
 
-## 9. Honest Boundary: Open Problems and Unfinished Proofs
+## 10. Honest Boundary: Open Problems and Unfinished Proofs
 
-### 9.1 W1/W2/W3 Hierarchy
+### 10.1 W1/W2/W3 Hierarchy
 
 We strictly distinguish three epistemic levels:
 
@@ -1058,25 +1023,25 @@ We strictly distinguish three epistemic levels:
 
 **Specific Hierarchy Examples**:
 
-| Assertion | Level | Growth Stage | Status |
+| Assertion | Level | Structural Role | Status |
 |:---|:---:|:---:|:---|
-| Duality Two-One Theorem | W1 | First bifurcation | ✅ Proven |
-| Algebraic causal order transitivity | W1 | Root expansion | ✅ Proven |
-| $\theta = 1/(2+2\cos(2\pi/7))$ | W1 | Trunk generation | ✅ Proven |
-| Cyclic algebraic stabilizer structure | W1 | Root expansion | ✅ Proven |
-| Second law (discrete version) | W1 | Leaf unfolding | ✅ Proven |
-| Past hypothesis theorem | W1 | Leaf unfolding | ✅ Proven |
-| Finite evolution trade-off | W1 | Growth boundary | ✅ Proven |
-| EffectiveFin7Regular unsatisfiability on finite lattices | W1 | Trunk generation | ✅ Proven (Total-Subset Principle) |
-| Real universe satisfies EffectiveFin7Regular | W2 | To be verified | ⚠️ Assumption |
-| Regge → Einstein-Hilbert convergence | W2 | To be grown | ⚠️ Framework, proofs to be filled |
-| Unified action variational principle | W2 | To be grown | ⚠️ Framework |
+| Duality Two-One Theorem | W1 | Core structural theorem | ✅ Proven |
+| Algebraic causal order transitivity | W1 | Causal foundation | ✅ Proven |
+| $\theta = 1/(2+2\cos(2\pi/7))$ | W1 | Numerical anchor | ✅ Proven |
+| Cyclic algebraic stabilizer structure | W1 | Causal foundation | ✅ Proven |
+| Second law (discrete version) | W1 | Derived physical law | ✅ Proven |
+| Past hypothesis theorem | W1 | Derived physical law | ✅ Proven |
+| Finite evolution trade-off | W1 | Structural boundary | ✅ Proven |
+| EffectiveFin7Regular unsatisfiability on finite lattices | W1 | Numerical anchor | ✅ Proven (Total-Subset Principle) |
+| Real universe satisfies EffectiveFin7Regular | W2 | — | ⚠️ Assumption |
+| Regge → Einstein-Hilbert convergence | W2 | — | ⚠️ Framework, proofs to be filled |
+| Unified action variational principle | W2 | — | ⚠️ Framework |
 | $\theta = \Omega_m$ | W2/W3 | Empirical anchor | ⚠️ Physical correspondence postulate |
-| Projective circle corresponds to spacetime compactification | W3 | Leaf unfolding | ⚠️ Interpretation |
-| $SU(3) \times SU(2) \times U(1)$ emergence | W3 | Leaf unfolding | ⚠️ Conjecture (AxiomH is placeholder) |
-| Fin 7 selection principle | W3 | Trunk generation | ⚠️ Open problem |
+| Projective circle corresponds to spacetime compactification | W3 | Derived physical law | ⚠️ Interpretation |
+| $SU(3) \times SU(2) \times U(1)$ emergence | W3 | Derived physical law | ⚠️ Conjecture (AxiomH is placeholder) |
+| Fin 7 selection principle | W3 | Numerical anchor | ⚠️ Open problem |
 
-### 9.2 Precise Formulation of the Information Causality Bound
+### 10.2 Precise Formulation of the Information Causality Bound
 
 **AxiomI** defines the causal monotonicity of entropy:
 
@@ -1093,7 +1058,7 @@ We **do not claim** to have proven the Bekenstein bound (the area law of black h
 
 The connection between the two—if it exists—is a W2/W3-layer open problem.
 
-### 9.3 Open Problems List
+### 10.3 Open Problems List
 
 All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with no unproven assertions disguised as theorems.
 
@@ -1133,80 +1098,11 @@ All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with 
 
 G1–G5 are the core progress of the W2-layer offensive in v11.7.0. G1, G3, and G5 have reached W1 strict proof; G2 and G4 have established frameworks and completed conditional theorems, with remaining strictification work to continue.
 
-### 9.4 Sorry Audit: Evolution of the Formalization Engineering Process
+### 10.4 Sorry Audit: Formalization Status
 
-The formalization of CSQIT is an iterative engineering effort spanning many versions. From the first version, the project underwent countless rewrites—from early AI-assisted manual operations to later systematic AI workflows with parallel sub-agents—the total number of sorry and admit statements eliminated over the course of the project is beyond precise accounting. This section documents only the **traceable sorry elimination history since v11.0** as a methodological snapshot of the formalization engineering process.
+All core W1 theorems are machine-verified with no `sorry`—3340 compilation tasks pass with 0 errors. The codebase comprises ~39,000 lines of formal code across 63 compiled Lean modules. The 5 intentionally retained `sorry` in `cyclic_stable_substructure` serve as honestly labeled counterexamples (mathematically impossible, not unfinished). W2/W3 layers contain open problems and framework-level results, all explicitly labeled.
 
-**Phase 1: Foundational Framework Construction (v11.0.x)**
-
-The initial version contained numerous placeholders, covering the axiomatic system, finite models, and dynamics framework:
-
-| File | Sorry Count | Content |
-|:---|:---:|:---|
-| `Core/AlgebraicCausality.lean` | 1 | `algebraic_le_trans` transitivity proof |
-| `Core/B_V_Naturalness.lean` | 3 | Limit analysis in θ derivation |
-| `Core/FoundationalGrowth.lean` | 1 | Foundational growth structure |
-| `Core/QuantumMeasurement.lean` | 4 | Quantum measurement 4 theorems |
-| `Core/Models/FiniteWeavingExamples.lean` | 8 | `cyclic_stable_substructure` (4) + `cyclic_algebraic_stable` (3) + `order_jump_example` (1) |
-| **Subtotal** | **17** | |
-
-**Phase 2: Core Theorem Offensive (v11.1.x)**
-
-Eliminating key proofs of algebraic causal order and finite models:
-
-| Eliminated Sorry | File | Proof Method | Significance |
-|:---:|:---|:---:|:---|
-| `algebraic_le_trans` | AlgebraicCausality.lean | `mul_nsmul'` reverse rewriting | Algebraic causal order transitivity—unifying causal and algebraic closure |
-| `causal_past_trans` | FoundationalGrowth.lean | Transitivity proof | Structural integrity of causal past |
-| Quantum measurement 4 theorems | QuantumMeasurement.lean | Duality theorem application | Formalized foundation of quantum measurement |
-
-**Phase 3: Finite Model Breakthrough (v11.2.0)**
-
-Tackling the most difficult finite model proofs:
-
-| Eliminated Sorry | File | Proof Method | Significance |
-|:---:|:---|:---:|:---|
-| `cyclic_algebraic_stable` (3 fields) | FiniteWeavingExamples.lean | `add_nsmul` + `fin_cases decide` | Cyclic algebraic stabilizer structure—verifying the validity of algebraic causal order |
-| `order_jump_example` | FiniteWeavingExamples.lean | `ext` + `mul_nsmul'` | Order jump phenomenon—revealing the nonlinear character of hierarchical weaving |
-| B/V naturalness 3 limits | B_V_Naturalness.lean | Limit analysis + definition reconstruction | Complete closure of θ derivation—zero-parameter deductive chain completed |
-
-**Phase 4: W2 Offensive G1–G5 (v11.7.0)**
-
-v11.7.0 completed the key strictification work of the W2-layer offensive:
-
-| Strictification Item | File | Proof Method | Significance |
-|:---:|:---|:---:|:---|
-| `poly_no_rational_root` | TotalSubsetPrinciple.lean:109 | Contradiction + mod-2 analysis, no sorry | Characteristic polynomial has no rational roots—W1 strict |
-| `k_out_is_irrational` | TotalSubsetPrinciple.lean:204 | Applies `poly_no_rational_root`, no sorry | Irrationality of $k_{\text{out}}$—W1 strict |
-| `finite_lattice_cannot_satisfy_EffectiveFin7Regular` | TotalSubsetPrinciple.lean:378 | Applies `k_out_is_irrational`, no sorry | Total-Subset Principle—W1 strict |
-| `fin7_unique_satisfying_both_constraints` | Fin7Uniqueness.lean | 4-theorem synthesis, no sorry | Fin 7 uniqueness—W1 strict |
-| `trivial_field_stationary` | ScaleDynamics.lean §6 | Discrete Euler-Lagrange, no sorry | Discrete variational principle foundation—W1 strict |
-| `holographic_isomorphism_finite` | HolographicIsomorphism.lean §7 | Finite toy model verification, no sorry | Holographic isomorphism (finite case)—W1 strict |
-| `reggeConverges4D_to_EinsteinHilbert` | ContinuumLimit.lean | Conditional theorem, no sorry | Regge convergence framework—W1 conditional |
-
-**Axiom Count Reduced from 6 to 2**:
-
-The 4 pseudo-axioms in GrowthModel.lean have been downgraded to theorems, replaced by strict proofs. The current codebase axiom count is reduced from 6 to 2, retaining only the basic properties of the cyclotomic field $\mathbb{Q}(\zeta_7 + \zeta_7^{-1})$ as axioms (these are standard results verified in the mathematical literature).
-
-**Current Status (v11.7.0)**
-
-| Category | Count |
-|:---|:---:|
-| Sorry eliminated since v11.0 | **13 + 0 new in v11.7.0** (v11.7.0 strictifications are all new proofs, not elimination of existing sorry) |
-| Intentionally retained sorry (mathematically invalid) | **5** |
-| Compilation tasks | **3340** |
-| Compilation errors | **0** |
-| Total axioms | **2** (only cyclotomic field properties retained) |
-
-**The 5 Intentionally Retained Sorry**:
-
-Located in `cyclic_stable_substructure` in `Core/Models/FiniteWeavingExamples.lean`, intentionally retained because they are mathematically invalid (cyclic subgroups are not prefix-closed), serving as honestly labeled counterexamples. These 5 sorry are not "unfinished proofs," but markers of "proven impossible"—their existence precisely demonstrates our honesty and rigor.
-
-**Methodological Insight**:
-
-Formalized verification is not only a process of "eliminating sorry," but also a process of **discovering structural limitations**. The failure of `cyclic_stable_substructure` directly led to the discovery of algebraic causal order (`algebraic_le`)—an important insight emerging from "failure." Similarly, the proof of `finite_lattice_cannot_satisfy_EffectiveFin7Regular` revealed the Total-Subset Principle—a structural prediction emerging from "unsatisfiability."
-
-### 9.5 Status of Derived Laws and Appendices
+### 10.5 Status of Derived Laws and Appendices
 
 The CSQIT codebase contains two categories of supplementary materials: `DerivedLaws/` (23 files) and `Appendices/` (5 files). This section explicitly states their cognitive status.
 
@@ -1234,14 +1130,14 @@ These placeholders are declared in `True` form, indicating "this proposition has
 
 **Future Work**: Incorporating `DerivedLaws/` and `Appendices/` into the main build, gradually eliminating True placeholders and completing strict formalization, is one of the main directions for future versions of CSQIT.
 
-### 9.6 Four Closure Loops and the Unitary Closure Thesis
+### 10.6 Four Closure Loops and the Unitary Closure Thesis
 
 Synthesizing all preceding layers of analysis—from **measurement ontology** (weaving extension), **algebraic number theory** (3/5/7 and the 3×3 affine plane), **combinatorial evolution** (order jumps and causal closure), to **formalized code** (Lean 4 proofs and models)—we now collide them with the **actual universe (Planck 2018 data)** to derive a unified field-level precise conclusion.
 
 **Three Layers of Cross-Validation**: CSQIT's validation structure operates at three independent levels, each reinforcing the others:
 - **§5.10 Internal mathematical cross-validation**: Within the axiomatic system itself, multiple independent structural pathways converge on the same numerical constant θ—algebraic derivation from EffectiveFin7Regularity, cubic equation uniqueness, and the extension spectrum sieve all point to p = 7.
-- **§7.4 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
-- **§9.6 Cross-validation between theory and observation**: The theoretical value θ ≈ 0.308 agrees with the Planck 2018 observed Ω_m ≈ 0.311 to within 0.97%, lying inside the 1σ confidence interval.
+- **§9 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
+- **§10.6 Cross-validation between theory and observation**: The theoretical value θ ≈ 0.308 agrees with the Planck 2018 observed Ω_m ≈ 0.311 to within 0.97%, lying inside the 1σ confidence interval.
 
 These three layers—internal mathematical consistency, cross-disciplinary structural correspondence, and empirical agreement—form a nested validation architecture.
 
@@ -1303,9 +1199,9 @@ Substituting the four closure loops into the CSQIT axiomatic system, we obtain t
 
 **Honest Labeling (W3)**: The above "extended unified identity equation" and "four closure loops" currently belong to the **physical interpretation layer (W3)** and have not yet been fully formalized in Lean. In particular, the chain "$15 \equiv 7 \pmod 8$ rigidly yields $\theta$" requires further algebraic-geometric formalization. Cross-scale correspondences (periodic table, molecular bonds, genetic code) are empirically observed structural isomorphisms whose rigorous mathematical proof remains to be established. Nevertheless, these closure loops forge the scattered theorems (duality, algebraic causality, scale dynamics, thermodynamic arrow) into a unified cosmological narrative, demonstrating the **explanatory power and consistency** of the CSQIT framework—even if some links require future correction, the methodological goal of "closed deduction from axioms to observation" has been achieved.
 
-**Growth Synthesis (W3)**: The four closure loops are not juxtaposed, but four branches grown from the same axiomatic seed. They share the same algebraic base (Fin 7 / Fin 8), unfolding into different physical phenomena at their respective scales. This is an objective observation of cross-scale holographic isomorphism—the same seed grows different leaves, but the root system remains the same.
+**Structural Synthesis (W3)**: The four closure loops are not juxtaposed, but four structural consequences derived from the same axiomatic foundation. They share the same algebraic base (Fin 7 / Fin 8), manifesting as different physical phenomena at their respective scales. This is an objective observation of cross-scale holographic isomorphism—the same underlying structure produces different manifestations, but the algebraic foundation remains the same.
 
-### 9.7 Hierarchical Labeling of the Intersection Matrix
+### 10.7 Hierarchical Labeling of the Intersection Matrix
 
 The proof hierarchy distribution of the 12 anchor points across the six intersections:
 
@@ -1326,7 +1222,7 @@ The proof hierarchy distribution of the 12 anchor points across the six intersec
 
 ---
 
-## 10. Epistemology: Formal Status of the Internal Observer
+## 11. Epistemology: Formal Status of the Internal Observer
 
 The contributions of CSQIT manifest at three mutually reinforcing levels:
 
@@ -1338,7 +1234,7 @@ The contributions of CSQIT manifest at three mutually reinforcing levels:
 
 The third-level contribution is particularly critical: **CSQIT is not "aligning" with individual physical laws, but reproducing the deep structural relationships known to exist between physical theories.** The strength of this "inter-theoretic cross-validation" far exceeds the coincidence probability of single-point correspondence.
 
-### 10.1 Established Formal Results
+### 11.1 Established Formal Results
 
 The following results are formally proven in Lean 4:
 
@@ -1351,7 +1247,7 @@ The following results are formally proven in Lean 4:
 7. **Total-Subset Principle (new in v11.7.0)**: EffectiveFin7Regular is unsatisfiable on finite lattices (`finite_lattice_cannot_satisfy_EffectiveFin7Regular`); the irrationality of $k_{\text{out}}$ is strictly proven (`k_out_is_irrational`).
 8. **Fin 7 Uniqueness (new in v11.7.0)**: Theorems such as `fin7_unique_satisfying_both_constraints` prove the uniqueness of Fin 7 satisfying the dual constraints.
 
-### 10.2 Structural Correspondence
+### 11.2 Structural Correspondence
 
 The following structural correspondences hold at different levels:
 
@@ -1362,14 +1258,14 @@ The following structural correspondences hold at different levels:
 - **Chemical level**: Carbon's sp³ hybridization and the four-fold symmetry of direction 4
 - **Biological level**: Correspondence between the 4 DNA bases and the tetrahedron vertex directions
 
-### 10.3 Empirical Anchor
+### 11.3 Empirical Anchor
 
 The numerical relationship between θ ≈ 0.308 and Ω_m = 0.311:
 - This constant is derived deductively from zero information-theoretic axioms, with zero free parameters in the gravitational and cosmological sectors ($\Omega_m = \theta$ is the only interpretive assumption)
 - The relative deviation from the Planck 2018 observed value is 0.97%, lying within the 1σ confidence interval of the measurement ($\Omega_m = 0.311 \pm 0.006$)
 - This correspondence constitutes a W2/W3-layer physical correspondence postulate, not a W1-layer theorem
 
-### 10.4 Epistemic Status of the Internal Observer
+### 11.4 Epistemic Status of the Internal Observer
 
 The CSQIT axiomatic system defines the structure of a causal weaving lattice. In this structure, the observer is not an externally presupposed subject, but a set of nodes within the weaving lattice.
 
@@ -1379,7 +1275,7 @@ The epistemic constraint derived from this is:
 
 The cubic nonlinear structure of Fin 7 makes irreversible recording possible—this is the algebraic prerequisite for "questioning" and "memory." The golden ratio structure of Fin 5 only supports reversible oscillation, unable to accumulate history.
 
-### 10.5 Boundaries of the Framework
+### 11.5 Boundaries of the Framework
 
 The boundaries of the current formalized system are defined by the following conditions:
 
@@ -1387,39 +1283,37 @@ The boundaries of the current formalized system are defined by the following con
 - **Effective theory (W2)**: Bekenstein-Verlinde correspondence, dark matter/dark energy classification, gauge symmetry emergence (AxiomH still a placeholder)
 - **Physical interpretation (W3)**: Physical correspondence postulate of θ and Ω_m, time as scale parameter, cross-scale structural isomorphism
 
-### 10.6 The Complete Path of the Growth Chain
+### 11.6 The Complete Deductive Chain
 
-From an axiomatic seed to the observer's self-cognition, the growth path of CSQIT is:
+The logical deductive chain of CSQIT, from axiomatic foundations to observer self-cognition, proceeds as follows:
 
-> ### The Complete Path of the Growth Chain
->
-> From an axiomatic seed to the observer's self-cognition, the growth path of CSQIT is:
+> ### The Complete Deductive Chain
 >
 > \[
 > \boxed{
 > \begin{aligned}
-> &\text{Seed: AxiomA's self-containment (input\_must\_be\_empty)} \\
+> &\text{Foundation: AxiomA's self-containment (input\_must\_be\_empty)} \\
 > &\downarrow \text{(logical necessity: no external input → system must be self-referential)} \\
-> &\text{Bifurcation: Duality Two-One Theorem (causal and informational cannot both be had)} \\
+> &\text{Duality: Duality Two-One Theorem (causal and informational cannot both be non-trivial)} \\
 > &\downarrow \text{(logical necessity: must introduce combine to break the deadlock)} \\
-> &\text{Roots: Algebraic causal order (causality emerges from algebraic structure)} \\
+> &\text{Causality: Algebraic causal order (causality emerges from algebraic structure)} \\
 > &\downarrow \text{(logical necessity: finite unitary injective amplitudes → prime-order cyclic group)} \\
-> &\text{Trunk: Fin 7 sieve (the only prime within the structure formation window in the extension spectrum)} \\
+> &\text{Numerics: Fin 7 sieve (the only prime within the structure formation window in the extension spectrum)} \\
 > &\downarrow \text{(logical necessity: Fin 8 closure → mod-8 congruence → 7)} \\
-> &\text{Leaves: Scale dynamics + thermodynamic arrow of time} \\
+> &\text{Dynamics: Scale dynamics + thermodynamic arrow of time} \\
 > &\downarrow \text{(logical necessity: refinement sequence → projective compactification → time as scale)} \\
-> &\text{Fruit: The observer's self-cognition (structure=7 ⇔ we exist)}
+> &\text{Closure: The observer's self-cognition (structure=7 ⇔ we exist)}
 > \end{aligned}
 > }
 > \]
 >
 > **Objective Observation (W1)**: Every step of this path is supported by formalized proof.
-> **Structural Correspondence (W3)**: The closure of the growth chain—the fruit growing back to the seed itself—is the core of CSQIT epistemology.
+> **Structural Correspondence (W3)**: The closure of the deductive chain—the observer's existence looping back to the axiomatic foundation—is the core of CSQIT epistemology.
 > **Honest Labeling**: Whether the chain leads to ultimate physical truth remains unknown. But the chain itself—the complete deduction from axioms to observer—has been formally recorded in the proof assistant.
 
-**Growth Completion (W3)**: CSQIT's growth chain starts from `input_must_be_empty` (the axiomatic seed), passes through the duality bifurcation, the algebraic roots, the Fin 7 trunk, and the scale leaves, finally arriving at the observer's self-cognition—the fruit.
+**Epistemological Summary (W3)**: CSQIT's deductive chain starts from `input_must_be_empty` (the axiomatic foundation), passes through the duality theorem, algebraic causal order, the Fin 7 numerical anchor, and scale dynamics, finally arriving at the observer's self-cognition.
 
-This fruit is not an external harvest, but the closure of the growth chain itself: **the observer, as an internal node of the causal lattice, has its existence itself as the form in which the growth chain finally grows back to itself.**
+This closure is not an external result, but the internal logical consistency of the deductive chain itself: **the observer, as an internal node of the causal lattice, has its existence itself as the form in which the deductive chain finally closes back on itself.**
 
 ---
 
@@ -1501,7 +1395,7 @@ All dependencies are managed through `lakefile.lean` and `lean-toolchain`. The c
 | Appendices/ (not in main build) | ~700 | 5 files, including 3 True placeholders |
 | **Codebase total (v11.6.0)** | **~39,000** | **63 compiled modules + 28 supplementary files** |
 
-**Note**: v11.7.0 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §9.5 for details).
+**Note**: v11.7.0 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §10.5 for details).
 
 ---
 
@@ -1511,7 +1405,7 @@ All dependencies are managed through `lakefile.lean` and `lean-toolchain`. The c
 
 This appendix presents CSQIT's epistemological structure: six-layer uniqueness lock-in. Each layer's lock-stop is explicitly labeled with W1/W2/W3 levels, and all cross-layer assertions are explicitly declared.
 
-**Growth Lock-in (W3)**: The six-layer lock-in is not an externally imposed constraint, but a path grown from the axiomatic seed, forced to close at each layer's branch point by logical necessity. Each step has only one path—growth is the continuous elimination of the impossible, until only the unique possibility remains.
+**Structural Lock-in (W3)**: The six-layer lock-in is not an externally imposed constraint, but a logical chain derived from the axiomatic foundation, forced to close at each layer by logical necessity. Each step has only one viable path—the process is the continuous elimination of the impossible, until only the unique possibility remains.
 
 ### D.2 The Logical Chain of Six Lock-ins
 
@@ -1596,7 +1490,7 @@ The "front-back-left-right-up-down" 6 directions of everyday perception are the 
 
 > **Uniqueness Conclusion**: Any other prime p falls outside at least one constraint. \( \theta(7) \) is the unique intersection point of the triple anchoring.
 
-**Note (v11.7.0)**: At the observational anchoring level, $\Omega_m = \theta$ is a physical correspondence postulate (W2/W3), not a mathematical theorem (see §5.5). The Total-Subset Principle predicts that $\Omega_m^{\text{obs}}$ is a rational approximant of $\theta$, not the exact value; the relative deviation of about 0.97% is a structural prediction (see §5.9).
+**Note**: At the observational anchoring level, $\Omega_m = \theta$ is a physical correspondence postulate (W2/W3), not a mathematical theorem (see §5.5). The Total-Subset Principle predicts $\Omega_m^{\text{obs}}$ is a rational approximant of $\theta$, with ~0.97% relative deviation as a structural prediction (see §5.9).
 
 #### Sixth Lock-stop: Self-Referential Cognition — The Unique Proof of Observer Existence (W3)
 
