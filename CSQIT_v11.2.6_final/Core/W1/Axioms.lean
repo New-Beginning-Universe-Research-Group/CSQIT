@@ -582,27 +582,27 @@ class AxiomG (M C : Type*) [AxiomA M C] where
   amplitude_spin : spin_network → ℂ
 
 /--
-公理 H: 标准模型嵌入（规范场论）
+公理 H: 规范群嵌入框架（占位符）
 
-**物理意义**:
-  - 描述基本粒子相互作用的规范场论结构
-  - gauge_group: 规范群（如 SU(3)×SU(2)×U(1)）
-  - field_content: 场在规范群和时空上的分布
-  - lagrangian: 系统的作用量密度
+**诚实标注**:
+  ⚠️ AxiomH 目前是一个**框架性占位符**，而非完整的标准模型形式化。
+  它只定义了规范群嵌入所需的三个基本类型字段，
+  未包含任何关于规范群具体结构（如 SU(3)×SU(2)×U(1)）的约束，
+  也未证明 lagrangian 与标准模型拉氏量的对应关系。
 
-**数学结构**:
-  - gauge_group: 规范群类型（李群）
-  - field_content : gauge_group → M → ℂ，场配置
-  - lagrangian : (M → ℂ) → ℝ，作用量泛函
+  标准模型的完整形式化留待后续工作。
+  当前所有已知模型（Unit, Bool, Fin 5, HDST 等）中，
+  AxiomH 均以 gauge_group = Unit 的退化形式满足。
 
-**物理诠释**:
-  - gauge_group 描述相互作用的对称性（强相互作用 SU(3)，弱相互作用 SU(2)，电磁 U(1)）
-  - field_content 描述场在时空各点的取值及其规范变换性质
-  - lagrangian 是系统的作用量，通过变分原理导出运动方程
+**字段说明**:
+  - gauge_group: 规范群类型（占位，当前无约束）
+  - field_content: 场在规范群和因果格上的分布
+  - lagrangian: 系统的作用量密度泛函
 
-**参考**:
-  - Weinberg, S. (1996). "The Quantum Theory of Fields".
-  - Peskin, M. E., & Schroeder, D. V. (1995). "An Introduction to Quantum Field Theory".
+**物理动机（W3 诠释）**:
+  - 该框架的设计目标是为标准模型 SU(3)×SU(2)×U(1) 预留结构位置
+  - 但目前仅为类型签名，无实质物理内容
+  - 不构成对"已推导出标准模型"的声明
 -/
 class AxiomH (M C : Type*) [AxiomA M C] where
   gauge_group : Type
@@ -862,6 +862,10 @@ class AxiomG' (M C : Type*) [A' : AxiomA' M C] where
   spin_network : Type
   amplitude_spin : spin_network → ℂ
 
+/-- AxiomH'（增强版）：规范群嵌入框架（占位符）
+
+    诚实标注：同 AxiomH，仅为框架性占位符，
+    标准模型完整形式化留待后续工作。 -/
 class AxiomH' (M C : Type*) [A' : AxiomA' M C] where
   gauge_group : Type
   field_content : gauge_group → M → ℂ

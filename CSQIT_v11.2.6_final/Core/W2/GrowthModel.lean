@@ -75,31 +75,53 @@ namespace CSQIT.W2
 namespace GrowthModel
 
 /-! ============================================================================
-   §1. 生长公理
-   
-   四个基本公理，定义了"生长"是什么。
-   所有对称群都从这四个公理中涌现。
+   §1. 生长原理（形式化定理，非公理）
+
+   注：本节四个原理原标注为"生长公理"，但实际上它们都可以在
+   Lean/Mathlib 的基础逻辑中直接证明，不需要作为公理引入。
+   因此已从 `axiom` 降级为 `theorem`，以确保代码库的严谨性。
+
+   它们的物理意义（生长的直观图像）保留在注释中，
+   但数学上它们是平凡定理，不构成独立的假设。
    ============================================================================ -/
 
-/-- 生长公理一：二元生成
-    每一个生长步骤都产生一个新的"两面性"实体。
+/-- 原理一：二元生成性
+    数学上平凡：至少存在一个非空类型（如 Unit）。
+    物理诠释：每一个生长步骤都产生一个新的"两面性"实体，
     素数 2 是生长的起点。 -/
-axiom binary_generation : ∃ (g : Type), Nonempty g
+theorem binary_generation : ∃ (g : Type), Nonempty g :=
+  ⟨Unit, ⟨()⟩⟩
 
-/-- 生长公理二：三元闭包
-    三个生成关系可以复合，形成因果三角形。
+/-- 原理二：三元闭包性
+    数学上平凡：结论为 True，无论前提如何都成立。
+    物理诠释：三个生成关系可以复合，形成因果三角形，
     素数 3 是空间维度的来源。 -/
-axiom ternary_closure : ∀ (a b c : ℕ), a + b + c > 0 → True
+theorem ternary_closure : ∀ (a b c : ℕ), a + b + c > 0 → True :=
+  fun _ _ _ _ => trivial
 
-/-- 生长公理三：自相似性
-    每个稳定结构可以作为新的生成元，
+/-- 原理三：自相似性
+    数学上平凡：自然数无界，对任意 n 取 n+1 即可。
+    物理诠释：每个稳定结构可以作为新的生成元，
     触发更高层级的生长。 -/
-axiom self_similarity : ∀ (n : ℕ), ∃ (m : ℕ), m > n
+theorem self_similarity : ∀ (n : ℕ), ∃ (m : ℕ), m > n :=
+  fun n => ⟨n + 1, by linarith⟩
 
-/-- 生长公理四：最小作用量
-    生长总是选择"增加最少复杂度"的路径。
+/-- 原理四：最小作用量原理
+    数学上平凡：自然数的良序性——任何非空子集都有最小元。
+    物理诠释：生长总是选择"增加最少复杂度"的路径，
     这就是为什么每一步都是"最小的"满足条件的结构。 -/
-axiom minimal_action : ∀ (S : Set ℕ), S.Nonempty → ∃ (x : ℕ), x ∈ S ∧ ∀ y ∈ S, x ≤ y
+theorem minimal_action : ∀ (S : Set ℕ), S.Nonempty → ∃ (x : ℕ), x ∈ S ∧ ∀ y ∈ S, x ≤ y := by
+  intro S hS
+  classical
+  let P : ℕ → Prop := fun n => n ∈ S
+  have hP : ∃ n, P n := hS
+  have h1 : P (Nat.find hP) := by
+    exact Nat.find_spec hP
+  have h2 : ∀ y, P y → Nat.find hP ≤ y := by
+    intro y hy
+    exact Nat.find_min' hP hy
+  exact ⟨Nat.find hP, h1, h2⟩
+
 
 /-! ============================================================================
    §2. 第一涌现层：四面体对称 A₄
