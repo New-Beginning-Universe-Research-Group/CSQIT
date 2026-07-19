@@ -875,13 +875,13 @@ theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
 
 **Growth Node (W1)**: The past hypothesis is not a boundary condition—it is a theorem grown from the lattice structure of bounded causal lattices. The arrow of time is not externally imposed, but an intrinsic property of the causal lattice. Entropy increase and projective compactification together form two leaves above the trunk: one pointing to thermodynamics, the other to cosmology.
 
-### 7.5 Intersections of Physical Laws
+### 7.4 Intersections of Physical Laws
 
 The preceding sections have established individual correspondences between CSQIT and specific physical laws—quantum unitarity, thermodynamic entropy increase, the past hypothesis, and so on. Each correspondence, taken individually, could be dismissed as a structural coincidence. However, a deeper pattern emerges when we examine how CSQIT simultaneously anchors **both ends** of multiple well-established physical dualities. These six intersection points, each independently grounded in the same axiomatic root system, form a cross-validation network whose collective strength far exceeds the sum of its parts.
 
 **Methodological Note (W3)**: The strategy here is not to claim that CSQIT "unifies all physics," but rather to demonstrate that the discrete causal-information framework naturally intersects with known physical laws at multiple structurally deep points. Each intersection is an independent anchor; together they constitute a coherent structural web.
 
-#### 7.5.1 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
+#### 7.4.1 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
 
 **Known Physics Background**: The apparent tension between quantum unitarity (reversible, information-preserving evolution) and the second law of thermodynamics (irreversible entropy increase) has been a foundational problem since Boltzmann. The standard resolution involves decoherence, coarse-graining, and the arrow of time—but the two principles remain seemingly opposed at the fundamental level.
 
@@ -896,7 +896,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: Both anchors are W1-level strict theorems. The interpretation that they correspond to "quantum unitarity" and "the second law" is W3-level physical interpretation.
 
-#### 7.5.2 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
+#### 7.4.2 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
 
 **Known Physics Background**: Bekenstein-Hawking entropy $S = A/(4G\hbar)$ reveals a profound connection between general relativity (horizon area) and quantum mechanics (information/entropy). This area law is one of the strongest hints about quantum gravity, suggesting that the information content of a gravitational system is encoded on its boundary.
 
@@ -911,7 +911,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: The boundary definition and θ = B/V ratio are W1-level strict. The discrete entropy-area law is at the W1/W2 boundary (AppendixD, not in main build). The zeroth, first, and third laws of black hole thermodynamics remain as `True` placeholders, explicitly labeled as unformalized. The physical interpretation as "black hole thermodynamics" is W3.
 
-#### 7.5.3 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
+#### 7.4.3 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
 
 **Known Physics Background**: Jacobson's 1995 derivation showed that Einstein's field equations can be obtained from the proportionality between entropy and horizon area, together with the first law of thermodynamics. This suggests that gravity may be a thermodynamic state equation—an emergent phenomenon of underlying microscopic degrees of freedom.
 
@@ -926,7 +926,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: The thermodynamic end (entropy monotonicity, past hypothesis) is W1 strict. The GR end (Regge → EH convergence) is W2 conditional, relying on EffectiveFin7Regularity and dimensional recursion assumptions. The gravitational constant derivation is W1. The "entropic gravity" interpretation is W3.
 
-#### 7.5.4 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
+#### 7.4.4 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
 
 **Known Physics Background**: The standard cosmological paradigm holds that the large-scale structure of the universe originated from quantum fluctuations in the very early universe, stretched to cosmic scales by inflation. The seeds of galaxies are quantum in origin—connecting the smallest scales (quantum mechanics) to the largest (cosmology).
 
@@ -941,7 +941,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: The uniqueness theorem and amplitude properties are W1 strict. The structure formation window boundaries (0.28, 0.33) come from empirical cosmology (W2 input). The interpretation as "quantum fluctuations → structure formation" is W3.
 
-#### 7.5.5 Information Theory ↔ Gauge Theory: The Holographic Principle
+#### 7.4.5 Information Theory ↔ Gauge Theory: The Holographic Principle
 
 **Known Physics Background**: The holographic principle (exemplified by AdS/CFT duality) states that the entire information content of a d+1-dimensional gravitational system can be encoded on its d-dimensional boundary. This profound duality suggests that gauge theory and gravity (or information and geometry) are two equivalent descriptions of the same underlying structure.
 
@@ -956,7 +956,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: The cardinality bijection (8² = 4³ = 64) and the direction projection are W1 strict. The interpretation as a "holographic principle" or connection to "SU(2)×U(1)" is W3 conjecture. The genetic code correspondence (64 codons) is also W3.
 
-#### 7.5.6 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
+#### 7.4.6 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
 
 **Known Physics Background**: A closed quantum system exchanges no information with its environment; its evolution is described by unitary operators. This closure—system + environment = universe—implies that the universe as a whole must be a self-contained quantum system. But what does "closure" mean structurally, and how does a closed system acquire internal structure?
 
@@ -971,7 +971,7 @@ The preceding sections have established individual correspondences between CSQIT
 
 **Honest Labeling**: Both `input_must_be_empty` and `amplitude_norm_one` are W1 strict theorems. The interpretation as "closed quantum system" and "causal self-reference" is W3.
 
-#### 7.5.7 Summary Table of the Six Intersections
+#### 7.4.7 Summary Table of the Six Intersections
 
 | # | Physical Duality | Left Anchor (Theorem + File) | Right Anchor (Theorem + File) | Shared Root System | Honesty Level |
 |---|---|---|---|---|---|
@@ -1220,7 +1220,7 @@ Synthesizing all preceding layers of analysis—from **measurement ontology** (w
 
 **Three Layers of Cross-Validation**: CSQIT's validation structure operates at three independent levels, each reinforcing the others:
 - **§5.10 Internal mathematical cross-validation**: Within the axiomatic system itself, multiple independent structural pathways converge on the same numerical constant θ—algebraic derivation from EffectiveFin7Regularity, cubic equation uniqueness, and the extension spectrum sieve all point to p = 7.
-- **§7.5 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
+- **§7.4 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
 - **§9.6 Cross-validation between theory and observation**: The theoretical value θ ≈ 0.308 agrees with the Planck 2018 observed Ω_m ≈ 0.311 to within 0.97%, lying inside the 1σ confidence interval.
 
 These three layers—internal mathematical consistency, cross-disciplinary structural correspondence, and empirical agreement—form a nested validation architecture.
