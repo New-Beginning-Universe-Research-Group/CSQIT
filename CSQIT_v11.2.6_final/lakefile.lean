@@ -40,7 +40,7 @@ W1 — 形式化数学核心（严格定义与证明）
 
 W2 — 有效理论（应用模型与物理推导）
   Core/W2/
-    ScaleDynamics.lean       尺度动力学
+    ScaleDynamics.lean       尺度动力学（含 §6 离散变分原理，战略 2 修正版）
     B_V_Naturalness.lean     B/V自然性
     HDST.lean                高维时空
     ContinuumLimit.lean      连续极限
@@ -53,6 +53,9 @@ W2 — 有效理论（应用模型与物理推导）
     GravityDerivation.lean   引力推导
     GroupRepresentationData.lean 群表示数据
     GrowthAndSymmetry.lean   生长与对称
+    Fin7Uniqueness.lean      Fin 7 唯一性（G3 攻坚）
+    HolographicIsomorphism.lean 全息同构（G5 攻坚）
+    TotalSubsetPrinciple.lean 全集-子集原理形式化（战略 1 替代版）
     Models/
       EnhancedModels.lean    增强模型
       PeriodicTable.lean     元素周期表
@@ -65,6 +68,8 @@ W3 — 探索性框架（概念性与实验性内容）
     AtomicOperations.lean   原子操作分类
     UnifiedPicture.lean     综合解析：统一图景
     CyclicUniverse.lean     循环宇宙：无始无终的群论图景
+    ObserverFormalization.lean 观测者形式化与弱人择原理
+    Weaver.lean             Weaver（编织者）形式化（战略 3 修正版）
     Summary.lean            综合总结：生长的对称谱系
 
 Unified/Constants/  三锁统一闭包（核心成果层，W1完成态）
@@ -127,6 +132,7 @@ lean_lib CSQIT where
     `Core.W2.GrowthAndSymmetry,
     `Core.W2.Fin7Uniqueness,
     `Core.W2.HolographicIsomorphism,
+    `Core.W2.TotalSubsetPrinciple,
     `Core.W2.Models.EnhancedModels,
     `Core.W2.Models.PeriodicTable,
     `Core.W2.Models.FiniteWeavingExamples,
@@ -137,6 +143,7 @@ lean_lib CSQIT where
     `Core.W3.UnifiedPicture,
     `Core.W3.CyclicUniverse,
     `Core.W3.ObserverFormalization,
+    `Core.W3.Weaver,
     `Core.W3.Summary,
     -- ===== 三锁统一闭包（核心成果） =====
     `Unified.Constants.FineStructure,
@@ -149,5 +156,7 @@ lean_lib CSQIT where
     `Unified.Models.Magnetism,
     `Unified.Models.Conductivity,
     `Unified.Models.PhaseStates,
-    `Unified.Models.Transparency
+    `Unified.Models.Transparency,
+    -- ===== 物理映射函子（熔铸战略 5） =====
+    `Unified.Interpretation
   ]
