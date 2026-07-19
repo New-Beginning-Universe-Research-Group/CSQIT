@@ -601,66 +601,183 @@ firstVariation φ δφ = ∑ Δφ · Δ(δφ)
 
 这是二次多项式展开的一阶项系数。
 
-证明方法：用 HasDerivAt 显式构造导数。
-由于 variedAction 是 ε 的二次多项式 C₀ + ε·C₁ + ε²·C₂，
-其在 ε=0 处的导数为 C₁。
+证明方法：由 `variedAction_quadratic_expansion`，
+variedAction φ δφ ε = C₀ + ε·C₁ + ε²·C₂
+其中 C₀ = DiscreteAction φ, C₁ = ∑ Δφ·Δ(δφ), C₂ = DiscreteAction δφ。
 
-注：证明体使用 sorry，因为当前 Mathlib v4.29.0-rc6 中
-HasDerivAt 的乘法引理名称与预期不同。
-定理陈述已数学验证正确，证明体待后续修复。
+由 `deriv` 的线性性：
+d/dε [C₀ + ε·C₁ + ε²·C₂] |_{ε=0} = 0 + C₁ + 2·0·C₂ = C₁
+
+状态：🔵 W1 严格（基于 variedAction_quadratic_expansion + deriv 线性性）
 -/
 theorem firstVariation_explicit {M : Type*} [BoundedCausalLattice M] [Fintype M]
     (φ : Field M) (δφ : FieldVariation M) :
     firstVariation φ δφ =
     ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x := by
-  -- 数学证明：
+  -- 策略：用 variedAction_quadratic_expansion 重写 firstVariation
   -- variedAction φ δφ ε = DiscreteAction φ + ε·C₁ + ε²·DiscreteAction δφ
   -- 其中 C₁ = ∑ Δφ · Δ(δφ)
-  -- d/dε [C₀ + ε·C₁ + ε²·C₂] |_{ε=0} = C₁
-  -- 因为 ε² 的导数在 0 处为 0，常数的导数为 0，ε·C₁ 的导数为 C₁
-  --
-  -- 证明体待修复：需要正确的 HasDerivAt 乘法引理名称
-  sorry
+  -- firstVariation = deriv (fun ε => variedAction φ δφ ε) 0
+  --              = deriv (fun ε => C₀ + ε·C₁ + ε²·C₂) 0
+  --              = C₁（因为 ε² 在 0 处导数为 0）
+  unfold firstVariation
+  -- 用 variedAction_quadratic_expansion 重写
+  have h_expand : ∀ (ε : ℝ),
+      variedAction φ δφ ε =
+      DiscreteAction φ +
+      ε * (∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x) +
+      ε^2 * DiscreteAction δφ :=
+    fun ε => variedAction_quadratic_expansion φ δφ ε
+  -- 重写目标中的 variedAction
+  rw [show (fun ε => variedAction φ δφ ε) =
+        (fun ε => DiscreteAction φ +
+                  ε * (∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x) +
+                  ε^2 * DiscreteAction δφ) from
+        funext h_expand]
+  -- 现在计算 deriv (fun ε => C₀ + ε·C₁ + ε²·C₂) 0
+  -- 用 HasDerivAt 的线性性。直接内联 C₁ = ∑ x, ...，避免 let 绑定引起的模式匹配问题
+  -- C₀ 是常数，导数为 0
+  have h_dC0 : HasDerivAt (fun _ : ℝ => DiscreteAction φ) 0 0 :=
+    hasDerivAt_const 0 (DiscreteAction φ)
+  -- ε·C₁ 在 0 处的导数是 C₁（用 mul_const：f * c 的导数是 f' * c）
+  have h_dC1 : HasDerivAt
+      (fun ε : ℝ => ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x)
+      (1 * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x) 0 :=
+    (hasDerivAt_id (0 : ℝ)).mul_const _
+  -- ε²·C₂ 在 0 处的导数是 0（用 mul_const）
+  have h_dC2 : HasDerivAt (fun ε : ℝ => ε^2 * DiscreteAction δφ) (0 * DiscreteAction δφ) 0 := by
+    have h_eps2 : HasDerivAt (fun ε : ℝ => ε^2) 0 0 := by
+      have h := hasDerivAt_pow 2 (0 : ℝ)
+      simpa [pow_one, mul_zero] using h
+    exact h_eps2.mul_const (DiscreteAction δφ)
+  -- 组合：先 (ε·C₁ + ε²·C₂)，再 C₀ + (ε·C₁ + ε²·C₂)
+  have h_dC12 : HasDerivAt
+      (fun ε : ℝ =>
+        ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x +
+        ε^2 * DiscreteAction δφ)
+      (1 * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x +
+       0 * DiscreteAction δφ) 0 :=
+    HasDerivAt.add h_dC1 h_dC2
+  -- C₀ + (ε·C₁ + ε²·C₂)
+  have h_sum : HasDerivAt
+      (fun ε : ℝ =>
+        DiscreteAction φ +
+        (ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x +
+         ε^2 * DiscreteAction δφ))
+      (0 +
+       (1 * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x +
+        0 * DiscreteAction δφ)) 0 :=
+    HasDerivAt.add h_dC0 h_dC12
+  -- 提取导数：h_sum.deriv 给出 deriv 的方程
+  have h_deriv := h_sum.deriv
+  -- h_deriv : deriv (fun ε => DiscreteAction φ + (ε * ∑ x, ... + ε^2 * DiscreteAction δφ)) 0
+  --           = 0 + (1 * ∑ x, ... + 0 * DiscreteAction δφ)
+  -- 目标：deriv (fun ε => DiscreteAction φ + ε * ∑ x, ... + ε^2 * DiscreteAction δφ) 0 = ∑ x, ...
+  -- 注意：目标的函数是左结合 (a + b) + c，h_deriv 中是右结合 a + (b + c)，结合性不同
+  -- 用 funext 证明两函数相等，再 rw
+  have h_func_eq : ∀ (ε : ℝ),
+      DiscreteAction φ + ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x + ε^2 * DiscreteAction δφ
+      = DiscreteAction φ + (ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x + ε^2 * DiscreteAction δφ) := by
+    intro ε; ring
+  rw [show (fun ε : ℝ =>
+        DiscreteAction φ + ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x + ε^2 * DiscreteAction δφ)
+      = (fun ε : ℝ =>
+        DiscreteAction φ + (ε * ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x + ε^2 * DiscreteAction δφ))
+     from funext h_func_eq]
+  rw [h_deriv]
+  -- 现在目标：0 + (1 * ∑ x, ... + 0 * DiscreteAction δφ) = ∑ x, ...
+  -- 用 ring 处理代数恒等式（1*X = X, 0*Y = 0, X + 0 = X, 0 + X = X）
+  ring
 
-/-- **定理 6.5（主定理）：驻点 ⟺ 离散 Laplace 方程**
+/-- **定理 6.5a（单向）：Δφ = 0 ⟹ 驻点**
+
+如果 discreteLaplacian M φ = 0 对所有 x : M，则 φ 是 DiscreteAction 的驻点。
+
+这是 (⟸) 方向，数学上严格成立：
+- firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ 0 · Δ(δφ) = 0
+
+状态：🔵 W1 严格（证明体无 sorry）
+
+注意：反向（驻点 ⟹ Δφ = 0）**数学上不成立**。
+对于 S[φ] = ∑ (Δφ)²/2，驻点条件等价于 Δ²φ = 0（双拉普拉斯为零），
+而不是 Δφ = 0。详见 `stationary_iff_bilaplacian_zero`。
+-/
+theorem laplacian_zero_implies_stationary {M : Type*} [BoundedCausalLattice M] [Fintype M]
+    (φ : Field M) (h_lap_zero : ∀ x : M, discreteLaplacian M φ x = 0) :
+    isStationary φ := by
+  intro δφ h_boundary
+  -- firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ 0 · Δ(δφ) = 0
+  rw [firstVariation_explicit]
+  -- 每个 Δφ(x) = 0，所以每项 = 0 · Δ(δφ)(x) = 0，总和 = 0
+  apply Finset.sum_eq_zero
+  intro x _
+  rw [h_lap_zero x]
+  ring
+
+/-- **双拉普拉斯算子（Bilaplacian）**
+
+Δ²φ = Δ(Δφ)，双拉普拉斯算子。
+
+对于作用量 S[φ] = ∑ (Δφ)²/2，驻点条件是 Δ²φ = 0（而非 Δφ = 0）。
+这是变分原理的正确数学结论。
+-/
+noncomputable def bilaplacian {M : Type*} [BoundedCausalLattice M] [Fintype M]
+    (φ : Field M) (x : M) : ℝ :=
+  discreteLaplacian M (discreteLaplacian M φ) x
+
+/-- **定理 6.5b（主定理，修正版）：驻点 ⟺ 双拉普拉斯方程**
 
 场 φ 是 DiscreteAction 的驻点，当且仅当
-discreteLaplacian M φ = 0（对所有 x : M）。
+bilaplacian M φ = 0（对所有内部 x : M）。
 
 这是战略 2 的核心定理，将 G4 框架升级为真正的 W1 定理。
 
-证明思路：
-  (⟸) 假设 Δφ = 0，则 firstVariation φ δφ = ∑ 0 · Δ(δφ) = 0
-  (⟹) 假设 ∃ x, Δφ(x) ≠ 0，构造 δφ 使 firstVariation ≠ 0
+数学证明（基于离散 Green 恒等式）：
+  firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ δφ · Δ²φ（由 L 的自伴性）
+  驻点条件：∀ δφ (满足边界), ∑ δφ · Δ²φ = 0 ⟺ Δ²φ = 0（在内部点）
 
-  关键技巧：选择 δφ = discreteLaplacian M φ（即 δφ 与 Δφ 同号），
-  则 firstVariation φ δφ = ∑ (Δφ)² > 0，矛盾。
+状态：⚠️ W2 条件性
+  - (⟸) 方向待证明（需要 Green 恒等式）
+  - (⟹) 方向待证明（需要 Green 恒等式 + 反证法）
+  - 关键引理：discreteLaplacian 的自伴性（Green 恒等式）
+
+注意：原 `stationary_iff_laplacian_zero` 的陈述有误（应为 Δ²φ = 0，非 Δφ = 0）。
+本定理是数学正确的修正版。
 -/
-theorem stationary_iff_laplacian_zero {M : Type*} [BoundedCausalLattice M] [Fintype M]
+theorem stationary_iff_bilaplacian_zero {M : Type*} [BoundedCausalLattice M] [Fintype M]
     (φ : Field M) :
-    isStationary φ ↔ ∀ x : M, discreteLaplacian M φ x = 0 := by
-  constructor
-  · -- (⟹) 假设 isStationary φ，证明 Δφ = 0
-    intro h_stationary
-    -- 反证：假设 ∃ x, Δφ(x) ≠ 0
-    by_contra h_contra
-    push_neg at h_contra
-    obtain ⟨x0, h_x0_nonzero⟩ := h_contra
-    -- 选择 δφ = discreteLaplacian M φ
-    -- 这个 δφ 不一定满足边界条件，所以需要更精细的构造
-    -- 但对于反证，我们可以选择 δφ = Δφ，然后 firstVariation = ∑ (Δφ)²
-    -- 由于 ∑ (Δφ)² > 0（因为 ∃ x, (Δφ(x))² > 0），矛盾
-    -- 注：这里需要边界条件的处理，暂时用 sorry
-    sorry
-  · -- (⟸) 假设 Δφ = 0，证明 isStationary φ
-    intro h_lap_zero δφ h_boundary
-    -- firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ 0 · Δ(δφ) = 0
-    rw [firstVariation_explicit]
-    -- 每个 Δφ(x) = 0，所以每项 = 0 · Δ(δφ)(x) = 0，总和 = 0
-    apply Finset.sum_eq_zero
-    intro x _
-    rw [h_lap_zero x]
-    ring
+    isStationary φ ↔ ∀ x : M, x ≠ (⊥ : M) → x ≠ (⊤ : M) → bilaplacian φ x = 0 := by
+  -- 数学证明需要 discreteLaplacian 的自伴性（Green 恒等式）：
+  -- ∑_x Δf(x) · Δg(x) = ∑_x g(x) · Δ²f(x) + 边界项
+  -- 当 g 在边界为 0 时，边界项为 0，所以 ∑ Δf · Δg = ∑ g · Δ²f
+  --
+  -- (⟸) 假设 Δ²φ = 0，则 firstVariation = ∑ δφ · 0 = 0
+  -- (⟹) 假设驻点，反证 ∃ x0 (内部), Δ²φ(x0) ≠ 0，
+  --      取 δφ(x0) = Δ²φ(x0)，其他为 0，则 ∑ δφ · Δ²φ = (Δ²φ(x0))² > 0，矛盾
+  --
+  -- 完整形式化需要：
+  -- 1. 证明 discreteLaplacian 的自伴性（Green 恒等式）
+  -- 2. 处理边界条件（δφ 在 ⊥ 和 ⊤ 为 0）
+  -- 3. 构造反证所需的 δφ
+  sorry
+
+/-- **定理 6.5c（原 6.5 的修正注释）：原 stationary_iff_laplacian_zero 的数学修正**
+
+原定理 `stationary_iff_laplacian_zero`（驻点 ⟺ Δφ = 0）数学上不正确。
+
+正确陈述：
+  - (⟸) 方向成立：Δφ = 0 ⟹ 驻点（见 `laplacian_zero_implies_stationary`）
+  - (⟹) 方向不成立：驻点 ⇏ Δφ = 0（反例：调和函数 φ 使 Δφ = 常数 ≠ 0）
+
+对于作用量 S[φ] = ∑ (Δφ)²/2，正确的驻点条件是 Δ²φ = 0（见 `stationary_iff_bilaplacian_zero`）。
+
+本定理保留为占位，陈述已修正为单向：
+  Δφ = 0 ⟹ isStationary φ（即 laplacian_zero_implies_stationary 的重述）
+-/
+theorem stationary_iff_laplacian_zero_corrected {M : Type*} [BoundedCausalLattice M] [Fintype M]
+    (φ : Field M) :
+    (∀ x : M, discreteLaplacian M φ x = 0) → isStationary φ :=
+  laplacian_zero_implies_stationary φ
 
 /-- **离散 Euler-Lagrange 方程（框架形式）**
 
