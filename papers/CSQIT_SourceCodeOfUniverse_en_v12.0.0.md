@@ -88,18 +88,23 @@ CSQIT shares with causal set theory the structural intuition of "discrete causal
 
 ### 1.5 Structure of This Paper
 
-The paper proceeds from foundational axioms to cosmological implications, following a logical deductive chain:
+The paper proceeds from foundational axioms to cosmological implications, following a logical deductive chain organized around **three core pillars**:
 
+**Pillar 1: Structural Theorems**
 - **§2 Source Code**: The axiomatic system—defining the rules of the game
 - **§3 Duality Two-One Theorem**: The incompatibility of causal and informational aspects
 - **§4 Emergence of Causality**: Algebraic causal order—causality as an emergent property of algebraic structure
+
+**Pillar 2: Numerical Anchors**
 - **§5 Numerical Anchor**: Fin 7 model and cosmological characteristic constant θ—from structure to quantity
-- **§6 Scale Dynamics**: Projective compactification and gauge closure—time as a scale parameter
-- **§7 Arrow of Time**: Lattice-theoretic derivation of the second law of thermodynamics—the necessity of entropy increase
-- **§8 Intersection Network**: The cross-validation network of six physical dualities
-- **§9 Finiteness Boundary**: Fundamental limits of finite models—the boundary between knowable and unknowable
-- **§10 Honest Boundary**: Open problems and unfinished proofs
-- **§11 Epistemology**: The formal status of the internal observer
+
+**Pillar 3: Cross-Validation Network**
+- **§6 Intersection Network**: The cross-validation network of six physical dualities—scale dynamics, arrow of time, and the common root system
+
+**Boundaries and Epistemology**
+- **§7 Finiteness Boundary**: Fundamental limits of finite models—the boundary between knowable and unknowable
+- **§8 Honest Boundary**: Open problems and unfinished proofs
+- **§9 Epistemology**: The formal status of the internal observer
 
 ### 1.6 The Structural Gap Between Theory and Observation
 
@@ -433,6 +438,27 @@ This means: if the universe fundamentally has algebraic structure (which CSQIT's
 
 **Structural Significance (W1)**: Algebraic causal order downgrades causality from "axiom-level assumption" to "emergent property of algebraic structure"—causal past corresponds to generated subgroup, causal closure corresponds to subgroup closure, and hierarchical weaving corresponds to subgroup lattice. This provides the algebraic foundation for Fin 7 and the cosmological constant θ.
 
+### 4.8 Three-Pillar Navigation: Three Core Contributions of CSQIT
+
+With the first pillar (structural theorems) fully established, the following chapters unfold the three core contributions of CSQIT in sequence:
+
+**Pillar 1: Structural Theorems (§3–§4)**
+—— Duality Two-One Theorem: the causal aspect and information aspect cannot both be non-trivial (the discrete complementarity principle)
+—— Algebraic Causal Order: causality is an emergent property of algebraic structure, not a fundamental assumption
+—— Causal Self-Reference Theorem: all rules have empty input, the structure is entirely self-referential
+
+**Pillar 2: Numerical Anchors (§5)**
+—— Fin 7 selection: why 7 and not other primes
+—— θ ≈ 0.308: the correspondence between the duality parameter and matter density
+—— Three-lock constants 20:111:289: the cosmological ratio of baryonic / dark matter / dark energy
+
+**Pillar 3: Cross-Validation Network (§6)**
+—— Six physical dualities simultaneously emerge from the same axiomatic root system
+—— Quantum ↔ Thermodynamics, GR ↔ Quantum, Thermodynamics ↔ GR, Quantum ↔ Cosmology, Information ↔ Gauge, Quantum ↔ Information Theory
+—— Common root system, network resilience, and closure argument
+
+§7–§9 discuss the finiteness boundary, honesty boundary, and epistemological status respectively.
+
 ---
 
 ## 5. Numerical Anchor: Fin 7 Model and Cosmological Characteristic Constant
@@ -732,9 +758,15 @@ A universe with only a quadratic extension structure ($p=5$, golden ratio), alth
 
 ---
 
-## 6. Scale Dynamics: Projective Compactification and Gauge Closure
+## 6. The Intersection Network of Physical Laws
 
-### 6.1 Time as Scale, Not Dimension
+The preceding sections have established individual correspondences between CSQIT and specific physical laws—quantum unitarity, thermodynamic entropy increase, the past hypothesis, and so on. Each correspondence, taken individually, could be dismissed as a structural coincidence. However, a deeper pattern emerges when we examine how CSQIT simultaneously anchors **both ends** of multiple well-established physical dualities. These six intersection points, each independently grounded in the same axiomatic root system, form a cross-validation network whose collective strength far exceeds the sum of its parts.
+
+**Methodological Note (W3)**: The strategy here is not to claim that CSQIT "unifies all physics," but rather to demonstrate that the discrete causal-information framework naturally intersects with known physical laws at multiple structurally deep points. Each intersection is an independent anchor; together they constitute a coherent structural web.
+
+### 6.1 Scale Dynamics and the Arrow of Time (Physical Background)
+
+#### 6.1.1 Scale Dynamics: Time as a Refinement Parameter
 
 **Definition**: For a refinement sequence $M_n$ with lattice spacing $\delta_n$:
 
@@ -747,108 +779,40 @@ $$t(n) = -\log \delta_n$$
 \text{Spacetime} = 3 + 1 \iff \text{stable closure of cubic extension (3)} + \text{projective tracking scale (1)}
 \]
 
-In everyday language, "the passage of time" translates in the CSQIT framework to: the weaving structure of the causal lattice continuously approaches the projective circle along the refinement sequence, and the process of $s(n) = 2\pi n/(n+1) \to 2\pi$ is perceived as time by internal observers.
-
-### 6.2 Unified Action
-
-**Definition**: The total action is the sum of three components:
+**Unified Action**: The total action is the sum of three components:
 
 $$S_{\text{total}} = S_{\text{geo}} + S_{\text{phase}} + S_{\text{weave}}$$
 
 where:
+- $S_{\text{geo}} = \sum_x \text{area}(x) \cdot \delta(x)$ (Regge curvature, corresponds to Einstein-Hilbert / Gravity)
+- $S_{\text{phase}} = \sum_{\text{chains}} \arg\left(\prod_{c \in \text{chain}} \text{amplitude}(c)\right)$ (phase accumulation, corresponds to Quantum action / Quantum mechanics)
+- $S_{\text{weave}} = \sum_{\alpha,\beta} \mathbf{1}_{\text{compose}(\alpha,\beta) \neq \text{compose}(\beta,\alpha)}$ (non-commutativity, corresponds to Yang-Mills / Gauge symmetry)
 
-$$S_{\text{geo}} = \sum_x \text{area}(x) \cdot \delta(x) \quad \text{(Regge curvature)}$$
+**Projective Circle Compactification** (`projectiveScale`, ScaleDynamics.lean):
 
-$$S_{\text{phase}} = \sum_{\text{chains}} \arg\left(\prod_{c \in \text{chain}} \text{amplitude}(c)\right) \quad \text{(phase accumulation)}$$
+$$s(n) = 2\pi n / (n+1)$$
 
-$$S_{\text{weave}} = \sum_{\alpha,\beta} \mathbf{1}_{\text{compose}(\alpha,\beta) \neq \text{compose}(\beta,\alpha)} \quad \text{(non-commutativity)}$$
+Key properties (W1): strictly increasing, always less than $2\pi$ for finite $n$, converging to $2\pi$ as $n \to \infty$. Infinity is not a boundary, but a cycle—the topological reason for the universal appearance of $\pi$ in physical constants.
 
-**Correspondence** (W2/W3 layer interpretation):
+**SU(3) Cartan Generators**: The Cartan subalgebra of $su(3)$ emerges naturally from the root system structure of Fin 7. The complete $SU(3) \times SU(2) \times U(1)$ derivation remains an open problem (W3; AxiomH is currently only a type-signature placeholder).
 
-| Component | Continuum Limit Counterpart | Physical Domain |
-|:---:|:---:|:---:|
-| $S_{\text{geo}}$ | Einstein-Hilbert | Gravity |
-| $S_{\text{phase}}$ | Quantum action | Quantum mechanics |
-| $S_{\text{weave}}$ | Yang-Mills | Gauge symmetry |
+**Honest Labeling**: The strict proof of the variational principle $\delta S_{\text{total}}/\delta t = 0$ is currently an open problem (G4 framework completed).
 
-**Honest Labeling**: The strict proof of the variational principle $\delta S_{\text{total}}/\delta t = 0$ is currently an open problem (see §10.3, G4 framework completed).
+#### 6.1.2 Arrow of Time: Lattice-Theoretic Derivation of the Second Law
 
-### 6.3 Projective Circle Compactification
+**Causal Entropy Definition**: $S(x) = |\text{causalPast}(x)|$—the number of events in the causal past of event $x$.
 
-**Definition** (ScaleDynamics.lean):
+**Second Law (Discrete Version, W1)** (`causalEntropy_monotone`, ThermodynamicArrow.lean): Causal entropy is monotonically non-decreasing along the causal order.
 
-```lean
-def projectiveScale (n : ℕ) : ℝ :=
-  2 * Real.pi * (n : ℝ) / ((n : ℝ) + 1)
-```
-
-**Theorems** (W1 layer):
-- `projectiveScale_strictMono`: $s(n)$ is strictly increasing
-- `projectiveScale_lt_two_pi`: For all finite $n$, $s(n) < 2\pi$
-
-As $n \to \infty$, $s(n) \to 2\pi$—"the infinite future" becomes a closed point on the circle.
-
-**Interpretation (W3)**: Infinity is not a boundary, but a cycle. This is the topological reason for the universal appearance of $\pi$ in physical constants.
-
-### 6.4 SU(3) Cartan Generators
-
-**Definition**:
-
-```lean
-def cartanGenerator (k : Fin 3) : Matrix (Fin 3) (Fin 3) ℝ :=
-  Matrix.diagonal $
-    match k with
-    | 0 => ![1, -1, 0]
-    | 1 => ![0, 1, -1]
-    | 2 => ![-1, 0, 1]
-```
-
-**Theorem** (`cartan_generators_commute`, W1 layer): The Cartan generators commute pairwise.
-
-**Proof**: Diagonal matrix multiplication is commutative. $\square$
-
-**Interpretation**: The Cartan subalgebra of $su(3)$ emerges naturally from the root system structure of Fin 7. The complete $SU(3) \times SU(2) \times U(1)$ derivation is an open problem (W3, see §2.5 AxiomH Status Note: AxiomH is currently only a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum).
-
-**Structural Significance (W3)**: The understanding of time as scale emerges naturally from the refinement sequence $s(n)=2\pi n/(n+1)$. It is not an additional assumption—it is the scalar tracking parameter of the causal lattice's advancement from finite to infinite. The "1" in the 3+1 structure is not a fourth dimension, but the tracking dimension of projective compactification. The gauge symmetry (SU(3)), as a projection of the Fin 7 root system, provides a structural link to the standard model's gauge sector.
-
----
-
-## 7. Arrow of Time: Lattice-Theoretic Derivation of the Second Law of Thermodynamics
-
-### 7.1 Causal Entropy
-
-**Definition**: $S(x) = |\text{causalPast}(x)|$—the number of events in the causal past of event $x$.
-
-### 7.2 Second Law (Discrete Version, W1 Layer)
-
-**Theorem** (`second_law_causal_is_theorem`, ThermodynamicArrow.lean): Causal entropy is monotonically non-decreasing along the causal order.
-
-```lean
-theorem causalEntropy_monotone {x y : M} (h : x ≤ y) :
-    causalEntropy x ≤ causalEntropy y
-```
+$$x \leq y \implies S(x) \leq S(y)$$
 
 **Proof**: If $x \leq y$, then $\text{causalPast}(x) \subseteq \text{causalPast}(y)$. The cardinality of a subset of a finite set does not exceed that of the original set. $\square$
 
-### 7.3 Past Hypothesis (W1 Layer)
+**Past Hypothesis (W1)** (`past_hypothesis_is_theorem`): There exists a minimum element $\bot$ such that for all $x$, $S(\bot) \leq S(x)$.
 
-**Theorem** (`past_hypothesis_is_theorem`): There exists a minimum element $\bot$ such that for all $x$, $S(\bot) \leq S(x)$.
+**Interpretation (W3)**: The past hypothesis (the universe began in a low-entropy state) is not a boundary condition—it is a **mathematical theorem** of bounded causal lattices. The arrow of time is not externally imposed, but an intrinsic property of the causal lattice. Entropy increase and projective compactification together form two structural pillars: one connecting to thermodynamics, the other to cosmology.
 
-**Proof**: Take $x_0 = \bot$. By `bot_le`, $\bot \leq x$. By monotonicity, $S(\bot) \leq S(x)$. $\square$
-
-**Interpretation (W3)**: The past hypothesis (the universe began in a low-entropy state) is not a boundary condition—it is a **mathematical theorem** of bounded causal lattices.
-
-**Structural Significance (W1)**: The past hypothesis is not a boundary condition—it is a theorem derived from the lattice structure of bounded causal lattices. The arrow of time is not externally imposed, but an intrinsic property of the causal lattice. Entropy increase and projective compactification together form two structural pillars: one connecting to thermodynamics, the other to cosmology.
-
----
-
-## 8. The Intersection Network of Physical Laws
-
-The preceding sections have established individual correspondences between CSQIT and specific physical laws—quantum unitarity, thermodynamic entropy increase, the past hypothesis, and so on. Each correspondence, taken individually, could be dismissed as a structural coincidence. However, a deeper pattern emerges when we examine how CSQIT simultaneously anchors **both ends** of multiple well-established physical dualities. These six intersection points, each independently grounded in the same axiomatic root system, form a cross-validation network whose collective strength far exceeds the sum of its parts.
-
-**Methodological Note (W3)**: The strategy here is not to claim that CSQIT "unifies all physics," but rather to demonstrate that the discrete causal-information framework naturally intersects with known physical laws at multiple structurally deep points. Each intersection is an independent anchor; together they constitute a coherent structural web.
-
-### 8.1 Meta-Structure of the Intersection Matrix: Why a Network, Not a List
+### 6.2 Meta-Structure of the Intersection Matrix: Why a Network, Not a List
 
 The simultaneous anchoring of six physical dualities derives its persuasive force not from quantity, but from their logical dependency structure. These six intersections are not independent discoveries but projections of the same axiomatic root system (AxiomA–J) onto different branches.
 
@@ -856,7 +820,7 @@ The tree-like dependency structure: AxiomA–J forms the root, which bifurcates 
 
 This network structure means: challenging the physical interpretation of any one intersection does not affect the mathematical validity of the W1 theorems underpinning the other intersections. To overthrow the entire cross-validation network, one must find a logical contradiction within AxiomA–J itself. This is precisely the advantage of a "network" over a "list": it is not six independent coincidences, but six branches necessarily growing from the same root.
 
-### 8.2 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
+### 6.3 Quantum Mechanics ↔ Thermodynamics: Unitarity and Entropy Increase
 
 **Known Physics Background**: The apparent tension between quantum unitarity (reversible, information-preserving evolution) and the second law of thermodynamics (irreversible entropy increase) has been a foundational problem since Boltzmann. The standard resolution involves decoherence, coarse-graining, and the arrow of time—but the two principles remain seemingly opposed at the fundamental level.
 
@@ -871,7 +835,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: Both anchors are W1-level strict theorems. The interpretation that they correspond to "quantum unitarity" and "the second law" is W3-level physical interpretation.
 
-### 8.3 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
+### 6.4 General Relativity ↔ Quantum Mechanics: Black Hole Thermodynamics
 
 **Known Physics Background**: Bekenstein-Hawking entropy $S = A/(4G\hbar)$ reveals a profound connection between general relativity (horizon area) and quantum mechanics (information/entropy). This area law is one of the strongest hints about quantum gravity, suggesting that the information content of a gravitational system is encoded on its boundary.
 
@@ -886,7 +850,28 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The boundary definition and θ = B/V ratio are W1-level strict. The discrete entropy-area law is at the W1/W2 boundary (AppendixD, not in main build). The zeroth, first, and third laws of black hole thermodynamics remain as `True` placeholders, explicitly labeled as unformalized. The physical interpretation as "black hole thermodynamics" is W3.
 
-### 8.4 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
+### 6.5 The Common Root System: Axiomatic Dependency Structure
+
+The six physical dualities are not independent discoveries, but projections of the same axiomatic root system (AxiomA–J) onto different directions. The dependency structure is as follows:
+
+                    AxiomA – J (10 axioms)
+                          │
+            ┌─────────────┼─────────────┐
+            │             │             │
+        AxiomB        AxiomC       AxiomD – J
+        Causal Order   Amplitude   Weaving/Dynamics
+            │             │             │
+     ┌──────┘        ┌────┘        ┌────┴────┐
+     │               │             │         │
+  Entropy anchor  Unitarity anchor Gravity   Holographic
+                   anchor          anchor    anchor
+     │               │             │         │
+  Thermo↔GR      Quantum↔Thermo   GR↔Q      Info↔Gauge
+  Quantum↔Cosmo   Quantum↔Info
+
+**Network Resilience**: Challenging the physical interpretation of any one intersection does not affect the mathematical validity of the W1 theorems underpinning the other intersections. To overthrow the entire network, one must find a logical contradiction at the core level of AxiomA–J.
+
+### 6.6 Thermodynamics ↔ General Relativity: Entropic Gravity and Jacobson's Derivation
 
 **Known Physics Background**: Jacobson's 1995 derivation showed that Einstein's field equations can be obtained from the proportionality between entropy and horizon area, together with the first law of thermodynamics. This suggests that gravity may be a thermodynamic state equation—an emergent phenomenon of underlying microscopic degrees of freedom.
 
@@ -901,7 +886,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The thermodynamic end (entropy monotonicity, past hypothesis) is W1 strict. The GR end (Regge → EH convergence) is W2 conditional, relying on EffectiveFin7Regularity and dimensional recursion assumptions. The gravitational constant derivation is W1. The "entropic gravity" interpretation is W3.
 
-### 8.5 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
+### 6.7 Quantum Mechanics ↔ Cosmology: Quantum Fluctuations and Structure Formation
 
 **Known Physics Background**: The standard cosmological paradigm holds that the large-scale structure of the universe originated from quantum fluctuations in the very early universe, stretched to cosmic scales by inflation. The seeds of galaxies are quantum in origin—connecting the smallest scales (quantum mechanics) to the largest (cosmology).
 
@@ -916,7 +901,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The uniqueness theorem and amplitude properties are W1 strict. The structure formation window boundaries (0.28, 0.33) come from empirical cosmology (W2 input). The interpretation as "quantum fluctuations → structure formation" is W3.
 
-### 8.6 Information Theory ↔ Gauge Theory: The Holographic Principle
+### 6.8 Information Theory ↔ Gauge Theory: The Holographic Principle
 
 **Known Physics Background**: The holographic principle (exemplified by AdS/CFT duality) states that the entire information content of a d+1-dimensional gravitational system can be encoded on its d-dimensional boundary. This profound duality suggests that gauge theory and gravity (or information and geometry) are two equivalent descriptions of the same underlying structure.
 
@@ -931,7 +916,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: The cardinality bijection (8² = 4³ = 64) and the direction projection are W1 strict. The interpretation as a "holographic principle" or connection to "SU(2)×U(1)" is W3 conjecture. The genetic code correspondence (64 codons) is also W3.
 
-### 8.7 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
+### 6.9 Quantum Mechanics ↔ Information Theory: Closure and Causal Self-Reference
 
 **Known Physics Background**: A closed quantum system exchanges no information with its environment; its evolution is described by unitary operators. This closure—system + environment = universe—implies that the universe as a whole must be a self-contained quantum system. But what does "closure" mean structurally, and how does a closed system acquire internal structure?
 
@@ -946,7 +931,7 @@ This network structure means: challenging the physical interpretation of any one
 
 **Honest Labeling**: Both `input_must_be_empty` and `amplitude_norm_one` are W1 strict theorems. The interpretation as "closed quantum system" and "causal self-reference" is W3.
 
-### 8.8 Closure Argument of Cross-Validation
+### 6.10 Closure Argument of Cross-Validation
 
 | # | Physical Duality | Left Anchor (Theorem + File) | Right Anchor (Theorem + File) | Shared Root System | Honesty Level |
 |---|---|---|---|---|---|
@@ -971,11 +956,11 @@ This network structure means: challenging the physical interpretation of any one
 
 ---
 
-## 9. Finiteness Boundary: Fundamental Limits of Finite Models
+## 7. Finiteness Boundary: Fundamental Limits of Finite Models
 
 Formalized verification reveals not only what is true, but also what is **impossible**. This chapter discusses the structural limitations of finite models.
 
-### 9.1 Finite Evolution Trade-off (W1 Layer)
+### 7.1 Finite Evolution Trade-off (W1 Layer)
 
 **Theorem** (`finite_evolve_tradeoff`, EnhancedModels.lean): On a finite linearly ordered set, any map satisfying $x \leq f(x)$ must have a fixed point.
 
@@ -985,7 +970,7 @@ This is a profound **structural trade-off**:
 - Finite + locally finite → trivial dynamics
 - Non-trivial dynamics → requires infinity → may break local finiteness
 
-### 9.2 Total Order Finiteness Theorem (W1 Layer)
+### 7.2 Total Order Finiteness Theorem (W1 Layer)
 
 **Theorem** (`no_infinite_locally_finite_total_order`, OpenProblems.lean): Under total-order causal partial order, local finiteness forces global finiteness.
 
@@ -993,7 +978,7 @@ This is a profound **structural trade-off**:
 
 **Interpretation**: A total-order universe is necessarily finite. This is a profound structural constraint.
 
-### 9.3 Significance of the Limitations
+### 7.3 Significance of the Limitations
 
 These impossibility theorems are not negative—they are positive guides:
 
@@ -1003,15 +988,15 @@ These impossibility theorems are not negative—they are positive guides:
 
 These limitations outline the boundary of "possible universes"—and CSQIT lies precisely on this boundary.
 
-These formalized proof limitations, together with the cognitive boundaries discussed in §10, define the complete possibility space of CSQIT: the former are negative results of mathematical structure, the latter are honest labels of cognitive levels.
+These formalized proof limitations, together with the cognitive boundaries discussed in §8, define the complete possibility space of CSQIT: the former are negative results of mathematical structure, the latter are honest labels of cognitive levels.
 
 **Structural Boundary (W1)**: These impossibility theorems define the external boundary of CSQIT's structural framework—the real universe must lie on the boundary of "finite local + infinite global." CSQIT is precisely positioned on this boundary. Structures within the boundary are mathematically necessary; everything beyond the boundary is impossible.
 
 ---
 
-## 10. Honest Boundary: Open Problems and Unfinished Proofs
+## 8. Honest Boundary: Open Problems and Unfinished Proofs
 
-### 10.1 W1/W2/W3 Hierarchy
+### 8.1 W1/W2/W3 Hierarchy
 
 We strictly distinguish three epistemic levels:
 
@@ -1041,7 +1026,7 @@ We strictly distinguish three epistemic levels:
 | $SU(3) \times SU(2) \times U(1)$ emergence | W3 | Derived physical law | ⚠️ Conjecture (AxiomH is placeholder) |
 | Fin 7 selection principle | W3 | Numerical anchor | ⚠️ Open problem |
 
-### 10.2 Precise Formulation of the Information Causality Bound
+### 8.2 Precise Formulation of the Information Causality Bound
 
 **AxiomI** defines the causal monotonicity of entropy:
 
@@ -1058,7 +1043,7 @@ We **do not claim** to have proven the Bekenstein bound (the area law of black h
 
 The connection between the two—if it exists—is a W2/W3-layer open problem.
 
-### 10.3 Open Problems List
+### 8.3 Open Problems List
 
 All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with no unproven assertions disguised as theorems.
 
@@ -1098,11 +1083,11 @@ All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with 
 
 G1–G5 are the core progress of the W2-layer offensive in v11.7.0. G1, G3, and G5 have reached W1 strict proof; G2 and G4 have established frameworks and completed conditional theorems, with remaining strictification work to continue.
 
-### 10.4 Sorry Audit: Formalization Status
+### 8.4 Sorry Audit: Formalization Status
 
 All core W1 theorems are machine-verified with no `sorry`—3340 compilation tasks pass with 0 errors. The codebase comprises ~39,000 lines of formal code across 63 compiled Lean modules. The 5 intentionally retained `sorry` in `cyclic_stable_substructure` serve as honestly labeled counterexamples (mathematically impossible, not unfinished). W2/W3 layers contain open problems and framework-level results, all explicitly labeled.
 
-### 10.5 Status of Derived Laws and Appendices
+### 8.5 Status of Derived Laws and Appendices
 
 The CSQIT codebase contains two categories of supplementary materials: `DerivedLaws/` (23 files) and `Appendices/` (5 files). This section explicitly states their cognitive status.
 
@@ -1130,14 +1115,14 @@ These placeholders are declared in `True` form, indicating "this proposition has
 
 **Future Work**: Incorporating `DerivedLaws/` and `Appendices/` into the main build, gradually eliminating True placeholders and completing strict formalization, is one of the main directions for future versions of CSQIT.
 
-### 10.6 Four Closure Loops and the Unitary Closure Thesis
+### 8.6 Four Closure Loops and the Unitary Closure Thesis
 
 Synthesizing all preceding layers of analysis—from **measurement ontology** (weaving extension), **algebraic number theory** (3/5/7 and the 3×3 affine plane), **combinatorial evolution** (order jumps and causal closure), to **formalized code** (Lean 4 proofs and models)—we now collide them with the **actual universe (Planck 2018 data)** to derive a unified field-level precise conclusion.
 
 **Three Layers of Cross-Validation**: CSQIT's validation structure operates at three independent levels, each reinforcing the others:
 - **§5.10 Internal mathematical cross-validation**: Within the axiomatic system itself, multiple independent structural pathways converge on the same numerical constant θ—algebraic derivation from EffectiveFin7Regularity, cubic equation uniqueness, and the extension spectrum sieve all point to p = 7.
-- **§9 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
-- **§10.6 Cross-validation between theory and observation**: The theoretical value θ ≈ 0.308 agrees with the Planck 2018 observed Ω_m ≈ 0.311 to within 0.97%, lying inside the 1σ confidence interval.
+- **§6 Cross-validation between physics branches**: The axiomatic framework simultaneously anchors both ends of six known physical dualities (quantum↔thermodynamics, GR↔quantum, thermodynamics↔GR, quantum↔cosmology, information↔gauge, quantum↔information theory). No single challenge can pierce this network.
+- **§8.6 Cross-validation between theory and observation**: The theoretical value θ ≈ 0.308 agrees with the Planck 2018 observed Ω_m ≈ 0.311 to within 0.97%, lying inside the 1σ confidence interval.
 
 These three layers—internal mathematical consistency, cross-disciplinary structural correspondence, and empirical agreement—form a nested validation architecture.
 
@@ -1201,7 +1186,7 @@ Substituting the four closure loops into the CSQIT axiomatic system, we obtain t
 
 **Structural Synthesis (W3)**: The four closure loops are not juxtaposed, but four structural consequences derived from the same axiomatic foundation. They share the same algebraic base (Fin 7 / Fin 8), manifesting as different physical phenomena at their respective scales. This is an objective observation of cross-scale holographic isomorphism—the same underlying structure produces different manifestations, but the algebraic foundation remains the same.
 
-### 10.7 Hierarchical Labeling of the Intersection Matrix
+### 8.7 Hierarchical Labeling of the Intersection Matrix
 
 The proof hierarchy distribution of the 12 anchor points across the six intersections:
 
@@ -1222,7 +1207,7 @@ The proof hierarchy distribution of the 12 anchor points across the six intersec
 
 ---
 
-## 11. Epistemology: Formal Status of the Internal Observer
+## 9. Epistemology: Formal Status of the Internal Observer
 
 The contributions of CSQIT manifest at three mutually reinforcing levels:
 
@@ -1234,7 +1219,7 @@ The contributions of CSQIT manifest at three mutually reinforcing levels:
 
 The third-level contribution is particularly critical: **CSQIT is not "aligning" with individual physical laws, but reproducing the deep structural relationships known to exist between physical theories.** The strength of this "inter-theoretic cross-validation" far exceeds the coincidence probability of single-point correspondence.
 
-### 11.1 Established Formal Results
+### 9.1 Established Formal Results
 
 The following results are formally proven in Lean 4:
 
@@ -1247,7 +1232,7 @@ The following results are formally proven in Lean 4:
 7. **Total-Subset Principle (new in v11.7.0)**: EffectiveFin7Regular is unsatisfiable on finite lattices (`finite_lattice_cannot_satisfy_EffectiveFin7Regular`); the irrationality of $k_{\text{out}}$ is strictly proven (`k_out_is_irrational`).
 8. **Fin 7 Uniqueness (new in v11.7.0)**: Theorems such as `fin7_unique_satisfying_both_constraints` prove the uniqueness of Fin 7 satisfying the dual constraints.
 
-### 11.2 Structural Correspondence
+### 9.2 Structural Correspondence
 
 The following structural correspondences hold at different levels:
 
@@ -1258,14 +1243,14 @@ The following structural correspondences hold at different levels:
 - **Chemical level**: Carbon's sp³ hybridization and the four-fold symmetry of direction 4
 - **Biological level**: Correspondence between the 4 DNA bases and the tetrahedron vertex directions
 
-### 11.3 Empirical Anchor
+### 9.3 Empirical Anchor
 
 The numerical relationship between θ ≈ 0.308 and Ω_m = 0.311:
 - This constant is derived deductively from zero information-theoretic axioms, with zero free parameters in the gravitational and cosmological sectors ($\Omega_m = \theta$ is the only interpretive assumption)
 - The relative deviation from the Planck 2018 observed value is 0.97%, lying within the 1σ confidence interval of the measurement ($\Omega_m = 0.311 \pm 0.006$)
 - This correspondence constitutes a W2/W3-layer physical correspondence postulate, not a W1-layer theorem
 
-### 11.4 Epistemic Status of the Internal Observer
+### 9.4 Epistemic Status of the Internal Observer
 
 The CSQIT axiomatic system defines the structure of a causal weaving lattice. In this structure, the observer is not an externally presupposed subject, but a set of nodes within the weaving lattice.
 
@@ -1275,7 +1260,7 @@ The epistemic constraint derived from this is:
 
 The cubic nonlinear structure of Fin 7 makes irreversible recording possible—this is the algebraic prerequisite for "questioning" and "memory." The golden ratio structure of Fin 5 only supports reversible oscillation, unable to accumulate history.
 
-### 11.5 Boundaries of the Framework
+### 9.5 Boundaries of the Framework
 
 The boundaries of the current formalized system are defined by the following conditions:
 
@@ -1283,7 +1268,7 @@ The boundaries of the current formalized system are defined by the following con
 - **Effective theory (W2)**: Bekenstein-Verlinde correspondence, dark matter/dark energy classification, gauge symmetry emergence (AxiomH still a placeholder)
 - **Physical interpretation (W3)**: Physical correspondence postulate of θ and Ω_m, time as scale parameter, cross-scale structural isomorphism
 
-### 11.6 The Complete Deductive Chain
+### 9.6 The Complete Deductive Chain
 
 The logical deductive chain of CSQIT, from axiomatic foundations to observer self-cognition, proceeds as follows:
 
@@ -1395,7 +1380,7 @@ All dependencies are managed through `lakefile.lean` and `lean-toolchain`. The c
 | Appendices/ (not in main build) | ~700 | 5 files, including 3 True placeholders |
 | **Codebase total (v11.6.0)** | **~39,000** | **63 compiled modules + 28 supplementary files** |
 
-**Note**: v11.7.0 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §10.5 for details).
+**Note**: v11.7.0 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §8.5 for details).
 
 ---
 
