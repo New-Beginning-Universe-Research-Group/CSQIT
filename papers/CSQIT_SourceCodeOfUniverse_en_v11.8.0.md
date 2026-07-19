@@ -1214,7 +1214,7 @@ These placeholders are declared in `True` form, indicating "this proposition has
 
 **Future Work**: Incorporating `DerivedLaws/` and `Appendices/` into the main build, gradually eliminating True placeholders and completing strict formalization, is one of the main directions for future versions of CSQIT.
 
-### 9.6 Three Closure Loops and the Unitary Closure Thesis
+### 9.6 Four Closure Loops and the Unitary Closure Thesis
 
 Synthesizing all preceding layers of analysis—from **measurement ontology** (weaving extension), **algebraic number theory** (3/5/7 and the 3×3 affine plane), **combinatorial evolution** (order jumps and causal closure), to **formalized code** (Lean 4 proofs and models)—we now collide them with the **actual universe (Planck 2018 data)** to derive a unified field-level precise conclusion.
 
