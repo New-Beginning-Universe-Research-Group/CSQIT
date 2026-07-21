@@ -2,8 +2,8 @@
 ================================================================================
 CSQIT — 尺度动力学 —— 三线汇聚与统一变分原理
 文件: Core/W2/ScaleDynamics.lean
-版本: v11.2.4
-日期: 2026-07-02
+版本: v11.2.6
+日期: 2026-07-21
 
 ================================================================================
 模块概要
@@ -73,8 +73,7 @@ def d_dt (O : ℕ → ℝ) (n : ℕ) (dt : ℝ) : ℝ :=
 -/
 def discreteLaplacian (M : Type*) [BoundedCausalLattice M] [Fintype M]
     (f : M → ℝ) (x : M) : ℝ :=
-  let s := {y : M | isImmediateSuccessor x y} ∪ {y : M | isImmediateSuccessor y x}
-  ∑ y ∈ s.toFinset, (f y - f x)
+  ∑ y ∈ ({y : M | isImmediateSuccessor x y} ∪ {y : M | isImmediateSuccessor y x}).toFinset, (f y - f x)
 
 /--
 **出度（因果度）**：顶点 x 的直接后继数量。
@@ -725,41 +724,184 @@ noncomputable def bilaplacian {M : Type*} [BoundedCausalLattice M] [Fintype M]
     (φ : Field M) (x : M) : ℝ :=
   discreteLaplacian M (discreteLaplacian M φ) x
 
+/-- **邻域关系**：x 和 y 是邻居当且仅当一个是另一个的直接后继 -/
+def isNeighbor {M : Type*} [BoundedCausalLattice M] (x y : M) : Prop :=
+  isImmediateSuccessor x y ∨ isImmediateSuccessor y x
+
+/-- 邻域关系的对称性 -/
+lemma isNeighbor_symmetric {M : Type*} [BoundedCausalLattice M] (x y : M) :
+    isNeighbor x y ↔ isNeighbor y x := by
+  unfold isNeighbor; tauto
+
+/-- discreteLaplacian 的展开形式：在全域上的条件求和 -/
+lemma discreteLaplacian_eq {M : Type*} [BoundedCausalLattice M] [Fintype M]
+    (f : M → ℝ) (x : M) :
+    discreteLaplacian M f x =
+    ∑ y : M, if isNeighbor x y then f y - f x else 0 := by
+  unfold discreteLaplacian isNeighbor
+  have h_filter : ({y : M | isImmediateSuccessor x y} ∪ {y : M | isImmediateSuccessor y x}).toFinset =
+                   Finset.univ.filter (fun y => isImmediateSuccessor x y ∨ isImmediateSuccessor y x) := by
+    ext y; simp
+  simp only [h_filter, Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro y _
+  simp
+
+/-- **离散 Green 恒等式（分部积分）**：∑ f·Δg = ∑ g·Δf
+
+数学证明：展开 Δf(x) = ∑_{y∈N(x)} (f(y) - f(x))，
+利用邻域关系对称性（y∈N(x) ⟺ x∈N(y)），
+交换求和后每对 (x,y) 和 (y,x) 的贡献互相抵消。
+-/
+lemma discrete_green_identity {M : Type*} [BoundedCausalLattice M] [Fintype M]
+    (f g : M → ℝ) :
+    ∑ x : M, f x * discreteLaplacian M g x = ∑ x : M, g x * discreteLaplacian M f x := by
+  simp only [discreteLaplacian_eq, Finset.mul_sum]
+  -- 关键引理：每对 (x,y) 的差分形式 A(x,y) = B(x,y) - B(y,x)
+  -- 其中 B(x,y) = if isNeighbor x y then f x * g y else 0
+  have h_key : ∀ (x y : M),
+      f x * (if isNeighbor x y then g y - g x else 0) -
+      g x * (if isNeighbor x y then f y - f x else 0) =
+      (if isNeighbor x y then f x * g y else 0) - (if isNeighbor y x then f y * g x else 0) := by
+    intro x y
+    by_cases h : isNeighbor x y
+    · have h' : isNeighbor y x := (isNeighbor_symmetric x y).mp h
+      simp only [h, h', if_true]
+      ring
+    · have h' : ¬ isNeighbor y x := by
+        intro h''
+        exact h ((isNeighbor_symmetric x y).mpr h'')
+      simp only [h, h', if_false]
+      ring
+  -- 把 A - B 重写为 D 形式
+  have h_D_form :
+    (∑ x, ∑ y, f x * (if isNeighbor x y then g y - g x else 0)) -
+    (∑ x, ∑ y, g x * (if isNeighbor x y then f y - f x else 0)) =
+    (∑ x, ∑ y, if isNeighbor x y then f x * g y else 0) -
+    (∑ x, ∑ y, if isNeighbor y x then f y * g x else 0) := by
+    -- 先对每个 x，把内层两个求和的差用 h_key 逐项转换
+    have h_inner : ∀ x,
+        ((∑ y, f x * (if isNeighbor x y then g y - g x else 0)) -
+         (∑ y, g x * (if isNeighbor x y then f y - f x else 0))) =
+        ((∑ y, if isNeighbor x y then f x * g y else 0) -
+         (∑ y, if isNeighbor y x then f y * g x else 0)) := by
+      intro x
+      calc
+        ((∑ y, f x * (if isNeighbor x y then g y - g x else 0)) -
+          (∑ y, g x * (if isNeighbor x y then f y - f x else 0)))
+          = ∑ y, ((f x * (if isNeighbor x y then g y - g x else 0)) -
+                  (g x * (if isNeighbor x y then f y - f x else 0))) := by
+            rw [Finset.sum_sub_distrib]
+        _ = ∑ y, ((if isNeighbor x y then f x * g y else 0) -
+                  (if isNeighbor y x then f y * g x else 0)) := by
+            apply Finset.sum_congr rfl
+            intro y _
+            exact h_key x y
+        _ = ((∑ y, if isNeighbor x y then f x * g y else 0) -
+             (∑ y, if isNeighbor y x then f y * g x else 0)) := by
+            rw [Finset.sum_sub_distrib]
+    calc
+      ((∑ x, ∑ y, f x * (if isNeighbor x y then g y - g x else 0)) -
+        (∑ x, ∑ y, g x * (if isNeighbor x y then f y - f x else 0)))
+        = ∑ x, ((∑ y, f x * (if isNeighbor x y then g y - g x else 0)) -
+                (∑ y, g x * (if isNeighbor x y then f y - f x else 0))) := by
+          rw [Finset.sum_sub_distrib]
+      _ = ∑ x, ((∑ y, if isNeighbor x y then f x * g y else 0) -
+                (∑ y, if isNeighbor y x then f y * g x else 0)) := by
+          apply Finset.sum_congr rfl
+          intro x _
+          exact h_inner x
+      _ = (∑ x, ∑ y, if isNeighbor x y then f x * g y else 0) -
+          (∑ x, ∑ y, if isNeighbor y x then f y * g x else 0) := by
+          rw [Finset.sum_sub_distrib]
+  -- 利用求和变量重命名：∑_x∑_y B(y,x) = ∑_y∑_x B(x,y) = ∑_x∑_y B(x,y)
+  have h_D_zero :
+    (∑ x, ∑ y, if isNeighbor x y then f x * g y else 0) -
+    (∑ x, ∑ y, if isNeighbor y x then f y * g x else 0) = 0 := by
+    have h_swap : (∑ x, ∑ y, if isNeighbor y x then f y * g x else 0) =
+                  (∑ x, ∑ y, if isNeighbor x y then f x * g y else 0) := by
+      -- 外层 x↔y 重命名，再交换求和顺序
+      calc
+        (∑ x, ∑ y, if isNeighbor y x then f y * g x else 0)
+          = ∑ y, ∑ x, if isNeighbor x y then f x * g y else 0 := by
+          apply Finset.sum_congr rfl
+          intro x _
+          apply Finset.sum_congr rfl
+          intro y _
+          rfl
+        _ = ∑ x, ∑ y, if isNeighbor x y then f x * g y else 0 := by
+          rw [Finset.sum_comm]
+    rw [h_swap]
+    ring
+  -- 由 h_D_form 和 h_D_zero 推出 A = B
+  linarith
+
 /-- **定理 6.5b（主定理，修正版）：驻点 ⟺ 双拉普拉斯方程**
 
 场 φ 是 DiscreteAction 的驻点，当且仅当
 bilaplacian M φ = 0（对所有内部 x : M）。
 
-这是战略 2 的核心定理，将 G4 框架升级为真正的 W1 定理。
-
 数学证明（基于离散 Green 恒等式）：
-  firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ δφ · Δ²φ（由 L 的自伴性）
+  firstVariation φ δφ = ∑ Δφ · Δ(δφ) = ∑ δφ · Δ²φ（由 discrete_green_identity）
   驻点条件：∀ δφ (满足边界), ∑ δφ · Δ²φ = 0 ⟺ Δ²φ = 0（在内部点）
 
-状态：⚠️ W2 条件性
-  - (⟸) 方向待证明（需要 Green 恒等式）
-  - (⟹) 方向待证明（需要 Green 恒等式 + 反证法）
-  - 关键引理：discreteLaplacian 的自伴性（Green 恒等式）
-
-注意：原 `stationary_iff_laplacian_zero` 的陈述有误（应为 Δ²φ = 0，非 Δφ = 0）。
-本定理是数学正确的修正版。
+状态：🔵 W1 严格（基于 discrete_green_identity）
 -/
 theorem stationary_iff_bilaplacian_zero {M : Type*} [BoundedCausalLattice M] [Fintype M]
     (φ : Field M) :
     isStationary φ ↔ ∀ x : M, x ≠ (⊥ : M) → x ≠ (⊤ : M) → bilaplacian φ x = 0 := by
-  -- 数学证明需要 discreteLaplacian 的自伴性（Green 恒等式）：
-  -- ∑_x Δf(x) · Δg(x) = ∑_x g(x) · Δ²f(x) + 边界项
-  -- 当 g 在边界为 0 时，边界项为 0，所以 ∑ Δf · Δg = ∑ g · Δ²f
-  --
-  -- (⟸) 假设 Δ²φ = 0，则 firstVariation = ∑ δφ · 0 = 0
-  -- (⟹) 假设驻点，反证 ∃ x0 (内部), Δ²φ(x0) ≠ 0，
-  --      取 δφ(x0) = Δ²φ(x0)，其他为 0，则 ∑ δφ · Δ²φ = (Δ²φ(x0))² > 0，矛盾
-  --
-  -- 完整形式化需要：
-  -- 1. 证明 discreteLaplacian 的自伴性（Green 恒等式）
-  -- 2. 处理边界条件（δφ 在 ⊥ 和 ⊤ 为 0）
-  -- 3. 构造反证所需的 δφ
-  sorry
+  constructor
+  -- (⟹) 驻点 ⟹ Δ²φ = 0（反证法）
+  · intro h_stationary x h_not_bot h_not_top
+    by_contra h_contra
+    -- 取 δφ(y) = if y = x then Δ²φ(x) else 0
+    let δφ : FieldVariation M := fun y => if y = x then bilaplacian φ x else 0
+    have h_boundary : variation_vanishes_on_boundary δφ := by
+      intro y hy
+      obtain rfl | rfl := hy
+      · simp only [δφ, if_neg (Ne.symm h_not_bot)]
+      · simp only [δφ, if_neg (Ne.symm h_not_top)]
+    have h_var := h_stationary δφ h_boundary
+    rw [firstVariation_explicit] at h_var
+    -- Green 恒等式: ∑ Δφ · Δ(δφ) = ∑ δφ · Δ²φ
+    have h_green : ∑ x' : M, discreteLaplacian M φ x' * discreteLaplacian M δφ x' =
+                   ∑ x' : M, δφ x' * bilaplacian φ x' :=
+      discrete_green_identity (discreteLaplacian M φ) δφ
+    rw [h_green] at h_var
+    -- ∑ δφ · Δ²φ = (Δ²φ(x))² ≠ 0，矛盾
+    have h_sum : ∑ x' : M, δφ x' * bilaplacian φ x' = bilaplacian φ x * bilaplacian φ x := by
+      dsimp only [δφ]
+      let f := fun y => (if y = x then bilaplacian φ x else 0) * bilaplacian φ y
+      have h_fx : f x = bilaplacian φ x * bilaplacian φ x := by
+        simp [f]
+      rw [← h_fx]
+      rw [show ∑ x' : M, (if x' = x then bilaplacian φ x else 0) * bilaplacian φ x' =
+                ∑ x' : M, f x' by apply Finset.sum_congr rfl; intro x' _; simp [f]]
+      apply Finset.sum_eq_single x
+      · -- 对 y ≠ x，项为 0
+        intro y _ hy
+        simp [f, hy]
+      · -- x 一定在 Finset.univ 中
+        intro hy
+        exact absurd (Finset.mem_univ x) hy
+    rw [h_sum] at h_var
+    exact absurd (mul_self_eq_zero.mp h_var) h_contra
+  -- (⟸) Δ²φ = 0 ⟹ 驻点
+  · intro h_bilap δφ h_boundary
+    rw [firstVariation_explicit]
+    have h_green : ∑ x : M, discreteLaplacian M φ x * discreteLaplacian M δφ x =
+                   ∑ x : M, δφ x * bilaplacian φ x :=
+      discrete_green_identity (discreteLaplacian M φ) δφ
+    rw [h_green]
+    apply Finset.sum_eq_zero
+    intro x _
+    by_cases h_x : x = (⊥ : M) ∨ x = (⊤ : M)
+    · have := h_boundary x h_x
+      simp [this]
+    · push_neg at h_x
+      rcases h_x with ⟨h_nb, h_nt⟩
+      have := h_bilap x h_nb h_nt
+      simp [this]
 
 /-- **定理 6.5c（原 6.5 的修正注释）：原 stationary_iff_laplacian_zero 的数学修正**
 
