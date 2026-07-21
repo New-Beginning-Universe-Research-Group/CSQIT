@@ -85,7 +85,8 @@ package csqit where
   version := v!"11.2.6"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
-require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887"
 
 @[default_target]
 lean_lib CSQIT where
