@@ -97,7 +97,7 @@ Electrostatics, magnetism, conductivity, phase states, transparency — five bra
 ```bash
 # In WSL (Ubuntu 24.04, Lean 4.29.0-rc6) / 在 WSL 中
 lake build
-# Current status / 当前状态: 2070 jobs, all passed, zero errors / 全部通过, 无错误
+# Current status / 当前状态: 3340 jobs, all passed, zero errors / 全部通过, 无错误
 ```
 
 **Code Statistics (v11.2.6) / 代码统计**：
@@ -109,7 +109,7 @@ lake build
 | Lean source files / Lean 源文件 | 94 |
 | Compiled modules / 编译模块 | 63 |
 
-**`sorry` Statistics / 统计**：45 total, of which 5 in `Core/W2/Models/FiniteWeavingExamples.lean` are intentionally retained as mathematically invalid counterexamples (honest annotation) / 共 45 处，其中 5 处作为数学上不成立的反例（诚实标注）。
+**`sorry` Statistics / 统计**：4 genuine `sorry` tactics, all in `Core/W2/Models/FiniteWeavingExamples.lean`, intentionally retained as mathematically invalid counterexamples (honest annotation). The remaining 41 occurrences are text in comments discussing proof status / 真正的 `sorry` 战术只有 4 处，均在 `Core/W2/Models/FiniteWeavingExamples.lean` 中，作为数学上不成立的反例（诚实标注）。其余 41 处为注释中的文字讨论证明状态。
 
 ## PRL Submission Branch / PRL 投稿分支
 
