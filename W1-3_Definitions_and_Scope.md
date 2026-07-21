@@ -2,8 +2,6 @@
 
 > Version: v11.2.6 | Date: 2026-07-21
 > Purpose: Strict reference baseline for subsequent work
-> History: v11.2.6 → v11.2.7: Supplemented AxiomC'/AxiomD' definitions and scope differences; updated sorry status; added W3 layer theorems that have been compiled
->       v11.2.7 → v11.6.0: Unified time definition (causal order = scale flow = development process); completed exists_order_two_subgroup / p7_satisfies_WAP_conditions proofs; unified file header format and version numbers
 
 ---
 
