@@ -2,9 +2,9 @@
 
 **CSQIT: Causal Structure Quantum Information Theory**
 
-Version: v11.8.0
+Version: v11.2.6
 Lean 4: v4.29.0-rc6
-Codebase: 63 compiled Lean modules, ~39,000 lines of formalized code (v11.6.0)
+Codebase: 63 compiled Lean modules, ~39,000 lines of formalized code (v11.2.4)
 Author: Jun Zhang
 ORCID: 0009-0004-9803-3237
 
@@ -131,7 +131,7 @@ This theorem (W1-level strict proof, no sorry) shows: any finite lattice cannot 
 - The observer bridge $B = 250/9$ sets the approximation scale, constraining the deviation amplitude between theory and observation.
 - $\Omega_m^{\text{obs}} \approx 0.311$ falls within the rational approximant spectrum predicted by theory, with a relative deviation of about 0.97%.
 
-**This principle reconstructs the relationship between theory and observation from "theory should predict the observed value" to "theory predicts the rational approximant structure of the observed value."** This is one of the core structural insights introduced in CSQIT v11.7.0, further developed in §5.2 and §5.9.
+**This principle reconstructs the relationship between theory and observation from "theory should predict the observed value" to "theory predicts the rational approximant structure of the observed value."** This is one of the core structural insights introduced in CSQIT v11.2.5, further developed in §5.2 and §5.9.
 
 ---
 
@@ -1071,7 +1071,7 @@ All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with 
 | OP-P2-4 | Infinite-type complete model | Prop declaration |
 | OP-P2-9 | Hierarchical two-aspect balance conjecture | Prop declaration |
 
-**W2 Offensive G1–G5 (v11.7.0 Progress)**:
+**W2 Offensive G1–G5 (v11.2.5 Progress)**:
 
 | Number | Offensive Goal | Status | Key Theorem |
 |:---:|:---|:---:|:---|
@@ -1081,7 +1081,7 @@ All open problems are declared in `OpenProblems.lean` as `def ... : Prop`, with 
 | G4 | Discrete variational principle | ✅ Framework complete | `ScaleDynamics.lean §6` discrete Euler-Lagrange |
 | G5 | Holographic isomorphism | ✅ Complete | `HolographicIsomorphism.lean §7` finite toy model verification |
 
-G1–G5 are the core progress of the W2-layer offensive in v11.7.0. G1, G3, and G5 have reached W1 strict proof; G2 and G4 have established frameworks and completed conditional theorems, with remaining strictification work to continue.
+G1–G5 are the core progress of the W2-layer offensive in v11.2.5. G1, G3, and G5 have reached W1 strict proof; G2 and G4 have established frameworks and completed conditional theorems, with remaining strictification work to continue.
 
 ### 8.4 Sorry Audit: Formalization Status
 
@@ -1229,8 +1229,8 @@ The following results are formally proven in Lean 4:
 4. **Projective Compactification**: The sequence $s(n) = 2\pi n/(n+1)$ is strictly monotonically increasing and converges to $2\pi$.
 5. **Thermodynamic Arrow of Time**: Causal entropy is monotonically non-decreasing along the causal order; a bounded causal lattice has a minimum-entropy element.
 6. **Finite Model Limitations**: A monotone map on a finite linear order must have a fixed point; a locally finite total-order causal partial order must be globally finite.
-7. **Total-Subset Principle (new in v11.7.0)**: EffectiveFin7Regular is unsatisfiable on finite lattices (`finite_lattice_cannot_satisfy_EffectiveFin7Regular`); the irrationality of $k_{\text{out}}$ is strictly proven (`k_out_is_irrational`).
-8. **Fin 7 Uniqueness (new in v11.7.0)**: Theorems such as `fin7_unique_satisfying_both_constraints` prove the uniqueness of Fin 7 satisfying the dual constraints.
+7. **Total-Subset Principle (new in v11.2.5)**: EffectiveFin7Regular is unsatisfiable on finite lattices (`finite_lattice_cannot_satisfy_EffectiveFin7Regular`); the irrationality of $k_{\text{out}}$ is strictly proven (`k_out_is_irrational`).
+8. **Fin 7 Uniqueness (new in v11.2.5)**: Theorems such as `fin7_unique_satisfying_both_constraints` prove the uniqueness of Fin 7 satisfying the dual constraints.
 
 ### 9.2 Structural Correspondence
 
@@ -1329,7 +1329,7 @@ This closure is not an external result, but the internal logical consistency of 
 | **Regge → Einstein-Hilbert convergence** | ContinuumLimit.lean | `reggeConverges4D_to_EinsteinHilbert` | **W1 (conditional)** |
 | **Holographic isomorphism (finite toy model)** | HolographicIsomorphism.lean §7 | `holographic_isomorphism_finite` | **W1** |
 
-**Complete Proof Chain of the Total-Subset Principle** (new in v11.7.0):
+**Complete Proof Chain of the Total-Subset Principle** (new in v11.2.5):
 
 ```
 poly_no_rational_root (TotalSubsetPrinciple.lean:109)
@@ -1375,12 +1375,12 @@ All dependencies are managed through `lakefile.lean` and `lean-toolchain`. The c
 | Core/TotalSubsetPrinciple.lean | ~600 | Total-Subset Principle, k_out irrationality |
 | Core/Fin7Uniqueness.lean | ~400 | Fin 7 uniqueness |
 | Core/HolographicIsomorphism.lean | ~700 | Holographic isomorphism (finite toy model) |
-| **Core total (v11.7.0)** | **~38,300** | **63 compiled Lean modules** |
+| **Core total (v11.2.5)** | **~38,300** | **63 compiled Lean modules** |
 | DerivedLaws/ (not in main build) | ~600 | 23 files, conceptually derived |
 | Appendices/ (not in main build) | ~700 | 5 files, including 3 True placeholders |
-| **Codebase total (v11.6.0)** | **~39,000** | **63 compiled modules + 28 supplementary files** |
+| **Codebase total (v11.2.4)** | **~39,000** | **63 compiled modules + 28 supplementary files** |
 
-**Note**: v11.7.0 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §8.5 for details).
+**Note**: v11.2.5 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §8.5 for details).
 
 ---
 
@@ -1448,7 +1448,7 @@ This appendix presents CSQIT's epistemological structure: six-layer uniqueness l
 
 > **Uniqueness Conclusion**: Fin 8 closure → 8-dimensional Lie algebra → SU(3) is the unique option → mod-8 congruence forces Fin 7. The Standard Model gauge group \( SU(3)\times SU(2)\times U(1) \) is the **unique Lie-algebra projection** of the Fin 8 closure coupled with Fin 7.
 
-**Note (v11.7.0)**: The "complete Standard Model embedding" part of the above fourth lock-stop currently belongs to W3 conjecture. AxiomH remains a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum (see §2.5 AxiomH Status Note). All known models satisfy AxiomH with `gauge_group = Unit` in degenerate form. Complete Standard Model embedding is a future research direction.
+**Note (v11.2.5)**: The "complete Standard Model embedding" part of the above fourth lock-stop currently belongs to W3 conjecture. AxiomH remains a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum (see §2.5 AxiomH Status Note). All known models satisfy AxiomH with `gauge_group = Unit` in degenerate form. Complete Standard Model embedding is a future research direction.
 
 **The Four-Fold Symmetry of Direction 4 (W3)**:
 
@@ -1555,7 +1555,7 @@ This table presents in **simplest form**: each CSQIT axiom → corresponding phy
 
 > **Note**: This table reveals the correspondence between the CSQIT axiomatic system and standard physical principles. The correspondence is **interpretive (W3 level)** — the axioms themselves do not depend on these physical principles; rather, starting from information-theoretic first principles and verifying consistency in finite models (Fin 5, Fin 7), they **emerge** structural isomorphism with these principles.
 >
-> **Special Status of AxiomH and AxiomK (v11.7.0 note)**: AxiomH is currently only a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum. All known models satisfy it with `gauge_group = Unit` in degenerate form. AxiomK, as an extended axiom, does not belong to the standard Theory, but to `TheoryEternalNow`.
+> **Special Status of AxiomH and AxiomK (v11.2.5 note)**: AxiomH is currently only a type-signature placeholder, not specifying the gauge group as $SU(3) \times SU(2) \times U(1)$, nor deriving the Standard Model particle spectrum. All known models satisfy it with `gauge_group = Unit` in degenerate form. AxiomK, as an extended axiom, does not belong to the standard Theory, but to `TheoryEternalNow`.
 
 ---
 
@@ -1910,7 +1910,7 @@ Of course, any errors or overclaims are entirely the responsibility of the autho
 
 ---
 
-*CSQIT v11.8.0 — Formalized deduction from information-theoretic axioms to the cosmological characteristic constant*
+*CSQIT v11.2.6 — Formalized deduction from information-theoretic axioms to the cosmological characteristic constant*
 *Lean 4 v4.29.0-rc6 — 3340 compilation tasks, 0 errors*
 *2026-07-20*
 
