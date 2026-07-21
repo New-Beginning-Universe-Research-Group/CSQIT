@@ -83,11 +83,27 @@ CSQIT（Causal Set Quantum Information Theory，因果集量子信息理论）�
 ```bash
 # 在 WSL (Ubuntu 24.04, Lean 4.29.0-rc6) 中
 lake build
-# 当前状态: 3340 jobs, 全部通过, 无错误
+# 当前状态: 2070 jobs, 全部通过, 无错误
 ```
 
-当前仅 `Core/W2/Models/FiniteWeavingExamples.lean` 保留 5 处 `sorry`
-作为数学上不成立的反例（诚实标注）。
+**代码统计（v11.2.6）**：
+
+| 指标 | 数值 |
+|------|------|
+| 总代码行数 | 32,393 行 |
+| Core 目录行数 | 23,964 行 |
+| Lean 源文件 | 94 个 |
+| 编译模块 | 63 个 |
+
+**sorry 统计**：共 45 处，其中 5 处位于 `Core/W2/Models/FiniteWeavingExamples.lean`，作为数学上不成立的反例（诚实标注）。
+
+## PRL 投稿分支
+
+`prl-submission` 分支专用于 PRL 投稿，只包含形式化代码（不含论文文本）：
+
+> https://github.com/New-Beginning-Universe-Research-Group/CSQIT/tree/prl-submission
+
+该分支保留了所有 Lean 代码以便审稿人验证形式化，但移除了所有论文文件以符合 PRL 的审稿前保密政策。
 
 ---
 
