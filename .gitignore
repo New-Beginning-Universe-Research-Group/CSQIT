@@ -140,6 +140,7 @@ lakefile_wsl.lean
 !README.md
 !DerivedLaws/README.md
 !W1-3_定义与适用范围清单.md
+!W1-3_Definitions_and_Scope.md
 # Allow .md files inside Core/, Unified/, Appendices/ if any exist as module docs
 !Core/**/*.md
 !Unified/**/*.md
