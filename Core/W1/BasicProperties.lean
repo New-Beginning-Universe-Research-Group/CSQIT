@@ -1,7 +1,7 @@
-/-
+﻿/-
 CSQIT — 编织结构的基本性质
 文件: Core/W1/BasicProperties.lean
-版本: v11.6.0
+版本: v11.2.4
 日期: 2026-07-12
 
 核心定理：Eckmann-Hilton 论证

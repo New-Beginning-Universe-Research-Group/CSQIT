@@ -1,7 +1,7 @@
-/-
+﻿/-
 CSQIT — 一体两面性定理
 文件: Core/W1/TwoAspectTheorems.lean
-版本: v11.6.0
+版本: v11.2.4
 日期: 2026-06-28
 -/
 import Core.W1.Axioms

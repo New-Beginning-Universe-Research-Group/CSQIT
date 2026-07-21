@@ -1,7 +1,7 @@
-/-
+﻿/-
 CSQIT — 动量守恒与角动量守恒（诺特定理的空间对称性版本）
 文件: DerivedLaws/ClassicalMechanics/MomentumConservation.lean
-版本: v11.6.0
+版本: v11.2.4
 日期: 2026-07-19
 编译状态: ⏸ 未参与编译（未在 lakefile.lean 中注册）
 

@@ -1,7 +1,7 @@
-/-
+﻿/-
 CSQIT — 壳层容量 2n² 公式（元素周期律的代数本质）
 文件: DerivedLaws/Chemistry/ShellCapacity.lean
-版本: v11.6.0
+版本: v11.2.4
 日期: 2026-07-19
 编译状态: ⏸ 未参与编译（未在 lakefile.lean 中注册）
 
