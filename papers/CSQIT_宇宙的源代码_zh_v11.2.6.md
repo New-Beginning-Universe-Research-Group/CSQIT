@@ -2,9 +2,9 @@
 
 **CSQIT：因果结构量子信息理论**
 
-版本：v11.8.0
+版本：v11.2.6
 Lean 4：v4.29.0-rc6
-代码库：63 个已编译 Lean 模块，约 39,000 行形式化代码（v11.6.0）
+代码库：63 个已编译 Lean 模块，约 39,000 行形式化代码（v11.2.4）
 作者：张珺
 ORCID：0009-0004-9803-3237
 
@@ -135,7 +135,7 @@ theorem finite_lattice_cannot_satisfy_EffectiveFin7Regular
 - 观测者桥 $B = 250/9$ 设定逼近尺度，约束理论与观测之间的偏差幅度。
 - $\Omega_m^{\text{obs}} \approx 0.311$ 落在理论预测的有理逼近谱内，相对偏差约 0.97%。
 
-**该原理把理论与观测的关系从"理论应该预测观测值"重构为"理论预测观测值的有理逼近结构"**。这是 CSQIT 在 v11.7.0 引入的核心结构性洞见之一，将在 §5.2、§5.9 进一步展开。
+**该原理把理论与观测的关系从"理论应该预测观测值"重构为"理论预测观测值的有理逼近结构"**。这是 CSQIT 在 v11.2.5 引入的核心结构性洞见之一，将在 §5.2、§5.9 进一步展开。
 
 ---
 
@@ -499,7 +499,7 @@ def EffectiveFin7Regular (M : Type*) [BoundedCausalLattice M] [Fintype M] : Prop
 
 **诠释**：这是一个**统计平均条件**——不是每个节点都有恰好 $k_{\text{out}}$ 个出度，而是内部节点的平均出度匹配 Fin 7 的代数常数。这类似于统计力学中的热力学极限。
 
-**全集-子集原理下的不可满足性**（W1 层，v11.7.0 新增）：
+**全集-子集原理下的不可满足性**（W1 层，v11.2.5 新增）：
 
 ```lean
 theorem finite_lattice_cannot_satisfy_EffectiveFin7Regular
@@ -1059,7 +1059,7 @@ information_causal : ∀ x y : M, B.le x y →
 | OP-P2-4 | 无限类型完整模型 | Prop 声明 |
 | OP-P2-9 | 层级两面平衡态猜想 | Prop 声明 |
 
-**W2 攻坚 G1-G5（v11.7.0 进展）**：
+**W2 攻坚 G1-G5（v11.2.5 进展）**：
 
 | 编号 | 攻坚目标 | 状态 | 关键定理 |
 |:---:|:---|:---:|:---|
@@ -1069,7 +1069,7 @@ information_causal : ∀ x y : M, B.le x y →
 | G4 | 离散变分原理 | ✅ 框架完成 | `ScaleDynamics.lean §6` 离散 Euler-Lagrange |
 | G5 | 全息同构 | ✅ 已完成 | `HolographicIsomorphism.lean §7` 有限玩具模型验证 |
 
-G1-G5 是 v11.7.0 中 W2 层攻坚的核心进展。G1、G3、G5 已达到 W1 严格证明；G2、G4 已建立框架并完成条件性定理，剩余严格化工作待续。
+G1-G5 是 v11.2.5 中 W2 层攻坚的核心进展。G1、G3、G5 已达到 W1 严格证明；G2、G4 已建立框架并完成条件性定理，剩余严格化工作待续。
 
 ### 8.4 sorry 审计与形式化工程状态
 
@@ -1224,8 +1224,8 @@ CSQIT 的贡献体现在三个相互支撑的层面：
 4. **射影紧化**：序列 $s(n) = 2\pi n/(n+1)$ 严格单调递增并收敛于 $2\pi$。
 5. **热力学时间箭头**：因果熵沿因果序单调不减；有界因果格存在最小熵元。
 6. **有限模型限制**：有限线性序上的单调映射必有不动点；局部有限的全序因果偏序必整体有限。
-7. **全集-子集原理（v11.7.0 新增）**：有限格上 EffectiveFin7Regular 不可满足（`finite_lattice_cannot_satisfy_EffectiveFin7Regular`）；$k_{\text{out}}$ 的无理性严格证明（`k_out_is_irrational`）。
-8. **Fin 7 唯一性（v11.7.0 新增）**：`fin7_unique_satisfying_both_constraints` 等定理证明 Fin 7 满足双重约束的唯一性。
+7. **全集-子集原理（v11.2.5 新增）**：有限格上 EffectiveFin7Regular 不可满足（`finite_lattice_cannot_satisfy_EffectiveFin7Regular`）；$k_{\text{out}}$ 的无理性严格证明（`k_out_is_irrational`）。
+8. **Fin 7 唯一性（v11.2.5 新增）**：`fin7_unique_satisfying_both_constraints` 等定理证明 Fin 7 满足双重约束的唯一性。
 
 ### 9.2 结构对应
 
@@ -1326,7 +1326,7 @@ Fin 7 的三次非线性结构使得不可逆记录成为可能——这是"提�
 | **Regge → Einstein-Hilbert 收敛性** | ContinuumLimit.lean | `reggeConverges4D_to_EinsteinHilbert` | **W1（条件性）** |
 | **全息同构（有限玩具模型）** | HolographicIsomorphism.lean §7 | `holographic_isomorphism_finite` | **W1** |
 
-**全集-子集原理的完整证明链**（v11.7.0 新增）：
+**全集-子集原理的完整证明链**（v11.2.5 新增）：
 
 ```
 poly_no_rational_root (TotalSubsetPrinciple.lean:109)
@@ -1372,12 +1372,12 @@ lake build
 | Core/TotalSubsetPrinciple.lean | ~600 | 全集-子集原理、k_out 无理性 |
 | Core/Fin7Uniqueness.lean | ~400 | Fin 7 唯一性 |
 | Core/HolographicIsomorphism.lean | ~700 | 全息同构（有限玩具模型） |
-| **Core 总计（v11.7.0）** | **~38,300** | **63 个已编译 Lean 模块** |
+| **Core 总计（v11.2.5）** | **~38,300** | **63 个已编译 Lean 模块** |
 | DerivedLaws/（未纳入主构建） | ~600 | 23 个文件，概念性派生 |
 | Appendices/（未纳入主构建） | ~700 | 5 个文件，含 3 个 True 占位 |
-| **代码库总计（v11.6.0）** | **~39,000** | **63 个已编译模块 + 28 个补充文件** |
+| **代码库总计（v11.2.4）** | **~39,000** | **63 个已编译模块 + 28 个补充文件** |
 
-**注**：v11.7.0 共 63 个已编译 Lean 模块（纳入主构建），约 39,000 行形式化代码。`DerivedLaws/` 与 `Appendices/` 未纳入主构建（详见 §8.5）。
+**注**：v11.2.5 共 63 个已编译 Lean 模块（纳入主构建），约 39,000 行形式化代码。`DerivedLaws/` 与 `Appendices/` 未纳入主构建（详见 §8.5）。
 
 ---
 
@@ -1445,7 +1445,7 @@ lake build
 
 > **唯一性结论**：Fin 8 闭包 → 8 维李代数 → SU(3) 是唯一选项 → 模 8 同余强制 Fin 7。标准模型的规范群 \( SU(3)\times SU(2)\times U(1) \) 是 Fin 8 闭包与 Fin 7 耦合的**唯一李代数投影**。
 
-**注（v11.7.0）**：上述第四锁止点的"标准模型完整嵌入"部分目前属于 W3 猜想。AxiomH 仍为类型签名占位符，未指定规范群为 $SU(3) \times SU(2) \times U(1)$，也未推导标准模型粒子谱（参见 §2.5 AxiomH 状态说明）。所有已知模型以 `gauge_group = Unit` 退化形式满足 AxiomH。标准模型完整嵌入是未来研究方向。
+**注（v11.2.5）**：上述第四锁止点的"标准模型完整嵌入"部分目前属于 W3 猜想。AxiomH 仍为类型签名占位符，未指定规范群为 $SU(3) \times SU(2) \times U(1)$，也未推导标准模型粒子谱（参见 §2.5 AxiomH 状态说明）。所有已知模型以 `gauge_group = Unit` 退化形式满足 AxiomH。标准模型完整嵌入是未来研究方向。
 
 **方向4的四重对称性（W3）**：
 
@@ -1472,7 +1472,7 @@ lake build
 
 > **唯一性结论**：任何其他素数 p 都会落入至少一个约束之外。\( \theta(7) \) 是三重锚定的唯一交点。
 
-**注（v11.7.0）**：观测锚定层面的 $\Omega_m = \theta$ 是物理对应公设（W2/W3），不是数学定理（参见 §5.5）。全集-子集原理预测 $\Omega_m^{\text{obs}}$ 是 $\theta$ 的有理逼近，而非精确值，相对偏差约 0.97% 是结构性预测（参见 §5.9）。
+**注（v11.2.5）**：观测锚定层面的 $\Omega_m = \theta$ 是物理对应公设（W2/W3），不是数学定理（参见 §5.5）。全集-子集原理预测 $\Omega_m^{\text{obs}}$ 是 $\theta$ 的有理逼近，而非精确值，相对偏差约 0.97% 是结构性预测（参见 §5.9）。
 
 #### 第六锁止点：自指认知——观测者存在的唯一证明（W3）
 
@@ -1552,7 +1552,7 @@ lake build
 
 > **表注**：本表旨在揭示 CSQIT 公理体系与标准物理原理之间的对应关系。这种对应是**诠释性的（W3 层）**——公理本身不依赖于这些物理原理，而是从信息论第一原理出发，在有限模型（Fin 5, Fin 7）中验证一致性后，**涌现出**与这些原理的结构同构。
 >
-> **AxiomH 与 AxiomK 的特殊状态（v11.7.0 注）**：AxiomH 目前仅为类型签名占位符，未指定规范群为 $SU(3) \times SU(2) \times U(1)$，也未推导标准模型粒子谱。所有已知模型以 `gauge_group = Unit` 退化形式满足。AxiomK 作为扩展公理，不属于标准 Theory，而属于 `TheoryEternalNow`。
+> **AxiomH 与 AxiomK 的特殊状态（v11.2.5 注）**：AxiomH 目前仅为类型签名占位符，未指定规范群为 $SU(3) \times SU(2) \times U(1)$，也未推导标准模型粒子谱。所有已知模型以 `gauge_group = Unit` 退化形式满足。AxiomK 作为扩展公理，不属于标准 Theory，而属于 `TheoryEternalNow`。
 
 ---
 
@@ -1907,7 +1907,7 @@ a_{n-1}^2 & n \ge 5 \quad (8^2 = 64, \dots) \quad \text{（饱和期，平方递
 
 ---
 
-*CSQIT v11.8.0 — 从信息论公理到宇宙学特征常数的形式化演绎*
+*CSQIT v11.2.6 — 从信息论公理到宇宙学特征常数的形式化演绎*
 *Lean 4 v4.29.0-rc6 — 3340 个编译任务，0 错误*
 *2026-07-20*
 
