@@ -4,7 +4,7 @@
 
 Version: v11.2.6
 Lean 4: v4.29.0-rc6
-Codebase: 63 compiled Lean modules, ~39,000 lines of formalized code (v11.2.4)
+Codebase: 63 compiled Lean modules, ~34,000 lines of formalized code (v11.2.6)
 Author: Jun Zhang
 ORCID: 0009-0004-9803-3237
 
@@ -1085,7 +1085,7 @@ G1–G5 are the core progress of the W2-layer offensive in v11.2.5. G1, G3, and 
 
 ### 8.4 Sorry Audit: Formalization Status
 
-All core W1 theorems are machine-verified with no `sorry`—3340 compilation tasks pass with 0 errors. The codebase comprises ~39,000 lines of formal code across 63 compiled Lean modules. The 5 intentionally retained `sorry` in `cyclic_stable_substructure` serve as honestly labeled counterexamples (mathematically impossible, not unfinished). W2/W3 layers contain open problems and framework-level results, all explicitly labeled.
+All core W1 theorems are machine-verified with no `sorry`—3340 compilation tasks pass with 0 errors. The codebase comprises ~34,000 lines of formal code across 63 compiled Lean modules (Core+Unified). The 4 intentionally retained `sorry` in `cyclic_stable_substructure` serve as honestly labeled counterexamples (mathematically impossible, not unfinished). W2/W3 layers contain open problems and framework-level results, all explicitly labeled.
 
 ### 8.5 Status of Derived Laws and Appendices
 
@@ -1375,12 +1375,14 @@ All dependencies are managed through `lakefile.lean` and `lean-toolchain`. The c
 | Core/TotalSubsetPrinciple.lean | ~600 | Total-Subset Principle, k_out irrationality |
 | Core/Fin7Uniqueness.lean | ~400 | Fin 7 uniqueness |
 | Core/HolographicIsomorphism.lean | ~700 | Holographic isomorphism (finite toy model) |
-| **Core total (v11.2.5)** | **~38,300** | **63 compiled Lean modules** |
-| DerivedLaws/ (not in main build) | ~600 | 23 files, conceptually derived |
-| Appendices/ (not in main build) | ~700 | 5 files, including 3 True placeholders |
-| **Codebase total (v11.2.4)** | **~39,000** | **63 compiled modules + 28 supplementary files** |
+| **Core total (v11.2.6)** | **~29,000** | **52 Lean files** |
+| **Unified total (v11.2.6)** | **~4,700** | **11 Lean files** |
+| **Compiled modules total (v11.2.6)** | **~33,700** | **63 compiled modules** |
+| DerivedLaws/ (not in main build) | ~4,300 | 25 files, conceptually derived |
+| Appendices/ (not in main build) | ~1,200 | 5 files, including True placeholders |
+| **Codebase total (v11.2.6)** | **~39,500** | **95 Lean files** |
 
-**Note**: v11.2.5 has 63 compiled Lean modules (included in the main build), approximately 39,000 lines of formalized code. `DerivedLaws/` and `Appendices/` are not included in the main build (see §8.5 for details).
+**Note**: v11.2.6 has 63 compiled Lean modules (included in the main build), approximately 33,700 lines of formalized code (Core+Unified). `DerivedLaws/` and `Appendices/` are not included in the main build. The entire codebase totals ~39,500 lines across 95 Lean files. 3340 compilation jobs, all passed, zero errors.
 
 ---
 
@@ -1911,8 +1913,8 @@ Of course, any errors or overclaims are entirely the responsibility of the autho
 ---
 
 *CSQIT v11.2.6 — Formalized deduction from information-theoretic axioms to the cosmological characteristic constant*
-*Lean 4 v4.29.0-rc6 — 3340 compilation tasks, 0 errors*
-*2026-07-20*
+*Lean 4 v4.29.0-rc6 — 3340 compilation tasks, 0 errors, 63 modules*
+*2026-07-21*
 
 ---
 

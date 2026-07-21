@@ -104,12 +104,15 @@ lake build
 
 | Metric / 指标 | Value / 数值 |
 |------|------|
-| Total lines of code / 总代码行数 | 32,393 |
-| Core directory lines / Core 目录行数 | 23,964 |
-| Lean source files / Lean 源文件 | 94 |
-| Compiled modules / 编译模块 | 63 |
+| Total Lean files / 总 Lean 文件 | 95 |
+| Total lines of code / 总代码行数 | ~39,500 |
+| Core directory / Core 目录 | 52 files / 个文件, ~29,000 lines / 行 |
+| Unified directory / Unified 目录 | 11 files / 个文件, ~4,700 lines / 行 |
+| Compiled modules / 编译模块 | 63 (Core + Unified) |
+| Compiled lines / 编译行数 | ~33,700 |
+| Compilation jobs / 编译任务 | 3340 (all passed, zero errors / 全部通过, 零错误) |
 
-**`sorry` Statistics / 统计**：4 genuine `sorry` tactics, all in `Core/W2/Models/FiniteWeavingExamples.lean`, intentionally retained as mathematically invalid counterexamples (honest annotation). The remaining 41 occurrences are text in comments discussing proof status / 真正的 `sorry` 战术只有 4 处，均在 `Core/W2/Models/FiniteWeavingExamples.lean` 中，作为数学上不成立的反例（诚实标注）。其余 41 处为注释中的文字讨论证明状态。
+**`sorry` Statistics / 统计**: 4 genuine `sorry` tactics, all in `Core/W2/Models/FiniteWeavingExamples.lean`, intentionally retained as mathematically invalid counterexamples (honest annotation). The remaining occurrences are text in comments discussing proof status / 真正的 `sorry` 战术只有 4 处，均在 `Core/W2/Models/FiniteWeavingExamples.lean` 中，作为数学上不成立的反例（诚实标注）。其余为注释中的文字讨论证明状态。
 
 ## PRL Submission Branch / PRL 投稿分支
 
