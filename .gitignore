@@ -53,6 +53,8 @@ _backup/
 _scripts/
 _reports/
 *.tar.gz
+papers/*.pdf
+papers/*.tex
 
 # Project-specific backup files
 CSQIT_*.txt
@@ -69,6 +71,7 @@ CSQIT_10.*
 CSQIT_11.*
 CSQIT_FinalBackup_*
 CSQIT_All_Lean_*
+CSQIT_all_lean_files_*
 优化历史备份/
 2026-06-28_*/
 All_Lean_Code_*.md
@@ -78,8 +81,11 @@ All_Lean_Code_Export_*
 Core_Lean_Code_*.txt
 *_深度梳理*.md
 *_Review*.md
+*_审查推进*.md
+*_令人印象深刻*.md
 theorems_base64.txt
 test_mex3.lean
+*.zip
 
 # Docker build files (not part of core repo)
 csqsit_docker_build/
@@ -101,6 +107,7 @@ WORKFLOW_README.md
 
 # Temporary files
 commit_msg.txt
+commit_msg_*.txt
 *.ps1
 *.sh
 *.py
@@ -126,3 +133,18 @@ lakefile_wsl.lean
 
 # Git
 .git/
+
+# Process documents (keep local only, not pushed to GitHub)
+# Only README.md and explicitly named reference docs are tracked
+*.md
+!README.md
+!DerivedLaws/README.md
+!W1-3_定义与适用范围清单.md
+!W1-3_Definitions_and_Scope.md
+# Allow .md files inside Core/, Unified/, Appendices/ if any exist as module docs
+!Core/**/*.md
+!Unified/**/*.md
+!Appendices/**/*.md
+
+# Export/consolidation text files (regenerated, not tracked)
+*.txt

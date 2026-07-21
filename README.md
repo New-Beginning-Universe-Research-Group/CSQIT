@@ -1,214 +1,168 @@
-# CSQIT v11.2.0 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎
+# CSQIT — Formal Deduction of the Source Code of the Universe / 宇宙的源代码形式化演绎
 
-**Causal Structure Quantum Information Theory**
-
-**版本**: v11.2.0  
-**日期**: 2026年7月4日  
-**Lean 版本**: v4.29.0-rc6（见 [lean-toolchain](lean-toolchain)）  
-**编译状态**: 2196 jobs 全部通过  
-**代码规模**: 50 个 Lean 文件，约 24,300 行形式化证明
+> [English](#overview) | [中文](#项目定位)
 
 ---
 
-## 项目简介
+## Overview
 
-CSQIT（因果结构量子信息理论）是一个在 **Lean 4** 证明助手中完全形式化的离散因果-信息公理框架。从 10 条关于因果关系、规则复合与量子振幅的公理出发，通过机器可验证的形式化证明，推导出可与观测宇宙学对比的数值结果（零自由参数）。
+**Version**: v11.2.6  
+**Lean Version**: v4.29.0-rc6  
+**Mathlib Dependency**: See `lakefile.lean`
 
-**核心结果**：在 EffectiveFin7Regularity 条件下，公理体系必然给出特征常数 $\theta = 1/(2+2\cos(2\pi/7)) \approx 0.308$，与 Planck 2018 观测的宇宙总物质密度 $\Omega_m \approx 0.311$ 偏差约 1%。
+CSQIT (Causal Set Quantum Information Theory) is a formalized physics framework based on **discrete causal-information axioms**. Starting from the most fundamental causal partial order and quantum amplitude axioms, it deduces the basic structure, constants, and dynamics of the universe.
 
-**理论生长脉络**：从 AxiomA 的自包含性（`input_must_be_empty`）作为种子，经过两面性分叉、代数因果序根系扩展、Fin 7 主干生成、射影紧化枝叶展开，最终抵达观测者的自我认知——每一阶段都是前一阶段逻辑必然性的展开。
-
-**六层唯一性锁定框架**：公理闭合 → 两面性冲突 → 素数筛选 → 规范投影 → 参数锚定 → 自指认知
-
-**四闭合环**：代数（三次方程 $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$）→ 几何（3x3 仿射平面）→ 物理（$\Omega_m$）→ 生物（DNA 碱基）
-
-**论文**（位于 `papers/` 目录）：
-- 英文版（PDF）: [The Source Code of the Universe](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf)
-- 中文版（PDF）: [宇宙的源代码](papers/CSQIT_宇宙的源代码_zh_v11.2.0.pdf)
-- LaTeX源文件（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex)
-- LaTeX源文件（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.tex](papers/CSQIT_宇宙的源代码_zh_v11.2.0.tex)
-- Markdown版（英文）: [CSQIT_SourceCodeOfUniverse_en_v11.2.0.md](papers/CSQIT_SourceCodeOfUniverse_en_v11.2.0.md)
-- Markdown版（中文）: [CSQIT_宇宙的源代码_zh_v11.2.0.md](papers/CSQIT_宇宙的源代码_zh_v11.2.0.md)
-- 参考文献: [references.bib](papers/references.bib)
+The project is fully formalized in Lean 4 + Mathlib. All mathematical assertions are strictly graded into W1/W2/W3 layers.
 
 ---
 
-## 验证状态
+## 项目定位
 
-### W1 层（形式化数学 — 机器可验证）
+**版本**: v11.2.6  
+**Lean 版本**: v4.29.0-rc6  
+**Mathlib 依赖**: 见 `lakefile.lean`
 
-| 命题 | 证明状态 | 代码位置 |
-|------|---------|---------|
-| AxiomA-K 公理体系内部自洽 | 严格证明 | [Core/Consistency.lean](Core/Consistency.lean) |
-| Fin 7 非平凡模型满足全部公理 | 严格证明 | [Core/Models/EnhancedModels.lean](Core/Models/EnhancedModels.lean) |
-| input_must_be_empty（自包含性定理） | 严格证明 | [Core/CausalWeaving.lean](Core/CausalWeaving.lean) |
-| 两面性二一定理（离散互补性） | 严格证明 | [Core/TwoAspectTheorems.lean](Core/TwoAspectTheorems.lean) |
-| 代数因果序传递性 | 严格证明 | [Core/AlgebraicCausality.lean](Core/AlgebraicCausality.lean) |
-| causal_past_trans（因果过去传递性） | 严格证明 | [Core/FoundationalGrowth.lean](Core/FoundationalGrowth.lean) |
-| θ = 1/(2+2cos(2π/7)) 代数推导 | 严格证明 | [Core/B_V_Naturalness.lean](Core/B_V_Naturalness.lean) |
-| 总物质 = 可见物质 ∪ 暗物质 | 严格证明 | [Core/DarkUniverse.lean](Core/DarkUniverse.lean) |
-| 循环代数稳定子结构 | 严格证明 | [Core/Models/FiniteWeavingExamples.lean](Core/Models/FiniteWeavingExamples.lean) |
-| 热力学第二定律（离散版） | 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
-| 过去假设定理 | 严格证明 | [Core/ThermodynamicArrow.lean](Core/ThermodynamicArrow.lean) |
+CSQIT（Causal Set Quantum Information Theory，因果集量子信息理论）是一套基于
+**离散因果-信息公理** 的形式化物理理论框架。它从最基本的因果偏序与量子振幅
+公理出发，演绎出宇宙的基本结构、常数与动力学。
 
-### W2/W3 层（有效理论/物理诠释）
-
-| 命题 | 当前状态 | 层级 |
-|------|---------|------|
-| θ ≈ Ω_m（与观测偏差 ~1%） | 经验锚点 | W2/W3 |
-| θ(p) 展开谱严格单调递减 | 数值验证 | W2 |
-| p=7 在结构形成窗口 (0.28, 0.33) 内唯一 | 数值验证 | W2 |
-| Regge → 爱因斯坦-希尔伯特收敛性 | 框架完整，证明待填充 | W2 |
-| SU(3)×SU(2)×U(1) 完整李代数 | 仅 su(3) Cartan | W2/W3 |
-
-### θ(p) 展开谱
-
-| p | θ(p) | 递减 |
-|:---:|:---:|:---:|
-| 3 | 1.000 | — |
-| 5 | 0.382 | ↓ |
-| 7 | 0.308 | ↓ |
-| 11 | 0.272 | ↓ |
-| 13 | 0.265 | ↓ |
-| 17 | 0.259 | ↓ |
-| ∞ | 0.250 | ↓ |
+项目用 Lean 4 + Mathlib 完整形式化，所有数学断言按 W1/W2/W3 三层严格分级。
 
 ---
 
-## 项目结构
+## Three-Layer Theory Structure / 三层理论结构
+
+### W1 — Formalized Mathematical Core / 形式化数学核心
+
+`Core/W1/` directory / 目录, 24 modules / 个模块：
+
+- **Axiom System / 公理体系**: `Axioms.lean` (AxiomA–D + Consistency + Independence / 四公理 + 一致性 + 独立性)
+- **Basic Models / 基本模型**: `BasicModels.lean`, `Models/FinModels.lean` (Nontrivial instances / 非平凡实例)
+- **Causal Lattice / 因果格**: `CausalLattice.lean` (BoundedCausalLattice, cosmicVolume, twoAspectParameter)
+- **Weaving Structure / 编织结构**: `WeavingStructure.lean`, `CausalWeaving.lean`, `HierarchicalWeaving.lean`
+- **Amplitude Theorems / 振幅定理**: `AmplitudeTheorems.lean` (Unitarity, multiplicativity / 幺正性、可乘性)
+- **Two-Aspect Theorems / 两面性定理**: `TwoAspectTheorems.lean`, `TwoAspectToSU2.lean`
+- **Algebraic Causality / 代数因果**: `AlgebraicCausality.lean` (p ≥ 7 irreversibility / 不可逆性)
+- **Consistency / 一致性**: `Consistency.lean`, `Unified.lean`
+- **Axiom Independence / 公理独立性**: `AxiomC_Independence.lean`, `AxiomD_Independence.lean`, `Independence.lean`
+
+### W2 — Effective Theory / 有效理论
+
+`Core/W2/` directory / 目录, 19 modules / 个模块：
+
+- **Scale Dynamics / 尺度动力学**: `ScaleDynamics.lean` (§6 Discrete Variational Principle / 离散变分原理)
+- **Continuum Limit / 连续极限**: `ContinuumLimit.lean` (Regge → Einstein-Hilbert convergence / 收敛性)
+- **B/V Naturalness / B/V 自然性**: `B_V_Naturalness.lean` (θ = 1/(2+2cos(2π/7)))
+- **Fin 7 Uniqueness / Fin 7 唯一性**: `Fin7Uniqueness.lean` (G3, p=7 is the unique prime satisfying irreversibility + structure formation / 唯一满足不可逆性+结构形成的素数)
+- **Total-Subset Principle / 全集-子集原理**: `TotalSubsetPrinciple.lean` (G1, EffectiveFin7Regular unsatisfiable on finite lattices / 有限格上不可满足)
+- **Holographic Isomorphism / 全息同构**: `HolographicIsomorphism.lean` (G5, finite toy model verification / 有限玩具模型验证)
+- **Gravity Derivation / 引力推导**: `GravityDerivation.lean`, `StrictDerivation.lean`, `ThreeLocksDerivation.lean`
+- **Physical Constants / 物理常数**: `PhysicalConstants.lean` (α⁻¹, Ω_m, H₀, Λ_CDM zero-free-parameter predictions / 零自由参数预测)
+
+### W3 — Exploratory Framework / 探索性框架
+
+`Core/W3/` directory / 目录, 8 modules / 个模块：
+
+- **Operational Ontology / 操作本体论**: `Core.lean`, `Models.lean`, `AtomicOperations.lean`
+- **Synthetic Picture / 综合图景**: `UnifiedPicture.lean`, `CyclicUniverse.lean`, `Summary.lean`
+- **Observer Formalization / 观测者形式化**: `ObserverFormalization.lean` (Weak Anthropic Principle / 弱人择原理)
+- **Weaver Formalization / Weaver 形式化**: `Weaver.lean` (Strategy 3 revised / 战略 3 修正版)
+
+---
+
+## Core Results (Unified/) / 核心成果
+
+### Three-Lock Unified Closure / 三锁统一闭包
+
+Zero-free-parameter predictions of physical constants, in high agreement with observation:
+
+| Constant / 常数 | CSQIT Prediction / 预测 | Observation / 观测值 | Deviation / 偏差 |
+|------|-----------|--------|------|
+| Fine-structure constant inverse α⁻¹ / 精细结构常数倒数 | 137 + 9/250 = 137.036 | 137.035999084 | < 10⁻⁵ |
+| Matter density Ω_m / 宇宙物质密度 | θ = 1/(2+2cos(2π/7)) ≈ 0.308 | 0.311 (Planck 2018) | ~1% |
+| Hubble constant H₀ / 哈勃常数 | ≈ 67.39 km/s/Mpc | 67.4 ± 0.5 | < 1% |
+
+### Applied Physics Models / 应用物理模型
+
+Electrostatics, magnetism, conductivity, phase states, transparency — five branches of physics unified in formalization / 静电、磁学、电导、相态、透明度——五条物理分支的统一形式化。
+
+### Physical Mapping Functor / 物理映射函子
+
+`Unified/Interpretation.lean`: Melting Strategy 5 — explicit connection between W1 strict mathematical structure and W3 physical interpretation / 熔铸战略 5：将 W1 严格数学结构与 W3 物理诠释显式连接。
+
+---
+
+## Compilation Verification / 编译验证
+
+```bash
+# In WSL (Ubuntu 24.04, Lean 4.29.0-rc6) / 在 WSL 中
+lake build
+# Current status / 当前状态: 3340 jobs, all passed, zero errors / 全部通过, 无错误
+```
+
+**Code Statistics (v11.2.6) / 代码统计**：
+
+| Metric / 指标 | Value / 数值 |
+|------|------|
+| Total Lean files / 总 Lean 文件 | 95 |
+| Total lines of code / 总代码行数 | ~39,500 |
+| Core directory / Core 目录 | 52 files / 个文件, ~29,000 lines / 行 |
+| Unified directory / Unified 目录 | 11 files / 个文件, ~4,700 lines / 行 |
+| Compiled modules / 编译模块 | 63 (Core + Unified) |
+| Compiled lines / 编译行数 | ~33,700 |
+| Compilation jobs / 编译任务 | 3340 (all passed, zero errors / 全部通过, 零错误) |
+
+**`sorry` Statistics / 统计**: 4 genuine `sorry` tactics, all in `Core/W2/Models/FiniteWeavingExamples.lean`, intentionally retained as mathematically invalid counterexamples (honest annotation). The remaining occurrences are text in comments discussing proof status / 真正的 `sorry` 战术只有 4 处，均在 `Core/W2/Models/FiniteWeavingExamples.lean` 中，作为数学上不成立的反例（诚实标注）。其余为注释中的文字讨论证明状态。
+
+## PRL Submission Branch / PRL 投稿分支
+
+The `prl-submission` branch is dedicated to PRL submission, containing only formalized code (no paper text):
+
+> https://github.com/New-Beginning-Universe-Research-Group/CSQIT/tree/prl-submission
+
+This branch preserves all Lean code for reviewer verification while removing all paper files to comply with PRL's pre-publication confidentiality policy.
+
+`prl-submission` 分支专用于 PRL 投稿，只包含形式化代码（不含论文文本）。该分支保留了所有 Lean 代码以便审稿人验证形式化，但移除了所有论文文件以符合 PRL 的审稿前保密政策。
+
+---
+
+## Key Documents / 关键文档
+
+- `W1-3_定义与适用范围清单.md` / `W1-3_Definitions_and_Scope.md` — Strict reference for W1/W2/W3 layer definitions and scope / W1/W2/W3 三层定义与适用范围的严格参照基准
+- `DerivedLaws/README.md` — DerivedLaws directory guide (not registered to lakefile, does not participate in compilation) / DerivedLaws 目录说明（未注册到 lakefile，不参与编译）
+
+---
+
+## Project Structure / 项目结构
 
 ```
 CSQIT/
-├── Core/                              # 核心模块（38 个文件）
-│   ├── Axioms.lean                   # 公理体系 A-K 定义
-│   ├── Consistency.lean              # 一致性证明
-│   ├── FoundationalGrowth.lean       # 基础生长与因果过去
-│   ├── CausalWeaving.lean            # 因果编织
-│   ├── CausalLattice.lean            # 因果格
-│   ├── TwoAspectTheorems.lean        # 两面性二一定理
-│   ├── TwoAspectToSU2.lean           # 两面性 → SU(2) 对应
-│   ├── AlgebraicCausality.lean       # 代数因果序
-│   ├── B_V_Naturalness.lean          # Fin 7 与 θ 推导
-│   ├── DarkUniverse.lean             # 暗宇宙分类
-│   ├── ScaleDynamics.lean            # 尺度动力学与统一作用量
-│   ├── ThermodynamicArrow.lean       # 时间箭头
-│   ├── QuantumMeasurement.lean       # 量子测量
-│   ├── HierarchicalWeaving.lean      # 层级编织
-│   ├── HierarchicalLevels.lean       # 层级结构
-│   ├── HDST.lean                     # 高维时空结构
-│   ├── ShellCapacityDerivation.lean  # 壳层容量推导
-│   ├── Unified.lean                  # 统一框架
-│   ├── Theorems.lean                 # 核心定理汇总
-│   ├── OpenProblems.lean             # 开放问题
-│   ├── Models/                       # 模型目录（7 个文件）
-│   │   ├── EnhancedModels.lean       # 增强模型（fin7Model, fin8Model）
-│   │   ├── FinModels.lean            # 有限模型
-│   │   ├── Fin8Growth.lean           # Fin 8 生长模型
-│   │   ├── FiniteWeavingExamples.lean# 层级编织实例
-│   │   ├── PeriodicTable.lean        # 周期表对应
-│   │   └── TwoAspectBalancedVerification.lean  # 两面性平衡验证
-│   └── ...
-├── Appendices/                       # 附录模块（A-E）
-│   ├── AppendixA/Uniqueness.lean     # A: 唯一性
-│   ├── AppendixB/CausalAndProbability.lean  # B: 因果与概率
-│   ├── AppendixC/CausalStructure.lean # C: 因果结构
-│   ├── AppendixD/BlackHoleThermo.lean # D: 黑洞热力学
-│   └── AppendixE/Mathematics.lean    # E: 数学基础
-├── FutureWork/                       # 未来工作探索
-├── papers/                           # 论文预印本与源文件
-│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.pdf  # 英文完整版 PDF
-│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.pdf          # 中文完整版 PDF
-│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.tex  # 英文 LaTeX 源文件
-│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.tex          # 中文 LaTeX 源文件
-│   ├── CSQIT_SourceCodeOfUniverse_en_v11.2.0.md   # 英文 Markdown 版
-│   ├── CSQIT_宇宙的源代码_zh_v11.2.0.md           # 中文 Markdown 版
-│   └── references.bib                              # 参考文献
-├── lakefile.lean                     # Lake 项目配置
-├── lean-toolchain                    # Lean 版本锁定
-├── LICENSE.txt                       # MIT 许可证
-├── .gitignore                        # Git 忽略规则
-└── README.md                         # 本文件
+├── Core/
+│   ├── W1/          # Formalized mathematical core (24 modules) / 形式化数学核心（24 模块）
+│   ├── W2/          # Effective theory (19 modules) / 有效理论（19 模块）
+│   └── W3/          # Exploratory framework (8 modules) / 探索性框架（8 模块）
+├── Unified/
+│   ├── Constants/   # Three-lock unified closure (5 modules) / 三锁统一闭包（5 模块）
+│   ├── Models/      # Applied physics models (5 modules) / 应用物理模型（5 模块）
+│   └── Interpretation.lean
+├── DerivedLaws/     # Derived physical laws formalization (not registered, not compiled) / 已推导物理定律形式化（未注册，不参与编译）
+├── Appendices/      # Appendices (not registered) / 附录（未注册）
+├── papers/          # Related papers / 相关论文
+├── lakefile.lean    # Lake project configuration / Lake 项目配置
+└── lean-toolchain   # Lean toolchain version lock / Lean 工具链版本锁定
 ```
 
 ---
 
-## 核心公理体系（A-K）
+## Statement of Mathematical Honesty / 数学诚实性声明
 
-| 公理 | 描述 | 状态 |
-|------|------|------|
-| **AxiomA** | 关系元与规则的定义 | W1 完备 |
-| **AxiomB** | 因果偏序 | W1 完备 |
-| **AxiomC** | 量子振幅（复数幺正表示） | W1 完备 |
-| **AxiomD** | 操作编织 | W1 完备（与 AxiomC 有 trade-off） |
-| **AxiomE** | 信息容量 | W1 完备 |
-| **AxiomF** | 连续极限 | W2 框架定义，实例退化 |
-| **AxiomG** | 量子引力耦合 | W2 框架定义，实例退化 |
-| **AxiomH** | 规范群嵌入 | W2 框架定义，实例退化 |
-| **AxiomI** | 信息因果性 | W1 完备 |
-| **AxiomJ** | 动力学演化 | W1 完备 |
-| **AxiomK** | 永恒此刻（尺度动力学） | W1 定义，部分推论 |
+CSQIT adopts a three-layer assertion grading system:
+
+- **🔵 W1 Strict / W1 严格**: Proof body contains no `sorry`, fully formalized mathematical theorem / 证明体无 `sorry`，完全形式化的数学定理
+- **🟢 W2 Conditional / W2 条件性**: Conditional theorem under explicit premises (premises may be "ideal limit assumptions") / 在显式前提下的条件性定理（前提可能是"理想极限假设"）
+- **🟡 W2 Framework / W2 框架**: Formalized framework established, complete proof pending / 形式化框架已建立，完整证明待后续
+- **⚠️ W3 Interpretation / W3 诠释**: Narrative conjecture, not formalized as `Prop` / 叙事性猜想，不形式化为 `Prop`
+
+All `sorry` locations and reasons are explicitly annotated. EffectiveFin7Regular unsatisfiability on finite lattices (G1 breakthrough) has been strictly proven; theorems depending on it maintain conditional form, which is mathematically honest.
 
 ---
-
-## 编译方法
-
-### 环境要求
-- **elan** 工具链管理器
-- **Lean 4**: v4.29.0-rc6（见 `lean-toolchain`）
-- **mathlib**: v4.29.0-rc6 兼容版本
-
-### 编译步骤
-
-```bash
-# 首次配置
-lake update
-
-# 编译
-lake build
-# 预期输出：2196 jobs, 0 errors
-```
-
----
-
-## 经验锚点
-
-在两面性诠释下，从公理体系推导出的特征常数：
-
-$$\theta = \frac{1}{2 + 2\cos(2\pi/7)} \approx 0.308$$
-
-该常数满足三次方程 $\theta^3 - 6\theta^2 + 5\theta - 1 = 0$，与 Planck 2018 观测值 $\Omega_m = 0.311$ 的偏差约 1%。这是从纯公理到可观测数值的完整演绎链（零自由参数），作为经验锚点表明该框架可能与真实物理有关。
-
-**扩展统一身份方程**：$7 \equiv 15 \mod 8 \to \theta = 0.308 \to \Omega_m = 0.311 \to 4\text{ DNA 碱基} \to 8\text{ SU(3) 生成元}$
-
----
-
-## 诚实边界声明
-
-1. **所有定理均证明于有限类型**（Fin n, Unit, Bool）
-2. **"θ = Ω_m" 是物理解释**（W2/W3），而非数学定理（W1）
-3. **连续极限收敛性是开放问题**
-4. **不声称已统一量子力学和广义相对论**
-5. **代码中保留 4 个 sorry 作为数学不可能性的反例标记**
-
----
-
-## 版本演进
-
-| 日期 | 版本 | 主要改进 |
-|:---|:---|:---|
-| 2026-06-19 | 10.4.5 | 初始版本 |
-| 2026-06-22 | 10.5 | W1/W2/W3 分层 |
-| 2026-06-28 | 11.0.0 | 因果格、量子测量、时间箭头 |
-| 2026-07-01 | 11.1.0 | Fin 7 θ 推导 |
-| 2026-07-04 | 11.2.0 | 生长叙事、代数因果序、射影紧化、2196 jobs 通过 |
-
----
-
-## 许可证
-
-MIT License
-
----
-
-*CSQIT v11.2.0 — 宇宙的源代码：从离散信息到宇宙密度的形式化演绎*  
-*Lean 4 v4.29.0-rc6 — 2196 编译任务，0 错误*

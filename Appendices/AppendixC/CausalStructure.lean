@@ -1,15 +1,15 @@
 /-
 ================================================================================
-CSQIT v11.0.0 附录C：因果结构
+CSQIT — 附录C：因果结构
 文件: Appendices/AppendixC/CausalStructure.lean
-版本: 11.0.0
+版本: v11.2.4
 ================================================================================
 因果未来、因果过去的定义及基本性质。
 ================================================================================
 -/
 
-import Core.Axioms
-import Core.Theorems
+import Core.W1.Axioms
+import Core.W1.CausalWeaving
 
 namespace CSQIT.Appendices.AppendixD
 
