@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 振幅幺正性（量子力学幺正性的代数起源）
 文件: DerivedLaws/Quantum/Unitarity.lean
 版本: v11.2.4

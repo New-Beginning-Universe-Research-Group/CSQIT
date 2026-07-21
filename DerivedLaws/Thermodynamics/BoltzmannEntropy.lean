@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 玻尔兹曼熵公式（因果熵到统计熵的桥梁）
 文件: DerivedLaws/Thermodynamics/BoltzmannEntropy.lean
 版本: v11.2.4

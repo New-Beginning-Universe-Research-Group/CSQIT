@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 基础模型构造
 文件: Core/W1/BasicModels.lean
 版本: v11.2.4

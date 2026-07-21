@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 阿伏伽德罗定律与理想气体状态方程
 文件: DerivedLaws/Chemistry/IdealGas.lean
 版本: v11.2.4

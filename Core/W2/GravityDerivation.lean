@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 引力常数的群论推导
 文件: Core/W2/GravityDerivation.lean
 版本: v11.2.4

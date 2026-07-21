@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 三锁常数与有限单群表示论
 文件: Core/W2/GroupRepresentationData.lean
 版本: v11.2.4

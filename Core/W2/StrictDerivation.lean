@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 三锁常数的严格群论推导
 文件: Core/W2/StrictDerivation.lean
 版本: v11.2.4

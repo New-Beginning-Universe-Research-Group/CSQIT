@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 化学键理论（编织模型）
 文件: DerivedLaws/Chemistry/ChemicalBond.lean
 版本: v11.2.4

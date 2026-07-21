@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 元素周期律（两面性全息模型）
 文件: DerivedLaws/Chemistry/PeriodicLaw.lean
 版本: v11.2.4

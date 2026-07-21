@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 从生长理论推导壳层容量公式 2n²
 文件: Core/W1/ShellCapacityDerivation.lean
 版本: v11.2.4

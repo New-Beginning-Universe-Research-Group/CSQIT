@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 振幅结构定理
 文件: Core/W1/AmplitudeTheorems.lean
 版本: v11.2.4

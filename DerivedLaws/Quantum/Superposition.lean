@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 叠加原理（量子叠加的编织起源）
 文件: DerivedLaws/Quantum/Superposition.lean
 版本: v11.2.4

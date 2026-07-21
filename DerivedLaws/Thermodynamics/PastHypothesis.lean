@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 过去假设（宇宙初始低熵态的因果格基础）
 文件: DerivedLaws/Thermodynamics/PastHypothesis.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 热力学第三定律（绝对零度不可达）
 文件: DerivedLaws/Thermodynamics/ThirdLaw.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 最小作用量原理（离散编织版本）
 文件: DerivedLaws/ClassicalMechanics/LeastAction.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 守恒律（能量守恒与诺特定理的代数版本）
 文件: DerivedLaws/ClassicalMechanics/ConservationLaws.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 代数因果序 - 从代数结构涌现因果性
 文件: Core/W1/AlgebraicCausality.lean
 版本: v11.2.4

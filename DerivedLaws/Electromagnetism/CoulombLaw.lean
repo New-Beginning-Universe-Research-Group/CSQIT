@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 库仑定律与高斯定律（两面性 → 电荷 → 平方反比力）
 文件: DerivedLaws/Electromagnetism/CoulombLaw.lean
 版本: v11.2.4

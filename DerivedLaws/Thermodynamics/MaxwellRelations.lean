@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 麦克斯韦关系（热力学势的微分结构）
 文件: DerivedLaws/Thermodynamics/MaxwellRelations.lean
 版本: v11.2.4

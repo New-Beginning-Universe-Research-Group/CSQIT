@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 物理常数的群论推导：质量比、耦合常数等
 文件: Core/W2/PhysicalConstants.lean
 版本: v11.2.4

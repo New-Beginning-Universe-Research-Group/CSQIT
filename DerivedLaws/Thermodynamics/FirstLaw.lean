@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 热力学第一定律（能量守恒与热功当量）
 文件: DerivedLaws/Thermodynamics/FirstLaw.lean
 版本: v11.2.4

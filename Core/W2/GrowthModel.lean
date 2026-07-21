@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 生长模型：从生成关系到三群自发涌现
 文件: Core/W2/GrowthModel.lean
 版本: v11.2.4

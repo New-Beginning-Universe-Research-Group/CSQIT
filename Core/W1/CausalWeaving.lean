@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 因果序与编织公理核心定理
 文件: Core/W1/CausalWeaving.lean
 版本: v11.2.4

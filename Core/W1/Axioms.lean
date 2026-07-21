@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 完整公理体系
 文件: Core/W1/Axioms.lean
 版本: v11.2.4

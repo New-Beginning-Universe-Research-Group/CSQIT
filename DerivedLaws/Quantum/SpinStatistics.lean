@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 全同粒子与自旋统计定理（编织的交换对称性）
 文件: DerivedLaws/Quantum/SpinStatistics.lean
 版本: v11.2.4

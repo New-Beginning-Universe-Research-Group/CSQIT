@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — Lake 项目配置文件
 版本: v11.2.6
 Lean 版本: v4.29.0-rc6
@@ -85,7 +85,7 @@ package csqit where
   version := v!"11.2.6"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
-require mathlib from "/mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib"
+require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
 
 @[default_target]
 lean_lib CSQIT where

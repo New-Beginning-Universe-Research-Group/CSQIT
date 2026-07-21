@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 因果结构理论（相对论性因果的格论基础）
 文件: DerivedLaws/Spacetime/CausalStructure.lean
 版本: v11.2.4

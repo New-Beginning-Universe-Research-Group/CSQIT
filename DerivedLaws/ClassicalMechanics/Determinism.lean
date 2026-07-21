@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 因果决定论（经典力学第一定律的代数本质）
 文件: DerivedLaws/ClassicalMechanics/Determinism.lean
 版本: v11.2.4

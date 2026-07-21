@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 生长中的对称谱系：从生成关系到三群
 文件: Core/W2/GrowthAndSymmetry.lean
 版本: v11.2.4

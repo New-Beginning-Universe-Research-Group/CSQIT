@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 光速不变原理（因果结构的最大信号速度）
 文件: DerivedLaws/Spacetime/SpeedOfLight.lean
 版本: v11.2.4

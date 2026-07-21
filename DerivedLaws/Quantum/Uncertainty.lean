@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 不确定性原理（两面性的定量表达）
 文件: DerivedLaws/Quantum/Uncertainty.lean
 版本: v11.2.4

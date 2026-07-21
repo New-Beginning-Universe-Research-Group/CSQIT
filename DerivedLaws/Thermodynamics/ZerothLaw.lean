@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 热力学第零定律（热平衡的传递性）
 文件: DerivedLaws/Thermodynamics/ZerothLaw.lean
 版本: v11.2.4

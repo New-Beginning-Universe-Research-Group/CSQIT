@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 三群谱系：A₄ → A₅ → PSL(2,7)
 文件: Core/W1/ThreeGroupHierarchy.lean
 版本: v11.2.4

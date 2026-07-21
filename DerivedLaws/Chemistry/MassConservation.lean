@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 质量守恒定律（化学反应中的物质不灭）
 文件: DerivedLaws/Chemistry/MassConservation.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 三锁常数的群论来源：系统探索
 文件: Core/W2/ThreeLocksDerivation.lean
 版本: v11.2.4

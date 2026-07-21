@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 时间箭头（因果序就是时间）
 文件: DerivedLaws/Spacetime/TimeArrow.lean
 版本: v11.2.4

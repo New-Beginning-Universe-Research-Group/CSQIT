@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 热力学第二定律（熵增原理的因果格本质）
 文件: DerivedLaws/Thermodynamics/SecondLaw.lean
 版本: v11.2.4

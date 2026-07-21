@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 编织结构的基本性质
 文件: Core/W1/BasicProperties.lean
 版本: v11.2.4

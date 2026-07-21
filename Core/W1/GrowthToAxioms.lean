@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 生长理论与 CSQIT 公理系统的深度对接
 文件: Core/W1/GrowthToAxioms.lean
 版本: v11.2.4

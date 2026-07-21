@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 一体两面性定理
 文件: Core/W1/TwoAspectTheorems.lean
 版本: v11.2.4

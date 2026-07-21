@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 层级级联：原子层级到宇宙
 文件: Core/W1/HierarchicalLevels.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 泡利不相容原理（两面性 → 自旋 → 费米子）
 文件: DerivedLaws/Quantum/PauliExclusion.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — v11 与 v12 的综合：取长补短
 文件: Core/W2/Integration.lean
 版本: v11.2.4

@@ -1,4 +1,4 @@
-﻿/-
+/-
 CSQIT — 宇宙生长的基础原理 - 从最核心因素开始
 文件: Core/W1/FoundationalGrowth.lean
 版本: v11.2.4
