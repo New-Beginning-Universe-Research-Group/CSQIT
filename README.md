@@ -8,7 +8,7 @@
 
 **Version**: v11.2.6  
 **Lean Version**: v4.29.0-rc6  
-**Mathlib Dependency**: See `lakefile.lean`
+**Mathlib Dependency**: mathlib4 @ `6fc4d4f887` (auto-fetched via `lake build`)
 
 CSQIT (Causal Set Quantum Information Theory) is a formalized physics framework based on **discrete causal-information axioms**. Starting from the most fundamental causal partial order and quantum amplitude axioms, it deduces the basic structure, constants, and dynamics of the universe.
 
@@ -20,7 +20,7 @@ The project is fully formalized in Lean 4 + Mathlib. All mathematical assertions
 
 **版本**: v11.2.6  
 **Lean 版本**: v4.29.0-rc6  
-**Mathlib 依赖**: 见 `lakefile.lean`
+**Mathlib 依赖**: mathlib4 @ `6fc4d4f887`（通过 `lake build` 自动获取）
 
 CSQIT（Causal Set Quantum Information Theory，因果集量子信息理论）是一套基于
 **离散因果-信息公理** 的形式化物理理论框架。它从最基本的因果偏序与量子振幅
@@ -94,11 +94,29 @@ Electrostatics, magnetism, conductivity, phase states, transparency — five bra
 
 ## Compilation Verification / 编译验证
 
+### Reproducibility / 可复现性
+
 ```bash
-# In WSL (Ubuntu 24.04, Lean 4.29.0-rc6) / 在 WSL 中
+# Prerequisites / 前置条件:
+#   Lean 4.29.0-rc6 (see lean-toolchain)
+#   mathlib4 @ 6fc4d4f887 (auto-fetched via lakefile.lean)
+#
+# Clone and build / 克隆并编译:
+git clone https://github.com/New-Beginning-Universe-Research-Group/CSQIT.git
+cd CSQIT
 lake build
-# Current status / 当前状态: 3340 jobs, all passed, zero errors / 全部通过, 无错误
 ```
+
+### Verified Build Result / 验证编译结果
+
+| Item / 项目 | Value / 数值 |
+|------|------|
+| Build environment / 编译环境 | WSL Ubuntu 24.04.1 LTS |
+| Lean version / Lean 版本 | v4.29.0-rc6 (elan 3.1.0) |
+| Mathlib commit / mathlib 版本 | 6fc4d4f887 |
+| Compilation jobs / 编译任务 | 3340 |
+| Build result / 编译结果 | All passed, zero errors / 全部通过, 零错误 |
+| Build date / 编译日期 | 2026-07-21 |
 
 **Code Statistics (v11.2.6) / 代码统计**：
 
