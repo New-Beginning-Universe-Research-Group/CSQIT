@@ -71,13 +71,18 @@ Unified/Constants/  三锁统一闭包（核心成果层，W1完成态）
 Unified/Models/     应用物理模型（W2/W1应用态）
 Appendices/         附录文档
 papers/             相关论文
+
+v12 新增（终极编译器架构）：
+  Core/Compiler.lean              终极编译器核心（唯一真相源）
+  Unified/CompilerBridge.lean     v11→v12 桥接层（向后兼容）
+  Test/CompilerVerification.lean  编译器完整验证套件
 -/
 
 import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"11.6.0"
+  version := v!"12.0.0"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
 require mathlib from "/home/dell/lean_deps/.lake/packages/mathlib"
@@ -141,6 +146,10 @@ lean_lib CSQIT where
     `Unified.Constants.Hubble,
     `Unified.Constants.Gravity,
     `Unified.Constants.CrossConsistency,
+    -- ===== v12 终极编译器 =====
+    `Core.Compiler,
+    `Unified.CompilerBridge,
+    `Test.CompilerVerification,
     -- ===== 应用物理模型 =====
     `Unified.Models.Electrostatics,
     `Unified.Models.Magnetism,
