@@ -167,4 +167,101 @@ def OurUniverse : TimeCircleWeave :=
 noncomputable def Λ_extended (k : ℕ) : ℝ :=
   curvature_energy (closure_sequence_extended k) (closure_sequence_extended_pos k)
 
+/-! ============================================================================
+   §8. Weaver 方向性校准与观测能标（W1 严格定义）
+   ============================================================================
+
+  核心思想：
+    Weaver 网络的拓扑摩擦不是标量常数，而是随闭包索引 n 变化的方向性调制场。
+    校准角度 θ = 2πn/totalClosure 将闭包索引映射到时间圆上的方位角。
+    调制幅度 Δ = 8/(totalClosure · α⁻¹) 来自 Weaver 网络的维持成本。
+
+    径向分量：1 + Δ·cos(θ) — 对能标的调制
+    切向分量：Δ·sin(θ) — 对 CP 破坏相位的调制
+
+    关键性质：
+    - n=420（暗能量闭包）时，θ=2π，cos=1，sin=0：纯径向，CP 守恒
+    - n=8（QCD闭包）时，θ≈0.12，CP 破坏相位极小但非零
+    - n=64（电弱闭包）时，θ≈0.96，CP 破坏相位显著
+  ============================================================================ -/
+
+/-- **Weaver 方向性校准向量**：(径向调制, 切向调制)（W1 严格定义）。
+    将 Weaver 网络的标量摩擦升级为方向性调制场。 -/
+noncomputable def weaver_calibration_vector (n : ℕ) (hn : 0 < n) : ℝ × ℝ :=
+  (1 + (8 : ℝ) / ((totalClosure : ℝ) * inverseAlpha) *
+       Real.cos (2 * Real.pi * (n : ℝ) / (totalClosure : ℝ)),
+   (8 : ℝ) / ((totalClosure : ℝ) * inverseAlpha) *
+       Real.sin (2 * Real.pi * (n : ℝ) / (totalClosure : ℝ)))
+
+/-- **Weaver 校准后的观测能标**（W1 严格定义）。
+    = curvature_energy(n) × 径向调制因子。
+    观测能标 = 裸能标 × (1 + Δ·cos θ) -/
+noncomputable def observed_energy (n : ℕ) (hn : 0 < n) : ℝ :=
+  curvature_energy n hn * (weaver_calibration_vector n hn).1
+
+/-- **Weaver 校准后的 CP 破坏相位**（W1 严格定义）。
+    = 切向调制因子，来自 Weaver 网络的拓扑耗散。
+    CP 相位 = Δ·sin θ -/
+noncomputable def observed_cp_phase (n : ℕ) (hn : 0 < n) : ℝ :=
+  (weaver_calibration_vector n hn).2
+
+/-- **Weaver 调制幅度**：Δ = 8/(totalClosure · α⁻¹)（W1 严格定义）。 -/
+noncomputable def weaver_modulation_amplitude : ℝ :=
+  (8 : ℝ) / ((totalClosure : ℝ) * inverseAlpha)
+
+/-- 定理：调制幅度为正（W1 严格）。 -/
+theorem weaver_modulation_amplitude_pos : 0 < weaver_modulation_amplitude := by
+  unfold weaver_modulation_amplitude
+  apply div_pos
+  · norm_num
+  · exact mul_pos (by exact_mod_cast totalClosure_pos) inverseAlpha_pos
+
+/-- 定理：调制幅度小于 1（W1 严格）。
+    Δ = 8/(420·137.036) ≈ 0.000139 << 1 -/
+theorem weaver_modulation_amplitude_lt_1 : weaver_modulation_amplitude < 1 := by
+  unfold weaver_modulation_amplitude
+  rw [div_lt_one]
+  · have h : (8 : ℝ) < (totalClosure : ℝ) * inverseAlpha := by
+      have h1 : (8 : ℝ) ≤ (totalClosure : ℝ) := by exact_mod_cast (by norm_num : (8 : ℕ) ≤ totalClosure)
+      have h2 : 0 < inverseAlpha := inverseAlpha_pos
+      calc (8 : ℝ)
+        ≤ (totalClosure : ℝ) := h1
+        _ < (totalClosure : ℝ) * inverseAlpha := by
+          rw [mul_lt_mul_right (ne_of_gt h2)]
+          exact_mod_cast totalClosure_pos
+    linarith
+  · exact mul_pos (by exact_mod_cast totalClosure_pos) inverseAlpha_pos
+
+/-- 定理：n=420（暗能量闭包）时 CP 破坏相位为零（W1 严格）。
+    物理意义：暗能量是纯标量场，不产生 CP 破坏。 -/
+theorem cp_phase_zero_at_dark_energy_closure :
+    observed_cp_phase 420 (by norm_num) = 0 := by
+  unfold observed_cp_phase weaver_calibration_vector
+  simp [Real.sin_two_pi]
+
+/-- 定理：n=420（暗能量闭包）时径向调制 = 1 + Δ（W1 严格）。
+    物理意义：暗能量闭包处，观测能标 = 裸能标 × (1 + Δ)。 -/
+theorem radial_modulation_at_dark_energy_closure :
+    (weaver_calibration_vector 420 (by norm_num)).1 = 1 + weaver_modulation_amplitude := by
+  unfold weaver_calibration_vector weaver_modulation_amplitude
+  simp [Real.cos_two_pi]
+
+/-- 定理：n=420 时观测能标 = 裸能标 × (1 + Δ)（W1 严格）。 -/
+theorem observed_energy_at_dark_energy_closure :
+    observed_energy 420 (by norm_num) =
+    curvature_energy 420 (by norm_num) * (1 + weaver_modulation_amplitude) := by
+  unfold observed_energy
+  rw [radial_modulation_at_dark_energy_closure]
+
+/-- 定理：n=840（大统一闭包）时 CP 破坏相位为零（W1 严格）。
+    物理意义：大统一闭包处，θ=2×2π，CP 守恒。 -/
+theorem cp_phase_zero_at_gut_closure :
+    observed_cp_phase 840 (by norm_num) = 0 := by
+  unfold observed_cp_phase weaver_calibration_vector
+  have h_angle : 2 * Real.pi * ((840 : ℝ) / (totalClosure : ℝ)) = 2 * (2 * Real.pi) := by
+    have h_tc : (totalClosure : ℝ) = 420 := by exact_mod_cast totalClosure_eq_420
+    rw [h_tc]; ring
+  rw [h_angle, Real.sin_two_mul]
+  simp [Real.sin_two_pi, Real.cos_two_pi]
+
 end CSQIT.V12.AlgebraicTimeCircle
