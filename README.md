@@ -160,4 +160,6 @@ The CSQIT v12.0.0 source code is released under the MIT License.
 
 If you use this work in your research, please cite:
 
-> Independent Researcher, "CSQIT v12.0.0 — The Ultimate Compiler: From Causal Axioms to Physical Predictions via Formal Verification", 2026.
+> **Jun Zhang (Independent Researcher)**  
+> "CSQIT v12.0.0 — The Ultimate Compiler: From Causal Axioms to Physical Predictions via Formal Verification", 2026.  
+> ORCID: [0009-0004-9803-3237](https://orcid.org/0009-0004-9803-3237)
