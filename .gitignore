@@ -1,0 +1,13 @@
+# 论文文本（PRL/PRD 初稿等）不放入 GitHub
+V12/CSQIT v12.0.0 — 终极理论论文（PRL和PRD初稿）.md
+V12/*.md
+
+# 临时提交信息文件
+commit_msg*.txt
+
+# Lean 构建产物
+.lake/
+build/
+
+# IDE 文件
+*.code-workspace
