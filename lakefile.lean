@@ -10,6 +10,7 @@ V12 模块是自包含的，仅依赖 Mathlib。
 模块结构：
   V12/Core/
     Foundation.lean             基础：公理体系、因果格、物理常数、射影尺度、扩展闭包序列
+    AxiomDerivation.lean        公理派生：AxiomD/I/J 的 W1 严格形式化
     AlgebraicTimeCircle.lean    代数时间之圆：TimeCircle S¹、能标生成函数、Λ_extended
     QuantumTimeCircle.lean      量子时间之圆：振幅-相位映射、贝里相位
     GravitationalAnomaly.lean   引力反常：编织曲率、曲率跳变、拓扑耗散
@@ -18,9 +19,10 @@ V12 模块是自包含的，仅依赖 Mathlib。
   V12/Unified/Models/
     AxionDarkEnergyCoupled.lean 轴子-暗能量耦合：四层作用量、预言验证报告
 
-编译状态：Build completed successfully (2074 jobs), 0 errors, 0 sorry
-代码行数：2321 行 (7 个模块)
+编译状态：Build completed successfully (2075 jobs), 0 errors, 0 sorry
+代码行数：2571 行 (8 个模块)
 第一性原理纯度：100% (零外部输入, 零观测拟合, 自旋网络指数 k=5, 量子纠缠 W1 严格)
+AxiomD/I/J：已从 AxiomA/AxiomC 严格派生（W1 严格，零 sorry）
 -/
 
 import Lake
@@ -30,6 +32,9 @@ package csqit where
   version := v!"12.0.0"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
+-- GitHub 可复用配置：标准 git 依赖
+-- 本地编译时通过符号链接使用预编译 mathlib：
+--   ln -s /mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib .lake/packages/mathlib
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887"
 
@@ -38,6 +43,7 @@ lean_lib CSQIT where
   roots := #[
     -- ===== V12：终极编译器模块（自包含，仅依赖 Mathlib） =====
     `V12.Core.Foundation,
+    `V12.Core.AxiomDerivation,
     `V12.Core.AlgebraicTimeCircle,
     `V12.Core.QuantumTimeCircle,
     `V12.Core.GravitationalAnomaly,
