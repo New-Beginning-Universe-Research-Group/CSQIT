@@ -11,3 +11,22 @@ build/
 
 # IDE 文件
 *.code-workspace
+
+# 本地编译配置（不推送 GitHub）
+lakefile.local.lean
+lakefile_v12_only.lean
+lake-manifest.json
+
+# 过程文档与脚本（仅本地保留，不推送 GitHub）
+*.txt
+*.py
+*.sh
+_archive/
+.trae/
+V12/_build_Papers/
+DerivedLaws/
+
+# 根目录过程文档（仅保留 README.md）
+/*.md
+!README.md
+

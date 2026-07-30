@@ -1,42 +1,54 @@
 /-
-CSQIT v12.0.0 — Lake 项目配置文件（纯 V12 终极编译器）
-版本: v12.0.0
+CSQIT v12.1.2 — Lake 项目配置文件（本地编译环境）
+版本: v12.1.2
 Lean 版本: v4.29.0-rc6
-日期: 2026-07-24
 
-本分支仅包含 V12 终极编译器模块，不含 Core/W1、Core/W2、Core/W3 等前版本代码。
-V12 模块是自包含的，仅依赖 Mathlib。
+本地专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。
+GitHub 推送版本：lakefile.lean（git 依赖，可复现）
 
-模块结构：
-  V12/Core/
-    Foundation.lean             基础：公理体系、因果格、物理常数、射影尺度、扩展闭包序列
-    AxiomDerivation.lean        公理派生：AxiomD/I/J 的 W1 严格形式化
-    AlgebraicTimeCircle.lean    代数时间之圆：TimeCircle S¹、能标生成函数、Λ_extended
-    QuantumTimeCircle.lean      量子时间之圆：振幅-相位映射、贝里相位
-    GravitationalAnomaly.lean   引力反常：编织曲率、曲率跳变、拓扑耗散
-    CSQITWeaver.lean            CSQIT编织机网络：8节点共识、暗能量状态方程
-    TopologicalTime.lean        拓扑时间：因果链涌现、时间圆极限
-  V12/Unified/Models/
-    AxionDarkEnergyCoupled.lean 轴子-暗能量耦合：四层作用量、预言验证报告
+使用方法：
+  cp lakefile.local.lean lakefile.lean
+  或者在 lakefile.lean 中切换 require 方式
 
-编译状态：Build completed successfully (2075 jobs), 0 errors, 0 sorry
-代码行数：2571 行 (8 个模块)
-第一性原理纯度：100% (零外部输入, 零观测拟合, 自旋网络指数 k=5, 量子纠缠 W1 严格)
-AxiomD/I/J：已从 AxiomA/AxiomC 严格派生（W1 严格，零 sorry）
+模块依赖顺序：
+  Foundation.lean           (基础，无依赖)
+    ↓
+  AxiomDerivation.lean      (依赖 Foundation)
+    ↓
+  AlgebraicTimeCircle.lean  (依赖 Foundation)
+    ↓
+  QuantumTimeCircle.lean    (依赖 Foundation, AlgebraicTimeCircle)
+    ↓
+  GravitationalAnomaly.lean (依赖 Foundation, AlgebraicTimeCircle)
+    ↓
+  CSQITWeaver.lean          (依赖 Foundation, AlgebraicTimeCircle, QuantumTimeCircle, GravitationalAnomaly)
+    ↓
+  TopologicalTime.lean      (依赖 Foundation, AlgebraicTimeCircle, CSQITWeaver)
+    ↓
+  Fin7Uniqueness.lean       (自包含，仅依赖 Mathlib；W2 层 Fin 7 唯一性定理)
+    ↓
+  AxionDarkEnergyCoupled.lean (依赖所有上述模块)
+
+编译状态：Build completed successfully, 0 errors, 0 sorry
+代码行数：约 6220 行 (9 个模块)
+层级标注（v12.1.2 诚实修正）：
+  核心结构因子（420, k=5, 2π, c(n), 量子纠缠）= W1 严格
+  α⁻¹ 表达式组合方式、B 构造、量级匹配 = W2 条件性
+  Fin 7 唯一性定理 = W2 条件性（W1 严格定理 + W2 经验窗口）
+AxiomD：W1 严格定理；AxiomI/J：W2 条件性（诚实标注）
 -/
 
 import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"12.0.0"
+  version := v!"12.1.2"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
--- GitHub 可复用配置：标准 git 依赖
--- 本地编译时通过符号链接使用预编译 mathlib：
---   ln -s /mnt/d/2_ResearchProgram/Lean4/lean_deps/.lake/packages/mathlib .lake/packages/mathlib
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887"
+-- 本地编译专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。
+-- WSL 环境路径：~/lean_deps/.lake/packages/mathlib
+require mathlib from
+  "/home/dell/lean_deps/.lake/packages/mathlib"
 
 @[default_target]
 lean_lib CSQIT where
@@ -49,5 +61,6 @@ lean_lib CSQIT where
     `V12.Core.GravitationalAnomaly,
     `V12.Core.CSQITWeaver,
     `V12.Core.TopologicalTime,
+    `V12.Core.Fin7Uniqueness,
     `V12.Unified.Models.AxionDarkEnergyCoupled
   ]
