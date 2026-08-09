@@ -769,7 +769,7 @@ theorem axion_mass_v12_2_bounds_W1 :
         rw [div_eq_mul_inv]
       rw [h_eq1, h_eq2]
       exact h_mul
-    have h_val1 : (54 : ℝ) / 10^18 ≤ ((15 : ℝ) / 100)^2 / ((2.29e18 : ℝ) / 5532) := by norm_num1
+    have h_val1 : (54 : ℝ) / 10^18 ≤ ((15 : ℝ) / 100)^2 / ((2.29e18 : ℝ) / 5532) := by norm_num
     linarith
   · -- 上界：Λ² / K < 22/10^17
     -- 证明链：
@@ -795,7 +795,7 @@ theorem axion_mass_v12_2_bounds_W1 :
         rw [div_eq_mul_inv]
       rw [h_eq1, h_eq2]
       exact h_mul
-    have h_val2 : ((30 : ℝ) / 100)^2 / ((2.29e18 : ℝ) / 5533) ≤ (22 : ℝ) / 10^17 := by norm_num1
+    have h_val2 : ((30 : ℝ) / 100)^2 / ((2.29e18 : ℝ) / 5533) ≤ (22 : ℝ) / 10^17 := by norm_num
     linarith
 
 end CSQIT.V12.Unified.Models.AxionDarkEnergy

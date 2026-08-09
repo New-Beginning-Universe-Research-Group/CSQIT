@@ -1365,11 +1365,11 @@ theorem v_EW_phys_bounds_W1 :
   -- 算术验证：9^14 < K_MPl 和 K_MPl < (27/2)^14
   have h_K_gt_9_14 : (9:ℝ)^14 < K_MPl := by
     have h := h_K_bounds.1
-    have h_check : (9:ℝ)^14 < (2.29e18:ℝ) / 5533 := by norm_num1
+    have h_check : (9:ℝ)^14 < (2.29e18:ℝ) / 5533 := by norm_num
     linarith
   have h_K_lt_27_2_14 : K_MPl < ((27:ℝ)/2)^14 := by
     have h := h_K_bounds.2
-    have h_check : (2.29e18:ℝ) / 5532 < ((27:ℝ)/2)^14 := by norm_num1
+    have h_check : (2.29e18:ℝ) / 5532 < ((27:ℝ)/2)^14 := by norm_num
     linarith
   -- 正指数单调性：9 < K_MPl^(1/14) < 27/2
   have h_one_14 : (0:ℝ) < 1/(14:ℝ) := by norm_num
@@ -1426,11 +1426,11 @@ theorem Λ_QCD_phys_bounds_W1 :
   -- 算术验证：800^5 < K_MPl < 900^5
   have h_K_gt_800_5 : (800:ℝ)^5 < K_MPl := by
     have h := h_K_bounds.1
-    have h_check : (800:ℝ)^5 < (2.29e18:ℝ) / 5533 := by norm_num1
+    have h_check : (800:ℝ)^5 < (2.29e18:ℝ) / 5533 := by norm_num
     linarith
   have h_K_lt_900_5 : K_MPl < (900:ℝ)^5 := by
     have h := h_K_bounds.2
-    have h_check : (2.29e18:ℝ) / 5532 < (900:ℝ)^5 := by norm_num1
+    have h_check : (2.29e18:ℝ) / 5532 < (900:ℝ)^5 := by norm_num
     linarith
   -- 正指数单调性：800 < K_MPl^(1/5) < 900
   have h_one_5 : (0:ℝ) < 1/(5:ℝ) := by norm_num
@@ -1519,11 +1519,11 @@ theorem Λ_DE_phys_bounds_W1 :
   -- 10^14 < K_MPl < 10^15
   have h_K_gt_10_14 : (10:ℝ)^14 < K_MPl := by
     have h := h_K_bounds.1
-    have h_check : (10:ℝ)^14 < (2.29e18:ℝ) / 5533 := by norm_num1
+    have h_check : (10:ℝ)^14 < (2.29e18:ℝ) / 5533 := by norm_num
     linarith
   have h_K_lt_10_15 : K_MPl < (10:ℝ)^15 := by
     have h := h_K_bounds.2
-    have h_check : (2.29e18:ℝ) / 5532 < (10:ℝ)^15 := by norm_num1
+    have h_check : (2.29e18:ℝ) / 5532 < (10:ℝ)^15 := by norm_num
     linarith
   -- K_MPl^(-1) = 1/K_MPl
   have h_neg_eq : K_MPl ^ p_Λ_DE = K_MPl⁻¹ := by
@@ -1553,7 +1553,7 @@ theorem Λ_DE_phys_bounds_W1 :
     have h_step1 : 1/(10:ℝ)^15 * ((751689:ℝ)/840) < K_MPl⁻¹ * ((751689:ℝ)/840) :=
       mul_lt_mul_of_pos_right h_inv_lb h_C_pos
     -- 验证 1/10^15 * 751689/840 > 1/10^13
-    have h_step2 : 1/(10:ℝ)^13 < 1/(10:ℝ)^15 * ((751689:ℝ)/840) := by norm_num1
+    have h_step2 : 1/(10:ℝ)^13 < 1/(10:ℝ)^15 * ((751689:ℝ)/840) := by norm_num
     linarith
   · -- 上界：K_MPl⁻¹ * 751689/840 < 1/10^11
     -- 由 h_inv_ub: K_MPl⁻¹ < 1/10^14
@@ -1561,7 +1561,7 @@ theorem Λ_DE_phys_bounds_W1 :
     have h_step1 : K_MPl⁻¹ * ((751689:ℝ)/840) < 1/(10:ℝ)^14 * ((751689:ℝ)/840) :=
       mul_lt_mul_of_pos_right h_inv_ub h_C_pos
     -- 验证 1/10^14 * 751689/840 < 1/10^11
-    have h_step2 : 1/(10:ℝ)^14 * ((751689:ℝ)/840) < 1/(10:ℝ)^11 := by norm_num1
+    have h_step2 : 1/(10:ℝ)^14 * ((751689:ℝ)/840) < 1/(10:ℝ)^11 := by norm_num
     linarith
 
 /-! ---------------------------------------------------------------------------
@@ -1738,7 +1738,7 @@ theorem neutrino_mass_phys_bounds_W1 :
     have h_val1 : (15 : ℝ) / 10^12 ≤
         ((200 : ℝ)^2) / (C_ν * ((2.29e18 : ℝ) / 5532)) := by
       rw [C_ν_eq]
-      norm_num1
+      norm_num
     linarith
   · -- 上界：v_EW² / (C_ν * K_MPl) < 37/10^12
     -- 链：
@@ -1770,7 +1770,7 @@ theorem neutrino_mass_phys_bounds_W1 :
     have h_val2 : ((300 : ℝ)^2) / (C_ν * ((2.29e18 : ℝ) / 5533)) ≤
         (37 : ℝ) / 10^12 := by
       rw [C_ν_eq]
-      norm_num1
+      norm_num
     linarith
 
 /-! ---------------------------------------------------------------------------
@@ -1978,13 +1978,13 @@ theorem physical_energy_order_matches_closure_order_W1 :
     -- Λ_DE < 1/10^11 < 0.15 < Λ_QCD
     have h1 : Λ_DE_phys < (1:ℝ) / 10^11 := h_DE.2
     have h2 : (15:ℝ)/100 < Λ_QCD_phys := h_QCD.1
-    have h_mid : (1:ℝ) / 10^11 < (15:ℝ)/100 := by norm_num1
+    have h_mid : (1:ℝ) / 10^11 < (15:ℝ)/100 := by norm_num
     linarith
   · -- Λ_QCD < v_EW
     -- Λ_QCD < 0.30 < 200 < v_EW
     have h1 : Λ_QCD_phys < (30:ℝ)/100 := h_QCD.2
     have h2 : (200 : ℝ) < v_EW_phys := h_v_ub.1
-    have h_mid : (30:ℝ)/100 < (200 : ℝ) := by norm_num1
+    have h_mid : (30:ℝ)/100 < (200 : ℝ) := by norm_num
     linarith
 
 end CSQIT.V12.AlgebraicTimeCircle
