@@ -30,7 +30,7 @@ GitHub 推送版本：lakefile.lean（git 依赖，可复现）
   AxionDarkEnergyCoupled.lean (依赖所有上述模块)
 
 编译状态：Build completed successfully, 0 errors, 0 sorry
-代码行数：约 6220 行 (9 个模块)
+代码行数：约 6301 行 (9 个模块)
 层级标注（v12.1.2 诚实修正）：
   核心结构因子（420, k=5, 2π, c(n), 量子纠缠）= W1 严格
   α⁻¹ 表达式组合方式、B 构造、量级匹配 = W2 条件性
@@ -62,5 +62,6 @@ lean_lib CSQIT where
     `V12.Core.CSQITWeaver,
     `V12.Core.TopologicalTime,
     `V12.Core.Fin7Uniqueness,
+    `V12.Core.ErrorBounds,
     `V12.Unified.Models.AxionDarkEnergyCoupled
   ]
