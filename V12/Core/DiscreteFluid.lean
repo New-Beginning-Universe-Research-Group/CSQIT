@@ -273,24 +273,24 @@ lemma evolve_n_not_injective (v : ℤ) :
   have hMn : (M_nat : ℤ) = M := by
     have h : ∀ (x : ℤ), 0 ≤ x → (x.natAbs : ℤ) = x := by
       intro x hx
-      exact?
+      have h_pos : 0 ≤ x := hx
+      have h_cast : (x.natAbs : ℤ) = x := by
+        simp [Int.natAbs_of_nonneg h_pos]
+        <;> omega
+      exact h_cast
     exact h M h_nonneg
   have h_bounded : ∀ n : ℕ, int_abs (evolve_n n v) ≤ M := by
-    intro n
-    exact velocity_abs_nonincreasing_iterate n v
-  set N : ℕ := 2 * M_nat + 2
-  let g : Fin N → ℤ := fun i => evolve_n i.val v
-  -- R : Finset ℤ = {k - M | k ∈ range (2M+1)}
-  let R : Finset ℤ := Finset.image (fun k : ℕ => (k : ℤ) - M) (Finset.range (2 * M_nat + 1))
+    intro n; exact velocity_abs_nonincreasing_iterate n v
+  -- 有限集 R = [−M, M] ∩ ℤ，card = 2M_nat + 1
+  let R : Finset ℤ := Finset.image (fun k : ℕ => (k : ℤ) - M)
+      (Finset.range (2 * M_nat + 1))
   have hR_card : R.card = 2 * M_nat + 1 := by
     have h_inj : Function.Injective (fun k : ℕ => (k : ℤ) - M) := by
       intro k1 k2 h
-      have : (k1 : ℤ) = (k2 : ℤ) := by linarith
-      exact_mod_cast this
+      have h1 : (k1 : ℤ) - M = (k2 : ℤ) - M := h
+      have h2 : (k1 : ℤ) = (k2 : ℤ) := by linarith
+      exact_mod_cast h2
     rw [Finset.card_image_of_injective _ h_inj, Finset.card_range]
-  -- S := {x : ℤ // x ∈ R}，是 Fintype，card = R.card
-  let S : Type := {x : ℤ // x ∈ R}
-  -- 需要证明：若 int_abs x ≤ M，则 x ∈ R
   have h_abs_in_R : ∀ x : ℤ, int_abs x ≤ M → x ∈ R := by
     intro x hx
     have hle : -M ≤ x ∧ x ≤ M := by
@@ -310,31 +310,29 @@ lemma evolve_n_not_injective (v : ℤ) :
         have h6 : x + M ≤ 2 * M := by linarith
         omega
       · have h7 : ((x + M).natAbs : ℤ) = x + M := by omega
-        linarith
+        have h8 : ((x + M).natAbs : ℤ) - M = x := by linarith
+        exact h8
     rcases hk with ⟨k, hk_lt, hk_eq⟩
     exact Finset.mem_image.mpr ⟨k, Finset.mem_range.mpr hk_lt, hk_eq⟩
-  -- g' : Fin N → S（evolve_n i.val v ∈ R 由 h_bounded + h_abs_in_R）
-  let g' : Fin N → S := fun i => ⟨g i, h_abs_in_R (g i) (h_bounded i.val)⟩
-  have hg'_inj : Function.Injective g' := by
+  -- 目标有限类型 S := {x : ℤ // x ∈ R}，Fintype，card = R.card
+  let S : Type := {x : ℤ // x ∈ R}
+  set N : ℕ := 2 * M_nat + 2 with hNdef
+  let g : Fin N → ℤ := fun i => evolve_n i.val v
+  have h_main : ∀ (i : Fin N), (g i) ∈ R := fun i => h_abs_in_R (g i) (h_bounded i.val)
+  -- h_inj_fn : Fin N → S 单射（若 h_inj 成立）
+  have h_inj_fn : Function.Injective (fun i : Fin N => (⟨g i, h_main i⟩ : S)) := by
     intro i j h_eq
     apply Fin.ext
-    have hval : (g' i).val = (g' j).val := Subtype.ext_iff.mp h_eq
-    have hgi : (g' i).val = g i := rfl
-    have hgj : (g' j).val = g j := rfl
-    have h : g i = g j := by linarith
-    exact h_inj h
-  have h_card_le : Fintype.card (Fin N) ≤ Fintype.card S :=
-    Fintype.card_le_of_injective g' hg'_inj
-  have h_card_S : Fintype.card S = R.card := Fintype.card_coe R
-  have hNcard : Fintype.card (Fin N) = N := by simp
-  have h_final : N ≤ R.card := by
-    calc
-      N = Fintype.card (Fin N) := hNcard.symm
-      _ ≤ Fintype.card S := h_card_le
-      _ = R.card := h_card_S
-  have h_contra : N ≤ 2 * M_nat + 1 := by linarith [hR_card, h_final]
-  have hNdef : N = 2 * M_nat + 2 := by rfl
-  omega
+    have hval : (⟨g i, h_main i⟩ : S).val = (⟨g j, h_main j⟩ : S).val :=
+      Subtype.ext_iff.mp h_eq
+    have h' : g i = g j := hval
+    exact h_inj h'
+  have h_card_lt : Fintype.card S < Fintype.card (Fin N) := by
+    have hS_card : Fintype.card S = R.card := Fintype.card_coe R
+    rw [hS_card, hNdef, hR_card]
+    simp [Fintype.card_fin]
+    <;> omega
+  exact Fintype.not_injective_of_card_lt _ h_card_lt h_inj_fn
 
 /-- **CSQIT 循环定理 (W1 严格)**:
     演化半轨最终进入循环。
@@ -373,7 +371,7 @@ theorem eventually_cyclic (v : ℤ) :
 theorem evolve_zero_is_fixed_point :
     evolve 0 = 0 := by
   unfold evolve
-  <;> decide
+  decide
 
 theorem evolve_n_zero_invariant (n : ℕ) :
     evolve_n n 0 = 0 := by
