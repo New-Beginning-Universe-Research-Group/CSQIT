@@ -45,5 +45,6 @@ lean_lib CSQIT where
     `V12.Core.ErrorBounds,
     `V12.Core.CrouzeixConnection,
     `V12.Core.DiscreteFluid,
+    `V12.Core.DiscreteUniverse,
     `V12.Unified.Models.AxionDarkEnergyCoupled
   ]
