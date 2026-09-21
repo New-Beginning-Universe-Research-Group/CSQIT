@@ -1,20 +1,18 @@
-﻿/-
-CSQIT v12.3 — Lake 项目配置文件（本地编译环境）
-版本: v12.3  (新增 CrouzeixConnection.lean —— Crouzeix 猜想桥梁模块)
+/-
+CSQIT v12.5.1 — Lake 项目配置文件（本地编译环境）
+版本: v12.5.1
 Lean 版本: v4.29.0-rc6
 
-重要里程碑 (v12.3):
-  · Jin Shanmu (2026, Lean 4) + Lorist & Schwenninger (2026, 独立) 证明 Crouzeix 猜想
-    ∥p(A)∥ ≤ 2·max_{z∈W(A)}|p(z)| 对所有复方阵 A 和多项式 p
-  · CSQIT 新增独立贡献：常数 2 的代数起源 = 三群 involution 结构
-  · A₄ 三维不可约表示精确构造（整数矩阵：r, s）
-  · s² = I（involution）→ 2-dilation 结构 → Crouzeix 常数 = 2
+重要里程碑:
+  v12.3: CrouzeixConnection.lean — Crouzeix 猜想桥梁模块
+  v12.5.0: DiscreteUniverse.lean — 宇宙离散性三 W1 证明链
+  v12.5.1: 全局一致性修正 — 物理意义注释统一
 
 本地专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。
 GitHub 推送版本：lakefile.lean（git 依赖，可复现）
 
 编译状态：Build completed successfully, 0 errors, 0 sorry
-代码行数：约 6500 行 (10 个模块)
+代码行数：约 6500 行 (13 个模块)
 层级标注：W1/W2 逐层切割已完成
 -/
 
@@ -22,7 +20,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!\"12.5.1\"
+  version := v!"12.5.1"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
 -- 本地编译专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。
