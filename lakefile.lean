@@ -1,4 +1,4 @@
-/-
+﻿/-
 CSQIT v12.3 — Lake 项目配置文件（本地编译环境）
 版本: v12.3  (新增 CrouzeixConnection.lean —— Crouzeix 猜想桥梁模块)
 Lean 版本: v4.29.0-rc6
@@ -22,7 +22,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"12.3.0"
+  version := v!\"12.5.1\"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
 -- 本地编译专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。

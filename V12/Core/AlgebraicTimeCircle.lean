@@ -540,7 +540,15 @@ noncomputable def Λ_cyclic (n : ℕ) : ℝ :=
 /-- **定理：循环能标是周期为 840 的周期函数**（W1 严格）。
     Λ_cyclic(n + 840) = Λ_cyclic(n)
 
-    物理意义：能标在时间圆上循环往复，宇宙不会热寂。 -/
+    物理意义（v12.5.1 修正）：
+    这是 foldIndex 索引折叠的 W1 严格推论：
+      foldIndex n = n % 840，故 Λ_cyclic 以 840 为周期。
+    
+    诚实边界：
+    这不是"宇宙演化循环往复"的 W1 证明——
+    演化方向由 Foundation §8 闭包序列（严格递增、永不循环）刻画。
+    时间圆图景的周期性是索引层面的（把无限时间轴折叠到 840 个位置），
+    不是演化层面的。两者是不同的数学结构。 -/
 theorem Λ_cyclic_periodic (n : ℕ) :
     Λ_cyclic (n + topoPeriod) = Λ_cyclic n := by
   have h_fold : foldIndex (n + topoPeriod) = foldIndex n :=

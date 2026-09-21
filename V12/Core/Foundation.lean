@@ -3197,7 +3197,15 @@ theorem fold_origin_cycle_equiv :
 /-- **定理：折叠函数是周期为 840 的周期函数**（W1 严格）。
     foldIndex(n + 840) = foldIndex(n)
 
-    物理意义：能标在时间圆上循环往复，排除热寂。 -/
+    物理意义（v12.5.1 修正）：
+    这是自然数取模的 W1 严格事实——
+    foldIndex n = n % 840 把无限时间轴折叠到 840 个位置。
+    
+    诚实边界：
+    这不是"宇宙演化循环往复"的证明。
+    演化方向由 §8 闭包序列 closure_sequence_extended（严格递增、永不循环）刻画。
+    foldIndex 的周期性是索引层面的数学结构，
+    闭包序列的严格递增是演化层面的数学结构。两者不同但兼容。 -/
 theorem foldIndex_periodic (n : ℕ) :
     foldIndex (n + topoPeriod) = foldIndex n := by
   unfold foldIndex
