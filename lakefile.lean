@@ -20,7 +20,7 @@ import Lake
 open Lake DSL
 
 package csqit where
-  version := v!"12.5.1"
+  version := v!"12.6.0"
   leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
 
 -- 本地编译专用：使用预编译 mathlib（path 依赖），避免重复下载和编译。
@@ -44,5 +44,7 @@ lean_lib CSQIT where
     `V12.Core.CrouzeixConnection,
     `V12.Core.DiscreteFluid,
     `V12.Core.DiscreteUniverse,
+    `V12.Core.LatticeGap,
+    `V12.Core.MillenniumMath,
     `V12.Unified.Models.AxionDarkEnergyCoupled
   ]
