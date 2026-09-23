@@ -46,5 +46,6 @@ lean_lib CSQIT where
     `V12.Core.DiscreteUniverse,
     `V12.Core.LatticeGap,
     `V12.Core.MillenniumMath,
+    `V12.Core.CausalFromAlgebra,
     `V12.Unified.Models.AxionDarkEnergyCoupled
   ]
