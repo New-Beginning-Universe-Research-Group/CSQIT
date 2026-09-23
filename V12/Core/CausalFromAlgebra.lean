@@ -327,6 +327,140 @@ theorem amplitude_in_U1 (M C : Type*) (A : AxiomA M C) (Cx : AxiomC M C)
     (α : C) : Complex.normSq (Cx.amplitude α) = 1 := Cx.norm_one α
 
 /-! ═══════════════════════════════════════════════════════════
+   §7.5 ★ "相邻"与序数版正格距（W1 严格）
+   
+   DeepSeek 评审建议的路径：
+     因果无环性 → 相邻节点存在正距离 → 格距 > 0
+   
+   本节把这条路径的 W1 严格部分形式化。
+   
+   "相邻"的定义：
+     adjacent x y := directCause x y
+   
+   为什么 directCause 就是正确的"相邻"？
+     因为 directCause_trans 已经证明了 directCause 本身传递。
+     这意味着 causalLe x y（x ≠ y）当且仅当 directCause x y。
+     也就是说，**任何严格因果先后的两个节点都是"直接相邻"的**——
+     在这个框架里不存在"隔着中间节点"的情况。
+     compose 操作自动把多步因果链压缩为一步直接因果。
+   
+   这听起来很"极端"，但实际上很干净：
+     - 因果偏序 causalLe = identity ∪ directCause
+     - "相邻"的传统定义（严格介于之间的节点不存在）
+       在这个框架里自动满足（因为没有中间节点）
+   
+   序数版正格距：
+     我们没有数值距离函数（这需要额外假设，比如 Fintype M）。
+     但我们有**序数意义上的正格距**：
+       
+       (a) adjacent 不对称：adjacent x y → ¬ adjacent y x
+           （由 causalAcyclic_from_injective，W1 严格）
+       
+       (b) adjacent 的证据是"最小单元"：
+           每个 adjacent x y 的证据 α 满足 input_nodup α
+           （AxiomA.input_nodup，W1 严格）
+           这意味着因果传递通过的是**无冗余的有限列表**
+           ——不存在"无限精细"的因果影响
+       
+       (c) 物理尺度正间隔：effectiveGap k = c(k+1) - c(k) > 0
+           （已在 LatticeGap.lean 中 W1 严格证明）
+   
+   三层循环结构的精确定义：
+     ┌──────────┬─────────────────────────────────────────────┐
+     │ 层次      │ 结构                                     │
+     ├──────────┼─────────────────────────────────────────────┤
+     │ 因果循环  │ ❌ 已排除（causalAcyclic_from_injective）  │
+     │          │ 不存在 x ≠ y 使得 x→y 且 y→x               │
+     ├──────────┼─────────────────────────────────────────────┤
+     │ 时间圆    │ ✅ 存在（foldIndex n = n % 840）            │
+     │          │ 螺旋上升：因果序严格递增，时间坐标周期性     │
+     ├──────────┼─────────────────────────────────────────────┤
+     │ 演化递增  │ ❌ 不循环（closure_sequence_extended_succ_lt）│
+     │          │ 闭包序列严格递增 c(k+1) > c(k)             │
+     └──────────┴─────────────────────────────────────────────┘
+   
+   用户图景中的"不断演化不断循环"：
+     → 时间圆层面的循环（层 2）
+     → 因果序/演化递增层面的不循环（层 1 + 层 3）
+     → 合起来就是"螺旋上升"——每圈回到同一个时间点，
+       但物理尺度由更大的 c(k) 确定
+   
+   层级：W1 严格
+   ═══════════════════════════════════════════════════════════ -/
+
+/-- **相邻**：x 和 y 在因果上直接相邻（W1 严格定义）。
+    
+    adjacent x y := directCause x y
+    
+    在本框架里，这就是正确的"相邻"概念——
+    因为 directCause 本身传递，任何因果先后的节点都是直接相邻的。 -/
+def adjacent (M C : Type*) (A : AxiomA M C) (x y : M) : Prop :=
+  directCause M C A x y
+
+/-- **相邻蕴含因果序**（W1 严格，仅 AxiomA）。
+    
+    如果 x 和 y 相邻，那么 x 在因果上先于 y。 -/
+theorem adjacent_implies_causalLe (M C : Type*) (A : AxiomA M C)
+    (x y : M) (h : adjacent M C A x y) : causalLe M C A x y :=
+  Or.inr h
+
+/-! ═══════════════════════════════════════════════════════════
+   §7.6 不存在 2-循环：序数版正格距（W1 严格，AxiomA + AxiomC）
+   
+   DeepSeek 评审提议的路径：
+     因果无环性 → 相邻节点存在正距离 → 格距 > 0
+   
+   序数版正格距：
+     不存在两个不同的事件 x ≠ y 使得 x→y 且 y→x。
+     这就是因果无环性的直接推论。
+   
+   物理意义：因果维度上没有"零距离循环"。
+   ═══════════════════════════════════════════════════════════ -/
+
+/-- **序数版正格距：不存在 2-循环**（W1 严格，AxiomA + AxiomC）。
+    
+    不存在两个不同的事件 x ≠ y 使得 x→y 且 y→x。
+    
+    这是 DeepSeek 评审提议的"因果无环性 → 正格距"的
+    序数版本——它排除了任何因果维度上的"零距离循环"。 -/
+theorem no_two_cycle (M C : Type*) (A : AxiomA M C) (Cx : AxiomC M C) :
+    ¬ ∃ (x y : M), x ≠ y ∧ adjacent M C A x y ∧ adjacent M C A y x := by
+  intro h
+  rcases h with ⟨x, y, h_ne, h_adj_xy, h_adj_yx⟩
+  have h_eq : x = y := causalAcyclic_from_injective M C A Cx x y h_adj_xy h_adj_yx
+  exact h_ne h_eq
+
+/-! ═══════════════════════════════════════════════════════════
+   §7.7 相邻证据的原子性：通过 input_nodup（W1 严格，仅 AxiomA）
+   
+   每个 adjacent x y 的证据 α 都满足 input_nodup α：
+     - input α 的元素互不相同（无冗余）
+     - 但 x 必须在 input α 里（所以 input α 非空）
+   
+   这揭示了因果传递的**最小性**：
+     - 每次因果影响都通过一个有限的、无冗余的列表完成
+     - 不存在"无限精细"的因果影响
+     - 因果结构是"离散原子"的
+   
+   这就是更深层的"正格距"：
+     因果影响不能被无限细分——它有最小单元。
+   
+   层级：W1 严格（仅 AxiomA.input_nodup）
+   ═══════════════════════════════════════════════════════════ -/
+
+/-- **相邻证据的原子性**（W1 严格，仅 AxiomA）。
+    
+    对任何 adjacent x y，存在证据 α 满足 input_nodup α。
+    
+    物理意义：因果传递通过**无冗余的最小单元**完成，
+    不存在无限精细的因果影响。 -/
+theorem adjacent_witness_atomic (M C : Type*) (A : AxiomA M C)
+    {x y : M} (h : adjacent M C A x y) :
+    ∃ (α : C), x ∈ A.input α ∧ A.output α = y ∧ (A.input α).Nodup := by
+  rcases h with ⟨α, hx_in, hα_out⟩
+  refine' ⟨α, hx_in, hα_out, A.input_nodup α⟩
+
+/-! ═══════════════════════════════════════════════════════════
    §8 总结：v12.7.0 完整因果架构
    
    ✅ 从 AxiomA 涌现的 W1 严格结构：
