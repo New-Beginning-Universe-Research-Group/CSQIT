@@ -1,0 +1,6 @@
+﻿.lake/
+**/.lake/
+*.olean
+*.o
+*.so
+.dub/
