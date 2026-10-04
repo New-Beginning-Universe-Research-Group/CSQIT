@@ -2,7 +2,7 @@ import Lake
 open Lake DSL
 
 package CSQIT_W1 where
-  version := v!"13.1.0"
+  version := v!"15.0.0"
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887"
@@ -31,5 +31,6 @@ lean_lib CSQIT_W1 where
     `CSQIT_W1.SequenceStructure,
     `CSQIT_W1.PhysicalPredictions,
     `CSQIT_W1.ObserverLayering,
-    `CSQIT_W1.QuantumCorrection
+    `CSQIT_W1.QuantumCorrection,
+    `CSQIT_W1.Fin7Uniqueness
   ]
