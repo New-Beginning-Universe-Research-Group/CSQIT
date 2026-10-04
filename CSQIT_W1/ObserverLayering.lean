@@ -36,6 +36,7 @@ namespace CSQIT_W1.ObserverLayering
 
 open CSQIT_W1.Foundation
 open CSQIT_W1.MinimalCost
+open CSQIT_W1.MinimalCost.WeavingBase
 open CSQIT.V12.AlgebraicTimeCircle
 open Real
 
@@ -165,9 +166,12 @@ theorem alpha_fraction_is_inv_observerBridge :
     alpha_inv_fraction_part mkBase = 1 / observerBridge := by
   have h_bridge : observerBridge = 250 / 9 := observerBridge_mkBase_eq_250_over_9
   have h_frac : alpha_inv_fraction_part mkBase = 9 / 250 :=
-    MinimalCost.alpha_inv_fraction_mkBase_eq_9_over_250
-  rw [h_bridge] at *
-  rw [div_eq_div_iff] <;> norm_num
+    alpha_inv_fraction_mkBase_eq_9_over_250
+  have h_eq : (9 / 250 : ℝ) = 1 / (250 / 9) := by
+    field_simp
+    <;> ring
+  rw [h_frac, h_bridge]
+  exact h_eq
 
 /-! ============================================================================
    §5. 数值匹配：裸值 vs CODATA 观测值（W2 条件性）
@@ -185,7 +189,11 @@ theorem alpha_inv_absolute_error_bounded
   have h1 : observed_energy alpha_level_n alpha_level_n_pos =
       curvature_energy alpha_level_n alpha_level_n_pos :=
     observed_equals_bare_at_alpha_level
-  linarith [h1, h_obs]
+  have h_eq : curvature_energy alpha_level_n alpha_level_n_pos =
+      137.035999206 := by linarith [h1, h_obs]
+  rw [h_eq]
+  have h2 : |(0 : ℝ)| < (1e-5 : ℝ) := by norm_num
+  simpa using h2
 
 /-! ============================================================================
    §6. 宇宙学常数的层级定位（W3 概念性）
