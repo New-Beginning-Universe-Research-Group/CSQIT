@@ -31,5 +31,6 @@ lean_lib CSQIT_W1 where
     `CSQIT_W1.SequenceStructure,
     `CSQIT_W1.PhysicalPredictions,
     `CSQIT_W1.ObserverLayering,
-    `CSQIT_W1.QuantumCorrection
+    `CSQIT_W1.QuantumCorrection,
+    `CSQIT_W1.GenerationBridge
   ]
