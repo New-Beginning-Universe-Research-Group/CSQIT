@@ -22,6 +22,7 @@ PhysicalPredictions — CSQIT 物理预言：从基底 P 到可观测常数
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
+import CSQIT_W1.AttractorPrototype
 
 namespace CSQIT_W1.PhysicalPredictions
 
@@ -184,6 +185,69 @@ theorem mp_over_me_integer_factorization :
    
    吸引子唯一性（W2 数值证据，非 W1 严格）：
    枚举 p<30 的所有四素数组合，只有 {2,3,5,7} 命中 α⁻¹=137.036。
+   
+   — 升级为 W1 严格 ——
+   通过 AttractorPrototype.attractor_unique（W1 严格定理），
+   sin²θ_W 和 m_p/m_e 整数部分都可以从吸引子约束强制导出。
+   这不再是"枚举发现的数值巧合"，而是"吸引子唯一性强制的物理结果"。
    ============================================================================ -/
+
+/-! ============================================================================
+   §6. 吸引子强制的物理常数（W1 严格 — 从 attractor_unique 直接导出）
+   
+   核心升级：之前的 sin²θ_W = 34/147 和 m_p/m_e 整数 = 1836 只是
+   "用硬编码常量 norm_num 验证数值对"。
+   
+   现在通过 AttractorPrototype.attractor_unique：
+   任何满足吸引子约束的递增自然数 (p₁,p₂,p₃,p₄) 必须 = (2,3,5,7)，
+   因此一般化公式 sin2theta_W_general(p₁,p₂,p₃,p₄) 强制 = 34/147，
+   mp_over_me_integer_general 强制 = 1836。
+   
+   这是 W1 严格定理 — 不假设素数，不限上界。
+   ============================================================================ -/
+
+open CSQIT_W1.AttractorPrototype
+
+/-- **一般化 sin²θ_W 公式**（接受任意自然数四元组）。 -/
+def sin2theta_W_general (p1 p2 p3 p4 : ℕ) : ℚ :=
+    (p1 : ℚ) * ((p1 + p2 + p3 + p4) : ℚ) / ((p2 : ℚ) * (p4 : ℚ)^2)
+
+/-- **一般化 m_p/m_e 整数部分公式**（接受任意自然数四元组）。 -/
+def mp_over_me_integer_general (p1 p2 p3 p4 : ℕ) : ℕ :=
+    p1^2 * p2^3 * (p1 + p2 + p3 + p4)
+
+/-! **升级定理 1**：sin²θ_W 公式由吸引子唯一性强制。
+
+给定递增自然数 p₁≥2 满足吸引子约束（α⁻¹ 整数=137 + 分数等式），
+则 sin2theta_W_general p₁ p₂ p₃ p₄ 必须 = 34/147。
+
+这不再是"我们选了基底 P 算出来对"，而是：
+"任何能成为吸引子的四元组，其 sin²θ_W 候选公式强制 = 34/147"。 -/
+theorem sin2theta_W_forced_by_attractor :
+    ∀ p₁ p₂ p₃ p₄ : ℕ,
+    p₁ ≥ 2 → p₂ > p₁ → p₃ > p₂ → p₄ > p₃ →
+    attractor_integer_part p₁ p₂ p₄ = 137 →
+    attractor_fraction_eq p₁ p₂ p₃ →
+    sin2theta_W_general p₁ p₂ p₃ p₄ = 34 / 147 := by
+  intro p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
+  have h_forced : p₁ = 2 ∧ p₂ = 3 ∧ p₃ = 5 ∧ p₄ = 7 :=
+    attractor_unique p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
+  rcases h_forced with ⟨rfl, rfl, rfl, rfl⟩
+  norm_num [sin2theta_W_general]
+
+/-! **升级定理 2**：m_p/m_e 整数部分由吸引子唯一性强制。
+
+在吸引子约束下，mp_over_me_integer_general 强制 = 1836。 -/
+theorem mp_over_me_integer_forced_by_attractor :
+    ∀ p₁ p₂ p₃ p₄ : ℕ,
+    p₁ ≥ 2 → p₂ > p₁ → p₃ > p₂ → p₄ > p₃ →
+    attractor_integer_part p₁ p₂ p₄ = 137 →
+    attractor_fraction_eq p₁ p₂ p₃ →
+    mp_over_me_integer_general p₁ p₂ p₃ p₄ = 1836 := by
+  intro p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
+  have h_forced : p₁ = 2 ∧ p₂ = 3 ∧ p₃ = 5 ∧ p₄ = 7 :=
+    attractor_unique p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
+  rcases h_forced with ⟨rfl, rfl, rfl, rfl⟩
+  norm_num [mp_over_me_integer_general]
 
 end CSQIT_W1.PhysicalPredictions
