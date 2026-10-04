@@ -3,4 +3,10 @@
 *.olean
 *.o
 *.so
-.dub/
+.dub/*.bak
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.snl
+paper/*.synctex.gz

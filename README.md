@@ -1,4 +1,4 @@
-# CSQIT — 编译器量子时空理论
+# CSQIT — 量子时空编织理论
 
 > 版本: v15.0.0 (feat-minimalcost-uniqueness)  
 > 日期: 2026-10-04  

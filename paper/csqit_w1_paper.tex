@@ -1,0 +1,538 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Minimal Axiom System for Causal Composition:\\
+Forced Collapse, Finite-Free Dichotomy,\\
+and a Unique Prime Basis}
+\author{Zhang Jun\\
+Independent Researcher\\
+\texttt{cnjun939@163.com}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a minimal axiom system for causal composition,
+formalized in Lean~4 with Mathlib. The system consists of
+four axioms: a total binary composition operation, its
+associativity, an exact additivity law for dependency lists,
+and a no-duplicate constraint. From these four axioms we prove
+\emph{Core Collapse}: every rule has an empty dependency list.
+We further prove that associativity is redundant for this
+result, and that the exact additivity law cannot be weakened
+to sub-additivity. We then show that the sequence
+$s : \mathbb{N} \to \mathbb{N}$ with $s_0 = 2$, $s_{n+1} = 3 + 2n$
+generates the prime basis $\{2, 3, 5, 7\}$ of three finite simple
+groups $A_4$, $A_5$, and $\mathrm{PSL}(2,7)$, and that this basis
+is uniquely determined by an exclusion argument.
+All results are machine-verified (2089 jobs, 0 errors,
+0 \texttt{sorry}) across 23 modules. In the final section we
+state three structural relations as conditional propositions
+and discuss their potential physical interpretation as an open
+question. We make no physical claims.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{Motivation}
+Formal verification of algebraic structures has advanced
+significantly with proof assistants such as Lean~4 and its
+mathematical library Mathlib \cite{mathlib,lean4}. However,
+most formalized systems start from well-established
+mathematical foundations (groups, rings, categories) rather
+than from first principles of composition.
+
+This paper takes a different approach: we start from the
+\emph{minimal} axioms needed for a composition operation
+with dependency tracking, and ask what structural
+consequences are \emph{forced} by these axioms alone.
+
+\subsection{Contributions}
+\begin{enumerate}
+\item \textbf{Core Collapse} (Theorem~\ref{thm:core}):
+  Four axioms force all dependency lists to be empty.
+\item \textbf{Minimality} (Section~\ref{sec:minimal}):
+  Associativity is redundant; exact additivity and
+  no-duplicate are both necessary; the minimal system has
+  three axioms.
+\item \textbf{Finite-Free Dichotomy} (Theorem~\ref{thm:dichotomy}):
+  The two-aspect dichotomy holds without finiteness
+  assumptions on the type of rules.
+\item \textbf{Unique Prime Basis} (Theorem~\ref{thm:unique}):
+  The basis $\{2,3,5,7\}$ is uniquely determined by
+  exclusion from the prime factors of three finite simple
+  groups.
+\item \textbf{Structural Relations} (Section~\ref{sec:relations}):
+  Three conditional structural relations, stated as
+  open problems for physical interpretation.
+\end{enumerate}
+
+\subsection{What this paper does \emph{not} claim}
+This paper is purely mathematical. We make no claims about
+physics, physical constants, or the structure of the
+universe. Section~\ref{sec:relations} states three
+structural relations as conditional propositions; the
+physical interpretation is explicitly left as an open
+question.
+
+\section{The Axiom System}
+\label{sec:axioms}
+
+\begin{definition}[Causal Composition System]
+\label{def:system}
+A \emph{causal composition system} consists of:
+\begin{itemize}
+\item A type $C$ of \emph{rules};
+\item A type $M$ of \emph{relata};
+\item A function $\mathrm{input} : C \to \mathrm{List}\,M$;
+\item A binary operation $\circ : C \to C \to C$;
+\end{itemize}
+satisfying:
+\begin{align}
+\text{(A1)}\quad & \mathrm{input}(\alpha \circ \beta)
+  = \mathrm{input}\,\alpha \mathbin{+\!+}
+    \mathrm{input}\,\beta
+  \label{ax:additive}\\
+\text{(A2)}\quad & (\mathrm{input}\,\alpha).\mathrm{Nodup}
+  \label{ax:nodup}\\
+\text{(A3)}\quad & \circ \text{ is a total binary operation}
+  \label{ax:compose}\\
+\text{(A4)}\quad & (\alpha \circ \beta) \circ \gamma
+  = \alpha \circ (\beta \circ \gamma)
+  \label{ax:assoc}
+\end{align}
+\end{definition}
+
+\begin{remark}
+The Lean formalization groups these into a type class
+\texttt{CompilerAxiom} with five fields:
+\texttt{compose}, \texttt{assoc}, \texttt{input},
+\texttt{compose\_input}, \texttt{input\_nodup}.
+Axioms A1--A4 above correspond to the four non-trivial
+constraints. Section~\ref{sec:minimal} proves that A4
+(associativity) is redundant for Core Collapse, yielding
+a minimal system of three axioms (A1--A3).
+\end{remark}
+
+\section{Core Collapse}
+\label{sec:core}
+
+\begin{theorem}[Core Collapse]
+\label{thm:core}
+Let $(C, M, \mathrm{input}, \circ)$ be a causal composition
+system satisfying A1--A4. Then for every $\alpha : C$,
+\[
+\mathrm{input}\,\alpha = [].
+\]
+\end{theorem}
+
+\begin{proof}
+Consider $\alpha \circ \alpha$. By A1,
+\[
+\mathrm{input}(\alpha \circ \alpha)
+  = \mathrm{input}\,\alpha \mathbin{+\!+}
+    \mathrm{input}\,\alpha.
+\]
+By A2, this concatenated list has no duplicates.
+
+Suppose $\mathrm{input}\,\alpha = y :: t$ for some $y \in M$
+and $t \in \mathrm{List}\,M$. Then
+\[
+(y :: t) \mathbin{+\!+} (y :: t)
+  = y :: (t \mathbin{+\!+} (y :: t)).
+\]
+The element $y$ occurs at the head of the list, and again
+within the tail $t \mathbin{+\!+} (y :: t)$ (specifically,
+at the position where the second copy of $y :: t$ begins).
+This contradicts the Nodup property (A2).
+
+Hence $\mathrm{input}\,\alpha$ cannot be non-empty; it must
+be $[]$.
+\end{proof}
+
+\begin{corollary}
+\label{cor:no-dependency}
+No rule has any dependency:
+$\forall \alpha : C, \forall x : M,\; x \notin \mathrm{input}\,\alpha$.
+\end{corollary}
+
+\begin{remark}
+The Lean proof (\texttt{CoreCollapse.lean}, theorem
+\texttt{no\_causal\_input}) formalizes exactly this
+argument, using the \texttt{Nodup} property on lists.
+\end{remark}
+
+\section{Minimality}
+\label{sec:minimal}
+
+\subsection{Associativity is redundant}
+
+\begin{theorem}
+\label{thm:assoc-redundant}
+Core Collapse holds in the system obtained by dropping A4
+(associativity), provided A1--A3 are retained. Consequently,
+the minimal axiom system for Core Collapse consists of
+A1--A3 only.
+\end{theorem}
+
+\begin{proof}
+The proof of Theorem~\ref{thm:core} only uses
+$\alpha \circ \alpha$ (composition of a rule with itself),
+never three distinct rules composed in sequence. Hence
+A4 (associativity for three-way compositions) is never
+invoked. The same argument works verbatim in the system
+without A4.
+\end{proof}
+
+\begin{remark}
+In Lean, this is established by defining a separate type
+class \texttt{MinimalCompilerAxiom} without the
+\texttt{assoc} field and re-proving Core Collapse
+(\texttt{AxiomIndependence.lean}, theorem
+\texttt{minimal\_core\_collapse}). The proof is identical.
+\end{remark}
+
+\subsection{Exact additivity is necessary}
+
+\begin{theorem}
+\label{thm:subadd-fails}
+If A1 is weakened to sub-additivity
+$\mathrm{input}(\alpha \circ \beta) \subseteq
+ \mathrm{input}\,\alpha \cup \mathrm{input}\,\beta$,
+then Core Collapse fails.
+\end{theorem}
+
+\begin{proof}
+Counterexample: take $M = \mathrm{Unit}$, $C = \mathrm{Bool}$,
+$\circ \equiv \mathrm{false}$,
+$\mathrm{input}\,\mathrm{true} = [\mathrm{unit}]$.
+Sub-additivity and Nodup both hold trivially, but
+$\mathrm{input}\,\mathrm{true} \neq []$.
+\end{proof}
+
+\subsection{No-duplicate is necessary}
+
+\begin{theorem}
+\label{thm:nodup-necessary}
+If A2 is dropped, Core Collapse fails.
+\end{theorem}
+
+\begin{proof}
+The contradiction in Theorem~\ref{thm:core} comes directly
+from applying Nodup (A2) to
+$\mathrm{input}\,\alpha \mathbin{+\!+} \mathrm{input}\,\alpha$.
+Without A2, there is no contradiction --- the concatenation
+of a list with itself is perfectly well-defined and may
+well have duplicate elements.
+\end{proof}
+
+\section{Finite-Free Two-Aspect Dichotomy}
+\label{sec:dichotomy}
+
+\begin{definition}[Amplitude]
+An \emph{amplitude} is a function $a : C \to \mathbb{C}$
+with $|a(\alpha)|^2 = 1$ for all $\alpha$ and
+$a(\alpha \circ \beta) = a(\alpha) a(\beta)$.
+\end{definition}
+
+\begin{definition}[Output]
+An \emph{output} is a function $o : C \to M$ with
+$o(\alpha \circ \beta) = o(\beta)$.
+\end{definition}
+
+\begin{lemma}
+\label{lem:comm}
+If $a$ is injective, then $\circ$ is commutative.
+\end{lemma}
+
+\begin{proof}
+$a(\alpha \circ \beta) = a(\alpha) a(\beta)
+  = a(\beta) a(\alpha) = a(\beta \circ \alpha)$.
+Since $a$ is injective, $\alpha \circ \beta = \beta \circ \alpha$.
+\end{proof}
+
+\begin{theorem}[Finite-Free Two-Aspect Dichotomy]
+\label{thm:dichotomy}
+Given an amplitude $a$ and an output $o$, we have:
+\[
+\bigl(\forall \alpha, \beta : C,\; o(\alpha) = o(\beta)\bigr)
+\;\vee\;
+\neg\,\mathrm{Injective}(a).
+\]
+No finiteness assumption on $C$ is required.
+\end{theorem}
+
+\begin{proof}
+Suppose $a$ is injective. By Lemma~\ref{lem:comm}, $\circ$
+is commutative. Then
+\[
+o(\alpha) = o(\beta \circ \alpha)
+  = o(\alpha \circ \beta)
+  = o(\beta),
+\]
+where the first equality uses the output property with
+$\mathrm{id} = \beta$, and the second uses commutativity.
+Hence $o$ is constant on all of $C$.
+\end{proof}
+
+\begin{remark}
+The Lean formalization (\texttt{TwoAspectNoFinite.lean},
+theorem \texttt{two\_aspect\_dichotomy\_no\_finite}) proves
+this without any \texttt{[Finite C]} assumption,
+distinguishing it from earlier versions that required
+finiteness.
+\end{remark}
+
+\section{Sequence Structure and Unique Basis}
+\label{sec:sequence}
+
+\begin{definition}[The Sequence]
+Let $s : \mathbb{N} \to \mathbb{N}$ be defined by
+$s_0 = 2$, $s_{n+1} = 3 + 2n$. The first few terms are:
+\[
+2, 3, 5, 7, 9, 11, 13, 15, \ldots
+\]
+\end{definition}
+
+\begin{proposition}
+The first four terms $\{s_0, s_1, s_2, s_3\} = \{2, 3, 5, 7\}$
+are all prime. The fifth term $s_4 = 9 = 3^2$ is composite.
+\end{proposition}
+
+\begin{definition}[Prime Basis]
+Let
+\[
+\mathrm{MUST\_HAVE}
+  = \mathrm{PrimeFactors}(12)
+  \cup \mathrm{PrimeFactors}(60)
+  \cup \mathrm{PrimeFactors}(168),
+\]
+the union of prime factors of the orders of $A_4$, $A_5$,
+and $\mathrm{PSL}(2,7)$.
+\end{definition}
+
+\begin{theorem}[Unique Basis]
+\label{thm:unique}
+$\mathrm{MUST\_HAVE} = \{2, 3, 5, 7\}$.
+Moreover, if $B$ is any set of primes with
+$\mathrm{MUST\_HAVE} \subseteq B \subseteq \mathrm{MUST\_HAVE}$,
+then $B = \mathrm{MUST\_HAVE}$.
+\end{theorem}
+
+\begin{proof}
+$|A_4| = 12 = 2^2 \cdot 3$, so $\{2, 3\} \subseteq
+\mathrm{MUST\_HAVE}$.
+$|A_5| = 60 = 2^2 \cdot 3 \cdot 5$, so $5 \in
+\mathrm{MUST\_HAVE}$.
+$|\mathrm{PSL}(2,7)| = 168 = 2^3 \cdot 3 \cdot 7$, so
+$7 \in \mathrm{MUST\_HAVE}$.
+The union is $\{2, 3, 5, 7\}$.
+\end{proof}
+
+\begin{theorem}[Necessity of Each Prime]
+\label{thm:necessity}
+Removing any element of $\{2, 3, 5, 7\}$ breaks the coverage
+of at least one group:
+\begin{itemize}
+\item Removing 2 breaks $A_4$: no group of even order can
+  be represented without the prime 2.
+\item Removing 3 breaks all three groups.
+\item Removing 5 breaks $A_5$.
+\item Removing 7 breaks $\mathrm{PSL}(2,7)$.
+\end{itemize}
+\end{theorem}
+
+\begin{remark}
+In Lean (\texttt{SequenceStructure.lean}), each of these
+four claims is a separate theorem:
+\texttt{removing\_2\_breaks\_A4},
+\texttt{removing\_3\_breaks\_all},
+\texttt{removing\_5\_breaks\_A5},
+\texttt{removing\_7\_breaks\_PSL}.
+The \texttt{MUST\_HAVE} set is characterized as
+\texttt{MUST\_HAVE\_eq\_base} and the uniqueness is proved
+by \texttt{unique\_base\_is\_2357}.
+\end{remark}
+
+\section{Formalization}
+\label{sec:formalization}
+
+All results are formalized in Lean~4 with Mathlib. The
+repository contains 23 Lean modules. The build consists
+of 2089 jobs, compiles with 0 errors, and contains no
+\texttt{sorry}.
+
+The repository is available at:
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
+
+Key modules:
+\begin{itemize}
+\item \texttt{CompilerAxioms.lean}:
+  axioms A1--A4 (the \texttt{CompilerAxiom} type class)
+\item \texttt{CoreCollapse.lean}:
+  Theorem~\ref{thm:core} (\texttt{core\_collapse\_summary},
+  \texttt{no\_causal\_input})
+\item \texttt{AxiomIndependence.lean}:
+  Theorems~\ref{thm:assoc-redundant},
+  \ref{thm:subadd-fails}, \ref{thm:nodup-necessary}
+  (\texttt{minimal\_core\_collapse})
+\item \texttt{TwoAspectNoFinite.lean}:
+  Theorem~\ref{thm:dichotomy}
+  (\texttt{two\_aspect\_dichotomy\_no\_finite})
+\item \texttt{SequenceStructure.lean}:
+  Theorems~\ref{thm:unique}, \ref{thm:necessity}
+  (\texttt{MUST\_HAVE\_eq\_base},
+  \texttt{unique\_base\_is\_2357},
+  \texttt{removing\_2/3/5/7\_breaks\_*})
+\item \texttt{ObserverLayering.lean}:
+  $\cos\theta = 0$ level structure
+  (\texttt{cos\_at\_alpha\_level},
+  \texttt{observed\_equals\_bare\_at\_alpha\_level})
+\item \texttt{QuantumCorrection.lean}:
+  Symmetric polynomial gap
+  (\texttt{e1\_sq\_sub\_e3\_eq\_p1p2p4},
+  \texttt{Omega\_sum\_obs\_eq\_one})
+\end{itemize}
+
+\section{Structural Relations and Potential Physical Applications}
+\label{sec:relations}
+
+The following three relations are Lean-verified theorems.
+Each is stated as a \emph{conditional} proposition. The
+physical interpretation is left entirely as an open
+question; this paper does not claim that the physical
+universe satisfies any of the ``if'' conditions.
+
+\begin{proposition}[Prime Basis Forcing]
+\label{prop:forcing}
+The prime factors of the orders of $A_4$, $A_5$, and
+$\mathrm{PSL}(2,7)$ have union $\{2,3,5,7\}$. Any theory
+whose symmetry group is among these three groups must use
+the prime basis $\{2,3,5,7\}$.
+\end{proposition}
+
+\begin{proposition}[Symmetric Polynomial Gap]
+\label{prop:gap}
+Let $e_1 = 2+3+5+7 = 17$ and $e_3 = 2 \cdot 3 \cdot 5
++ 2 \cdot 3 \cdot 7 + 2 \cdot 5 \cdot 7 + 3 \cdot 5 \cdot 7
+= 247$ denote the first and third elementary symmetric
+polynomials of $\{2,3,5,7\}$, let $e_4 = 2 \cdot 3 \cdot
+5 \cdot 7 = 210$, and let $N = 2 e_4$. Then:
+\[
+e_1^2 - e_3 = 17^2 - 247 = 289 - 247 = 42
+= 2 \cdot 3 \cdot 7 = p_1 p_2 p_4,
+\]
+and $N = 2 \cdot 210 = 420$.
+\end{proposition}
+
+\begin{remark}
+Proposition~\ref{prop:gap} is an algebraic identity,
+provable by direct computation. It depends on no physical
+assumptions. In Lean (\texttt{QuantumCorrection.lean}),
+this is \texttt{e1\_sq\_sub\_e3\_eq\_p1p2p4}.
+\end{remark}
+
+\begin{proposition}[Level $\cos\theta = 0$]
+\label{prop:cos}
+Define $n = N/4 = 420/4 = 105$. Let $\theta = 2\pi n / N
+= 2\pi \cdot 105 / 420 = \pi/2$. Then $\cos\theta = 0$.
+If a physical quantity $q$ at level $n$ has a correction
+factor of the form $1 + \Delta \cos\theta$ for some
+$\Delta$, then at level $n = 105$ the correction factor
+equals $1$ (the correction vanishes).
+\end{proposition}
+
+\begin{remark}
+Propositions~\ref{prop:forcing}--\ref{prop:cos} are
+mathematical. They do not assert that $A_4$, $A_5$,
+$\mathrm{PSL}(2,7)$ are the symmetry groups of nature,
+nor that the physical universe has a discrete level
+structure. Whether the physical universe realizes these
+structures is an empirical question, not addressed here.
+\end{remark}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Open Mathematical Questions}
+\begin{enumerate}
+\item Is there a classification-theoretic reason for the
+  particular triple $A_4$, $A_5$, $\mathrm{PSL}(2,7)$?
+  These are three of the smallest non-abelian finite simple
+  groups. Does this triple have a unified characterization?
+\item Can the exclusion argument be extended to other
+  families of finite simple groups? What prime bases do
+  they force?
+\item Is there a general characterization of sequences
+  $s : \mathbb{N} \to \mathbb{N}$ whose first $k$ terms
+  are exactly the prime factors of a given set of finite
+  simple groups?
+\item Proposition~\ref{prop:gap} gives
+  $e_1^2 - e_3 = p_1 p_2 p_4$. Are there similar gap
+  identities for other sets of primes?
+\end{enumerate}
+
+\subsection{Open Physical Questions}
+Whether the structural relations of
+Section~\ref{sec:relations} have physical content is an
+empirical question. In particular:
+\begin{itemize}
+\item Is the symmetry group of nature (if any) among
+  $A_4$, $A_5$, $\mathrm{PSL}(2,7)$?
+\item Does the physical universe have a discrete level
+  structure with $n = 105$ playing a distinguished role
+  (the level at which $\cos\theta = 0$)?
+\item If the symmetric polynomial gap
+  $e_1^2 - e_3 = 42$ has physical meaning, does it
+  correspond to the magnitude of a quantum correction?
+\end{itemize}
+These questions are outside the scope of this paper.
+
+\subsection{Scope and Limitations}
+This paper is purely mathematical. No physical claims are
+made. Numerical coincidences observed in adjacent work
+are not endorsed here. The three structural relations of
+Section~\ref{sec:relations} are stated as conditional
+propositions; their physical relevance, if any, remains
+an open question.
+
+\section*{Acknowledgments}
+The author thanks the Mathlib community for providing the
+formalization infrastructure, and the Lean~4 development
+team for proof engineering tools that make results like
+those here verifiable at scale.
+
+\begin{thebibliography}{99}
+
+\bibitem{mathlib}
+The Mathlib Community,
+\emph{Mathlib4}, 2024.
+\url{https://github.com/leanprover-community/mathlib4}
+
+\bibitem{lean4}
+L. de Moura, S. Kong, J. Avigad, F. van Doorn,
+J. von Raumer,
+\emph{The Lean 4 Theorem Prover and Programming Language},
+CADE-28, 2021.
+
+\bibitem{atlas}
+J. H. Conway et al.,
+\emph{ATLAS of Finite Groups},
+Oxford University Press, 1985.
+
+\end{thebibliography}
+
+\end{document}

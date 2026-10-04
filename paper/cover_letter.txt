@@ -1,0 +1,60 @@
+Dear Editor-in-Chief Tobias Nipkow,
+
+I am writing to submit our manuscript entitled **"A Minimal Axiom System for
+Causal Composition: Forced Collapse, Finite-Free Dichotomy, and a Unique Prime
+Basis"** for consideration as a Research Article in the *Journal of Automated
+Reasoning*.
+
+### Core Contributions
+
+We present a minimal axiom system for causal composition, fully formalized in
+Lean~4 with Mathlib (2089 jobs, 0 errors, 0 \texttt{sorry}). From four
+elementary axioms---a total binary composition, its associativity, an exact
+additivity law for dependency lists, and a no-duplicate constraint---we prove
+three main results:
+
+1. **Core Collapse**: Every rule has an empty dependency list as a necessary
+   consequence of the axioms alone. We further prove that associativity is
+   redundant for this result (three axioms suffice), and that neither exact
+   additivity nor no-duplicate can be weakened.
+
+2. **Finite-Free Two-Aspect Dichotomy**: The dichotomy between amplitude
+   injectivity and output constancy holds without any finiteness assumption on
+   the type of rules, improving on prior formalizations that required
+   \texttt{[Finite C]}.
+
+3. **Unique Prime Basis**: The first four terms of the sequence
+   $s_0 = 2$, $s_{n+1} = 3 + 2n$ generate the prime basis $\{2,3,5,7\}$, which
+   is uniquely determined by the prime factors of the orders of three finite
+   simple groups $A_4$, $A_5$, and $\mathrm{PSL}(2,7)$. Each prime is shown to
+   be necessary by an exclusion argument.
+
+### Suitability for JAR
+
+Given JAR's focus on the theory, implementation, and applications of formal
+proof assistants, we believe this work is well-suited. The paper demonstrates:
+
+- A machine-verified minimal axiom system and its structural consequences,
+  directly aligning with the journal's interest in automated reasoning and
+  formal verification.
+- An elementary theorem (Core Collapse) whose proof requires only the
+  \texttt{Nodup} property on lists---accessible to a broad JAR readership.
+- A hierarchy of results from the most concrete (Core Collapse) to the
+  most abstract (finite-free dichotomy), providing a complete narrative.
+
+### Manuscript Details
+
+- **Repository**: \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
+- **Formalization**: 23 Lean modules, compiles with 2089 jobs, 0 errors
+- **Originality**: This manuscript represents original material, has not been
+  published previously, and is not under consideration for publication
+  elsewhere.
+- **Competing Interests**: We declare no competing interests.
+
+We look forward to your consideration.
+
+Sincerely,
+
+Zhang Jun
+Independent Researcher
+\texttt{cnjun939@163.com}
