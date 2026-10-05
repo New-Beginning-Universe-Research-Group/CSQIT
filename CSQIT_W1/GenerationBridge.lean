@@ -932,4 +932,68 @@ theorem evolution_all_constants_final :
     Omega_darkmatter_from_evolution, Omega_total_unity,
     Weaver_G_from_evolution, Weaver_Delta_from_evolution⟩
 
+/-! ============================================================================
+   Section 20. L4 layer Delta/w_DE honesty boundary (v18.9.0 - DeepSeek 9th review)
+
+   Open problem: why is Delta = G/(N * alpha_inv) the right formula,
+   and w_DE = -1 + Delta?
+
+   Honest declaration: these are noncomputable defs in MinimalCost Section 7.
+   There is no path to derive the formula form from evolution chain.
+   Marked as W2 (axiom-level definition, not W1 forced theorem).
+
+   But an interesting observation (structural, W1-verifiable):
+
+   ALL THREE inputs of the Delta formula are evolution-chain-forced values:
+
+     G = Weaver_G = closure[0] = p1^p2 = 8
+         W1 forced: evolution_closure_chain forces closure[0] = 8 (Core Collapse)
+
+     N = closure_N = lcm(A4,A5,PSL)/2 = 420
+         W1 forced part: lcm = 840 (base P forces group orders forces lcm)
+         Definition choice: /2 (MinimalCost definition with group theory
+         motivation, but NOT evolution-forced)
+
+     alpha_inv = 137 + 9/250
+         W1 forced: evolution_closure_chain forces alpha_inv_evolution_formula
+
+   So although the combination G/(N*alpha_inv) is axiom-level choice,
+   NONE of the three inputs are free parameters - ALL locked by evolution.
+
+   Implications:
+   - Delta value ~ 8/(420*137.036) ~ 0.000139 is completely fixed
+   - w_DE = -1 + Delta ~ -0.99986 is completely fixed
+   - Planck observation: w_DE = -0.980 +- 0.06 (1 sigma) -> ~2 sigma deviation
+
+   Two possible readings:
+   (a) CSQIT predicts w_DE = -1 (the LCMD boundary), observation deviates
+   (b) Delta formula G/(N*alpha_inv) needs evolution derivation, missing link
+
+   Honest conclusion (v18.9.0):
+   - Delta/w_DE formula form = MinimalCost axiom definition (W2)
+   - But Delta three inputs = all evolution-chain-locked (W1)
+   - If we can derive why G/(N*alpha_inv) from evolution chain, closed
+   - If not, L4 is the framework real boundary
+   ============================================================================ -/
+
+/-- **W1 strict**: ALL three inputs of Weaver Delta are evolution forced.
+
+This does NOT say Delta formula form is derived (that is W2 axiom).
+It says Delta formula has NO free parameters - all inputs are locked. -/
+theorem Weaver_Delta_all_inputs_evolution_forced :
+    -- Input 1: G = closure[0] = p1^p2 = 8 (W1 forced)
+    closure_sequence_extended 0 = 8 /\
+    Weaver_G mkBase = closure_sequence_extended 0 /\
+    -- Input 2: N = closure_N = 420 (lcm W1, /2 def choice, value fixed)
+    closure_N mkBase = 420 /\
+    Nat.lcm (Nat.lcm (A4_order_B mkBase) (A5_order_B mkBase)) (PSL27_order_B mkBase) = 840 /\
+    -- Input 3: alpha_inv = 137.036... (W1 evolution forced)
+    alpha_inv_evolution_formula = 137 + 9 / 250 := by
+  have h_base := evolution_closure_chain
+  rcases h_base with ⟨hc0, _, _, _, _, _, _, _, rfl, rfl, rfl⟩
+  have h_weaver_eq_closure0 : Weaver_G mkBase = closure_sequence_extended 0 := by
+    exact closure0_eq_weaver_G.symm
+  exact ⟨hc0, h_weaver_eq_closure0, closure_N_mkBase_eq_420,
+          lcm_three_group_orders_eq_840, alpha_inv_from_evolution⟩
+
 end CSQIT_W1.GenerationBridge
