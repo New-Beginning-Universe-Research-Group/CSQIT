@@ -349,14 +349,26 @@ theorem evolution_closure_chain :
    🔴 "为什么 Hurwitz 的 2 直接做底数？"
    🔴 "同底数约束能否从群论强制推出？"
 
-   现在通过 evolution_closure_chain（§11）和 attractor_unique，
-   这些问题有了 W1 严格的回答：
-   - 2 是唯一在三基底群 A4/A5/PSL(2,7) 中都出现的素数（§4 W1）
-   - attractor_unique（AttractorPrototype）强制基底 = {2,3,5,7}
-     且整数部分公式 = p₁^p₄ + p₁^p₂ + 1（同底数内置在 attractor 约束）
-   - 这条链和 evolution_closure_chain 独立到达同一基底 P
+   现在我们能更精确地区分两条路径及其边界：
 
-   两条独立路径 → 同一公式形式 → 物理常数 = 137.036
+   路径 1 — 演化链（evolution_closure_chain，W1 严格，无公式前提）：
+     Core Collapse → closure[0]=8 → PSL(2,7) Hurwitz 链
+       → 基底 P = {2,3,5,7} （p₁=2, p₂=3, p₃=5, p₄=7 全部 rfl）
+       → MinimalCost.alpha_inv 公式是基底元素的直接展开
+     
+     这条路径 独立于 MinimalCost 公式选择，纯群论 + Hurwitz 即可锁死基底 P。
+
+   路径 2 — 吸引子唯一性（attractor_unique，W1 严格，有公式前提）：
+     attractor_integer_part / attractor_fraction_eq 这两个约束
+     本身就是 MinimalCost 公式形式的转写，不是从 Core Collapse 独立推出。
+     attractor_unique 在 接受这些约束 的前提下强制基底 = {2,3,5,7}。
+
+   两条独立路径（前者纯群论，后者有公式前提）
+   在基底 P 和物理常数 α⁻¹=137.036 上精确汇合。
+
+   ⚠️ 诚实边界仍在："公式形式本身为何是 MinimalCost"
+   （即为什么选这个特定的混合表达式）属于公理选择层面，
+   不是从群论公理独立强制的。这一点在之前几轮已反复确认。
    ============================================================================ -/
 
 /-- **演化强制的 α⁻¹ 候选公式**（所有项来自 W1 演化链）。 -/
