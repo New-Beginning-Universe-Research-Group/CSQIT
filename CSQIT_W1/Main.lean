@@ -7,6 +7,7 @@ CSQIT-W1 Main — 统一系统主入口
 ================================================================================ -/
 
 import CSQIT_W1.Foundation
+import CSQIT_W1.GroupTheoreticOrigin
 import CSQIT_W1.CoreCollapse
 import CSQIT_W1.TwoAspect
 import CSQIT_W1.AxiomDerivation
