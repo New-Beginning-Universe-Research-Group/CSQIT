@@ -22,7 +22,6 @@ PhysicalPredictions — CSQIT 物理预言：从基底 P 到可观测常数
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
-import CSQIT_W1.AttractorPrototype
 
 namespace CSQIT_W1.PhysicalPredictions
 

@@ -67,8 +67,7 @@ theorem e3_from_e1_sq :
     e3 mkBase = (e1 mkBase)^2 - mkBase.p1 * mkBase.p2 * mkBase.p4 := by
   have h : (e1 mkBase)^2 - e3 mkBase = mkBase.p1 * mkBase.p2 * mkBase.p4 :=
     e1_sq_sub_e3_eq_p1p2p4
-  have hge : (e1 mkBase)^2 ≥ e3 mkBase := by omega
-  omega
+  exact h ▸ rfl
 
 /-! ============================================================================
    §2. 修正后的观测值分子（W1 严格定义）

@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.GCD.Basic
+import Mathlib.Tactic.IntervalCases
 import CSQIT_W1.MinimalCost
 
 namespace CSQIT_W1.AttractorPrototype
@@ -35,7 +36,7 @@ lemma lock_p1_eq_2 :
     have hsum : p₁^p₄ + p₁^p₂ + 1 ≥ 729 := by
       have hge : p₁^p₂ ≥ p₁ := by
         have h2 : p₂ ≥ p₁ + 1 := by omega
-        exact Nat.pow_le_pow_of_le_left hcontra h2
+        gcongr
       omega
     dsimp [alpha_integer_part] at hint
     omega
@@ -87,46 +88,52 @@ lemma lock_p2_eq_3 :
     p₂ = 3 := by
   intro p₂ p₄ hgt hgt2 h_eq
   have hp4ge_p21 : p₄ ≥ p₂ + 1 := by omega
-  by_cases hcases : p₄ ≥ p₂ + 2 ∨ p₄ = p₂ + 1
-  · rcases hcases with hge | heq
-    · -- p₄ ≥ p₂ + 2
-      have hp2le27 : 2^p₂ ≤ 27 := p2_pow_le_27 p₂ p₄ hgt hge h_eq
-      have hp2le4 : p₂ ≤ 4 := p2_le_4 p₂ hgt hp2le27
-      by_cases h2 : p₂ = 3
-      · exact h2
-      · -- p₂ = 4
-        have h4 : p₂ = 4 := by omega
-        rw [h4] at h_eq
-        omega
-    · -- p₄ = p₂ + 1 → 矛盾
-      exact False.elim (p4_eq_p2_plus_1_impossible p₂ p₄ hgt heq h_eq)
-  · omega
+  have hp2le4 : p₂ ≤ 4 := by
+    by_cases hcases : p₄ ≥ p₂ + 2 ∨ p₄ = p₂ + 1
+    · rcases hcases with hge | heq
+      · have hp2le27 : 2^p₂ ≤ 27 := p2_pow_le_27 p₂ p₄ hgt hge h_eq
+        exact p2_le_4 p₂ hgt hp2le27
+      · exact False.elim (p4_eq_p2_plus_1_impossible p₂ p₄ hgt heq h_eq)
+    · omega
+  by_cases h2 : p₂ = 3
+  · exact h2
+  · have h4 : p₂ = 4 := by omega
+    rw [h4] at h_eq
+    have hp4ge5 : p₄ ≥ 5 := by omega
+    have hcases : p₄ = 5 ∨ p₄ = 6 ∨ p₄ ≥ 7 := by omega
+    rcases hcases with h5 | h6 | hge7
+    · rw [h5] at h_eq; norm_num at h_eq
+    · rw [h6] at h_eq; norm_num at h_eq
+    · have hge128 : (2^p₄ : ℕ) ≥ 128 := by
+        have h : (2^p₄ : ℕ) ≥ 2^7 := by gcongr
+        have h7 : (2^7 : ℕ) = 128 := by norm_num
+        linarith
+      have h_eq2 : (2^p₄ : ℕ) = 136 - 2^4 := by omega
+      have h_eq3 : (2^p₄ : ℕ) = 120 := by norm_num at h_eq2 ⊢
+      have h128gt120 : (128 : ℤ) > 120 := by norm_num
+      have hge128z : (↑(2^p₄) : ℤ) ≥ 128 := by exact_mod_cast hge128
+      have h120z : (↑(2^p₄) : ℤ) = 120 := by exact_mod_cast h_eq3
+      linarith
 
 /-! 引理 3: 2^p₄ = 128, p₄ > 3 → p₄ = 7 -/
 lemma lock_p4_eq_7 :
     ∀ p₄ : ℕ,
     p₄ > 3 → 2^p₄ = 128 → p₄ = 7 := by
   intro p₄ hgt h
-  by_cases hcase : p₄ ≤ 6 ∨ p₄ ≥ 8
-  · rcases hcase with hle | hge
-    · -- p₄ ≤ 6 → 2^p₄ ≤ 64, 但 h 说 = 128
-      have h6 : 2^p₄ ≤ 2^6 := by gcongr
-      have h7 : 2^6 = 64 := by norm_num
-      have h8 : 2^p₄ ≤ 64 := by
-        have h9 : 2^p₄ ≤ 2^6 := h6
-        rw [h7] at h9
-        exact h9
-      omega  -- 2^p₄ ≤ 64 和 2^p₄ = 128 矛盾
-    · -- p₄ ≥ 8 → 2^p₄ ≥ 256, 但 h 说 = 128
-      have h6 : 2^p₄ ≥ 2^8 := by gcongr
-      have h7 : 2^8 = 256 := by norm_num
-      have h8 : 2^p₄ ≥ 256 := by
-        have h9 : 2^p₄ ≥ 2^8 := h6
-        rw [h7] at h9
-        exact h9
-      omega  -- 2^p₄ ≥ 256 和 2^p₄ = 128 矛盾
-  · have h6 : p₄ = 7 := by omega
-    exact h6
+  have hcases : p₄ = 4 ∨ p₄ = 5 ∨ p₄ = 6 ∨ p₄ = 7 ∨ p₄ ≥ 8 := by omega
+  rcases hcases with h4 | h5 | h6 | h7 | hge8
+  · rw [h4] at h; norm_num at h
+  · rw [h5] at h; norm_num at h
+  · rw [h6] at h; norm_num at h
+  · rw [h7]
+  · have hge256 : (2^p₄ : ℕ) ≥ 256 := by
+      have h : (2^p₄ : ℕ) ≥ 2^8 := by gcongr
+      have h8 : (2^8 : ℕ) = 256 := by norm_num
+      linarith
+    have h256pos : (256 : ℤ) > 128 := by norm_num
+    have hge256z : (↑(2^p₄) : ℤ) ≥ 256 := by exact_mod_cast hge256
+    have h128z : (↑(2^p₄) : ℤ) = 128 := by exact_mod_cast h
+    linarith
 
 /-! 引理 4: 分数等式 → p₃ = 5 -/
 lemma lock_p3_eq_5 :

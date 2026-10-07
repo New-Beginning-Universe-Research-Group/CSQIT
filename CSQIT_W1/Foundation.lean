@@ -188,14 +188,14 @@ theorem darkEnergyNum_pos : 0 < darkEnergyNum := by
     物理意义：暗能量分子 289 = 17² = (p₁+p₂+p₃+p₄)²，
     是四个基本对称素数之和的完全叠加。 -/
 theorem S_eq_17 : S = 17 := by
-  simp [S, p1, p2, p3, p4]; norm_num
+  simp [S, p1, p2, p3, p4]
 
 /-- **定理**：暗能量分子 = 289 = 17²（W1 严格）。
     darkEnergyNum = S² = 17² = 289。
     物理意义：W_base 的分母，决定了 M_Pl 的量级。
     289 = (p₁+p₂+p₃+p₄)² — 四个基本素数之和的平方。 -/
 theorem darkEnergyNum_eq_289 : darkEnergyNum = 289 := by
-  simp [darkEnergyNum, S, p1, p2, p3, p4]; norm_num
+  simp [darkEnergyNum, S, p1, p2, p3, p4]
 
 /-- **定理**：编织刚度基底为正（W1 严格）。 -/
 theorem weavingStiffnessBase_pos : 0 < weavingStiffnessBase := by
@@ -813,7 +813,7 @@ theorem closure64_over_8_eq_8 : closure64_over_closure8 = 8 := by
     closure ratio 本身是 W1 严格的，
     α⁻¹ 幂次是 W2 calibration（物理输入）。 -/
 theorem closure64_over_8_eq_p1_cube : closure64_over_closure8 = p1 ^ 3 := by
-  simp [closure64_over_closure8, p1, closure_sequence_extended_values]; norm_num
+  simp [closure64_over_closure8, p1, closure_sequence_extended_values]
 
 /-- 闭包序列相邻项比值：840 / 420 = 2（W1 严格）。 -/
 def closure840_over_closure420 : ℕ := closure_sequence_extended 3 / closure_sequence_extended 2

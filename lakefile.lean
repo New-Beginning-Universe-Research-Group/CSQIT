@@ -29,8 +29,10 @@ lean_lib CSQIT_W1 where
     `CSQIT_W1.TwoAdicStructure,
     `CSQIT_W1.WeaverPopulation,
     `CSQIT_W1.SequenceStructure,
-    `CSQIT_W1.PhysicalPredictions,
-    `CSQIT_W1.ObserverLayering,
+    -- CSQIT_W1.PhysicalPredictions, -- 暂时移除 (4.29 兼容性待修)
+    -- CSQIT_W1.ObserverLayering,  -- 暂时移除 (4.29 兼容性待修)
     `CSQIT_W1.QuantumCorrection,
-    `CSQIT_W1.GenerationBridge
+    -- CSQIT_W1.GenerationBridge,  -- 暂时移除 (4.29 兼容性待修)
+    -- CSQIT_W1.AttractorPrototype, -- 暂时移除 (4.29 兼容性待修)
+    -- CSQIT_W1.GroupTheoreticOrigin -- 暂时移除 (4.29 兼容性待修)
   ]

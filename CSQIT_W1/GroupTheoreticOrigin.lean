@@ -1,3 +1,7 @@
+import CSQIT_W1.Foundation
+import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.NormNum
+
 /-! ================================================================================
 CSQIT v18.25.0 — 三群表示论 → 基本常数的严格群论推导
 文件: CSQIT_W1/GroupTheoreticOrigin.lean
@@ -30,10 +34,6 @@ CSQIT v18.25.0 — 三群表示论 → 基本常数的严格群论推导
       所有物理常数都从三群的群论数据中严格推出。
       不需要 {2,3,5,7} 作为独立公理 — 它们是三群素因子的并集。
 ================================================================================ -/
-
-import CSQIT_W1.Foundation
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.NormNum
 
 namespace CSQIT
 
