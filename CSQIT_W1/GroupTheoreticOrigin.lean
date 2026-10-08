@@ -52,7 +52,7 @@ namespace CSQIT
    ============================================================================ -/
 
 -- 从 Foundation 导入
-open Foundation (p1 p2 p3 p4 S darkEnergyNum totalClosure
+open CSQIT_W1.Foundation (p1 p2 p3 p4 S darkEnergyNum totalClosure
                  A4_order A5_order PSL27_order
                  inverseAlpha inverseAlpha_eq_137_036)
 
@@ -124,12 +124,13 @@ def baryon_numerator : ℕ := 20
     |A₅| / |中心化子| = 60 / 3 = 20 -/
 theorem baryon_numerator_eq_A5_3cycle_count :
     baryon_numerator = A5_order / 3 := by
-  simp [baryon_numerator, A5_order]; norm_num
+  simp [baryon_numerator, A5_order]<;> norm_num
 
 /-- **定理**：Ω_b = 20/420（W1 严格）。 -/
 theorem Omega_b_eq_20_div_420 :
     (baryon_numerator : ℚ) / totalClosure = 20 / 420 := by
-  simp [baryon_numerator, totalClosure]; norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, baryon_numerator]
 
 /-! ============================================================================
    §4. 暗能量分子 = S² = (素数和)² = 289（W1 严格）
@@ -153,7 +154,8 @@ theorem dark_energy_eq_S_sq : darkEnergyNumerator = S ^ 2 := by rfl
 /-- **定理**：Ω_Λ = 289/420（W1 严格）。 -/
 theorem Omega_Lambda_eq_289_div_420 :
     (darkEnergyNumerator : ℚ) / totalClosure = 289 / 420 := by
-  simp [darkEnergyNumerator, darkEnergyNum, totalClosure]; norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, darkEnergyNumerator, darkEnergyNum, S, p1, p2, p3, p4]
 
 /-! ============================================================================
    §5. 暗物质分子 = |A₅| + 3×S = 60 + 51 = 111（W1 严格）
@@ -180,17 +182,18 @@ def darkMatterNumerator : ℕ := A5_order + 3 * S
 
 /-- **定理**：暗物质分子 = 111（W1 严格）。 -/
 theorem dark_matter_eq_111 : darkMatterNumerator = 111 := by
-  simp [darkMatterNumerator, A5_order, S, p1, p2, p3, p4]; norm_num
+  simp [darkMatterNumerator, A5_order, S, p1, p2, p3, p4]<;> norm_num
 
 /-- **定理**：暗物质分子 = 3 × (S + 重子数)（W1 严格）。 -/
 theorem dark_matter_eq_3_times_S_plus_baryon :
     darkMatterNumerator = 3 * (S + baryon_numerator) := by
-  simp [darkMatterNumerator, dark_matter_eq_111, S, baryon_numerator]; norm_num
+  norm_num [darkMatterNumerator, A5_order, S, baryon_numerator, p1, p2, p3, p4]
 
 /-- **定理**：Ω_DM = 111/420（W1 严格）。 -/
 theorem Omega_DM_eq_111_div_420 :
     (darkMatterNumerator : ℚ) / totalClosure = 111 / 420 := by
-  simp [darkMatterNumerator, totalClosure, A5_order, S, p1, p2, p3, p4]; norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, darkMatterNumerator, A5_order, S, p1, p2, p3, p4]
 
 /-! ============================================================================
    §6. 验证：三锁和为全闭包（W1 严格）
@@ -205,7 +208,7 @@ theorem Omega_DM_eq_111_div_420 :
 theorem three_locks_sum_eq_total :
     baryon_numerator + darkMatterNumerator + darkEnergyNumerator = totalClosure := by
   simp [baryon_numerator, darkMatterNumerator, darkEnergyNumerator,
-        darkEnergyNum, totalClosure, A5_order, S, p1, p2, p3, p4]; norm_num
+        darkEnergyNum, totalClosure, A5_order, S, p1, p2, p3, p4]<;> norm_num
 
 /-- **定理**：三锁常数和 = 1（W1 严格）。
     Ω_b + Ω_DM + Ω_Λ = 1 ✓ -/
@@ -215,7 +218,10 @@ theorem three_locks_sum_eq_one :
     (darkEnergyNumerator : ℚ) / totalClosure = 1 := by
   have h : baryon_numerator + darkMatterNumerator + darkEnergyNumerator = totalClosure :=
     three_locks_sum_eq_total
-  field_simp [baryon_numerator, darkMatterNumerator, darkEnergyNumerator, totalClosure]
+  have h' : (baryon_numerator : ℚ) + (darkMatterNumerator : ℚ) + (darkEnergyNumerator : ℚ) = (totalClosure : ℚ) :=
+    by exact_mod_cast h
+  have hpos : (0 : ℚ) < (totalClosure : ℚ) := by exact_mod_cast (CSQIT_W1.Foundation.totalClosure_pos)
+  field_simp [h']
   <;> linarith
 
 /-! ============================================================================
@@ -231,12 +237,12 @@ theorem three_locks_sum_eq_one :
 theorem DM_plus_DE_eq_baryon_sq :
     darkMatterNumerator + darkEnergyNumerator = baryon_numerator ^ 2 := by
   simp [darkMatterNumerator, darkEnergyNumerator, baryon_numerator,
-        darkEnergyNum, A5_order, S, p1, p2, p3, p4]; norm_num
+        darkEnergyNum, A5_order, S, p1, p2, p3, p4]<;> norm_num
 
 /-- **定理**：S + baryon = 37（W1 严格）。
     37 是第12个素数，对应 |A₄| = 12 ✓ -/
 theorem S_plus_baryon_eq_37 : S + baryon_numerator = 37 := by
-  simp [S, baryon_numerator, p1, p2, p3, p4]; norm_num
+  simp [S, baryon_numerator, p1, p2, p3, p4]<;> norm_num
 
 /-! ============================================================================
    §7. v11 定义与严格群论推导的等价性（W1 严格）
@@ -254,21 +260,22 @@ theorem S_plus_baryon_eq_37 : S + baryon_numerator = 37 := by
 /-- **定理**：v11 的 Ω_b = 1/(3×7) 等于 A₅ 3-循环类大小 / 420（W1 严格）。 -/
 theorem v11_Omega_b_eq_strict :
     (1 : ℚ) / (p2 * p4) = (baryon_numerator : ℚ) / totalClosure := by
-  simp [baryon_numerator, totalClosure, p2, p4]; norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, baryon_numerator, p2, p4]
 
 /-- **定理**：v11 的 Ω_DM = 1/4 + 1/(2×5×7) 等于 (|A₅| + 3×S) / 420（W1 严格）。 -/
 theorem v11_Omega_DM_eq_strict :
     (1 : ℚ) / 4 + 1 / (p1 * p3 * p4) =
     (darkMatterNumerator : ℚ) / totalClosure := by
-  simp [darkMatterNumerator, totalClosure, A5_order, S, p1, p2, p3, p4]
-  <;> norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, darkMatterNumerator, A5_order, S, p1, p2, p3, p4]
 
 /-- **定理**：v11 的 Ω_Λ = 1 - Ω_b - Ω_DM 等于 S² / 420（W1 严格）。 -/
 theorem v11_Omega_Lambda_eq_strict :
     (1 : ℚ) - 1 / (p2 * p4) - (1 / 4 + 1 / (p1 * p3 * p4)) =
     (darkEnergyNumerator : ℚ) / totalClosure := by
-  simp [darkEnergyNumerator, darkEnergyNum, totalClosure, S, p1, p2, p3, p4]
-  <;> norm_num
+  have ht : (totalClosure : ℚ) = 420 := by exact_mod_cast CSQIT_W1.Foundation.totalClosure_eq_420
+  norm_num [ht, darkEnergyNumerator, darkEnergyNum, S, p1, p2, p3, p4]
 
 /-! ============================================================================
    §8. 精细结构常数的群论推导（W1 严格）
@@ -298,7 +305,7 @@ def idealCount : ℕ := p1 ^ p4 + p1 ^ p2 + 1
 
 /-- **定理**：理想原子计数 = 137（W1 严格）。 -/
 theorem ideal_count_eq_137 : idealCount = 137 := by
-  simp [idealCount, p1, p2, p3, p4]; norm_num
+  simp [idealCount, p1, p2, p3, p4]<;> norm_num
 
 /-- 测量代价 = p₂²/(p₁×p₃³) = 9/250（W1 严格定义）。 -/
 noncomputable def measurementCost : ℝ :=
@@ -306,7 +313,7 @@ noncomputable def measurementCost : ℝ :=
 
 /-- **定理**：测量代价 = 9/250（W1 严格）。 -/
 theorem measurement_cost_eq_9_250 : measurementCost = 9 / 250 := by
-  simp [measurementCost, p1, p2, p3]; norm_num
+  simp [measurementCost, p1, p2, p3]<;> norm_num
 
 /-- **定理**：α⁻¹ = 理想计数 + 测量代价 = 137 + 9/250（W1 严格）。 -/
 theorem inverseAlpha_from_group_theory :
@@ -320,9 +327,10 @@ theorem inverseAlpha_all_from_baseP :
       idealCount = a ^ g + a ^ b + c ∧
       measurementCost = (d : ℝ) ^ 2 / ((e : ℝ) * (f : ℝ) ^ 3) ∧
       {a, b, c, d, e, f} ⊆ ({p1, p2, p3, p4} : Finset ℕ) := by
-  refine' ⟨p1, p2, 1, p2, p1, p3, p4, _⟩
+  refine' ⟨p1, p1, p3, p2, p1, p3, p4, _⟩
   constructor
-  · simp [idealCount, p1, p2, p4]
+  · simp [idealCount, p1, p3, p4]
+    <;> norm_num
   constructor
   · simp [measurementCost, p1, p2, p3]
   · decide
@@ -404,8 +412,8 @@ def PSL27_irrep_dims : List ℕ := [1, 3, 3, 6, 7, 8]
 
 /-- **定理**：PSL(2,7) 最大不可约表示维数 = 8 = closure[0]（W1 严格）。 -/
 theorem PSL27_max_irrep_eq_closure0 :
-    PSL27_irrep_dims.getMax? = some (closure_sequence_extended 0) := by
-  have h : PSL27_irrep_dims.getMax? = some 8 := by decide
+    List.max? PSL27_irrep_dims = some (closure_sequence_extended 0) := by
+  have h : List.max? PSL27_irrep_dims = some 8 := by decide
   rw [h]
   <;> rfl
 
@@ -419,18 +427,18 @@ theorem PSL27_has_p2 : 3 ∈ PSL27_irrep_dims := by decide
 def A5_irrep_dims : List ℕ := [1, 3, 3, 4, 5]
 
 /-- **定理**：A₅ 最大不可约表示维数 = 5 = p₃（W1 严格）。 -/
-theorem A5_max_irrep_eq_p3 : A5_irrep_dims.getMax? = some p3 := by decide
+theorem A5_max_irrep_eq_p3 : List.max? A5_irrep_dims = some p3 := by decide
 
 /-- A₄ 不可约表示维数列表（W1 严格定义）。 -/
 def A4_irrep_dims : List ℕ := [1, 1, 1, 3]
 
 /-- **定理**：A₄ 最大不可约表示维数 = 3 = p₂（W1 严格）。 -/
-theorem A4_max_irrep_eq_p2 : A4_irrep_dims.getMax? = some p2 := by decide
+theorem A4_max_irrep_eq_p2 : List.max? A4_irrep_dims = some p2 := by decide
 
 /-- **定理**：三群最大不可约表示维数 = {p₂, p₃, closure[0]}（W1 严格）。
     这就给了基底 P 和 closure[0] 第三条群论来源！ -/
 theorem three_max_irreps_eq_baseP_and_closure0 :
-    ({p₂, p₃, closure_sequence_extended 0} : Finset ℕ) = ({3, 5, 8} : Finset ℕ) := by
+    ({p2, p3, closure_sequence_extended 0} : Finset ℕ) = ({3, 5, 8} : Finset ℕ) := by
   decide
 
 /-- PSL(2,7) 共轭类大小列表（W1 严格定义）。 -/
@@ -438,7 +446,7 @@ def PSL27_cc_sizes : List ℕ := [1, 21, 42, 56, 24, 24]
 
 /-- **定理**：PSL(2,7) 共轭类大小之和 = |PSL(2,7)| = 168（W1 严格）。 -/
 theorem PSL27_cc_sum_eq_order : PSL27_cc_sizes.sum = PSL27_order := by
-  simp [PSL27_cc_sizes, PSL27_order]; norm_num
+  simp [PSL27_cc_sizes, PSL27_order]<;> norm_num
 
 /-- **定理**：PSL(2,7) 前三个共轭类大小之和 = 64 = closure[1]（W1 严格）。
     这是 closure[1] 的第三条群论来源！
@@ -455,7 +463,7 @@ theorem PSL27_first3_cc_sum_eq_closure1 :
     21 = p₃ × p₄ = 5 × 7
     42 = p₁ × p₂ × p₃ × p₄ / p₁ = 420/10 = 42 -/
 theorem PSL27_first3_cc_from_baseP :
-    (PSL27_cc_sizes.take 3).toFinset = ({1, p₃ * p₄, totalClosure / p₁} : Finset ℕ) := by
+    (PSL27_cc_sizes.take 3).toFinset = ({1, p3 * p4, totalClosure / p1} : Finset ℕ) := by
   simp [PSL27_cc_sizes, totalClosure, p1, p2, p3, p4] <;> norm_num
 
 /-! ============================================================================
@@ -483,7 +491,7 @@ theorem PSL27_first3_cc_from_baseP :
 
 /-- 从三群推导的 scale factor 有理部分 = 53/50（W1 严格定义）。 -/
 noncomputable def planckMass_scale_rational : ℚ :=
-    ((p₂ : ℚ) * (S : ℚ) + (p₁ : ℚ)) / ((p₁ : ℚ) * (p₃ : ℚ) ^ 2)
+    ((p2 : ℚ) * (S : ℚ) + (p1 : ℚ)) / ((p1 : ℚ) * (p3 : ℚ) ^ 2)
 
 /-- **定理**：scale factor 有理部分 = 53/50（W1 严格）。 -/
 theorem scale_rational_eq_53_50 :
@@ -496,13 +504,18 @@ theorem scale_rational_eq_53_50 :
     没有一个因子脱离三群群论！ -/
 theorem scale_rational_all_from_baseP :
     ∃ (num den : ℤ),
-      planckMass_scale_rational = num / den ∧
-      num = (p₂ : ℤ) * (S : ℤ) + (p₁ : ℤ) ∧
-      den = (p₁ : ℤ) * (p₃ : ℤ) ^ 2 := by
-  refine' ⟨(p₂ : ℤ) * (S : ℤ) + (p₁ : ℤ), (p₁ : ℤ) * (p₃ : ℤ) ^ 2, _⟩
-  have h : planckMass_scale_rational = ((p₂ : ℚ) * (S : ℚ) + (p₁ : ℚ)) / ((p₁ : ℚ) * (p₃ : ℚ) ^ 2) := rfl
-  rw [h]
-  ring
+      planckMass_scale_rational = (num : ℚ) / (den : ℚ) ∧
+      num = (p2 : ℤ) * (S : ℤ) + (p1 : ℤ) ∧
+      den = (p1 : ℤ) * (p3 : ℤ) ^ 2 := by
+  let num : ℤ := (p2 : ℤ) * (S : ℤ) + (p1 : ℤ)
+  let den : ℤ := (p1 : ℤ) * (p3 : ℤ) ^ 2
+  refine' ⟨num, den, _⟩
+  have h : planckMass_scale_rational = ((p2 : ℚ) * (S : ℚ) + (p1 : ℚ)) / ((p1 : ℚ) * (p3 : ℚ) ^ 2) := rfl
+  have hnum : (num : ℚ) = (p2 : ℚ) * (S : ℚ) + (p1 : ℚ) := by norm_cast
+  have hden : (den : ℚ) = (p1 : ℚ) * (p3 : ℚ) ^ 2 := by norm_cast
+  have hmain : planckMass_scale_rational = (num : ℚ) / (den : ℚ) := by
+    rw [h, hnum, hden]
+  exact ⟨hmain, rfl, rfl⟩
 
 /-! ============================================================================
    §12. 四路径交汇总结（W1 严格）
