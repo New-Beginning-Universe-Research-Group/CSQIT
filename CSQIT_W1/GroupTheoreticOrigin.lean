@@ -54,6 +54,7 @@ namespace CSQIT
 -- 从 Foundation 导入
 open CSQIT_W1.Foundation (p1 p2 p3 p4 S darkEnergyNum totalClosure
                  A4_order A5_order PSL27_order
+                 closure_sequence_extended totalClosure_eq_420
                  inverseAlpha inverseAlpha_eq_137_036)
 
 /-! ============================================================================
@@ -207,8 +208,9 @@ theorem Omega_DM_eq_111_div_420 :
 /-- **定理**：三锁分子和 = totalClosure（W1 严格）。 -/
 theorem three_locks_sum_eq_total :
     baryon_numerator + darkMatterNumerator + darkEnergyNumerator = totalClosure := by
+  rw [totalClosure_eq_420]
   simp [baryon_numerator, darkMatterNumerator, darkEnergyNumerator,
-        darkEnergyNum, totalClosure, A5_order, S, p1, p2, p3, p4]<;> norm_num
+        darkEnergyNum, A5_order, S, p1, p2, p3, p4]<;> norm_num
 
 /-- **定理**：三锁常数和 = 1（W1 严格）。
     Ω_b + Ω_DM + Ω_Λ = 1 ✓ -/
@@ -329,7 +331,7 @@ theorem inverseAlpha_all_from_baseP :
       {a, b, c, d, e, f} ⊆ ({p1, p2, p3, p4} : Finset ℕ) := by
   refine' ⟨p1, p1, p3, p2, p1, p3, p4, _⟩
   constructor
-  · simp [idealCount, p1, p3, p4]
+  · simp [idealCount, p1, p2, p3, p4]
     <;> norm_num
   constructor
   · simp [measurementCost, p1, p2, p3]
@@ -463,8 +465,8 @@ theorem PSL27_first3_cc_sum_eq_closure1 :
     21 = p₃ × p₄ = 5 × 7
     42 = p₁ × p₂ × p₃ × p₄ / p₁ = 420/10 = 42 -/
 theorem PSL27_first3_cc_from_baseP :
-    (PSL27_cc_sizes.take 3).toFinset = ({1, p3 * p4, totalClosure / p1} : Finset ℕ) := by
-  simp [PSL27_cc_sizes, totalClosure, p1, p2, p3, p4] <;> norm_num
+    (PSL27_cc_sizes.take 3).toFinset = ({1, p2 * p4, p1 * p2 * p4} : Finset ℕ) := by
+  simp [PSL27_cc_sizes, p1, p2, p3, p4] <;> decide
 
 /-! ============================================================================
    §11. 从三群推导 M_Pl scale factor（独立验证！W1 严格）
