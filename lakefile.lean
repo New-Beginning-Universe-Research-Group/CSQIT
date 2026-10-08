@@ -11,5 +11,8 @@ require mathlib from git
 lean_lib CSQIT_W1 where
   roots := #[
     `CSQIT_W1.Foundation,
-    `CSQIT_W1.GroupTheoreticOrigin
+    `CSQIT_W1.GroupTheoreticOrigin,
+    `CSQIT_W1.MinimalCost,
+    `CSQIT_W1.AttractorPrototype,
+    `CSQIT_W1.PhysicalPredictions
   ]

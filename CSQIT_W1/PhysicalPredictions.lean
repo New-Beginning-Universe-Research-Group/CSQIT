@@ -22,10 +22,16 @@ PhysicalPredictions — CSQIT 物理预言：从基底 P 到可观测常数
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
+import CSQIT_W1.Foundation
+import CSQIT_W1.AttractorPrototype
 
 namespace CSQIT_W1.PhysicalPredictions
 
 set_option linter.unusedVariables false
+
+open CSQIT_W1.Foundation
+open CSQIT_W1.Foundation.PlanckMassDerivation
+open CSQIT_W1.AttractorPrototype
 
 /-! 基底 P = {2, 3, 5, 7}（ℕ 类型，避免 ℝ.pow 问题）。 -/
 def p1_n : ℕ := 2
@@ -225,8 +231,8 @@ def mp_over_me_integer_general (p1 p2 p3 p4 : ℕ) : ℕ :=
 theorem sin2theta_W_forced_by_attractor :
     ∀ p₁ p₂ p₃ p₄ : ℕ,
     p₁ ≥ 2 → p₂ > p₁ → p₃ > p₂ → p₄ > p₃ →
-    attractor_integer_part p₁ p₂ p₄ = 137 →
-    attractor_fraction_eq p₁ p₂ p₃ →
+    alpha_integer_part p₁ p₂ p₄ = 137 →
+    alpha_fraction_eq p₁ p₂ p₃ →
     sin2theta_W_general p₁ p₂ p₃ p₄ = 34 / 147 := by
   intro p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
   have h_forced : p₁ = 2 ∧ p₂ = 3 ∧ p₃ = 5 ∧ p₄ = 7 :=
@@ -240,8 +246,8 @@ theorem sin2theta_W_forced_by_attractor :
 theorem mp_over_me_integer_forced_by_attractor :
     ∀ p₁ p₂ p₃ p₄ : ℕ,
     p₁ ≥ 2 → p₂ > p₁ → p₃ > p₂ → p₄ > p₃ →
-    attractor_integer_part p₁ p₂ p₄ = 137 →
-    attractor_fraction_eq p₁ p₂ p₃ →
+    alpha_integer_part p₁ p₂ p₄ = 137 →
+    alpha_fraction_eq p₁ p₂ p₃ →
     mp_over_me_integer_general p₁ p₂ p₃ p₄ = 1836 := by
   intro p₁ p₂ p₃ p₄ h1 h2 h3 h4 hint hfrac
   have h_forced : p₁ = 2 ∧ p₂ = 3 ∧ p₃ = 5 ∧ p₄ = 7 :=
