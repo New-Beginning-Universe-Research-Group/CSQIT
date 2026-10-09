@@ -1,0 +1,5 @@
+:g/have hp4lt : p₁/d
+:g/have hp2lt : 3/d
+:g/have hp2lt : 4/d
+:g/have hp4lt : 3/d
+:wq
