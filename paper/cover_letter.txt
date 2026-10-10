@@ -1,4 +1,4 @@
-Dear Editor-in-Chief of the Journal of Formalized Reasoning,
+﻿Dear Editor-in-Chief of the Journal of Formalized Reasoning,
 
 I am writing to submit our manuscript entitled
 "Honest Boundaries in Formalized Mathematics:
@@ -38,7 +38,7 @@ Our contribution is methodological, not domain-specific:
    all W1 theorems with source annotations and compiles
    independently of the rest of the project.
 
-3. **Cross-validation as a design principle.** When independent
+The three tiers are not a ranking---they are a classification of type:\n   W1 results are theorems; W2 results are conditional theorems;\n   W3 results are narratives. The boundary between W1 and W2 is\n   sharp: if a result requires any assumption beyond the\n   declared starting points, it is W2.\n\n3. **Cross-validation as a design principle.** When independent
    derivation paths reach the same numerical value, their
    equality is itself formalized as a theorem. In our case
    study, two independent Lean modules derive the coupling
@@ -100,7 +100,7 @@ starting points be listed and results be labeled.
 - **Declaration.lean**: 13 theorems, 137 lines, compiles with zero errors, imports only independently verified modules
 - **Lean version**: 4.29.0-rc6 with Mathlib
 - **Originality**: This manuscript is original, has not been published previously, and is not under consideration elsewhere
-- **Conflicts of interest**: None
+- **Conflicts of interest**: None\n- **Ancillary files**: The complete Lean formalization\n  (28 modules, 9,826 lines, compiles with 0 errors from\n  \texttt{Declaration.lean} as a single entry point) is available\n  at the repository above and can be provided as ancillary\n  files upon request.
 
 We look forward to your consideration.
 
@@ -109,3 +109,4 @@ Sincerely,
 Jun Zhang
 Independent Researcher
 cnjun939@163.com
+
