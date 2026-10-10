@@ -1,57 +1,111 @@
-﻿尊敬的主编 Tobias Nipkow 教授：
+Dear Editor-in-Chief of the Journal of Formalized Reasoning,
 
-我写信向《Journal of Automated Reasoning》投稿题为
-`A Minimal Axiom System for Causal Composition:
-Forced Collapse, Finite-Free Dichotomy, and a Unique Prime Basis''
-的研究论文。
+I am writing to submit our manuscript entitled
+"Honest Boundaries in Formalized Mathematics:
+A Three-Tier Classification with Concentrated Declarations"
+(subtitle: "A Case Study in Causal Composition")
+for consideration as a methodology paper.
 
-### 核心贡献
+---
 
-我们提出一个因果组合的最小公理系统，以 Lean~4 + Mathlib 完全形式化。
-从四条基础公理——全二元组合、结合律、依赖列表的精确可加律、无重复约束——
-我们证明三大主要结果：
+### Core Contribution
 
-1. **Core Collapse**：每条规则必有空依赖列表，此结论仅由公理强制。
-   我们进一步证明结合律对此结果是冗余的（三条公理即可），且精确可加律和
-   无重复约束均不可弱化。这是本论文的突出亮点——从四条看似合理的公理出发，
-   其中一条是冗余的，另外两条中的任何一个被移除都会导致反例。
+This paper introduces a methodology for honest boundaries in
+formalized mathematics: a three-tier classification system
+(W1: strictly derivable from declared starting points; W2:
+conditional on additional assumptions; W3: conceptual
+interpretation) combined with concentrated declaration files
+that list all starting points and all W1 results in single
+auditable locations.
 
-2. **有限自由两面对立**：振幅内射性与输出常数性之间的对立无需任何有限性假设，
-   改正了之前形式化需要 [Finite C] 的局限。量子纠缠作为等价关系出现。
+The methodology addresses a gap we observe in large-scale
+formalization projects---from the Liquid Tensor Experiment to
+Flyspeck to Mathlib---where zero `sorry` does not mean zero
+assumptions, and readers must trace the full dependency graph
+to distinguish what was derived from what was assumed.
 
-3. **唯一素基底**：序列  = 2$、{n+1} = 3+2n$ 的前四项生成基底
-   $\{2,3,5,7\}$，恰好是三个 Hurwitz 三角群最小有限商 $、$、
-   $\mathrm{PSL}(2,7)$ 阶数的素因子并集。每个素因子的必要性通过排除论证确立。
+Our contribution is methodological, not domain-specific:
 
-额外贡献：本 session 新增的集中宣言文件
-\texttt{Declaration.lean}（13 条 theorem，137 行，编译零错误）
-和 \texttt{TheoryFoundations.lean}（约 410 行纯注释）将全部五个
-定义选择与 W1 严格推导集中标注，避免分散注释。
+1. **Three-tier classification.** Every result is explicitly
+   labeled at the point of statement. The classification
+   separates three distinct types of claims that are routinely
+   mixed in formalization projects.
 
-### 与 JAR 的适配性
+2. **Concentrated declaration files.** Two files external to
+   the theorem-proving pipeline provide a single audit surface:
+   \texttt{TheoryFoundations.lean} lists all definition choices
+   with honest boundary marks; \texttt{Declaration.lean} chains
+   all W1 theorems with source annotations and compiles
+   independently of the rest of the project.
 
-JAR 关注形式证明助手的理论、实现与应用，我们认为本工作高度契合：
+3. **Cross-validation as a design principle.** When independent
+   derivation paths reach the same numerical value, their
+   equality is itself formalized as a theorem. In our case
+   study, two independent Lean modules derive the coupling
+   constant $\alpha^{-1} = 137.036$, and their equality is a
+   machine-checked theorem
+   (\texttt{declaration\_alpha\_inv\_consistency}).
 
-- 机器验证的最小公理系统及其结构后果，直接对齐期刊对自动推理和形式验证的兴趣。
-- 一个基础定理（Core Collapse）的证明仅需列表上的 \texttt{Nodup} 性质——
-  可被广泛 JAR 读者理解。
-- 结果层级从最具体（Core Collapse）到最抽象（有限自由两面对立），
-  提供完整叙事。
+---
 
-### 稿件详情
+### Case Study: CSQIT
 
-- **代码库**: https://github.com/New-Beginning-Universe-Research-Group/CSQIT
-- **形式化**: 23 个 Lean 模块，2089 jobs，0 errors，0 sorry
-- **Declaration.lean**: 13 theorems，137 lines，编译零错误（本 session 新增）
-- **原创性**: 本文为原创材料，未之前发表，不考虑他处同时投稿
-- **利益冲突**: 无利益冲突
+We demonstrate the methodology on CSQIT (Causal-Structure
+Quantum Information Theory), a small algebraic framework
+formalized in Lean~4 with Mathlib. CSQIT's mathematical
+content---Core Collapse, minimality, two-aspect dichotomy,
+unique prime basis, coupling constant---is not our
+methodological contribution; it is the vehicle that shows
+how the methodology works in practice. All formalized results
+are marked W1 and chain into \texttt{Declaration.lean}.
 
-期待您的评审。
+---
 
-此致
+### Comparison with Related Approaches
 
-敬礼！
+The honest boundaries methodology fills a distinct niche:
 
-张珺
-独立研究者
-\texttt{cnjun939@163.com}
+- **LTE abstraction boundaries** (Commelin et al., 2023)
+  separate interfaces from implementations; honest boundaries
+  separate derivable results from definition choices. A project
+  could adopt both.
+
+- **Flyspeck tracking codes** (Hales et al., 2017) align
+  informal text with formal scripts; honest boundaries classify
+  the type of a claim (derivable, conditional, interpretive).
+
+- **Autoformalization assumption layers** (GUARD, Theoria, 2026)
+  detect hidden assumptions automatically; honest boundaries
+  require the human formalizer to declare them deliberately.
+  The two approaches are complementary.
+
+---
+
+### Fit for JFR
+
+The Journal of Formalized Reasoning's emphasis on
+"proof techniques and methodologies and their impact on the
+formalization process" directly matches our contribution.
+The honest boundaries methodology is a discipline that any
+formalization project can adopt---it imposes no restriction
+on proof style, library, or logic, and requires only that
+starting points be listed and results be labeled.
+
+---
+
+### Manuscript Details
+
+- **Repository**: https://github.com/New-Beginning-Universe-Research-Group/CSQIT
+- **Formalization**: 28 Lean modules, 9,826 lines, 451 theorem/lemma/corollary declarations, 16 sorry (all in W2/W3 modules)
+- **Declaration.lean**: 13 theorems, 137 lines, compiles with zero errors, imports only independently verified modules
+- **Lean version**: 4.29.0-rc6 with Mathlib
+- **Originality**: This manuscript is original, has not been published previously, and is not under consideration elsewhere
+- **Conflicts of interest**: None
+
+We look forward to your consideration.
+
+Sincerely,
+
+Jun Zhang
+Independent Researcher
+cnjun939@163.com
