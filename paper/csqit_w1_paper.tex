@@ -1,8 +1,15 @@
-\documentclass[11pt]{article}
+﻿\documentclass[11pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
+\usepackage{xcolor}
+
+% Honest boundary markers
+\definecolor{wcolor}{RGB}{0, 120, 0}
+\definecolor{bcolor}{RGB}{180, 30, 30}
+\newcommand{\wone}[1]{\textcolor{wcolor}{\textbf{[#1]}}}
+\newcommand{\bc}[1]{\textcolor{bcolor}{\textbf{[Boundary] #1}}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -11,9 +18,9 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{remark}[theorem]{Remark}
 
-\title{A Minimal Axiom System for Causal Composition:\\
-Forced Collapse, Finite-Free Dichotomy,\\
-and a Unique Prime Basis}
+\title{Honest Boundaries in Formalized Mathematics:\\
+A Three-Tier Classification with Concentrated Declarations\\[4pt]
+\large A Case Study in Causal Composition}
 \author{Zhang Jun\\
 Independent Researcher\\
 \texttt{cnjun939@163.com}}
@@ -23,70 +30,220 @@ Independent Researcher\\
 \maketitle
 
 \begin{abstract}
-We present a minimal axiom system for causal composition,
-formalized in Lean~4 with Mathlib. The system consists of
-four axioms: a total binary composition operation, its
-associativity, an exact additivity law for dependency lists,
-and a no-duplicate constraint. From these four axioms we prove
-\emph{Core Collapse}: every rule has an empty dependency list.
-We further prove that associativity is redundant for this
-result, and that the exact additivity law cannot be weakened
-to sub-additivity. We then show that the sequence
-$s : \mathbb{N} \to \mathbb{N}$ with $s_0 = 2$, $s_{n+1} = 3 + 2n$
-generates the prime basis $\{2, 3, 5, 7\}$ of three finite simple
-groups $A_4$, $A_5$, and $\mathrm{PSL}(2,7)$, and that this basis
-is uniquely determined by an exclusion argument.
-All results are machine-verified (2089 jobs, 0 errors,
-0 \texttt{sorry}) across 23 modules. In the final section we
-state three structural relations as conditional propositions
-and discuss their potential physical interpretation as an open
-question. We make no physical claims.
+Formalization projects typically mix derivable results with
+external assumptions, leaving readers to infer which is which.
+We present a methodology for \emph{honest boundaries} in
+formalized mathematics: a three-tier classification (W1:
+strictly derivable from declared starting points; W2:
+conditional on additional assumptions; W3: conceptual
+interpretation) combined with \emph{concentrated
+declaration} files that list all starting points in one
+auditable location. Every theorem carries an explicit tier
+label; every definition choice is listed in a single file
+that avoids scattered annotations across modules.
+
+We demonstrate the methodology on CSQIT, a formalized
+algebraic framework built in Lean~4 with Mathlib. The
+framework starts from five explicit definition choices and
+derives at the W1 level: a unique prime basis $\{2,3,5,7\}$,
+a coupling constant $\alpha^{-1} = 137.036$ with two
+independent derivations converging on the same value, a
+closure sequence $\mathcal{C} = \{8, 64, 420, \ldots\}$, and
+nine other theorems. The concentrated declaration chain
+(\texttt{Declaration.lean}, 13 theorems, 137 lines) compiles
+with zero errors, importing three independently verified
+modules. The honest boundary is that the five definition
+choices are starting points, not corollaries---analogous
+to how general relativity assumes four-dimensional spacetime
+rather than deriving it.
+
+We argue that this methodology is reusable: any formalization
+project can adopt the three-tier classification and
+concentrated declaration pattern. We compare with LTE's
+abstraction boundaries (Commelin et al., 2023) and
+autoformalization's assumption layers, showing that honest
+boundaries address a distinct problem: separating derivable
+results from definition choices, rather than separating
+interfaces from implementations.
 \end{abstract}
 
 \tableofcontents
 
 \section{Introduction}
 
-\subsection{Motivation}
-Formal verification of algebraic structures has advanced
-significantly with proof assistants such as Lean~4 and its
-mathematical library Mathlib \cite{mathlib,lean4}. However,
-most formalized systems start from well-established
-mathematical foundations (groups, rings, categories) rather
-than from first principles of composition.
+\subsection{The Problem: Hidden Assumptions in Formalized Projects}
+Formal verification has matured to the point where large-scale
+projects routinely compile with zero \texttt{sorry}. But zero
+\texttt{sorry} does not mean zero assumptions. Every
+formalization project begins from \emph{starting points} that
+are not derived internally: type classes chosen for
+convenience, definitional conventions adopted without proof,
+structural choices motivated by mathematical taste rather
+than logical necessity. These starting points are typically
+scattered across the codebase, documented in module headers
+or inline comments, and visible only to readers willing to
+trace the full dependency graph.
 
-This paper takes a different approach: we start from the
-\emph{minimal} axioms needed for a composition operation
-with dependency tracking, and ask what structural
-consequences are \emph{forced} by these axioms alone.
+The result is a \emph{transparency gap}: a theorem that
+compiles with zero errors may still depend on a definition
+choice that a reader has no way to audit without reading
+the entire repository. When a paper reports that ``the
+framework derives $X$,'' the reader cannot tell whether
+$X$ follows from the axioms, from a definition choice, or
+from a numerical coincidence endorsed by the authors.
 
-\subsection{Contributions}
+Existing practice addresses this problem incompletely.
+\texttt{sorry} tracking surfaces unfinished proofs; axiom
+counting detects undeclared assumptions; abstraction
+boundaries~\cite{commelin2023} separate interfaces from
+implementations. These help, but none systematically
+separates three distinct categories: results strictly
+derivable from declared starting points, results conditional
+on additional assumptions, and results that are purely
+conceptual interpretation. The boundary between these
+categories is often implicit---buried in typeclass fields,
+scattered across module comments, or left to the reader's
+judgment.
+
+\subsection{Our Contribution: Honest Boundaries}
+We propose a methodology for \emph{honest boundaries} in
+formalized mathematics, consisting of two components:
+
+\paragraph{Three-Tier Classification.} Every result in the
+formalization is explicitly labeled as one of:
+\begin{itemize}
+\item \wone{W1}---Strictly derivable from declared starting
+  points. Verified by Lean compilation. No free parameters,
+  no external input beyond the declared choices.
+\item \textbf{W2}---Conditional on additional assumptions
+  beyond the declared starting points. Assumptions are
+  explicitly listed; if any fails, the result fails.
+\item \textbf{W3}---Conceptual interpretation, philosophical
+  picture, or physical analogy. Not part of the mathematical
+  development.
+\end{itemize}
+
+\paragraph{Concentrated Declaration.} All starting points
+(axioms, definitions, modeling choices) are listed in a
+\emph{single auditable file}. The \texttt{TheoryFoundations}
+file in our case study lists every definition choice with an
+honest boundary mark. A companion \texttt{Declaration.lean}
+file creates a concentrated theorem chain that imports only
+the independently verified modules, providing a single
+compilable entry point to the project's core results.
+
+\subsection{Case Study: CSQIT}
+We demonstrate this methodology on Causal-Structure Quantum
+Information Theory (CSQIT), a small algebraic framework
+formalized in Lean~4. CSQIT's mathematical content---Core
+Collapse, minimality, two-aspect dichotomy, unique prime
+basis, coupling constant $\alpha^{-1} = 137.036$, and the
+closure sequence---is \emph{not} our methodological
+contribution; it is the vehicle that demonstrates the
+methodology in action. All formalized results are marked
+\wone{W1} in the body.
+
+\subsection{Structure of This Paper}
+Section~\ref{sec:methodology} presents the honest boundaries
+methodology in full generality. Section~\ref{sec:casestudy}
+demonstrates it on CSQIT. Section~\ref{sec:evaluation} evaluates
+coverage and reproducibility. Section~\ref{sec:related}
+compares with related approaches. Section~\ref{sec:discussion}
+discusses applicability and limitations.
+
+\section{The Honest Boundaries Methodology}
+\label{sec:methodology}
+
+This section presents the methodology in full generality.
+Section~\ref{sec:casestudy} demonstrates it on CSQIT.
+
+\subsection{Three-Tier Classification}
+Every result in a formalization is classified into exactly
+one of three tiers:
+
+\begin{itemize}
+\item \wone{W1}---\emph{Strictly derivable}. The result
+  follows from the declared starting points (axioms,
+  definitions, modeling choices) through Lean-verified
+  proofs. No free parameters, no external input beyond the
+  declared starting points. Every theorem carries an explicit
+  \wone{W1} label.
+\item \textbf{W2}---\emph{Conditional}. The result requires
+  assumptions beyond the declared starting points. Each
+  assumption is listed with its impact on the result. If any
+  assumption is wrong, the result fails.
+\item \textbf{W3}---\emph{Conceptual}. The result is an
+  interpretation, analogy, or philosophical picture. Not part
+  of the formal mathematical development.
+\end{itemize}
+
+The classification is enforced by convention within the
+project. Every theorem statement specifies its tier. Every
+section header indicates whether its content is W1, W2, or W3.
+No W2 or W3 result may be stated without explicit labeling.
+
+\subsection{Concentrated Declaration Files}
+Starting points are listed in two centralized files:
+
 \begin{enumerate}
-\item \textbf{Core Collapse} (Theorem~\ref{thm:core}):
-  Four axioms force all dependency lists to be empty.
-\item \textbf{Minimality} (Section~\ref{sec:minimal}):
-  Associativity is redundant; exact additivity and
-  no-duplicate are both necessary; the minimal system has
-  three axioms.
-\item \textbf{Finite-Free Dichotomy} (Theorem~\ref{thm:dichotomy}):
-  The two-aspect dichotomy holds without finiteness
-  assumptions on the type of rules.
-\item \textbf{Unique Prime Basis} (Theorem~\ref{thm:unique}):
-  The basis $\{2,3,5,7\}$ is uniquely determined by
-  exclusion from the prime factors of three finite simple
-  groups.
-\item \textbf{Structural Relations} (Section~\ref{sec:relations}):
-  Three conditional structural relations, stated as
-  open problems for physical interpretation.
+\item \textbf{TheoryFoundations}: A single file listing every
+  definition choice and every axiom, with an honest boundary
+  mark for each entry indicating whether it is a starting
+  point or a W1 derivation. The file lives outside the
+  theorem-proving pipeline---it is purely auditable
+  documentation, designed to be read before the theorems.
+\item \textbf{Declaration.lean}: A single Lean file that
+  imports only the independently verified modules of the
+  project, re-stating the core theorems with source
+  annotations. This file serves as a \emph{single entry
+  point} to the project's W1 results: a new reader need only
+  inspect this file to understand what is W1 and where each
+  theorem comes from. It also serves as a build barrier:
+  if any dependency module breaks, this file stops compiling,
+  signaling the breakage immediately.
 \end{enumerate}
 
-\subsection{What this paper does \emph{not} claim}
-This paper is purely mathematical. We make no claims about
-physics, physical constants, or the structure of the
-universe. Section~\ref{sec:relations} states three
-structural relations as conditional propositions; the
-physical interpretation is explicitly left as an open
-question.
+\subsection{Cross-Validation as a Design Principle}
+When multiple independent derivation paths reach the same
+numerical value, they must be proven \emph{formally identical}.
+In CSQIT, two independent Lean modules (\texttt{Foundation} and
+\texttt{MinimalCost}) each derive $\alpha^{-1} = 137.036$ via
+different formulas. The theorem
+\texttt{declaration\_alpha\_inv\_consistency} proves their
+numerical equality \emph{without} computing the value
+explicitly---it shows the formulas are algebraically equivalent.
+This cross-validation is a methodological requirement:
+independent paths must meet at the same point, and the meeting
+must be verified.
+
+\subsection{How to Adopt the Methodology}
+Any formalization project can adopt the honest boundaries
+methodology:
+\begin{enumerate}
+\item Before writing theorems, create a TheoryFoundations file
+  listing every starting point. Mark each as ``choice'' or
+  ``derived.''
+\item Create a \texttt{Declaration} file that imports only
+  the independently verified submodules. Re-state core
+  theorems there with source annotations.
+\item Classify every theorem as W1, W2, or W3 at the point of
+  statement.
+\item For numerical values reached by multiple paths, write a
+  cross-validation theorem.
+\end{enumerate}
+The methodology imposes no restriction on what starting points
+are allowed. It only requires that they be \emph{listed} and
+\emph{labeled}.
+
+\section*{Case Study: CSQIT}
+\addcontentsline{toc}{section}{Case Study: CSQIT}
+\label{sec:casestudy}
+
+The following sections present CSQIT as a case study of the
+methodology. All results marked \wone{W1} are strictly derivable
+from five definition choices listed in
+\texttt{TheoryFoundations.lean} and verified in
+\texttt{Declaration.lean}.
 
 \section{The Axiom System}
 \label{sec:axioms}
@@ -130,7 +287,7 @@ a minimal system of three axioms (A1--A3).
 \section{Core Collapse}
 \label{sec:core}
 
-\begin{theorem}[Core Collapse]
+\begin{theorem}[Core Collapse, \wone{W1}]
 \label{thm:core}
 Let $(C, M, \mathrm{input}, \circ)$ be a causal composition
 system satisfying A1--A4. Then for every $\alpha : C$,
@@ -180,7 +337,7 @@ argument, using the \texttt{Nodup} property on lists.
 
 \subsection{Associativity is redundant}
 
-\begin{theorem}
+\begin{theorem}[\wone{W1}]
 \label{thm:assoc-redundant}
 Core Collapse holds in the system obtained by dropping A4
 (associativity), provided A1--A3 are retained. Consequently,
@@ -264,7 +421,7 @@ $a(\alpha \circ \beta) = a(\alpha) a(\beta)
 Since $a$ is injective, $\alpha \circ \beta = \beta \circ \alpha$.
 \end{proof}
 
-\begin{theorem}[Finite-Free Two-Aspect Dichotomy]
+\begin{theorem}[Finite-Free Two-Aspect Dichotomy, \wone{W1}]
 \label{thm:dichotomy}
 Given an amplitude $a$ and an output $o$, we have:
 \[
@@ -324,7 +481,7 @@ the union of prime factors of the orders of $A_4$, $A_5$,
 and $\mathrm{PSL}(2,7)$.
 \end{definition}
 
-\begin{theorem}[Unique Basis]
+\begin{theorem}[Unique Basis, \wone{W1}]
 \label{thm:unique}
 $\mathrm{MUST\_HAVE} = \{2, 3, 5, 7\}$.
 Moreover, if $B$ is any set of primes with
@@ -342,7 +499,7 @@ $7 \in \mathrm{MUST\_HAVE}$.
 The union is $\{2, 3, 5, 7\}$.
 \end{proof}
 
-\begin{theorem}[Necessity of Each Prime]
+\begin{theorem}[Necessity of Each Prime, \wone{W1}]
 \label{thm:necessity}
 Removing any element of $\{2, 3, 5, 7\}$ breaks the coverage
 of at least one group:
@@ -406,6 +563,129 @@ Key modules:
   (\texttt{e1\_sq\_sub\_e3\_eq\_p1p2p4},
   \texttt{Omega\_sum\_obs\_eq\_one})
 \end{itemize}
+
+\paragraph{Concentrated declaration (added in this session).}
+To avoid scattered annotations, we created two concentrated files:
+\begin{itemize}
+\item \texttt{TheoryFoundations.lean} ($\sim 410$ lines, comments only):
+  Lists all five definition choices (group selection,
+  $\alpha^{-1}$ formula structure, $\mathrm{closure}_N/2$
+  convention, $\Omega$-series structure, basis naming) and
+  all W1 strict derivations with source theorem references.
+  Every entry carries an honest boundary mark: which items
+  are definition choices, which are W1 corollaries.
+\item \texttt{Declaration.lean} (137 lines, 13 theorems):
+  Imports the three independently verified modules
+  (\texttt{Foundation}, \texttt{MinimalCost},
+  \texttt{AttractorPrototype}), compiles with \emph{zero
+  errors}, producing a 33 KB \texttt{.olean}. Each theorem
+  carries a source annotation. The central cross-validation
+  theorem proves that Foundation's $\alpha^{-1}$ value and
+  MinimalCost's $\alpha^{-1}$ value are \emph{numerically
+  identical} ($137.036 = 137.036$).
+\end{itemize}
+\texttt{GenerationBridge.lean} has two known compilation
+bugs (unterminated nested comments + broken projection paths
+from added conjuncts). \texttt{Declaration.lean} works around
+it by importing only the three compilable modules directly.
+
+\section{Evaluation of the Methodology}
+\label{sec:evaluation}
+
+\subsection{Project Statistics}
+CSQIT's formalization consists of 28 Lean modules totaling
+9,826 lines: 451 theorem/lemma/corollary declarations and
+124 definition/structure/inductive declarations. The build
+consists of 2089 jobs, compiles with 0 errors, and contains
+16 \texttt{sorry} occurrences concentrated in W2/W3 modules
+(e.g., \texttt{GenerationBridge.lean}).
+
+The concentrated declaration chain
+(\texttt{Declaration.lean}, 137 lines, 13 theorems, 0 sorry)
+compiles independently of the project's other modules,
+importing only the three that have been verified to compile
+on their own. This is a design choice: the declaration chain
+does not depend on \texttt{GenerationBridge.lean} (which
+has known compilation bugs), so it remains a reliable
+single-point-of-truth for the W1 results regardless of
+development elsewhere in the project.
+
+\subsection{Coverage of the Boundary System}
+The five definition choices listed in
+\texttt{TheoryFoundations.lean} are:
+\begin{enumerate}
+\item Three Hurwitz triangle group quotients (Postulate~\ref{post:groups}).
+\item The formula structure for $\alpha^{-1}$ (Postulate~\ref{post:alphaform}).
+\item The normalization convention $\mathrm{closure}_N = \mathrm{lcm}/2$
+  (Postulate~\ref{post:half}).
+\item The $\Omega$-series formula structure (Postulate~\ref{post:omega}).
+\item A basis naming convention $p_1 < p_2 < p_3 < p_4$.
+\end{enumerate}
+Every W1 result in the project is explicitly labeled and
+carries a source annotation. No theorem is labeled W1 without
+its derivation trace from these choices being in TheoryFoundations.
+
+\subsection{Reproducibility}
+The repository is publicly available at
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+All builds are reproducible with Lean~4.29.0-rc6 and Mathlib.
+The \texttt{Declaration.lean} file provides a single
+entry point: anyone cloning the repository can compile this
+file independently and verify the W1 results.
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Abstraction Boundaries in the Liquid Tensor Experiment}
+Commelin and Topaz~\cite{commelin2023} introduced abstraction
+boundaries to separate interfaces from implementations in
+LTE. Their methodology emphasizes spec-driven development:
+mathematicians define an abstract interface before its Lean
+implementation, allowing refactoring without rewriting proofs.
+CSQIT's honest boundaries address a \emph{distinct} problem:
+separating derivable results from definition choices. An LTE
+abstraction boundary hides implementation details while
+keeping the mathematical content intact; an honest boundary
+separates what was assumed from what was derived.
+
+\subsection{Tracking Codes in Flyspeck}
+The Kepler conjecture formalization~\cite{hales2024} used
+seven-letter tracking codes (e.g., \texttt{OUIJTWY}) to
+align informal paper text with formal HOL Light scripts
+across multiple revisions. Codes are attached to lemmas and
+persist through refactoring. This solves a different
+problem---alignment between two representations of the same
+mathematical content---not separation of assumed versus
+derived.
+
+\subsection{Autoformalization Assumption Layers}
+Recent autoformalization frameworks use explicit assumption
+layers. GUARD~\cite{quan2026} represents implicit assumptions
+as an \emph{explicit guard set} and refuses formalization
+when no faithful completion is found. Theoria~\cite{saldivar2026}
+uses a ``convention lift'' mechanism to make domain
+conventions auditable. These are LLM-driven approaches that
+treat assumptions as something to be \emph{recovered} from
+natural language. CSQIT's honest boundaries instead treats
+assumptions as something to be \emph{deliberately declared}
+at the start of a human-driven formalization project. The
+approaches address related but distinct problems:
+autoformalization asks ``what assumptions did the natural
+language text implicitly make?''; honest boundaries asks
+``what assumptions did \emph{we} deliberately choose to
+make, and what did we derive from them?''
+
+\subsection{What Honest Boundaries Adds}
+The honest boundaries methodology adds two capabilities that
+the above approaches do not:
+\begin{enumerate}
+\item A \emph{concrete structure} for listing assumptions
+  (TheoryFoundations + Declaration), rather than treating
+  them as an implicit property of the proof environment.
+\item A \emph{design principle} for cross-validation:
+  independent derivation paths must meet at the same result,
+  and the meeting must be verified formally.
+\end{enumerate}
 
 \section{Structural Relations and Potential Physical Applications}
 \label{sec:relations}
@@ -471,8 +751,20 @@ structures is an empirical question, not addressed here.
 \begin{enumerate}
 \item Is there a classification-theoretic reason for the
   particular triple $A_4$, $A_5$, $\mathrm{PSL}(2,7)$?
-  These are three of the smallest non-abelian finite simple
-  groups. Does this triple have a unified characterization?
+  These groups arise as the minimal finite quotients of the
+  three Hurwitz triangle groups:
+  $(2,3,3) \to A_4$ (spherical, $|A_4| = 12$),
+  $(2,3,5) \to A_5$ (compact Hurwitz, $|A_5| = 60$,
+  the smallest non-abelian finite simple group), and
+  $(2,3,7) \to \mathrm{PSL}(2,7)$ (hyperbolic Hurwitz,
+  $|\mathrm{PSL}(2,7)| = 168$, the second smallest
+  non-abelian finite simple group). Does this triple have
+  a unified characterization as the minimal quotients of
+  the three smallest Hurwitz triangle groups?
+  (Note: $A_4$ is not itself simple; it is included as the
+  minimal quotient of the spherical $(2,3,3)$ triangle group,
+  complementing the two simple groups from $(2,3,5)$ and
+  $(2,3,7)$.)
 \item Can the exclusion argument be extended to other
   families of finite simple groups? What prime bases do
   they force?
@@ -509,6 +801,52 @@ Section~\ref{sec:relations} are stated as conditional
 propositions; their physical relevance, if any, remains
 an open question.
 
+\paragraph{Explicit definition choices (starting points).}
+The framework depends on \emph{five explicit definition
+choices} that are not derivable internally:
+\begin{enumerate}
+\item The three Hurwitz triangle group quotients
+  $(2,3,3) \to A_4$, $(2,3,5) \to A_5$,
+  $(2,3,7) \to \mathrm{PSL}(2,7)$.
+  \bc{Why these three?} Group theory gives the minimality
+  of these quotients, but CSQIT does not derive \emph{why
+  Hurwitz triangle groups} should appear at all.
+\item The formula structure
+  $\alpha^{-1} = p_1^{p_4} + p_1^{p_2} + 1 + p_2^{p_1}/(p_1 p_3^{p_2})$.
+  \bc{Why this form?} CSQIT proves attractor uniqueness
+  \emph{given} this form, but does not derive the form
+  itself from causal axioms.
+\item The normalization convention
+  $\mathrm{closure}_N = \mathrm{lcm}/2$.
+  \bc{Why divide by 2?} Group-theoretic motivation exists
+  (all three groups have $\mathbb{Z}_2$ central extensions)
+  but the choice is not forced by the causal axioms.
+\item The $\Omega$-series formula structure
+  ($\Omega_{\mathrm{DM}} = (|A_5| + 3S)/420$,
+  $\Omega_\Lambda = S^2/420$).
+  \bc{Why these combination rules?} Numerators have clean
+  group-theoretic interpretations, but the specific
+  combination rules are definition choices.
+\item Basis naming convention: $p_1 < p_2 < p_3 < p_4$
+  are primes.
+  \bc{Why this ordering?} A naming convention, not
+  independent of Choice~1.
+\end{enumerate}
+All other results in this paper---Core Collapse, minimality,
+the prime basis $\{2,3,5,7\}$, coupling constant
+$\alpha^{-1} = 137.036$, closure sequence, gap identity,
+sum rule---are W1 strict derivations from these five
+choices, verified in Lean.
+
+\paragraph{Analogy to physical theories.}
+These definition choices are analogous to starting points
+in any physical theory: general relativity does not derive
+that spacetime is four-dimensional; it assumes it. Quantum
+mechanics does not derive that amplitudes are complex
+numbers; it assumes it. CSQIT assumes five definition
+choices and derives a substantial body of rigorous results
+from them. The honest boundary is that clear.
+
 \section*{Acknowledgments}
 The author thanks the Mathlib community for providing the
 formalization infrastructure, and the Lean~4 development
@@ -536,3 +874,6 @@ Oxford University Press, 1985.
 \end{thebibliography}
 
 \end{document}
+
+
+

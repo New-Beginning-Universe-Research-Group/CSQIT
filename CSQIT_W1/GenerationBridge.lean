@@ -1232,8 +1232,7 @@ theorem Delta_denominator_is_alpha_observation_level :
     (mkBase.p2 : ℕ) * (mkBase.p3 : ℕ) * (mkBase.p4 : ℕ) =
     105 := by
   have hbase : mkBase.p2 = 3 ∧ mkBase.p3 = 5 ∧ mkBase.p4 = 7 := by
-    have h := evolution_closure_chain
-    exact ⟨h.2.2.2.2.1, h.2.2.2.2.2.1, h.2.2.2.2.2.2.1⟩
+    exact ⟨rfl, rfl, rfl⟩
   rcases hbase with ⟨rfl, rfl, rfl⟩
   <;> decide
 
@@ -1912,6 +1911,7 @@ end CSQIT_W1.GenerationBridge
    All three constants are NOT constants - they are n-dependent DYNAMICAL
    quantities. The 
 
+   -/
 /-! ============================================================================
    Section 26. The UNIFIED Calibration Relation (v18.16.0 — THE BREAKTHROUGH!)
 
@@ -1944,4 +1944,4 @@ end CSQIT_W1.GenerationBridge
 
    This is within the 6% error bound claimed by Foundation Section 12.4!
 
-   WHY THIS WORKS — DeepSeek 说的 
+   WHY THIS WORKS — DeepSeek 说的 -/
