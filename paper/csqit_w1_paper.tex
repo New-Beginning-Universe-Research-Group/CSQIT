@@ -589,10 +589,14 @@ To avoid scattered annotations, we created two concentrated files:
   MinimalCost's $\alpha^{-1}$ value are \emph{numerically
   identical} ($137.036 = 137.036$).
 \end{itemize}
-\texttt{GenerationBridge.lean} has two known compilation
-bugs (unterminated nested comments + broken projection paths
-from added conjuncts). \texttt{Declaration.lean} works around
-it by importing only the three compilable modules directly.
+\texttt{GenerationBridge.lean}'s two earlier compilation bugs
+(unterminated nested comments + broken projection paths
+from added conjuncts) have since been fixed, and the module
+now compiles without errors, carrying the project's single
+W2-conditional \texttt{sorry}. \texttt{Declaration.lean}
+deliberately imports only the three modules that are lake
+build targets, keeping the declaration chain independent of
+the project's larger, still-evolving modules.
 
 \section{Evaluation of the Methodology}
 \label{sec:evaluation}
@@ -613,10 +617,11 @@ auditing benefits from concentrated declarations.)
 The concentrated declaration chain
 (\texttt{Declaration.lean}, 137 lines, 13 theorems, 0 sorry)
 compiles independently of the project's other modules,
-importing only the three that have been verified to compile
-on their own. This is a design choice: the declaration chain
-does not depend on \texttt{GenerationBridge.lean} (which
-has known compilation bugs), so it remains a reliable
+importing only the three that are lake build targets and
+have been verified to compile on their own. This is a
+design choice: the declaration chain does not depend on
+the project's larger, still-evolving modules (e.g.,
+\texttt{GenerationBridge.lean}), so it remains a reliable
 single-point-of-truth for the W1 results regardless of
 development elsewhere in the project.
 
