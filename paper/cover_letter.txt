@@ -1,12 +1,11 @@
-﻿Dear ITP 2026 Program Committee,
+﻿Dear Professor Tobias Nipkow,
+Editor-in-Chief of the Journal of Automated Reasoning,
 
-We are writing to submit our manuscript entitled
+I am writing to submit our manuscript entitled
 "Honest Boundaries in Formalized Mathematics:
 A Three-Tier Classification with Concentrated Declarations"
 (subtitle: "A Case Study in Causal Composition")
-for consideration as a full paper at the 17th International
-Conference on Interactive Theorem Proving (ITP 2026),
-part of FLoC 2026, Lisbon, Portugal.
+for consideration as a methodology paper.
 
 ---
 
@@ -26,28 +25,33 @@ Flyspeck to Mathlib---where zero \texttt{sorry} does not mean
 zero assumptions, and readers must trace the full dependency
 graph to distinguish what was derived from what was assumed.
 
-Our contribution is methodological:
+Our contribution is methodological, with direct implications
+for the automated reasoning community:
 
 1. **Three-tier classification.** Every result is explicitly
-   labeled at the point of statement. The three tiers are not
-   a ranking---they are a classification of type: W1 results
-   are theorems; W2 results are conditional theorems; W3
-   results are narratives.
+   labeled at the point of statement. This classification is
+   actionable: automated tools could verify that W1 theorems
+   have no external dependencies and that W2 theorems carry
+   complete assumption tracking.
 
-2. **Concentrated declaration files.** Two files external to
-   the theorem-proving pipeline provide a single audit surface:
-   \texttt{TheoryFoundations.lean} lists all definition choices
-   with honest boundary marks; \texttt{Declaration.lean} chains
-   all W1 theorems with source annotations and compiles
-   independently of the rest of the project.
+2. **Concentrated declaration files.** Two files provide a
+   single audit surface: \texttt{TheoryFoundations.lean} lists
+   all definition choices; \texttt{Declaration.lean} chains
+   all W1 theorems independently. This structure suggests a
+   natural target for automated consistency checking.
 
 3. **Cross-validation as a design principle.** When two
    independent derivation paths reach the same numerical
-   value, their equality is itself formalized as a theorem.
-   In our case study, the coupling constant $\alpha^{-1} =
-   137.036$ is derived by two independent Lean modules, and
-   their equality is a machine-checked theorem
-   (\texttt{declaration\_alpha\_inv\_consistency}).
+   value, their equality is formalized as a theorem. This
+   provides a machine-checkable invariant for verifying
+   internal consistency across a formalization project.
+
+4. **Future work: automated checking.** The Discussion
+   section outlines how the honest boundaries structure could
+   be extended with an automated checker that verifies W1/W2/
+   W3 label consistency and external dependency tracking.
+   This is directly within the scope of automated reasoning
+   tooling.
 
 ---
 
@@ -64,17 +68,28 @@ with zero errors, importing three independently verified modules.
 
 ---
 
-### Fit for ITP
+### AI Assistance Disclosure
 
-ITP is the natural home for this work. The honest boundaries
-methodology is a discipline that any Lean or Coq project can
-adopt---it imposes no restriction on proof style, library, or
-logic, and requires only that starting points be listed and
-results be labeled. The paper directly addresses concerns
-expressed in ITP community discussions about auditability of
-large-scale formalization projects, and our Related Work
-section connects to LTE's abstraction boundaries (Commelin \&
-Topaz, 2024) and other ITP-published large-scale formali\-zations.
+Following Springer Nature's guidelines, we disclose the use
+of TRAE (AI coding assistant) for research assistance---for
+Lean formalization exploration, draft proof generation, and
+manuscript preparation. All Lean code and mathematical content
+has been personally verified by the author. This transparent
+disclosure is consistent with the honest boundaries methodology
+advocated in the paper.
+
+---
+
+### Fit for JAR
+
+The Journal of Automated Reasoning's interest in proof
+methodologies, formalization infrastructure, and tooling
+directly matches our contribution. The honest boundaries
+methodology is a discipline that any formalization project
+can adopt---and, as the future work section outlines, it
+suggests concrete targets for automated reasoning tooling
+that would make the methodology enforceable rather than
+advisory.
 
 ---
 
@@ -84,7 +99,6 @@ Topaz, 2024) and other ITP-published large-scale formali\-zations.
 - **Formalization**: 28 Lean modules, 9,826 lines, 451 theorem/lemma/corollary declarations, 16 sorry (all in W2/W3 modules)
 - **Declaration.lean**: 13 theorems, 137 lines, compiles with zero errors
 - **Lean version**: 4.29.0-rc6 with Mathlib
-- **Page count**: 9 pages (LIPIcs format target: 16 pages max)
 - **Originality**: This manuscript is original, has not been published previously, and is not under consideration elsewhere
 - **Conflicts of interest**: None
 - **Ancillary files**: The complete Lean formalization is available at the repository above and can be provided as ancillary files upon request.

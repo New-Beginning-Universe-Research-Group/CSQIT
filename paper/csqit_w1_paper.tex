@@ -1,7 +1,7 @@
-﻿\documentclass[10pt]{article}
+﻿\documentclass[11pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{hyperref}
-\usepackage[a4paper,margin=1.5cm]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
 \usepackage{xcolor}
 
@@ -847,11 +847,38 @@ numbers; it assumes it. CSQIT assumes five definition
 choices and derives a substantial body of rigorous results
 from them. The honest boundary is that clear.
 
+\paragraph{Future work: automated checking.}
+The W1/W2/W3 classification and concentrated declaration
+structure suggest a natural extension: \emph{automated
+checking of label consistency}. A tool could parse
+\texttt{TheoryFoundations.lean} and \texttt{Declaration.lean}
+to verify that every theorem marked W1 has no dependencies
+outside the W1 set, that every theorem labeled W2 carries
+explicit assumption tracking, and that the five definition
+choices are exactly the external dependencies of the W1
+core. This would transform the honest boundaries methodology
+from a manual discipline into a verifiable invariant. We
+leave this as future work.
+
 \section*{Acknowledgments}
 The author thanks the Mathlib community for providing the
 formalization infrastructure, and the Lean~4 development
 team for proof engineering tools that make results like
 those here verifiable at scale.
+
+\paragraph{AI assistance disclosure.}
+The author acknowledges the use of TRAE (AI coding assistant
+powered by DeepSeek and other large language models) for
+research assistance. These tools were used for: (1) assisting
+with the initial exploration of Lean~4 formalization strategies;
+(2) generating draft proof scripts that were subsequently
+reviewed, corrected, and refined by hand; and (3) aiding in
+the preparation and polishing of this manuscript. The author
+has personally verified the correctness of all Lean code,
+theorem statements, and mathematical content presented here,
+and takes full responsibility for the work. This transparent
+disclosure of AI assistance is consistent with the honest
+boundaries methodology advocated in this paper.
 
 \begin{thebibliography}{99}
 
