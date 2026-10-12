@@ -94,7 +94,7 @@ the methodology enforceable rather than advisory.
 ### Manuscript Details
 
 - Repository: https://github.com/New-Beginning-Universe-Research-Group/CSQIT
-- Formalization: 28 Lean modules, 9,826 lines, 451 theorem/lemma/corollary declarations, 16 sorry (all in W2/W3 modules)
+- Formalization: 28 Lean modules, 9,824 lines, 451 theorem/lemma/corollary declarations, 129 definitions; the W1 declaration chain compiles with zero errors and zero sorry, and the full project contains exactly one sorry (explicitly marked W2-conditional)
 - Declaration.lean: 13 theorems, 137 lines, compiles with zero errors
 - Lean version: 4.29.0-rc6 with Mathlib
 - Originality: This manuscript is original, has not been published previously, and is not under consideration elsewhere

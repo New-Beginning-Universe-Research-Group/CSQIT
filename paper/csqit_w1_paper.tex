@@ -528,9 +528,14 @@ by \texttt{unique\_base\_is\_2357}.
 \label{sec:formalization}
 
 All results are formalized in Lean~4 with Mathlib. The
-repository contains 23 Lean modules. The build consists
-of 2089 jobs, compiles with 0 errors, and contains no
-\texttt{sorry}.
+repository contains 28 Lean modules totaling 9,824 lines:
+451 theorem/lemma/corollary declarations and 129
+definition/structure/inductive declarations. The W1
+declaration chain (\texttt{Declaration.lean}) compiles
+with 0 errors and contains no \texttt{sorry}; the full
+project contains exactly one \texttt{sorry}, explicitly
+marked W2-conditional at its point of use
+(Section~\ref{sec:evaluation}).
 
 The repository is available at:
 \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
@@ -594,11 +599,16 @@ it by importing only the three compilable modules directly.
 
 \subsection{Project Statistics}
 CSQIT's formalization consists of 28 Lean modules totaling
-9,826 lines: 451 theorem/lemma/corollary declarations and
-124 definition/structure/inductive declarations. The build
-consists of 2089 jobs, compiles with 0 errors, and contains
-16 \texttt{sorry} occurrences concentrated in W2/W3 modules
-(e.g., \texttt{GenerationBridge.lean}).
+9,824 lines: 451 theorem/lemma/corollary declarations and
+129 definition/structure/inductive declarations. The W1
+declaration chain compiles with 0 errors; the full project
+contains exactly one \texttt{sorry}, in
+\texttt{GenerationBridge.lean}, explicitly marked
+\texttt{W2 conditional} at the point of use. (A naive text
+search reports 16 occurrences of the word ``sorry''; the
+other 15 are comments stating that the respective modules
+contain zero sorries---a small illustration of why manual
+auditing benefits from concentrated declarations.)
 
 The concentrated declaration chain
 (\texttt{Declaration.lean}, 137 lines, 13 theorems, 0 sorry)

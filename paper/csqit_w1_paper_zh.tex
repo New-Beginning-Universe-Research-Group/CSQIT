@@ -1,0 +1,657 @@
+% !TEX program = xelatex
+\documentclass[11pt]{ctexart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb}
+\usepackage{xcolor}
+
+% 诚实边界标记
+\definecolor{wcolor}{RGB}{0, 120, 0}
+\definecolor{bcolor}{RGB}{180, 30, 30}
+\newcommand{\wone}[1]{\textcolor{wcolor}{\textbf{[#1]}}}
+\newcommand{\bc}[1]{\textcolor{bcolor}{\textbf{[边界] #1}}}
+
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{remark}[theorem]{注}
+
+\renewcommand{\proofname}{证明}
+
+\title{形式化数学中的诚实边界：\\
+三层分类与集中宣言\\[4pt]
+\large 因果组合的案例研究}
+\author{张珺\\
+独立研究者\\
+\texttt{cnjun939@163.com}}
+\date{2026年10月12日}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+形式化项目通常把可推导的结果与外部假设混在一起，留给读者自行推断哪部分是哪部分。我们提出一种形式化数学中的\emph{诚实边界}（honest boundaries）方法论：三层分类（W1：从宣言起点严格可推导；W2：依赖额外假设的条件性结果；W3：概念诠释）结合\emph{集中宣言}（concentrated declaration）文件——把全部起点列在单一可审计的位置。每条定理都携带显式的层级标签；每个定义选择都列在同一份文件中，避免标注散落在各模块之间。
+
+我们在 CSQIT 上演示该方法论——这是一个以 Lean~4 与 Mathlib 构建的形式化代数框架。该框架从五个显式定义选择出发，在 W1 层级推导出：唯一素基底（unique prime basis）$\{2,3,5,7\}$、耦合常数 $\alpha^{-1} = 137.036$（两条独立推导路径汇聚到同一数值）、closure 序列 $\mathcal{C} = \{8, 64, 420, \ldots\}$，以及另外九条定理。集中宣言链（\texttt{Declaration.lean}，13 条定理，137 行）以零错误编译，导入三个独立验证过的模块。诚实边界在于：五个定义选择是起点，而非推论——正如广义相对论假设四维时空而非推导出它。
+
+我们论证该方法论是可复用的：任何形式化项目都可以采用三层分类与集中宣言模式。我们与 LTE 的抽象边界（Commelin 等，2023）以及自动形式化的假设层进行比较，表明诚实边界解决的是一个不同的问题：把可推导的结果与定义选择区分开，而非把接口与实现区分开。
+\end{abstract}
+
+\tableofcontents
+
+\section{引言}
+
+\subsection{问题：形式化项目中被隐藏的假设}
+形式化验证已经成熟到这样的程度：大型项目例行公事地以零 \texttt{sorry} 编译通过。但零 \texttt{sorry} 不等于零假设。每个形式化项目都从并非内部推导的\emph{起点}（starting points）出发：为方便而选取的类型类、未经证明而采纳的定义约定、出于数学品味而非逻辑必要性的结构选择。这些起点通常散落在代码库各处，记录在模块头部或行内注释里，只有愿意追踪完整依赖图的读者才能看到。
+
+其结果是\emph{透明度缺口}（transparency gap）：一条零错误编译通过的定理，可能仍然依赖于某个定义选择，而读者若不阅读整个仓库就无法审计它。当一篇论文报告“该框架推导出 $X$”时，读者无法分辨 $X$ 是从公理推出的、从某个定义选择推出的，还是从作者认可的数值巧合推出的。
+
+现有实践不完备地应对了这一问题。\texttt{sorry} 追踪能暴露未完成的证明；公理计数能检测未宣言的假设；抽象边界~\cite{commelin2023}能将接口与实现分离。这些都有帮助，但没有一种系统地分离三个不同的范畴：从宣言起点严格可推导的结果、依赖额外假设的条件性结果、以及纯粹属于概念诠释的结果。这些范畴之间的边界往往是隐式的——埋在类型类字段里、散落在模块注释中，或留给读者自行判断。
+
+\subsection{本文贡献：诚实边界}
+我们提出形式化数学中的诚实边界（honest boundaries）方法论，由两个组件构成：
+
+\paragraph{三层分类。}形式化中的每个结果都被显式标注为以下之一：
+\begin{itemize}
+\item \wone{W1}——从宣言起点严格可推导。由 Lean 编译验证。无自由参数，无超出宣言选择的外部输入。
+\item \textbf{W2}——超出宣言起点、依赖额外假设的条件性结果。假设被显式列出；若任何一条失效，结果即失效。
+\item \textbf{W3}——概念诠释、哲学图景或物理类比。不属于数学发展的一部分。
+\end{itemize}
+
+\paragraph{集中宣言。}所有起点（公理、定义、建模选择）都列在\emph{单一可审计的文件}中。我们案例研究中的 \texttt{TheoryFoundations} 文件列出每个定义选择，并附诚实边界标记。一个配套的 \texttt{Declaration.lean} 文件构造出一条集中定理链，只导入独立验证过的模块，为项目的核心结果提供单一可编译入口。
+
+\subsection{案例研究：CSQIT}
+我们在因果结构量子信息理论（Causal-Structure Quantum Information Theory, CSQIT）上演示该方法论，这是一个以 Lean~4 形式化的小型代数框架。CSQIT 的数学内容——核心坍缩（Core Collapse）、极小性、两面对立（two-aspect dichotomy）、唯一素基底、耦合常数 $\alpha^{-1} = 137.036$ 以及 closure 序列——并\emph{非}我们的方法论贡献；它是展示该方法论实际运作的载体。所有形式化结果在正文中均标注为 \wone{W1}。
+
+\subsection{本文结构}
+第~\ref{sec:methodology}~节完整地阐述诚实边界方法论。第~\ref{sec:casestudy}~节在 CSQIT 上演示它。第~\ref{sec:evaluation}~节评估覆盖面与可复现性。第~\ref{sec:related}~节与相关方法进行比较。第~\ref{sec:discussion}~节讨论适用性与局限。
+
+\section{诚实边界方法论}
+\label{sec:methodology}
+
+本节完整地阐述该方法论。第~\ref{sec:casestudy}~节在 CSQIT 上演示它。
+
+\subsection{三层分类}
+形式化中的每个结果都被恰好归入三层之一：
+
+\begin{itemize}
+\item \wone{W1}——\emph{严格可推导}。结果经由 Lean 验证的证明从宣言起点（公理、定义、建模选择）推出。无自由参数，无超出宣言起点的外部输入。每条定理携带显式的 \wone{W1} 标签。
+\item \textbf{W2}——\emph{条件性}。结果需要超出宣言起点的假设。每条假设都列出其对结果的影响。若任何一条假设错误，结果即失效。
+\item \textbf{W3}——\emph{概念性}。结果是一种诠释、类比或哲学图景。不属于形式数学发展的一部分。
+\end{itemize}
+
+该分类在项目内部以约定方式强制执行。每条定理陈述都指明其层级。每个章节标题都指明其内容属于 W1、W2 还是 W3。任何 W2 或 W3 结果不得在没有显式标注的情况下陈述。
+
+\subsection{集中宣言文件}
+起点列在两个集中化的文件中：
+
+\begin{enumerate}
+\item \textbf{\texttt{TheoryFoundations}}：单一文件，列出每个定义选择与每条公理，每个条目附一个诚实边界标记，指明它是起点还是 W1 推导。该文件位于定理证明流水线之外——它是纯粹可审计的文档，设计为在阅读定理之前先读它。
+\item \textbf{\texttt{Declaration.lean}}：单一 Lean 文件，只导入项目中独立验证过的模块，并带来源注解地重新陈述核心定理。该文件是项目 W1 结果的\emph{单一入口}：新读者只需查看这一个文件，就能理解哪些是 W1、每条定理来自哪里。它还充当构建屏障：若任何依赖模块损坏，该文件停止编译，立即发出损坏信号。
+\end{enumerate}
+
+\subsection{交叉验证作为设计原则}
+当多条独立推导路径到达同一数值时，必须证明它们\emph{形式上相同}。在 CSQIT 中，两个独立的 Lean 模块（\texttt{Foundation} 与 \texttt{MinimalCost}）各自经由不同公式推导出 $\alpha^{-1} = 137.036$。定理 \texttt{declaration\_alpha\_inv\_consistency} 在\emph{不}显式计算该数值的前提下证明二者的数值相等——它表明两个公式在代数上等价。这种交叉验证（cross-validation）是一条方法论要求：独立路径必须汇聚到同一点，且汇聚必须被验证。
+
+\subsection{如何采用该方法论}
+任何形式化项目都可以采用诚实边界方法论：
+\begin{enumerate}
+\item 在撰写定理之前，创建一个 TheoryFoundations 文件，列出每个起点。将每个起点标记为“选择”或“推导”。
+\item 创建一个 \texttt{Declaration} 文件，只导入独立验证过的子模块，并在其中带来源注解地重新陈述核心定理。
+\item 在陈述之处将每条定理分类为 W1、W2 或 W3。
+\item 对由多条路径到达的数值，撰写一条交叉验证定理。
+\end{enumerate}
+该方法论对允许什么起点不作任何限制。它只要求起点被\emph{列出}并被\emph{标注}。
+
+\section*{案例研究：CSQIT}
+\addcontentsline{toc}{section}{案例研究：CSQIT}
+\label{sec:casestudy}
+
+以下各节把 CSQIT 作为该方法论的案例研究来呈现。所有标注 \wone{W1} 的结果都从列于 \texttt{TheoryFoundations.lean} 的五个定义选择严格推导，并在 \texttt{Declaration.lean} 中得到验证。
+
+\section{公理系统}
+\label{sec:axioms}
+
+\begin{definition}[因果组合系统]
+\label{def:system}
+一个\emph{因果组合系统}（causal composition system）由以下部分组成：
+\begin{itemize}
+\item 一个\emph{规则}（rules）类型 $C$；
+\item 一个\emph{关涉对象}（relata）类型 $M$；
+\item 一个函数 $\mathrm{input} : C \to \mathrm{List}\,M$；
+\item 一个二元运算 $\circ : C \to C \to C$；
+\end{itemize}
+并满足：
+\begin{align}
+\text{(A1)}\quad & \mathrm{input}(\alpha \circ \beta)
+  = \mathrm{input}\,\alpha \mathbin{+\!+}
+    \mathrm{input}\,\beta
+  \label{ax:additive}\\
+\text{(A2)}\quad & (\mathrm{input}\,\alpha).\mathrm{Nodup}
+  \label{ax:nodup}\\
+\text{(A3)}\quad & \circ \text{ 是一个全定义的二元运算}
+  \label{ax:compose}\\
+\text{(A4)}\quad & (\alpha \circ \beta) \circ \gamma
+  = \alpha \circ (\beta \circ \gamma)
+  \label{ax:assoc}
+\end{align}
+\end{definition}
+
+\begin{remark}
+Lean 形式化将这些归入一个含五个字段的类型类 \texttt{CompilerAxiom}：
+\texttt{compose}、\texttt{assoc}、\texttt{input}、
+\texttt{compose\_input}、\texttt{input\_nodup}。
+上文的公理 A1--A4 对应四条非平凡约束。第~\ref{sec:minimal}~节证明 A4
+（结合律）对核心坍缩是冗余的，从而得到一个仅含三条公理（A1--A3）的极小系统。
+\end{remark}
+
+\section{核心坍缩}
+\label{sec:core}
+
+\begin{theorem}[核心坍缩，\wone{W1}]
+\label{thm:core}
+设 $(C, M, \mathrm{input}, \circ)$ 是一个满足 A1--A4 的因果组合系统。则对每个 $\alpha : C$，
+\[
+\mathrm{input}\,\alpha = [].
+\]
+\end{theorem}
+
+\begin{proof}
+考虑 $\alpha \circ \alpha$。由 A1，
+\[
+\mathrm{input}(\alpha \circ \alpha)
+  = \mathrm{input}\,\alpha \mathbin{+\!+}
+    \mathrm{input}\,\alpha.
+\]
+由 A2，这个拼接后的列表没有重复元素。
+
+假设 $\mathrm{input}\,\alpha = y :: t$，其中 $y \in M$，$t \in \mathrm{List}\,M$。则
+\[
+(y :: t) \mathbin{+\!+} (y :: t)
+  = y :: (t \mathbin{+\!+} (y :: t)).
+\]
+元素 $y$ 出现在列表头部，并且再次出现在尾部 $t \mathbin{+\!+} (y :: t)$ 之中（具体地，出现在第二份 $y :: t$ 开始的位置）。这与 Nodup 性质（A2）矛盾。
+
+因此 $\mathrm{input}\,\alpha$ 不可能非空；它必为 $[]$。
+\end{proof}
+
+\begin{corollary}
+\label{cor:no-dependency}
+任何规则都没有任何依赖：
+$\forall \alpha : C, \forall x : M,\; x \notin \mathrm{input}\,\alpha$。
+\end{corollary}
+
+\begin{remark}
+Lean 证明（\texttt{CoreCollapse.lean}，定理
+\texttt{no\_causal\_input}）恰好形式化了这一论证，使用了列表上的
+\texttt{Nodup} 性质。
+\end{remark}
+
+\section{极小性}
+\label{sec:minimal}
+
+\subsection{结合律是冗余的}
+
+\begin{theorem}[\wone{W1}]
+\label{thm:assoc-redundant}
+在去掉 A4（结合律）后所得的系统中，只要保留 A1--A3，核心坍缩依然成立。因此，核心坍缩的极小公理系统仅由 A1--A3 构成。
+\end{theorem}
+
+\begin{proof}
+定理~\ref{thm:core} 的证明只使用 $\alpha \circ \alpha$（规则与其自身的复合），从不需要按序列复合三个不同的规则。因此 A4（三重复合的结合律）从未被调用。同样的论证在无 A4 的系统中逐字适用。
+\end{proof}
+
+\begin{remark}
+在 Lean 中，这一点通过定义一个不含 \texttt{assoc} 字段的独立类型类 \texttt{MinimalCompilerAxiom} 并重新证明核心坍缩来确立（\texttt{AxiomIndependence.lean}，定理 \texttt{minimal\_core\_collapse}）。证明完全相同。
+\end{remark}
+
+\subsection{精确可加性是必要的}
+
+\begin{theorem}
+\label{thm:subadd-fails}
+若把 A1 弱化为次可加性
+$\mathrm{input}(\alpha \circ \beta) \subseteq
+ \mathrm{input}\,\alpha \cup \mathrm{input}\,\beta$，
+则核心坍缩失效。
+\end{theorem}
+
+\begin{proof}
+反例：取 $M = \mathrm{Unit}$，$C = \mathrm{Bool}$，
+$\circ \equiv \mathrm{false}$，
+$\mathrm{input}\,\mathrm{true} = [\mathrm{unit}]$。
+次可加性与 Nodup 都平凡成立，但
+$\mathrm{input}\,\mathrm{true} \neq []$。
+\end{proof}
+
+\subsection{无重复是必要的}
+
+\begin{theorem}
+\label{thm:nodup-necessary}
+若去掉 A2，核心坍缩失效。
+\end{theorem}
+
+\begin{proof}
+定理~\ref{thm:core} 中的矛盾直接来自把 Nodup（A2）应用于
+$\mathrm{input}\,\alpha \mathbin{+\!+} \mathrm{input}\,\alpha$。
+没有 A2，就没有矛盾——列表与其自身的拼接是完全良定义的，而且完全可以含有重复元素。
+\end{proof}
+
+\section{有限自由两面对立}
+\label{sec:dichotomy}
+
+\begin{definition}[振幅]
+一个\emph{振幅}（amplitude）是函数 $a : C \to \mathbb{C}$，
+满足对一切 $\alpha$ 有 $|a(\alpha)|^2 = 1$，且
+$a(\alpha \circ \beta) = a(\alpha) a(\beta)$。
+\end{definition}
+
+\begin{definition}[输出]
+一个\emph{输出}（output）是函数 $o : C \to M$，满足
+$o(\alpha \circ \beta) = o(\beta)$。
+\end{definition}
+
+\begin{lemma}
+\label{lem:comm}
+若 $a$ 是单射，则 $\circ$ 交换。
+\end{lemma}
+
+\begin{proof}
+$a(\alpha \circ \beta) = a(\alpha) a(\beta)
+  = a(\beta) a(\alpha) = a(\beta \circ \alpha)$。
+由于 $a$ 是单射，$\alpha \circ \beta = \beta \circ \alpha$。
+\end{proof}
+
+\begin{theorem}[有限自由两面对立，\wone{W1}]
+\label{thm:dichotomy}
+给定振幅 $a$ 与输出 $o$，我们有：
+\[
+\bigl(\forall \alpha, \beta : C,\; o(\alpha) = o(\beta)\bigr)
+\;\vee\;
+\neg\,\mathrm{Injective}(a).
+\]
+不需要对 $C$ 的任何有限性假设。
+\end{theorem}
+
+\begin{proof}
+假设 $a$ 是单射。由引理~\ref{lem:comm}，$\circ$
+交换。则
+\[
+o(\alpha) = o(\beta \circ \alpha)
+  = o(\alpha \circ \beta)
+  = o(\beta),
+\]
+其中第一个等号在 $\mathrm{id} = \beta$ 处使用输出性质，第二个等号使用交换性。因此 $o$ 在整个 $C$ 上为常值。
+\end{proof}
+
+\begin{remark}
+Lean 形式化（\texttt{TwoAspectNoFinite.lean}，
+定理 \texttt{two\_aspect\_dichotomy\_no\_finite}）在没有任何
+\texttt{[Finite C]} 假设的情况下证明了这一点，
+区别于需要有限性的早期版本。
+\end{remark}
+
+\section{序列结构与唯一基底}
+\label{sec:sequence}
+
+\begin{definition}[序列]
+设 $s : \mathbb{N} \to \mathbb{N}$ 定义为
+$s_0 = 2$，$s_{n+1} = 3 + 2n$。前几项为：
+\[
+2, 3, 5, 7, 9, 11, 13, 15, \ldots
+\]
+\end{definition}
+
+\begin{proposition}
+前四项 $\{s_0, s_1, s_2, s_3\} = \{2, 3, 5, 7\}$
+全为素数。第五项 $s_4 = 9 = 3^2$ 是合数。
+\end{proposition}
+
+\begin{definition}[素基底]
+设
+\[
+\mathrm{MUST\_HAVE}
+  = \mathrm{PrimeFactors}(12)
+  \cup \mathrm{PrimeFactors}(60)
+  \cup \mathrm{PrimeFactors}(168),
+\]
+即 $A_4$、$A_5$ 与 $\mathrm{PSL}(2,7)$ 的阶的素因子之并。
+\end{definition}
+
+\begin{theorem}[唯一基底，\wone{W1}]
+\label{thm:unique}
+$\mathrm{MUST\_HAVE} = \{2, 3, 5, 7\}$。
+此外，若 $B$ 是任意素数集合，满足
+$\mathrm{MUST\_HAVE} \subseteq B \subseteq \mathrm{MUST\_HAVE}$，
+则 $B = \mathrm{MUST\_HAVE}$。
+\end{theorem}
+
+\begin{proof}
+$|A_4| = 12 = 2^2 \cdot 3$，故 $\{2, 3\} \subseteq
+\mathrm{MUST\_HAVE}$。
+$|A_5| = 60 = 2^2 \cdot 3 \cdot 5$，故 $5 \in
+\mathrm{MUST\_HAVE}$。
+$|\mathrm{PSL}(2,7)| = 168 = 2^3 \cdot 3 \cdot 7$，故
+$7 \in \mathrm{MUST\_HAVE}$。
+其并为 $\{2, 3, 5, 7\}$。
+\end{proof}
+
+\begin{theorem}[每个素数的必要性，\wone{W1}]
+\label{thm:necessity}
+从 $\{2, 3, 5, 7\}$ 中去掉任何元素都会破坏至少一个群的覆盖：
+\begin{itemize}
+\item 去掉 2 破坏 $A_4$：没有素数 2，任何偶数阶群都无法被表示。
+\item 去掉 3 破坏所有三个群。
+\item 去掉 5 破坏 $A_5$。
+\item 去掉 7 破坏 $\mathrm{PSL}(2,7)$。
+\end{itemize}
+\end{theorem}
+
+\begin{remark}
+在 Lean 中（\texttt{SequenceStructure.lean}），这四个论断
+各自是一条独立定理：
+\texttt{removing\_2\_breaks\_A4}、
+\texttt{removing\_3\_breaks\_all}、
+\texttt{removing\_5\_breaks\_A5}、
+\texttt{removing\_7\_breaks\_PSL}。
+\texttt{MUST\_HAVE} 集合被刻画为
+\texttt{MUST\_HAVE\_eq\_base}，唯一性由
+\texttt{unique\_base\_is\_2357} 证明。
+\end{remark}
+
+\section{形式化}
+\label{sec:formalization}
+
+所有结果均以 Lean~4 与 Mathlib 形式化。仓库包含 28 个 Lean 模块，共计 9,824 行：451 条 theorem/lemma/corollary 声明与 129 条 definition/structure/inductive 声明。W1 宣言链（\texttt{Declaration.lean}）以 0 个错误编译，且不含 \texttt{sorry}；全项目恰好含有一个 \texttt{sorry}，在其使用点被显式标注为 W2 条件性（第~\ref{sec:evaluation}~节）。
+
+仓库公开于：
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
+
+关键模块：
+\begin{itemize}
+\item \texttt{CompilerAxioms.lean}：
+  公理 A1--A4（\texttt{CompilerAxiom} 类型类）
+\item \texttt{CoreCollapse.lean}：
+  定理~\ref{thm:core}（\texttt{core\_collapse\_summary}、
+  \texttt{no\_causal\_input}）
+\item \texttt{AxiomIndependence.lean}：
+  定理~\ref{thm:assoc-redundant}、
+  \ref{thm:subadd-fails}、\ref{thm:nodup-necessary}
+  （\texttt{minimal\_core\_collapse}）
+\item \texttt{TwoAspectNoFinite.lean}：
+  定理~\ref{thm:dichotomy}
+  （\texttt{two\_aspect\_dichotomy\_no\_finite}）
+\item \texttt{SequenceStructure.lean}：
+  定理~\ref{thm:unique}、\ref{thm:necessity}
+  （\texttt{MUST\_HAVE\_eq\_base}、
+  \texttt{unique\_base\_is\_2357}、
+  \texttt{removing\_2/3/5/7\_breaks\_*}）
+\item \texttt{ObserverLayering.lean}：
+  $\cos\theta = 0$ 层级结构
+  （\texttt{cos\_at\_alpha\_level}、
+  \texttt{observed\_equals\_bare\_at\_alpha\_level}）
+\item \texttt{QuantumCorrection.lean}：
+  对称多项式缺口
+  （\texttt{e1\_sq\_sub\_e3\_eq\_p1p2p4}、
+  \texttt{Omega\_sum\_obs\_eq\_one}）
+\end{itemize}
+
+\paragraph{集中宣言（本次会话新增）。}
+为避免标注散落，我们创建了两个集中化文件：
+\begin{itemize}
+\item \texttt{TheoryFoundations.lean}（约 410 行，纯注释）：
+  列出全部五个定义选择（群选取、
+  $\alpha^{-1}$ 公式结构、$\mathrm{closure}_N/2$
+  约定、$\Omega$-系列结构、基底命名）以及
+  全部 W1 严格推导并附来源定理引用。
+  每个条目都带有一个诚实边界标记：哪些条目
+  是定义选择，哪些是 W1 推论。
+\item \texttt{Declaration.lean}（137 行，13 条定理）：
+  导入三个独立验证的模块
+  （\texttt{Foundation}、\texttt{MinimalCost}、
+  \texttt{AttractorPrototype}），以\emph{零
+  错误}编译，生成 33 KB 的 \texttt{.olean}。每条定理
+  都带有一个来源注解。核心交叉验证
+  定理证明 Foundation 的 $\alpha^{-1}$ 值与
+  MinimalCost 的 $\alpha^{-1}$ 值\emph{数值相同}
+  （$137.036 = 137.036$）。
+\end{itemize}
+\texttt{GenerationBridge.lean} 有两个已知的编译缺陷
+（未闭合的嵌套注释 + 由新增合取项导致的投影路径损坏）。
+\texttt{Declaration.lean} 通过只直接导入那三个可编译的
+模块来绕开它。
+
+\section{方法论评估}
+\label{sec:evaluation}
+
+\subsection{项目统计}
+CSQIT 的形式化由 28 个 Lean 模块组成，共计 9,824 行：451 条 theorem/lemma/corollary 声明与 129 条 definition/structure/inductive 声明。W1 宣言链以 0 个错误编译；全项目恰好含有一个 \texttt{sorry}，位于 \texttt{GenerationBridge.lean}，在其使用点被显式标注为 \texttt{W2 conditional}。（朴素的文本搜索会报告 16 处 “sorry” 字样；其余 15 处是声明相应模块含零个 \texttt{sorry} 的注释——这个小例子正说明了人工审计为何受益于集中宣言。）
+
+集中宣言链（\texttt{Declaration.lean}，137 行，13 条定理，0 个 \texttt{sorry}）独立于项目的其他模块编译，只导入那三个已被单独验证可编译的模块。这是一个设计选择：宣言链不依赖 \texttt{GenerationBridge.lean}（它有已知的编译缺陷），因此无论项目其他部分如何发展，它始终是 W1 结果可靠的单一事实来源（single-point-of-truth）。
+
+\subsection{边界体系的覆盖}
+\texttt{TheoryFoundations.lean} 中列出的五个定义选择是：
+\begin{enumerate}
+\item 三个 Hurwitz 三角群商（Hurwitz 三角群选择）。
+\item $\alpha^{-1}$ 的公式结构（$\alpha^{-1}$ 公式选择）。
+\item 规范化约定 $\mathrm{closure}_N = \mathrm{lcm}/2$
+  （closure 规范化约定）。
+\item $\Omega$-系列公式结构（$\Omega$-系列选择）。
+\item 基底命名约定 $p_1 < p_2 < p_3 < p_4$。
+\end{enumerate}
+项目中的每个 W1 结果都被显式标注并带来源注解。任何定理，若其从这些选择出发的推导轨迹没有载入 \texttt{TheoryFoundations}，就不得标注为 W1。
+
+\subsection{可复现性}
+仓库公开于
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}。
+所有构建可用 Lean~4.29.0-rc6 与 Mathlib 复现。
+\texttt{Declaration.lean} 文件提供单一入口：任何克隆该仓库的人都可以独立编译此文件并验证 W1 结果。
+
+\section{相关工作}
+\label{sec:related}
+
+\subsection{液体张量实验中的抽象边界}
+Commelin 与 Topaz~\cite{commelin2023} 在 LTE（液体张量实验）中引入抽象边界（abstraction boundaries），用以把接口与实现分离。他们的方法论强调规约驱动开发（spec-driven development）：数学家在 Lean 实现之前先定义抽象接口，从而允许在不重写证明的情况下重构。CSQIT 的诚实边界解决的是一个\emph{不同}的问题：把可推导的结果与定义选择分离。LTE 抽象边界在保持数学内容完好的同时隐藏实现细节；诚实边界则把被假设的东西与被推导的东西分开。
+
+\subsection{Flyspeck 中的追踪代码}
+开普勒猜想的形式化~\cite{hales2017}使用七字母追踪代码（如 \texttt{OUIJTWY}）在多次修订之间把非正式的论文文本与形式化的 HOL Light 脚本对齐。代码附着在引理上并在重构中保持不变。这解决的是另一个问题——同一数学内容的两种表示之间的对齐——而非被假设者与被推导者的分离。
+
+\subsection{自动形式化的假设层}
+近期的自动形式化（autoformalization）框架使用显式假设层。GUARD~\cite{quan2026} 把隐式假设表示为一个\emph{显式守护集}（explicit guard set），并在找不到忠实的补全时拒绝形式化。Theoria~\cite{saldivar2026} 使用“约定提升”（convention lift）机制使领域约定可审计。这些是 LLM 驱动的方法，把假设当作要从自然语言中\emph{恢复}出来的东西。CSQIT 的诚实边界则把假设当作在一个人主导的形式化项目开端处被\emph{刻意宣言}的东西。这些方法处理的是相关但不同的问题：自动形式化问的是“自然语言文本隐含地做了哪些假设？”；诚实边界问的是“\emph{我们}刻意选择了做哪些假设，又从它们推导出了什么？”
+
+\subsection{诚实边界增加了什么}
+诚实边界方法论增加了上述方法所不具备的两种能力：
+\begin{enumerate}
+\item 一种列出假设的\emph{具体结构}
+  （TheoryFoundations + Declaration），而非把假设
+  当作证明环境的隐式属性。
+\item 一条交叉验证的\emph{设计原则}：
+  独立推导路径必须汇聚到同一结果，
+  且汇聚必须被形式地验证。
+\end{enumerate}
+
+\section{结构关系与潜在物理应用}
+\label{sec:relations}
+
+以下三条关系都是经 Lean 验证的定理。每一条都作为\emph{条件性}命题陈述。物理诠释完全留作开放问题；本文不声称物理宇宙满足其中任何一条“如果”条件。
+
+\begin{proposition}[素基底强制]
+\label{prop:forcing}
+$A_4$、$A_5$ 与
+$\mathrm{PSL}(2,7)$ 的阶的素因子之并为 $\{2,3,5,7\}$。任何
+对称群在这三个群之中的理论都必须使用
+素基底 $\{2,3,5,7\}$。
+\end{proposition}
+
+\begin{proposition}[对称多项式缺口]
+\label{prop:gap}
+设 $e_1 = 2+3+5+7 = 17$ 与 $e_3 = 2 \cdot 3 \cdot 5
++ 2 \cdot 3 \cdot 7 + 2 \cdot 5 \cdot 7 + 3 \cdot 5 \cdot 7
+= 247$ 表示 $\{2,3,5,7\}$ 的第一与第三初等对称多项式，
+设 $e_4 = 2 \cdot 3 \cdot
+5 \cdot 7 = 210$，并设 $N = 2 e_4$。则：
+\[
+e_1^2 - e_3 = 17^2 - 247 = 289 - 247 = 42
+= 2 \cdot 3 \cdot 7 = p_1 p_2 p_4,
+\]
+且 $N = 2 \cdot 210 = 420$。
+\end{proposition}
+
+\begin{remark}
+命题~\ref{prop:gap} 是一个代数恒等式，
+可由直接计算证明。它不依赖任何物理
+假设。在 Lean 中（\texttt{QuantumCorrection.lean}），
+它就是 \texttt{e1\_sq\_sub\_e3\_eq\_p1p2p4}。
+\end{remark}
+
+\begin{proposition}[$\cos\theta = 0$ 层级]
+\label{prop:cos}
+定义 $n = N/4 = 420/4 = 105$。设 $\theta = 2\pi n / N
+= 2\pi \cdot 105 / 420 = \pi/2$。则 $\cos\theta = 0$。
+若层级 $n$ 处的某个物理量 $q$ 带有形如 $1 + \Delta \cos\theta$ 的修正因子（$\Delta$ 为某个量），则在层级 $n = 105$ 处该修正因子等于 $1$（修正消失）。
+\end{proposition}
+
+\begin{remark}
+命题~\ref{prop:forcing}--\ref{prop:cos} 是
+数学性的。它们并不断言 $A_4$、$A_5$、
+$\mathrm{PSL}(2,7)$ 是自然界的对称群，
+也不断言物理宇宙具有离散层级结构。物理宇宙是否实现这些
+结构是一个经验问题，本文不予讨论。
+\end{remark}
+
+\section{讨论}
+\label{sec:discussion}
+
+\subsection{开放的数学问题}
+\begin{enumerate}
+\item 特定三元组 $A_4$、$A_5$、$\mathrm{PSL}(2,7)$ 的选取是否存在分类理论上的理由？
+  这三个群作为三个 Hurwitz 三角群的最小有限商出现：
+  $(2,3,3) \to A_4$（球面型，$|A_4| = 12$）、
+  $(2,3,5) \to A_5$（紧 Hurwitz 型，$|A_5| = 60$，
+  最小的非交换单群），以及
+  $(2,3,7) \to \mathrm{PSL}(2,7)$（双曲 Hurwitz 型，
+  $|\mathrm{PSL}(2,7)| = 168$，第二小的
+  非交换单群）。这个三元组是否具有统一刻画——即三个最小 Hurwitz 三角群的最小商？
+  （注意：$A_4$ 本身不是单群；它作为球面型 $(2,3,3)$ 三角群的最小商被纳入，
+  与来自 $(2,3,5)$ 和 $(2,3,7)$ 的两个单群互补。）
+\item 排除论证能否推广到其他有限单群族？它们强制出什么素基底？
+\item 是否存在对序列 $s : \mathbb{N} \to \mathbb{N}$ 的一般刻画，使其前 $k$ 项恰好是某个给定有限单群集合的素因子？
+\item 命题~\ref{prop:gap} 给出
+  $e_1^2 - e_3 = p_1 p_2 p_4$。对其他素数集合
+  是否存在类似的缺口恒等式？
+\end{enumerate}
+
+\subsection{开放的物理问题}
+第~\ref{sec:relations}~节的结构关系是否具有物理内容是一个经验问题。具体而言：
+\begin{itemize}
+\item 自然界的对称群（若存在）是否在
+  $A_4$、$A_5$、$\mathrm{PSL}(2,7)$ 之中？
+\item 物理宇宙是否具有离散层级结构，且 $n = 105$ 扮演特殊角色
+  （$\cos\theta = 0$ 的层级）？
+\item 若对称多项式缺口
+  $e_1^2 - e_3 = 42$ 有物理意义，它是否
+  对应某个量子修正的大小？
+\end{itemize}
+这些问题超出了本文的范围。
+
+\subsection{范围与局限}
+本文是纯数学性的。不作出任何物理断言。相邻工作中观察到的数值巧合不在此处获得背书。第~\ref{sec:relations}~节的三条结构关系作为条件性命题陈述；其物理相关性（若存在）仍是开放问题。
+
+\paragraph{显式定义选择（起点）。}
+该框架依赖五个并非内部可推导的\emph{显式定义选择}：
+\begin{enumerate}
+\item 三个 Hurwitz 三角群商
+  $(2,3,3) \to A_4$、$(2,3,5) \to A_5$、
+  $(2,3,7) \to \mathrm{PSL}(2,7)$。
+  \bc{为什么是这三个？}群论给出了这些商的极小性，
+  但 CSQIT 并没有推导出\emph{为什么}Hurwitz 三角群
+  应当出现。
+\item 公式结构
+  $\alpha^{-1} = p_1^{p_4} + p_1^{p_2} + 1 + p_2^{p_1}/(p_1 p_3^{p_2})$。
+  \bc{为什么是这个形式？}CSQIT 在\emph{给定}这一形式的前提下证明了吸引子唯一性，
+  但并没有从因果公理推导出该形式本身。
+\item 规范化约定
+  $\mathrm{closure}_N = \mathrm{lcm}/2$。
+  \bc{为什么除以 2？}存在群论上的动机
+  （三个群都有 $\mathbb{Z}_2$ 中心扩张），
+  但该选择并非由因果公理强制。
+\item $\Omega$-系列公式结构
+  （$\Omega_{\mathrm{DM}} = (|A_5| + 3S)/420$，
+  $\Omega_\Lambda = S^2/420$）。
+  \bc{为什么是这些组合规则？}分子具有干净的
+  群论诠释，但具体的组合规则是定义选择。
+\item 基底命名约定：$p_1 < p_2 < p_3 < p_4$
+  为素数。
+  \bc{为什么是这个排序？}这是一个命名约定，
+  不独立于选择~1。
+\end{enumerate}
+本文所有其他结果——核心坍缩、极小性、
+素基底 $\{2,3,5,7\}$、耦合常数
+$\alpha^{-1} = 137.036$、closure 序列、缺口恒等式、
+求和规则（sum rule）——都是从这五个选择出发的 W1 严格推导，并已在 Lean 中验证。
+
+\paragraph{与物理理论的类比。}
+这些定义选择类似于任何物理理论中的起点：广义相对论并不推导出时空是四维的；它假设这一点。量子力学并不推导出振幅是复数；它假设这一点。CSQIT 假设五个定义选择，并从它们推导出一大批严格结果。诚实边界就清晰到这种程度。
+
+\paragraph{未来工作：自动检查。}
+W1/W2/W3 分类与集中宣言结构暗示了一个自然的扩展：\emph{标签一致性的自动检查}。一个工具可以解析 \texttt{TheoryFoundations.lean} 与 \texttt{Declaration.lean}，以验证每条被标注为 W1 的定理在 W1 集合之外没有依赖、每条被标注为 W2 的定理都带有显式的假设追踪、并且五个定义选择恰好是 W1 核心的全部外部依赖。这将把诚实边界方法论从一种人工纪律转变为一个可验证的不变量。我们将其留作未来工作。
+
+\section*{致谢}
+作者感谢 Mathlib 社区提供形式化基础设施，感谢 Lean~4 开发团队打造的证明工程工具——正是这些工具使本文这类结果能够大规模地得到验证。
+
+\paragraph{AI 辅助披露。}
+作者确认在研究辅助中使用了 TRAE（由 DeepSeek 等大语言模型驱动的 AI 编程助手）。这些工具被用于：(1) 协助初步探索 Lean~4 形式化策略；(2) 生成证明脚本草稿——这些草稿随后经作者人工审阅、修正与打磨；(3) 协助本文稿的准备与润色。作者已亲自验证本文全部 Lean 代码、定理陈述与数学内容的正确性，并对本工作承担全部责任。这一对 AI 辅助的透明披露与本文倡导的诚实边界方法论相一致。
+
+\begin{thebibliography}{99}
+
+\bibitem{mathlib}
+The Mathlib Community,
+\emph{Mathlib4}, 2024.
+\url{https://github.com/leanprover-community/mathlib4}
+
+\bibitem{lean4}
+L. de Moura, S. Kong, J. Avigad, F. van Doorn,
+J. von Raumer,
+\emph{The Lean 4 Theorem Prover and Programming Language},
+CADE-28, 2021.
+
+\bibitem{atlas}
+J. H. Conway et al.,
+\emph{ATLAS of Finite Groups},
+Oxford University Press, 1985.
+
+\bibitem{commelin2023}
+J. Commelin and A. Topaz,
+``Abstraction boundaries and spec driven development
+in pure mathematics,''
+\emph{Bulletin of the American Mathematical Society}, 2024.
+\url{https://arxiv.org/abs/2309.14870}
+
+\bibitem{hales2017}
+T. Hales, M. Adams, G. Bauer, T. D. Dang, J. Harrison,
+L. T. Hoang, C. Kaliszyk, V. Magron, S. McLaughlin,
+T. T. Nguyen, Q. T. Nguyen, T. Nipkow, S. Obua,
+J. Pleso, J. Rute, A. Solovyev, T. H. A. Ta,
+N. T. Tran, T. D. Trieu, J. Urban, K. Vu, R. Zumkeller,
+``A formal proof of the Kepler conjecture,''
+\emph{Forum of Mathematics, Pi}, vol.~5, e2, 2017.
+\url{https://arxiv.org/abs/1501.02155}
+
+\bibitem{quan2026}
+X. Quan, R. Gubelmann, A. Freitas,
+``GUARD: Faithful autoformalization with explicit
+assumption layers,''
+arXiv:2609.16991, 2026.
+
+\bibitem{saldivar2026}
+M. Saldivar and B. Slivinski,
+``Theoria: Rewrite-acceptability verification over
+informal reasoning states,''
+arXiv:2607.01223, 2026.
+
+\end{thebibliography}
+
+\end{document}
