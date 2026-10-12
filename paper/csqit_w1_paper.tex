@@ -239,11 +239,15 @@ are allowed. It only requires that they be \emph{listed} and
 \addcontentsline{toc}{section}{Case Study: CSQIT}
 \label{sec:casestudy}
 
+{\sloppy
 The following sections present CSQIT as a case study of the
 methodology. All results marked \wone{W1} are strictly derivable
 from five definition choices listed in
 \texttt{TheoryFoundations.lean} and verified in
-\texttt{Declaration.lean}.
+\texttt{Declaration.lean}; the full list, with honest
+boundary marks, is given in
+Section~\ref{sec:boundary-choices}.
+\par}
 
 \section{The Axiom System}
 \label{sec:axioms}
@@ -527,18 +531,19 @@ by \texttt{unique\_base\_is\_2357}.
 \section{Formalization}
 \label{sec:formalization}
 
-All results are formalized in Lean~4 with Mathlib. The
-repository contains 28 Lean modules totaling 9,824 lines:
-451 theorem/lemma/corollary declarations and 129
-definition/structure/inductive declarations. The W1
+All results are formalized in Lean~4 with Mathlib. Full
+project statistics are given in
+Section~\ref{sec:evaluation}. The W1
 declaration chain (\texttt{Declaration.lean}) compiles
 with 0 errors and contains no \texttt{sorry}; the full
 project contains exactly one \texttt{sorry}, explicitly
-marked W2-conditional at its point of use
-(Section~\ref{sec:evaluation}).
+marked W2-conditional at its point of use.
 
 The repository is available at:
-\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+The verified snapshot corresponding to this paper is
+published as Release v23.0.0:
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT/releases/tag/v23.0.0}
 
 Key modules:
 \begin{itemize}
@@ -569,7 +574,7 @@ Key modules:
   \texttt{Omega\_sum\_obs\_eq\_one})
 \end{itemize}
 
-\paragraph{Concentrated declaration (added in this session).}
+\paragraph{Concentrated declaration (a new method).}
 To avoid scattered annotations, we created two concentrated files:
 \begin{itemize}
 \item \texttt{TheoryFoundations.lean} ($\sim 410$ lines, comments only):
@@ -583,7 +588,7 @@ To avoid scattered annotations, we created two concentrated files:
   Imports the three independently verified modules
   (\texttt{Foundation}, \texttt{MinimalCost},
   \texttt{AttractorPrototype}), compiles with \emph{zero
-  errors}, producing a 33 KB \texttt{.olean}. Each theorem
+  errors}. Each theorem
   carries a source annotation. The central cross-validation
   theorem proves that Foundation's $\alpha^{-1}$ value and
   MinimalCost's $\alpha^{-1}$ value are \emph{numerically
@@ -817,6 +822,7 @@ propositions; their physical relevance, if any, remains
 an open question.
 
 \paragraph{Explicit definition choices (starting points).}
+\label{sec:boundary-choices}
 The framework depends on \emph{five explicit definition
 choices} that are not derivable internally:
 \begin{enumerate}
