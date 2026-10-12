@@ -11,72 +11,71 @@ for consideration as a methodology paper.
 
 ### Core Contribution
 
-This paper presents a methodology for \emph{honest boundaries
-in formalized mathematics}: a three-tier classification system
+This paper presents a methodology for honest boundaries in
+formalized mathematics: a three-tier classification system
 (W1: strictly derivable from declared starting points; W2:
 conditional on additional assumptions; W3: conceptual
-interpretation) combined with \emph{concentrated declaration
-files} that list all starting points and all W1 results in
-single auditable locations.
+interpretation) combined with concentrated declaration files
+that list all starting points and all W1 results in single
+auditable locations.
 
 The methodology addresses a gap we observe in large-scale
 formalization projects---from the Liquid Tensor Experiment to
-Flyspeck to Mathlib---where zero \texttt{sorry} does not mean
-zero assumptions, and readers must trace the full dependency
-graph to distinguish what was derived from what was assumed.
+Flyspeck to Mathlib---where zero "sorry" does not mean zero
+assumptions, and readers must trace the full dependency graph
+to distinguish what was derived from what was assumed.
 
 Our contribution is methodological, with direct implications
 for the automated reasoning community:
 
-1. **Three-tier classification.** Every result is explicitly
-   labeled at the point of statement. This classification is
-   actionable: automated tools could verify that W1 theorems
-   have no external dependencies and that W2 theorems carry
-   complete assumption tracking.
+1. Three-tier classification. Every result is explicitly labeled
+   at the point of statement. This classification is actionable:
+   automated tools could verify that W1 theorems have no external
+   dependencies and that W2 theorems carry complete assumption
+   tracking.
 
-2. **Concentrated declaration files.** Two files provide a
-   single audit surface: \texttt{TheoryFoundations.lean} lists
-   all definition choices; \texttt{Declaration.lean} chains
-   all W1 theorems independently. This structure suggests a
-   natural target for automated consistency checking.
+2. Concentrated declaration files. Two files provide a single
+   audit surface: TheoryFoundations.lean lists all definition
+   choices; Declaration.lean chains all W1 theorems
+   independently. This structure suggests a natural target for
+   automated consistency checking.
 
-3. **Cross-validation as a design principle.** When two
-   independent derivation paths reach the same numerical
-   value, their equality is formalized as a theorem. This
-   provides a machine-checkable invariant for verifying
-   internal consistency across a formalization project.
+3. Cross-validation as a design principle. When two independent
+   derivation paths reach the same numerical value, their equality
+   is formalized as a theorem. This provides a machine-checkable
+   invariant for verifying internal consistency across a
+   formalization project.
 
-4. **Future work: automated checking.** The Discussion
-   section outlines how the honest boundaries structure could
-   be extended with an automated checker that verifies W1/W2/
-   W3 label consistency and external dependency tracking.
-   This is directly within the scope of automated reasoning
-   tooling.
+4. Future work: automated checking. The Discussion section
+   outlines how the honest boundaries structure could be extended
+   with an automated checker that verifies W1/W2/W3 label
+   consistency and external dependency tracking. This is directly
+   within the scope of automated reasoning tooling.
 
 ---
 
 ### Case Study: CSQIT
 
 We demonstrate the methodology on CSQIT, a formalized algebraic
-framework built in Lean~4 with Mathlib. CSQIT starts from five
+framework built in Lean 4 with Mathlib. CSQIT starts from five
 explicit definition choices and derives at the W1 level: a
 unique prime basis, a coupling constant with two independent
 derivations converging on the same value, a closure sequence,
 and nine other theorems. The concentrated declaration chain
-(\texttt{Declaration.lean}, 13 theorems, 137 lines) compiles
-with zero errors, importing three independently verified modules.
+(Declaration.lean, 13 theorems, 137 lines) compiles with zero
+errors, importing three independently verified modules.
 
 ---
 
 ### AI Assistance Disclosure
 
-Following Springer Nature's guidelines, we disclose the use
-of TRAE (AI coding assistant) for research assistance---for
-Lean formalization exploration, draft proof generation, and
-manuscript preparation. All Lean code and mathematical content
-has been personally verified by the author. This transparent
-disclosure is consistent with the honest boundaries methodology
-advocated in the paper.
+Following Springer Nature's guidelines, we disclose the use of
+TRAE (AI coding assistant powered by DeepSeek and other large
+language models) for research assistance---for Lean formalization
+exploration, draft proof generation, and manuscript preparation.
+All Lean code and mathematical content has been personally
+verified by the author. This transparent disclosure is consistent
+with the honest boundaries methodology advocated in the paper.
 
 ---
 
@@ -85,23 +84,22 @@ advocated in the paper.
 The Journal of Automated Reasoning's interest in proof
 methodologies, formalization infrastructure, and tooling
 directly matches our contribution. The honest boundaries
-methodology is a discipline that any formalization project
-can adopt---and, as the future work section outlines, it
-suggests concrete targets for automated reasoning tooling
-that would make the methodology enforceable rather than
-advisory.
+methodology is a discipline that any formalization project can
+adopt---and, as the future work section outlines, it suggests
+concrete targets for automated reasoning tooling that would make
+the methodology enforceable rather than advisory.
 
 ---
 
 ### Manuscript Details
 
-- **Repository**: https://github.com/New-Beginning-Universe-Research-Group/CSQIT
-- **Formalization**: 28 Lean modules, 9,826 lines, 451 theorem/lemma/corollary declarations, 16 sorry (all in W2/W3 modules)
-- **Declaration.lean**: 13 theorems, 137 lines, compiles with zero errors
-- **Lean version**: 4.29.0-rc6 with Mathlib
-- **Originality**: This manuscript is original, has not been published previously, and is not under consideration elsewhere
-- **Conflicts of interest**: None
-- **Ancillary files**: The complete Lean formalization is available at the repository above and can be provided as ancillary files upon request.
+- Repository: https://github.com/New-Beginning-Universe-Research-Group/CSQIT
+- Formalization: 28 Lean modules, 9,826 lines, 451 theorem/lemma/corollary declarations, 16 sorry (all in W2/W3 modules)
+- Declaration.lean: 13 theorems, 137 lines, compiles with zero errors
+- Lean version: 4.29.0-rc6 with Mathlib
+- Originality: This manuscript is original, has not been published previously, and is not under consideration elsewhere
+- Conflicts of interest: None
+- Ancillary files: The complete Lean formalization is available at the repository above and can be provided as ancillary files upon request.
 
 We look forward to your consideration.
 
