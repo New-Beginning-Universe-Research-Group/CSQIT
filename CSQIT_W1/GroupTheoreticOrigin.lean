@@ -199,14 +199,14 @@ theorem three_triangle_types_distinct :
    · |PSL(2,7)| = 168 = 2³ × 3 × 7 (第二小非阿贝尔单群) -/
 theorem three_minimal_quotient_orders :
     A4_order = 12 ∧ A5_order = 60 ∧ PSL27_order = 168 := by
-  exact ⟨by norm_num, by norm_num, by norm_num⟩
+  exact ⟨by decide, by decide, by decide⟩
 
 /-- **W1 严格**：三个三角群最小商的素因子分解。 -/
 theorem three_quotient_prime_factors :
     A4_order = 2^2 * 3 ∧
     A5_order = 2^2 * 3 * 5 ∧
     PSL27_order = 2^3 * 3 * 7 := by
-  exact ⟨by norm_num, by norm_num, by norm_num⟩
+  exact ⟨by decide, by decide, by decide⟩
 
 /-- **W1 严格**：三个三角群最小商的素因子并集 = 基底 P。
    
