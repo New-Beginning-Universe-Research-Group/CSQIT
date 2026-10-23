@@ -111,9 +111,7 @@
 \addcontentsline{toc}{section}{案例研究：CSQIT}
 \label{sec:casestudy}
 
-{\sloppy
-以下各节把 CSQIT 作为该方法论的案例研究来呈现。所有标注 \wone{W1} 的结果都从列于 \texttt{TheoryFoundations.lean} 的五个定义选择严格推导，并在 \texttt{Declaration.lean} 中得到验证；完整清单及诚实边界标记见第~\ref{sec:boundary-choices}~节。
-\par}
+以下各节把 CSQIT 作为该方法论的案例研究来呈现。所有标注 \wone{W1} 的结果都从列于 \texttt{TheoryFoundations.lean} 的五个定义选择严格推导，并在 \texttt{Declaration.lean} 中得到验证。
 
 \section{公理系统}
 \label{sec:axioms}
@@ -367,14 +365,10 @@ $7 \in \mathrm{MUST\_HAVE}$。
 \section{形式化}
 \label{sec:formalization}
 
-所有结果均以 Lean~4 与 Mathlib 形式化。完整的项目统计见第~\ref{sec:evaluation}~节。W1 宣言链（\texttt{Declaration.lean}）以 0 个错误编译，且不含 \texttt{sorry}；全项目恰好含有一个 \texttt{sorry}，在其使用点被显式标注为 W2 条件性。
+所有结果均以 Lean~4 与 Mathlib 形式化。仓库包含 28 个 Lean 模块，共计 9,825 行：451 条 theorem/lemma/corollary 声明与 129 条 definition/structure/inductive 声明。W1 宣言链（\texttt{Declaration.lean}）以 0 个错误编译，且不含 \texttt{sorry}；全项目恰好含有一个 \texttt{sorry}，在其使用点被显式标注为 W2 条件性（第~\ref{sec:evaluation}~节）。
 
-{\sloppy
 仓库公开于：
-\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}。
-与本文对应的已验证快照以 Release v23.0.0 发布：
-\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT/releases/tag/v23.0.0}
-\par}
+\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}
 
 关键模块：
 \begin{itemize}
@@ -405,7 +399,7 @@ $7 \in \mathrm{MUST\_HAVE}$。
   \texttt{Omega\_sum\_obs\_eq\_one}）
 \end{itemize}
 
-\paragraph{集中宣言（新增方法）。}
+\paragraph{集中宣言（本次会话新增）。}
 为避免标注散落，我们创建了两个集中化文件：
 \begin{itemize}
 \item \texttt{TheoryFoundations.lean}（约 410 行，纯注释）：
@@ -419,7 +413,7 @@ $7 \in \mathrm{MUST\_HAVE}$。
   导入三个独立验证的模块
   （\texttt{Foundation}、\texttt{MinimalCost}、
   \texttt{AttractorPrototype}），以\emph{零
-  错误}编译。每条定理
+  错误}编译，生成 33 KB 的 \texttt{.olean}。每条定理
   都带有一个来源注解。核心交叉验证
   定理证明 Foundation 的 $\alpha^{-1}$ 值与
   MinimalCost 的 $\alpha^{-1}$ 值\emph{数值相同}
@@ -436,7 +430,7 @@ $7 \in \mathrm{MUST\_HAVE}$。
 \label{sec:evaluation}
 
 \subsection{项目统计}
-CSQIT 的形式化由 28 个 Lean 模块组成，共计 9,824 行：451 条 theorem/lemma/corollary 声明与 129 条 definition/structure/inductive 声明。W1 宣言链以 0 个错误编译；全项目恰好含有一个 \texttt{sorry}，位于 \texttt{GenerationBridge.lean}，在其使用点被显式标注为 \texttt{W2 conditional}。（朴素的文本搜索会报告 16 处 “sorry” 字样；其余 15 处是声明相应模块含零个 \texttt{sorry} 的注释——这个小例子正说明了人工审计为何受益于集中宣言。）
+CSQIT 的形式化由 28 个 Lean 模块组成，共计 9,825 行：451 条 theorem/lemma/corollary 声明与 129 条 definition/structure/inductive 声明。W1 宣言链以 0 个错误编译；全项目恰好含有一个 \texttt{sorry}，位于 \texttt{GenerationBridge.lean}，在其使用点被显式标注为 \texttt{W2 conditional}。（朴素的文本搜索会报告 16 处 “sorry” 字样；其余 15 处是声明相应模块含零个 \texttt{sorry} 的注释——这个小例子正说明了人工审计为何受益于集中宣言。）
 
 集中宣言链（\texttt{Declaration.lean}，137 行，13 条定理，0 个 \texttt{sorry}）独立于项目的其他模块编译，只导入作为 lake 构建目标且已被单独验证可编译的那三个模块。这是一个设计选择：宣言链不依赖项目更大、仍在演化中的模块（例如 \texttt{GenerationBridge.lean}），因此无论项目其他部分如何发展，它始终是 W1 结果可靠的单一事实来源（single-point-of-truth）。
 
@@ -569,7 +563,6 @@ $\mathrm{PSL}(2,7)$ 是自然界的对称群，
 本文是纯数学性的。不作出任何物理断言。相邻工作中观察到的数值巧合不在此处获得背书。第~\ref{sec:relations}~节的三条结构关系作为条件性命题陈述；其物理相关性（若存在）仍是开放问题。
 
 \paragraph{显式定义选择（起点）。}
-\label{sec:boundary-choices}
 该框架依赖五个并非内部可推导的\emph{显式定义选择}：
 \begin{enumerate}
 \item 三个 Hurwitz 三角群商

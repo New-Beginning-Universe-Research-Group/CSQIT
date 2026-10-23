@@ -1,4 +1,4 @@
-﻿\documentclass[11pt]{article}
+﻿﻿﻿﻿﻿﻿\documentclass[11pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
@@ -239,15 +239,11 @@ are allowed. It only requires that they be \emph{listed} and
 \addcontentsline{toc}{section}{Case Study: CSQIT}
 \label{sec:casestudy}
 
-{\sloppy
 The following sections present CSQIT as a case study of the
 methodology. All results marked \wone{W1} are strictly derivable
 from five definition choices listed in
 \texttt{TheoryFoundations.lean} and verified in
-\texttt{Declaration.lean}; the full list, with honest
-boundary marks, is given in
-Section~\ref{sec:boundary-choices}.
-\par}
+\texttt{Declaration.lean}.
 
 \section{The Axiom System}
 \label{sec:axioms}
@@ -531,21 +527,23 @@ by \texttt{unique\_base\_is\_2357}.
 \section{Formalization}
 \label{sec:formalization}
 
-All results are formalized in Lean~4 with Mathlib. Full
-project statistics are given in
-Section~\ref{sec:evaluation}. The W1
+All results are formalized in Lean~4 with Mathlib. The
+repository contains 28 Lean modules totaling 9,825 lines:
+451 theorem/lemma/corollary declarations and 129
+definition/structure/inductive declarations. The W1
 declaration chain (\texttt{Declaration.lean}) compiles
 with 0 errors and contains no \texttt{sorry}; the full
 project contains exactly one \texttt{sorry}, explicitly
-marked W2-conditional at its point of use.
+marked W2-conditional at its point of use
+(Section~\ref{sec:evaluation}).
 
+{\sloppy
 The repository is available at:
 \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
-The verified snapshot corresponding to this paper is
-published as Release v23.0.0:
-\url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT/releases/tag/v23.0.0}
+\par}
 
 Key modules:
+{\sloppy
 \begin{itemize}
 \item \texttt{CompilerAxioms.lean}:
   axioms A1--A4 (the \texttt{CompilerAxiom} type class)
@@ -574,7 +572,7 @@ Key modules:
   \texttt{Omega\_sum\_obs\_eq\_one})
 \end{itemize}
 
-\paragraph{Concentrated declaration (a new method).}
+\paragraph{Concentrated declaration (added in this session).}
 To avoid scattered annotations, we created two concentrated files:
 \begin{itemize}
 \item \texttt{TheoryFoundations.lean} ($\sim 410$ lines, comments only):
@@ -588,12 +586,13 @@ To avoid scattered annotations, we created two concentrated files:
   Imports the three independently verified modules
   (\texttt{Foundation}, \texttt{MinimalCost},
   \texttt{AttractorPrototype}), compiles with \emph{zero
-  errors}. Each theorem
+  errors}, producing a 33 KB \texttt{.olean}. Each theorem
   carries a source annotation. The central cross-validation
   theorem proves that Foundation's $\alpha^{-1}$ value and
   MinimalCost's $\alpha^{-1}$ value are \emph{numerically
   identical} ($137.036 = 137.036$).
 \end{itemize}
+\par}
 \texttt{GenerationBridge.lean}'s two earlier compilation bugs
 (unterminated nested comments + broken projection paths
 from added conjuncts) have since been fixed, and the module
@@ -608,7 +607,7 @@ the project's larger, still-evolving modules.
 
 \subsection{Project Statistics}
 CSQIT's formalization consists of 28 Lean modules totaling
-9,824 lines: 451 theorem/lemma/corollary declarations and
+9,825 lines: 451 theorem/lemma/corollary declarations and
 129 definition/structure/inductive declarations. The W1
 declaration chain compiles with 0 errors; the full project
 contains exactly one \texttt{sorry}, in
@@ -646,8 +645,10 @@ carries a source annotation. No theorem is labeled W1 without
 its derivation trace from these choices being in TheoryFoundations.
 
 \subsection{Reproducibility}
+{\sloppy
 The repository is publicly available at
 \url{https://github.com/New-Beginning-Universe-Research-Group/CSQIT}.
+\par}
 All builds are reproducible with Lean~4.29.0-rc6 and Mathlib.
 The \texttt{Declaration.lean} file provides a single
 entry point: anyone cloning the repository can compile this
@@ -822,7 +823,6 @@ propositions; their physical relevance, if any, remains
 an open question.
 
 \paragraph{Explicit definition choices (starting points).}
-\label{sec:boundary-choices}
 The framework depends on \emph{five explicit definition
 choices} that are not derivable internally:
 \begin{enumerate}
