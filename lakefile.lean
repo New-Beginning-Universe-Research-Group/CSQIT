@@ -1,163 +1,156 @@
-/-
-CSQIT — Lake 项目配置文件
-版本: v11.2.6
-Lean 版本: v4.29.0-rc6
-日期: 2026-07-12
-
-本文件定义了 CSQIT 项目的 Lake 构建配置，
-包括 mathlib 依赖和各层级模块。
-
-项目结构说明（按 W1/W2/W3 分级）：
-
-W1 — 形式化数学核心（严格定义与证明）
-  Core/W1/
-    Axioms.lean              核心公理体系
-    BasicModels.lean         基本模型（非平凡实例）
-    FoundationalGrowth.lean  生长基础
-    HierarchicalLevels.lean  层级结构定义
-    AlgebraicCausality.lean  代数因果
-    TwoAspectToSU2.lean      两面性到SU(2)
-    CausalLattice.lean       因果格
-    WeavingStructure.lean    编织结构 + ParallelWeave
-    CausalWeaving.lean       因果编织
-    AmplitudeTheorems.lean   振幅定理
-    TwoAspectTheorems.lean   两面性定理
-    HierarchicalWeaving.lean 层级编织
-    Consistency.lean         一致性证明
-    ShellCapacityDerivation.lean 壳层容量推导
-    BasicProperties.lean     Eckmann-Hilton 严格定理
-    ThreeGroupHierarchy.lean 三群谱系统一定义
-    AxiomC_Independence.lean 公理独立性
-    AxiomD_Independence.lean
-    Independence.lean
-    CausalLatticeToAxiomA.lean
-    CausalSetCorrespondence.lean
-    GrowthToAxioms.lean
-    Hierarchy.lean
-    Unified.lean
-    Models/
-      FinModels.lean         有限模型
-
-W2 — 有效理论（应用模型与物理推导）
-  Core/W2/
-    ScaleDynamics.lean       尺度动力学（含 §6 离散变分原理，战略 2 修正版）
-    B_V_Naturalness.lean     B/V自然性
-    HDST.lean                高维时空
-    ContinuumLimit.lean      连续极限
-    Summary.lean             总结文档
-    Integration.lean         v11+v12整合方案
-    GrowthModel.lean         生长模型
-    PhysicalConstants.lean   物理常数
-    ThreeLocksDerivation.lean 三锁常数推导
-    StrictDerivation.lean    严格推导
-    GravityDerivation.lean   引力推导
-    GroupRepresentationData.lean 群表示数据
-    GrowthAndSymmetry.lean   生长与对称
-    Fin7Uniqueness.lean      Fin 7 唯一性（G3 攻坚）
-    HolographicIsomorphism.lean 全息同构（G5 攻坚）
-    TotalSubsetPrinciple.lean 全集-子集原理形式化（战略 1 替代版）
-    Models/
-      EnhancedModels.lean    增强模型
-      PeriodicTable.lean     元素周期表
-      FiniteWeavingExamples.lean 有限编织示例
-
-W3 — 探索性框架（概念性与实验性内容）
-  Core/W3/
-    Core.lean               核心公理体系（操作本体论）
-    Models.lean             具体模型（操作本体论）
-    AtomicOperations.lean   原子操作分类
-    UnifiedPicture.lean     综合解析：统一图景
-    CyclicUniverse.lean     循环宇宙：无始无终的群论图景
-    ObserverFormalization.lean 观测者形式化与弱人择原理
-    Weaver.lean             Weaver（编织者）形式化（战略 3 修正版）
-    Summary.lean            综合总结：生长的对称谱系
-
-Unified/Constants/  三锁统一闭包（核心成果层，W1完成态）
-Unified/Models/     应用物理模型（W2/W1应用态）
-Appendices/         附录文档
-papers/             相关论文
--/
-
 import Lake
 open Lake DSL
 
-package csqit where
-  version := v!"11.2.6"
-  leanOptions := #[⟨`weak.linter.unreachableTactic, false⟩, ⟨`weak.linter.unusedTactic, false⟩]
+package CSQIT_W1 where
+  version := v!"13.1.0"
 
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887"
+  "https://github.com/leanprover-community/mathlib4.git" @ "6fc4d4f887b81826d7e577d31ff43075f0833dc9"
+
+/-! 第八轮任务 2：全量构建验收。
+
+roots 已扩展到 CSQIT_W1/ 下的全部模块（31 个 .lean），包括此前
+不在构建内的检验文件（IndependenceCheck、AxiomAudit、
+CurvatureEnergyRefutation）与修复后的 GenerationBridge 墓碑、
+TheoryFoundations（纯注释）。
+
+排除项（不参与构建，原因见 BOUNDARIES §8）：
+  · GenerationBridge_legacy.lean.disabled —— 原 GB 1948 行残骸，
+    从未编译通过，扩展名非 .lean，Lake 不识别。 -/
 
 @[default_target]
-lean_lib CSQIT where
+lean_lib CSQIT_W1 where
   roots := #[
-    -- ===== W1：形式化数学核心 =====
-    `Core.W1.Axioms,
-    `Core.W1.BasicModels,
-    `Core.W1.FoundationalGrowth,
-    `Core.W1.HierarchicalLevels,
-    `Core.W1.AlgebraicCausality,
-    `Core.W1.TwoAspectToSU2,
-    `Core.W1.CausalLattice,
-    `Core.W1.WeavingStructure,
-    `Core.W1.CausalWeaving,
-    `Core.W1.AmplitudeTheorems,
-    `Core.W1.TwoAspectTheorems,
-    `Core.W1.HierarchicalWeaving,
-    `Core.W1.Consistency,
-    `Core.W1.ShellCapacityDerivation,
-    `Core.W1.BasicProperties,
-    `Core.W1.ThreeGroupHierarchy,
-    `Core.W1.AxiomC_Independence,
-    `Core.W1.AxiomD_Independence,
-    `Core.W1.Independence,
-    `Core.W1.CausalLatticeToAxiomA,
-    `Core.W1.CausalSetCorrespondence,
-    `Core.W1.GrowthToAxioms,
-    `Core.W1.Hierarchy,
-    `Core.W1.Unified,
-    `Core.W1.Models.FinModels,
-    -- ===== W2：有效理论 =====
-    `Core.W2.ScaleDynamics,
-    `Core.W2.B_V_Naturalness,
-    `Core.W2.HDST,
-    `Core.W2.ContinuumLimit,
-    `Core.W2.Summary,
-    `Core.W2.Integration,
-    `Core.W2.GrowthModel,
-    `Core.W2.PhysicalConstants,
-    `Core.W2.ThreeLocksDerivation,
-    `Core.W2.StrictDerivation,
-    `Core.W2.GravityDerivation,
-    `Core.W2.GroupRepresentationData,
-    `Core.W2.GrowthAndSymmetry,
-    `Core.W2.Fin7Uniqueness,
-    `Core.W2.HolographicIsomorphism,
-    `Core.W2.TotalSubsetPrinciple,
-    `Core.W2.Models.EnhancedModels,
-    `Core.W2.Models.PeriodicTable,
-    `Core.W2.Models.FiniteWeavingExamples,
-    -- ===== W3：探索性框架 =====
-    `Core.W3.Core,
-    `Core.W3.Models,
-    `Core.W3.AtomicOperations,
-    `Core.W3.UnifiedPicture,
-    `Core.W3.CyclicUniverse,
-    `Core.W3.ObserverFormalization,
-    `Core.W3.Weaver,
-    `Core.W3.Summary,
-    -- ===== 三锁统一闭包（核心成果） =====
-    `Unified.Constants.FineStructure,
-    `Unified.Constants.LambdaCDM,
-    `Unified.Constants.Hubble,
-    `Unified.Constants.Gravity,
-    `Unified.Constants.CrossConsistency,
-    -- ===== 应用物理模型 =====
-    `Unified.Models.Electrostatics,
-    `Unified.Models.Magnetism,
-    `Unified.Models.Conductivity,
-    `Unified.Models.PhaseStates,
-    `Unified.Models.Transparency,
-    -- ===== 物理映射函子（熔铸战略 5） =====
-    `Unified.Interpretation
+    `CSQIT_W1.Foundation,
+    `CSQIT_W1.GroupTheoreticOrigin,
+    `CSQIT_W1.MinimalCost,
+    `CSQIT_W1.AttractorPrototype,
+    `CSQIT_W1.PhysicalPredictions,
+    `CSQIT_W1.CompilerAxioms,
+    `CSQIT_W1.CoreCollapse,
+    `CSQIT_W1.AxiomIndependence,
+    `CSQIT_W1.AxiomDerivation,
+    `CSQIT_W1.QuantumCorrection,
+    `CSQIT_W1.ObserverLayering,
+    `CSQIT_W1.PhysicalConnect,
+    `CSQIT_W1.WeaverPopulation,
+    `CSQIT_W1.AlgebraicTimeCircle,
+    `CSQIT_W1.GenerationBridge,
+    `CSQIT_W1.TheoryFoundations,
+    `CSQIT_W1.SequenceStructure,
+    `CSQIT_W1.TwoAdicStructure,
+    `CSQIT_W1.TopologicalTime,
+    `CSQIT_W1.QuantumTimeCircle,
+    `CSQIT_W1.TwoAspect,
+    `CSQIT_W1.TwoAspectNoFinite,
+    `CSQIT_W1.CrossConsistency,
+    `CSQIT_W1.Declaration,
+    `CSQIT_W1.AxionDarkEnergy,
+    `CSQIT_W1.GravitationalAnomaly,
+    `CSQIT_W1.CSQITWeaver,
+    `CSQIT_W1.Main,
+    `CSQIT_W1.IndependenceCheck,
+    `CSQIT_W1.SolsAnyFamilies,
+    `CSQIT_W1.CurvatureEnergyRefutation,
+    `CSQIT_W1.AxiomAudit
+  ]
+
+/-! 增强公理体系（v11.2.8 全量移植）。
+独立上层模块，与 CSQIT_W1 并存；不修改 CSQIT_W1 任何文件。 -/
+@[default_target]
+lean_lib CSQIT_Enhanced where
+  roots := #[
+    `CSQIT_Enhanced.Axioms,
+    `CSQIT_Enhanced.EnhancedModels,
+    `CSQIT_Enhanced.PeriodicTable,
+    `CSQIT_Enhanced.Bridge,
+    `CSQIT_Enhanced.AxiomAuditEnhanced,
+    `CSQIT_Enhanced.EvolutionFaithfulness
+  ]
+
+/-! 第一代（V1.0 → V7.1.1）→ v23 接口检验。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced 任何文件；零新增 axiom、零 sorry。 -/
+@[default_target]
+lean_lib CSQIT_V1Bridge where
+  roots := #[
+    `CSQIT_V1Bridge.OrderAndFixedPoint,
+    `CSQIT_V1Bridge.OrderAndAction,
+    `CSQIT_V1Bridge.CausalAmplitudeLayer,
+    `CSQIT_V1Bridge.CausalLayerSharpening,
+    `CSQIT_V1Bridge.LayerWitness,
+    `CSQIT_V1Bridge.StructuralLimits,
+    `CSQIT_V1Bridge.CausalSetWitness,
+    `CSQIT_V1Bridge.NonTotalModel,
+    `CSQIT_V1Bridge.PowerStructure,
+    `CSQIT_V1Bridge.GaugeAndEndo,
+    `CSQIT_V1Bridge.OperadImpossibility,
+    `CSQIT_V1Bridge.AxiomCClassification,
+    `CSQIT_V1Bridge.ColoredOperadNoGo,
+    `CSQIT_V1Bridge.GeneralModelClassification,
+    `CSQIT_V1Bridge.OrderRigidity,
+    `CSQIT_V1Bridge.FiniteSeparation,
+    `CSQIT_V1Bridge.OrderUniqueness,
+    `CSQIT_V1Bridge.AmplitudeStructure,
+    `CSQIT_V1Bridge.LayerIndependence,
+    `CSQIT_V1Bridge.AmplitudeRigidity,
+    `CSQIT_V1Bridge.AxiomCRigidity,
+    `CSQIT_V1Bridge.FreeModel,
+    `CSQIT_V1Bridge.V23Interface,
+    `CSQIT_V1Bridge.OrderMaximality
+  ]
+
+/-! 分层 AxiomC 塔（设计候选）。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced / CSQIT_V1Bridge 任何文件；
+零新增 axiom、零 sorry。 -/
+@[default_target]
+lean_lib CSQIT_LayerTower where
+  roots := #[
+    `CSQIT_LayerTower.Tower,
+    `CSQIT_LayerTower.Top,
+    `CSQIT_LayerTower.AxiomCMaximality,
+    `CSQIT_LayerTower.Potential
+  ]
+
+/-! 层级切口探索（第 25 轮）。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced / CSQIT_V1Bridge 任何文件；
+零新增 axiom、零 sorry。仅落地已能证的部分。 -/
+@[default_target]
+lean_lib CSQIT_LayerCuts where
+  roots := #[
+    `CSQIT_LayerCuts.Cuts
+  ]
+
+/-! 振幅结构定理桥（第二十六轮）：G38/G39 的结构化。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced / CSQIT_V1Bridge 任何文件；
+零新增 axiom、零 sorry。 -/
+@[default_target]
+lean_lib CSQIT_Bridge where
+  roots := #[
+    `CSQIT_Bridge.AmplitudeSemigroup
+  ]
+
+/-! 编织路径桥（第二十七轮）：v11.2.8 `structure Weave` 的独立重建与判定。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced / CSQIT_V1Bridge /
+CSQIT_LayerTower / CSQIT_LayerCuts 任何文件；零新增 axiom、零 sorry。 -/
+@[default_target]
+lean_lib CSQIT_WeaveBridge where
+  roots := #[
+    `CSQIT_WeaveBridge.WeaveCore,
+    `CSQIT_WeaveBridge.Independence
+  ]
+
+/-! 时间尺度判定（第 28 轮）：时间是尺度还是维度 + 螺旋 S¹ × ℝ_{>0}。
+独立目录；不改 CSQIT_W1 / CSQIT_Enhanced / CSQIT_V1Bridge /
+CSQIT_LayerTower / CSQIT_LayerCuts / CSQIT_WeaveBridge 任何文件；
+零新增 axiom、零 sorry。 -/
+@[default_target]
+lean_lib CSQIT_TimeScale where
+  roots := #[
+    `CSQIT_TimeScale.Scale,
+    `CSQIT_TimeScale.Spiral,
+    `CSQIT_TimeScale.Verdict,
+    `CSQIT_TimeScale.GapScale,
+    `CSQIT_TimeScale.MulIndex,
+    `CSQIT_TimeScale.PowerLaw,
+    `CSQIT_TimeScale.Flow
   ]
